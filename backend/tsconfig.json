@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "esnext",                                
+    "lib": ["esnext"],                                      
+    "module": "commonjs",                              
+    "rootDir": "./src",                                 
+    "moduleResolution": "node",                     
+    "declaration": true,                             
+    "declarationMap": true,                 
+    "sourceMap": true,                                                    
+    "allowSyntheticDefaultImports": true,             
+    "esModuleInterop": true,                         
+    "forceConsistentCasingInFileNames": true,   
+    "strict": true,                                    
+    "noImplicitAny": true,                           
+    "strictNullChecks": true,                        
+    "strictPropertyInitialization": true,             
+    "noImplicitThis": true,                         
+    "noUnusedLocals": true,     
+    "noUnusedParameters": true,         
+    "exactOptionalPropertyTypes": true,            
+    "noImplicitReturns": true,                      
+    "noFallthroughCasesInSwitch": true,      
+    "noUncheckedIndexedAccess": true,        
+    "noImplicitOverride": true,
+    "allowUnusedLabels": true,                 
+    "allowUnreachableCode": true,                 
+    "skipLibCheck": true                            
+  }
+}

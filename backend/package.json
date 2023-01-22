@@ -1,0 +1,18 @@
+{
+  "name": "safe-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "kolserdav",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18"
+  }
+}
