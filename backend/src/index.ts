@@ -1,4 +1,8 @@
 import Fastify from 'fastify';
+import { PORT } from './utils/constants';
+
+console.log(PORT);
+
 const fastify = Fastify({
   logger: true,
 });
@@ -12,7 +16,7 @@ fastify.get<{
   return body;
 });
 
-fastify.listen({ port: 3000 }, (err, address) => {
+fastify.listen({ port: PORT }, (err, address) => {
   if (err) throw err;
   // Server is now listening on ${address}
 });

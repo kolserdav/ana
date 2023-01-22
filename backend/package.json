@@ -2,9 +2,13 @@
   "name": "safe-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "tsc -p . -w",
+    "build": "tsc -p .",
+    "start:dev": "nodemon dist/index.js",
+    "start": "env-cmd node dist/index.js",
+    "dev": "concurrently \"npm run watch\" \"npm run start:dev\""
   },
   "keywords": [],
   "author": "kolserdav",
@@ -13,6 +17,7 @@
     "fastify": "^4.12.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18"
+    "@types/node": "^18.11.18",
+    "dotenv": "^16.0.3"
   }
 }
