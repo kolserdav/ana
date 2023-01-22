@@ -1,10 +1,8 @@
 import Fastify from 'fastify';
-import { PORT } from './utils/constants';
-
-console.log(PORT);
+import { FASTIFY_LOGGER, PORT } from './utils/constants';
 
 const fastify = Fastify({
-  logger: true,
+  logger: FASTIFY_LOGGER,
 });
 
 fastify.get<{
