@@ -17,5 +17,14 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "4.9.4"
+  },
+  "devDependencies": {
+    "eslint-config-next": "13.1.4",
+    "eslint-config-react-app": "^7.0.1",
+    "react-app": "^1.1.2",
+    "sass": "^1.57.1",
+    "stylelint": "^14.16.1",
+    "stylelint-config-prettier-scss": "^0.0.1",
+    "stylelint-config-standard-scss": "^6.1.0"
   }
 }

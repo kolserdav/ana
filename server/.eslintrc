@@ -3,13 +3,10 @@
     "es2021": true,
     "node": true
   },
+  "root": true,
   "extends": [
-    "plugin:react/recommended",
-    "react-app",
-    "react-app/jest",
     "eslint:recommended",
     "eslint-config-prettier",
-    "eslint-config-next",
     "prettier",
     "plugin:@typescript-eslint/recommended"
   ],
