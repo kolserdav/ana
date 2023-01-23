@@ -16,9 +16,10 @@
   "author": "kolserdav",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "18.11.18",
+    "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
-    "@types/node": "18.11.18",
     "concurrently": "^7.6.0",
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
@@ -28,6 +29,8 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "date-fns": "^2.29.3"
+    "@fastify/cors": "^8.2.0",
+    "date-fns": "^2.29.3",
+    "uuid": "^9.0.0"
   }
 }

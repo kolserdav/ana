@@ -7,8 +7,6 @@ import AMQP from '../rabbitmq/amqp';
 import { QUEUE_NAME } from '../utils/constants';
 import WS from './ws';
 
-console.log(cluster.isPrimary);
-
 class HandleRequests extends Service {
   private protocol: Protocol;
 

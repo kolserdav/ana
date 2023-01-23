@@ -17,7 +17,6 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
