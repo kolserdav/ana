@@ -17,7 +17,7 @@ export type Protocol = 'request';
 export type WSProtocol = 'home';
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
-  ? { t: string }
+  ? { ok: 'yes' | 'no' }
   : T extends MessageType.SET_CONNECTION_ID
   ? null
   : never;

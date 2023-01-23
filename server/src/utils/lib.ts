@@ -24,3 +24,11 @@ export const log = (type: keyof typeof LogLevel, text: string, _data?: any, cons
     console[type](IS_DEV ? date : '', type, text, _data, '\n');
   }
 };
+
+export const wait = async (time: number) => {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(0);
+    }, time);
+  });
+};

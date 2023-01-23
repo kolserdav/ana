@@ -1,12 +1,13 @@
 import amqp from 'amqplib';
 import os from 'os';
-import { AMQP_ADDRESS, QUEUE_MAX_SIZE } from '../utils/constants';
-import { log } from '../utils/lib';
+import { MessageType, SendMessageArgs } from '../types/interfaces';
+import { AMQP_ADDRESS, QUEUE_MAX_SIZE, RABBITMQ_RECONNECT_TIMEOUT } from '../utils/constants';
+import { log, wait } from '../utils/lib';
 
 const cpus = os.cpus().length;
 
 class AMQP {
-  private connection: amqp.Connection | undefined;
+  private connection: amqp.Connection | undefined | void;
 
   private channel: amqp.Channel | undefined;
 
@@ -32,15 +33,23 @@ class AMQP {
     this.queueIndex = added < cpus ? added : 0;
   }
 
-  private async createConnection() {
-    this.connection = await amqp.connect(AMQP_ADDRESS);
+  private async createConnection(): Promise<void> {
+    this.connection = await amqp.connect(AMQP_ADDRESS).catch((e) => {
+      log('error', 'Failed RabbitMQ connection', e);
+    });
+    if (!this.connection) {
+      this.clean();
+      await wait(RABBITMQ_RECONNECT_TIMEOUT);
+      return await this.createConnection();
+    }
+
     this.connection.on('close', async () => {
       log('warn', 'AMQP connection is closed, reconnecting...');
-      await this.closeChannel();
-      await this.closeConnection();
       this.clean();
-      await this.createConnection();
+      await wait(RABBITMQ_RECONNECT_TIMEOUT);
+      return await this.createConnection();
     });
+
     await this.createChannel();
     for (let i = 0; i < cpus; i++) {
       await this.assertQueue(this.getQueue(i));
@@ -62,22 +71,6 @@ class AMQP {
       return;
     }
     this.channel = await this.connection.createChannel();
-  }
-
-  private async closeConnection() {
-    if (!this.connection) {
-      log('error', this.connErr('closeConnection'), { caller: this.caller });
-      return null;
-    }
-    return this.connection.close();
-  }
-
-  private async closeChannel() {
-    if (!this.channel) {
-      log('error', this.chanErr('closeChannel'), { caller: this.caller });
-      return null;
-    }
-    return this.channel.close();
   }
 
   public checkChannel() {
@@ -117,7 +110,8 @@ class AMQP {
     return result;
   }
 
-  public consume<T>(cb: (msg: T) => void) {
+  // eslint-disable-next-line no-unused-vars
+  public consume<T extends keyof typeof MessageType>(cb: (msg: SendMessageArgs<T>) => void) {
     if (!this.channel) {
       log('error', this.chanErr('consume'), { caller: this.caller });
       return;
@@ -132,11 +126,16 @@ class AMQP {
             return;
           }
           const msgStr = msg.content.toString();
-          let msgJSON = null;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          let msgJSON: null | SendMessageArgs<any> = null;
           try {
             msgJSON = JSON.parse(msgStr);
           } catch (e) {
             log('error', 'Error parse consumed msg', { e, queue, msgStr });
+            return;
+          }
+          if (msgJSON === null) {
+            return;
           }
           cb(msgJSON);
           if (!this.channel) {

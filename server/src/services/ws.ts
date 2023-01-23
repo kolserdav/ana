@@ -1,17 +1,15 @@
 import WebSocket, { WebSocketServer } from 'ws';
-import { v4 } from 'uuid';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
-import { CORS, IS_DEV, WS_PORT } from '../utils/constants';
+import { IS_DEV, WS_PORT } from '../utils/constants';
 import { log } from '../utils/lib';
 
 class WS {
-  private wss: WebSocket.Server;
+  public connection: WebSocket.Server;
 
-  private ws: Record<string, WebSocket> = {};
+  public ws: Record<string, WebSocket> = {};
 
   constructor() {
-    this.wss = this.createWSServer();
-    this.handleWSConnections();
+    this.connection = this.createWSServer();
   }
 
   public sendMessage<T extends keyof typeof MessageType>(msg: SendMessageArgs<T>) {
@@ -41,63 +39,17 @@ class WS {
   }
 
   private createWSServer() {
-    if (this.wss) {
-      return this.wss;
+    if (this.connection) {
+      return this.connection;
     }
     return new WebSocketServer({ port: WS_PORT });
   }
 
-  public handleWSConnections() {
-    const getConnectionId = (): string => {
-      const connId = v4();
-      if (this.ws[connId]) {
-        return getConnectionId();
-      }
-      return connId;
-    };
-    this.wss.on('connection', (ws, req) => {
-      const { origin } = req.headers;
-      const protocol = req.headers['sec-websocket-protocol'];
-      const notAllowed = CORS.split(',').indexOf(origin || '') === -1;
-      const id = getConnectionId();
-      if (CORS && CORS !== '*' && notAllowed) {
-        const message = 'Block CORS attempt';
-        log('warn', message, { headers: req.headers });
-        ws.send(
-          JSON.stringify({
-            type: MessageType.SET_ERROR,
-            data: {
-              message,
-              type: 'warn',
-            },
-          })
-        );
-        ws.close();
-        return;
-      }
-
-      this.setSocket({ id, ws });
-
-      ws.on('message', (msg) => {
-        const rawMessage = this.parseMessage(msg);
-        const { type } = rawMessage;
-        switch (type) {
-          default:
-            log('warn', 'Not implemented WS message', rawMessage);
-        }
-      });
-
-      ws.on('close', () => {
-        this.deleteSocket(id);
-      });
-    });
-  }
-
-  private deleteSocket(id: string) {
+  public deleteSocket(id: string) {
     delete this.ws[id];
   }
 
-  private setSocket({ id, ws }: { id: string; ws: WebSocket }) {
+  public setSocket({ id, ws }: { id: string; ws: WebSocket }) {
     this.ws[id] = ws;
     this.sendMessage({
       id,
@@ -106,7 +58,7 @@ class WS {
     });
   }
 
-  private parseMessage(message: WebSocket.RawData) {
+  public parseMessage(message: WebSocket.RawData) {
     let _data = '';
     if (typeof message !== 'string') {
       _data = message.toString('utf8');
