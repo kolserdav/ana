@@ -4,12 +4,16 @@
   "eslint.workingDirectories": ["app", "server"],
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
   },
+  "editor.formatOnSave": true,
+  "stylelint.enable": true,
+  "stylelint.validate": ["css", "scss"],
   "files.associations": {
+    ".stylelintrc": ".json",
+    ".env": "ini",
     ".env.development": "ini",
-    ".env.production": "ini",
-    ".env.example": "ini",
-    ".env": "ini"
+    ".env.example": "ini"
   }
 }

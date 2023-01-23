@@ -10,3 +10,4 @@ export const FASTIFY_LOGGER = process.env.FASTIFY_LOGGER === 'true';
 export const APPLICATION_JSON = 'application/json';
 export const V1 = 'v1';
 export const QUEUE_MAX_SIZE = 2_000_000_000;
+export const QUEUE_NAME = 'handle_request';

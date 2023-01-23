@@ -53,10 +53,10 @@ class AMQP {
   }
 
   private getQueue(index: number) {
-    return `${this.queue}-${index}`;
+    return `${this.queue}_${index}`;
   }
 
-  public async createChannel() {
+  private async createChannel() {
     if (!this.connection) {
       log('error', this.connErr('createChannel'), { caller: this.caller });
       return;
@@ -85,18 +85,19 @@ class AMQP {
       log('error', this.chanErr('assertQueue'), { caller: this.caller, queue });
       return null;
     }
-    return this.channel.assertQueue(queue, {
+    const result = await this.channel.assertQueue(queue, {
       exclusive: false,
       durable: true,
       autoDelete: false,
       arguments: {
-        'x-queue-type': 'stream',
+        'x-queue-type': 'classic',
         'x-max-length-bytes': QUEUE_MAX_SIZE,
       },
     });
+    return result;
   }
 
-  public async sendToQueue({ queue, msg }: { queue: string; msg: any }) {
+  public async sendToQueue(msg: any) {
     if (!this.channel) {
       log('error', this.chanErr('sendToQueue'), { caller: this.caller });
       return null;
@@ -143,7 +144,7 @@ class AMQP {
         {
           noAck: false,
           arguments: {
-            'x-stream-offset': 'first',
+            'x-classic-offset': 'first',
           },
         }
       );

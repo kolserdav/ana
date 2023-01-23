@@ -6,10 +6,11 @@
   "scripts": {
     "install:server": "cd server && npm i",
     "install:app": "cd app && npm i",
-    "postinstall": "npm run install:server && npm run install:app",
+    "postinstall": "npm run install:server && npm run install:app && npm run script:create-interfaces-symlink",
     "dev:server": "cd server && npm run dev",
     "dev:app": "cd app && npm run dev",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:app\""
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:app\"",
+    "script:create-interfaces-symlink": "node scripts/create-interfaces-symlink.js"
   },
   "keywords": [],
   "author": "kolserdav",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
+    "@types/node": "18.11.18",
     "concurrently": "^7.6.0",
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
