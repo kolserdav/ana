@@ -80,6 +80,10 @@ class AMQP {
     return this.channel.close();
   }
 
+  public checkChannel() {
+    return this.channel !== undefined;
+  }
+
   private async assertQueue(queue: string) {
     if (!this.channel) {
       log('error', this.chanErr('assertQueue'), { caller: this.caller, queue });

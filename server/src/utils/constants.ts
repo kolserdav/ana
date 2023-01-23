@@ -4,6 +4,7 @@ dotenv.config();
 
 export const AMQP_ADDRESS = process.env.AMQP_ADDRESS as string;
 export const PORT = parseInt(process.env.PORT as string, 10);
+export const WS_PORT = parseInt(process.env.WS_PORT as string, 10);
 export const LOG_LEVEL = parseInt(process.env.LOG_LEVEL as string, 10);
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const FASTIFY_LOGGER = process.env.FASTIFY_LOGGER === 'true';

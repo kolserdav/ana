@@ -1,17 +1,16 @@
 import cluster, { Worker } from 'cluster';
+
 import { Protocol } from '../types/interfaces';
 import { log } from '../utils/lib';
 import Service from './service';
 import AMQP from '../rabbitmq/amqp';
 import { QUEUE_NAME } from '../utils/constants';
+import WS from './ws';
 
-const amqpS = new AMQP({ caller: 'sender', queue: QUEUE_NAME });
-const amqpW = new AMQP({ caller: 'consumer', queue: QUEUE_NAME });
+console.log(cluster.isPrimary);
 
 class HandleRequests extends Service {
   private protocol: Protocol;
-
-  private started = false;
 
   constructor(protocol: Protocol, worker?: Worker) {
     let _worker = worker;
@@ -29,28 +28,30 @@ class HandleRequests extends Service {
   }
 
   public async listenWorker() {
+    const amqpS = new AMQP({ caller: 'sender', queue: QUEUE_NAME });
     this.listenWorkerMessages<any>(async ({ protocol, msg }) => {
       if (protocol === 'request') {
-        this.started = true;
         amqpS.sendToQueue(msg);
       } else {
         log('warn', 'Unexpected protocol or type', { protocol, type: msg.type });
       }
     });
+    this.handleQueues();
+  }
+
+  private async handleQueues() {
+    const ws = new WS();
+    const amqpW = new AMQP({ caller: 'consumer', queue: QUEUE_NAME });
     await new Promise((resolve) => {
       const interval = setInterval(() => {
-        if (this.started) {
+        if (amqpW.checkChannel()) {
           clearInterval(interval);
           resolve(0);
         }
       }, 100);
     });
-    this.handleQueues();
-  }
-
-  private handleQueues() {
-    amqpW.consume((msg) => {
-      console.log(msg);
+    amqpW.consume((msg: any) => {
+      ws.sendMessage(msg);
     });
   }
 
