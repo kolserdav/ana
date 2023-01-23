@@ -14,9 +14,11 @@
   "author": "kolserdav",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.10.3",
     "fastify": "^4.12.0"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.1",
     "@types/node": "^18.11.18",
     "dotenv": "^16.0.3"
   }
