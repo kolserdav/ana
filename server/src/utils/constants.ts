@@ -12,5 +12,5 @@ export const FASTIFY_LOGGER = process.env.FASTIFY_LOGGER === 'true';
 export const APPLICATION_JSON = 'application/json';
 export const V1 = 'v1';
 export const QUEUE_MAX_SIZE = 2_000_000_000;
-export const QUEUE_NAME = 'handle_request';
+export const QUEUE_PREFIX = process.env.QUEUE_PREFIX as string;
 export const RABBITMQ_RECONNECT_TIMEOUT = 2000;

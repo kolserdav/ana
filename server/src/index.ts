@@ -5,6 +5,8 @@ import getTestHandler from './api/v1/get.test';
 import { CORS, FASTIFY_LOGGER, PORT, V1 } from './utils/constants';
 import HandleRequests from './services/handleRequests';
 import { log } from './utils/lib';
+import WS from './services/ws';
+import HandleWS from './services/handleWS';
 
 if (cluster.isPrimary) {
   process.on('uncaughtException', (err: Error) => {
@@ -15,8 +17,10 @@ if (cluster.isPrimary) {
   });
 
   const worker = cluster.fork();
-  const handleRequests = new HandleRequests('request', worker);
-  handleRequests.listenWorker();
+  const ws = new WS();
+  new HandleRequests('request', ws, worker);
+  new HandleRequests('ws', ws, worker);
+  new HandleWS({ ws });
 } else {
   process.on('uncaughtException', (err: Error) => {
     log('error', '[WORKER] uncaughtException', err);

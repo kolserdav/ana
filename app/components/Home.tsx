@@ -36,9 +36,14 @@ const Home = () => {
       switch (type) {
         case MessageType.SET_CONNECTION_ID:
           setId(id);
+          ws.sendMessage({
+            type: MessageType.TEST,
+            id,
+            data: { ok: 'no' },
+          });
           break;
         default:
-          log('warn', 'Not implemented on ws message case', rawMessage);
+          log('warn', 'Not implemented on ws message case', rawMessage.data);
       }
     };
   }, [ws]);

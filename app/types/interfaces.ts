@@ -13,7 +13,7 @@ export enum MessageType {
   SET_ERROR = 'SET_ERROR',
 }
 
-export type Protocol = 'request';
+export type Protocol = 'request' | 'ws';
 export type WSProtocol = 'home';
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
