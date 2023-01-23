@@ -1,20 +1,14 @@
 import Fastify from 'fastify';
-import { FASTIFY_LOGGER, PORT } from './utils/constants';
+import testHandler from './api/v1/get.test';
+import { FASTIFY_LOGGER, PORT, V1 } from './utils/constants';
 
 const fastify = Fastify({
   logger: FASTIFY_LOGGER,
 });
 
-fastify.get<{
-  Querystring: { m: number };
-  Body: { t: string };
-  Reply: { t: string };
-}>('/', async ({ body, query: { m } }, reply) => {
-  reply.type('application/json').code(200);
-  return body;
-});
+fastify.get(`/${V1}/test`, testHandler);
 
 fastify.listen({ port: PORT }, (err, address) => {
   if (err) throw err;
-  // Server is now listening on ${address}
+  console.log('Server listenning on', address);
 });
