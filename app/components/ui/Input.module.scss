@@ -64,15 +64,6 @@
   }
 }
 
-.loader {
-  width: 100%;
-  position: relative;
-  max-height: 30px;
-  margin: 1rem;
-  display: flex;
-  justify-content: center;
-}
-
 .input {
   &:focus {
     outline: none;
@@ -124,21 +115,6 @@
   margin-left: 1rem;
   @media (max-width: $mobile-width) {
     margin-left: 0;
-  }
-
-  &:first-child {
-    margin-left: 0;
-  }
-
-  &.change__lastname {
-    margin-left: 0;
-    margin-top: 1rem;
-  }
-
-  &.date {
-    background-color: $color-gray;
-    border: 0;
-    min-width: calc(#{$react-datepicker-width} - #{$input-padding} + #{$icon-height} / 2);
   }
 
   &.error {

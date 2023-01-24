@@ -1,8 +1,9 @@
+import { Theme } from '@/Theme';
 import { useInputs } from './Login.hooks';
 import s from './Login.module.scss';
 import Input from './ui/Input';
 
-function Login() {
+function Login({ theme }: { theme: Theme }) {
   const { email, emailDisabled, emailError, emailSuccess, onChangeEmail, load, onBlurEmail } =
     useInputs();
 

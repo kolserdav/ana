@@ -1,8 +1,11 @@
 import Head from 'next/head';
 import styles from '@/styles/Home.module.scss';
 import Login from '@/components/Login';
+import useTheme from '@/hooks/useTheme';
 
 export default function HomePage() {
+  const { theme } = useTheme();
+
   return (
     <>
       <Head>
@@ -12,7 +15,7 @@ export default function HomePage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>Home</main>
-      <Login />
+      <Login theme={theme} />
     </>
   );
 }
