@@ -19,6 +19,7 @@ class Request {
     return new Promise((resolve) => {
       const req = new XMLHttpRequest();
       req.responseType = 'json' || responseType;
+      log('log', 'Send request', { url });
       req.onload = () => {
         resolve(req.response as T);
       };

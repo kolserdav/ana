@@ -1,7 +1,8 @@
 import cluster, { Worker } from 'cluster';
+import EventEmitter from 'events';
 import { MessageType, Message } from '../types/interfaces';
 
-class Service {
+class Service extends EventEmitter {
   private readonly workerNotFound = 'Worker not found in Service';
 
   private readonly masterNotFound = 'Master not found in Service';
@@ -11,6 +12,7 @@ class Service {
   protected worker: Worker | undefined;
 
   constructor(_worker?: Worker) {
+    super();
     this.worker = _worker;
   }
 

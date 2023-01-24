@@ -4,6 +4,9 @@ import WS from '../services/ws';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { log } from '../utils/lib';
 
+const protocol = 'ws';
+const handleRequests = new HandleRequests({ protocol, caller: 'message-handler' });
+
 class MessageHandler {
   private ws: WS;
 
@@ -12,7 +15,7 @@ class MessageHandler {
   }
 
   private async test(msg: SendMessageArgs<MessageType.TEST>) {
-    this.ws.sendMessage(msg);
+    handleRequests.emit('message', { protocol, msg });
   }
 
   public messages({ ws }: { ws: WebSocket }) {

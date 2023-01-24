@@ -14,10 +14,22 @@ const Home = () => {
     if (!id) {
       return;
     }
+    console.log(1);
     (async () => {
       const res = await req.test(id);
     })();
   }, [req, id]);
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    ws.sendMessage({
+      type: MessageType.TEST,
+      id,
+      data: { ok: 'yes' },
+    });
+  }, [id, ws]);
 
   /**
    * Connect to WS
@@ -36,14 +48,9 @@ const Home = () => {
       switch (type) {
         case MessageType.SET_CONNECTION_ID:
           setId(id);
-          ws.sendMessage({
-            type: MessageType.TEST,
-            id,
-            data: { ok: 'no' },
-          });
           break;
         default:
-          log('warn', 'Not implemented on ws message case', rawMessage.data);
+          log('warn', 'Not implemented on ws message case', rawMessage);
       }
     };
   }, [ws]);

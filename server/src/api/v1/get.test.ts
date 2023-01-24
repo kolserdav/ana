@@ -3,7 +3,7 @@ import { APPLICATION_JSON } from '../../utils/constants';
 import HandleRequests from '../../services/handleRequests';
 import { MessageType } from '../../types/interfaces';
 
-const handleRequests = new HandleRequests('request');
+const handleRequests = new HandleRequests({ protocol: 'request', caller: 'get-test-handler' });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getTestHandler: RequestHandler<{ Querystring: { id: string } }, any> = async (
@@ -15,7 +15,7 @@ const getTestHandler: RequestHandler<{ Querystring: { id: string } }, any> = asy
     type: MessageType.TEST,
     id,
     data: {
-      ok: 'yes',
+      ok: 'no',
     },
   });
   reply.type(APPLICATION_JSON).code(200);

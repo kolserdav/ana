@@ -11,26 +11,47 @@ import QueueHandler from '../components/queueHandler';
 class HandleRequests extends Service {
   private protocol: Protocol;
 
-  constructor(protocol: Protocol, ws?: WS, worker?: Worker) {
-    let _worker = worker;
-    if (!_worker && cluster.isPrimary) {
-      const { workers } = cluster;
-      if (workers) {
-        // eslint-disable-next-line prefer-destructuring
-        _worker = (workers as Record<number, Worker>)[1];
-      } else {
-        log('warn', 'Workers not found', { err: new Error() });
-      }
-    }
-    super(_worker);
+  private caller: string;
+
+  constructor({
+    protocol,
+    ws,
+    worker,
+    caller,
+  }: {
+    protocol: Protocol;
+    caller: string;
+    ws?: WS;
+    worker?: Worker;
+  }) {
+    super(worker);
 
     this.protocol = protocol;
+    this.caller = caller;
 
-    if (_worker && ws) {
-      this.listenWorker();
-      this.handleQueues({ ws });
-    } else if ((worker && !ws) || (ws && !_worker)) {
-      log('warn', 'Worker and WS must be together on "HandleRequests" constructor', { __filename });
+    if (cluster.isPrimary) {
+      switch (protocol) {
+        case 'request':
+          if (ws && worker) {
+            this.listenWorker();
+          }
+          break;
+        case 'ws':
+          if (!ws && !worker) {
+            this.listenMaster();
+          }
+          break;
+        default:
+          log('warn', 'Default case of "Handle Requests" protocol', protocol);
+      }
+      if (ws && worker) {
+        this.handleQueues({ ws });
+      }
+      if ((worker && !ws) || (ws && !worker)) {
+        log('warn', 'Worker and WS must be together on "HandleRequests" constructor', {
+          __filename,
+        });
+      }
     }
   }
 
@@ -50,7 +71,6 @@ class HandleRequests extends Service {
         }
       }, 100);
     });
-    console.log(queue);
     queueHandler.queues({ amqp: amqpW });
   }
 
@@ -58,12 +78,23 @@ class HandleRequests extends Service {
    * Listen on master
    */
   public async listenWorker() {
-    const amqpS = new AMQP({ caller: 'sender-w', queue: this.getQueueName() });
+    const amqpS = new AMQP({ caller: this.caller, queue: this.getQueueName() });
     this.listenWorkerMessages<any>(async ({ protocol, msg }) => {
-      if (protocol === 'request' || protocol === 'ws') {
+      if (protocol === 'request') {
         amqpS.sendToQueue(msg);
       } else {
-        log('warn', 'Unexpected protocol or type', { protocol, type: msg.type });
+        log('warn', 'Unexpected protocol or type on "listenWorker"', { protocol, type: msg.type });
+      }
+    });
+  }
+
+  public async listenMaster() {
+    const amqpS = new AMQP({ caller: this.caller, queue: this.getQueueName() });
+    this.addListener('message', ({ protocol, msg }) => {
+      if (protocol === 'ws') {
+        amqpS.sendToQueue(msg);
+      } else {
+        log('warn', 'Unexpected protocol or type on "listenMaster"', { protocol, type: msg.type });
       }
     });
   }
