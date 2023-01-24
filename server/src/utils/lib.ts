@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import { IS_DEV, LOG_LEVEL } from './constants';
+import { IncomingHttpHeaders } from 'http';
+import { CORS, IS_DEV, LOG_LEVEL } from './constants';
 
 // eslint-disable-next-line no-unused-vars
 enum LogLevel {
@@ -31,4 +32,14 @@ export const wait = async (time: number) => {
       resolve(0);
     }, time);
   });
+};
+
+export const checkCors = (headers: IncomingHttpHeaders) => {
+  const { origin } = headers;
+  const notAllowed = CORS.split(',').indexOf(origin || '') === -1;
+  if (CORS && CORS !== '*' && notAllowed) {
+    log('warn', 'Block CORS attempt', { headers });
+    return false;
+  }
+  return true;
 };

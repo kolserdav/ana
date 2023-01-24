@@ -16,9 +16,10 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "ignorePatterns": ["node_modules"],
+  "ignorePatterns": ["node_modules", "dist"],
   "rules": {
     "no-unused-vars": 1,
-    "prettier/prettier": 1
+    "prettier/prettier": 1,
+    "@typescript-eslint/no-var-requires": 1
   }
 }

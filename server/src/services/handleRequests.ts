@@ -74,9 +74,6 @@ class HandleRequests extends Service {
     queueHandler.queues({ amqp: amqpW });
   }
 
-  /**
-   * Listen on master
-   */
   public async listenWorker() {
     const amqpS = new AMQP({ caller: this.caller, queue: this.getQueueName() });
     this.listenWorkerMessages<any>(async ({ protocol, msg }) => {
@@ -99,9 +96,6 @@ class HandleRequests extends Service {
     });
   }
 
-  /**
-   * Send from worker
-   */
   public sendToQueue<T extends keyof typeof MessageType>(msg: SendMessageArgs<T>) {
     this.sendMessageToMaster<T>({ protocol: this.protocol, msg });
   }

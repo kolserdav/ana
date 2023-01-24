@@ -15,7 +15,7 @@ const getTestHandler: RequestHandler<{ Querystring: { id: string } }, any> = asy
     type: MessageType.TEST,
     id,
     data: {
-      ok: 'no',
+      ok: 'yes',
     },
   });
   reply.type(APPLICATION_JSON).code(200);

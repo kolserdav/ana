@@ -5,10 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "watch": "tsc -p . -w",
-    "build": "tsc -p .",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc -p .",
     "start:dev": "nodemon dist/index.js",
     "start": "env-cmd node dist/index.js",
-    "dev": "concurrently \"npm run watch\" \"npm run start:dev\""
+    "dev": "concurrently \"npm run watch\" \"npm run start:dev\"",
+    "test": "env-cmd node tests/index.test.js"
   },
   "keywords": [],
   "author": "kolserdav",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
     "@types/ws": "^8.5.4",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "puppeteer": "^19.6.0"
   }
 }

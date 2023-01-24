@@ -1,9 +1,7 @@
-import { IncomingMessage } from 'http';
 import { v4 } from 'uuid';
 import MessageHandler from '../components/messageHandler';
 import { MessageType } from '../types/interfaces';
-import { CORS } from '../utils/constants';
-import { log } from '../utils/lib';
+import { checkCors } from '../utils/lib';
 import WS from './ws';
 
 class HandleWS {
@@ -20,11 +18,11 @@ class HandleWS {
       return connId;
     };
     const messageHandler = new MessageHandler({ ws: wss });
-    wss.connection.on('connection', (ws, req) => {
+    wss.connection.on('connection', (ws, { headers }) => {
       // const protocol = req.headers['sec-websocket-protocol'];
       const id = getConnectionId();
 
-      if (!this.checkCors(req)) {
+      if (!checkCors(headers)) {
         ws.send(
           JSON.stringify({
             type: MessageType.SET_ERROR,
@@ -46,16 +44,6 @@ class HandleWS {
         wss.deleteSocket(id);
       });
     });
-  }
-
-  private checkCors(req: IncomingMessage) {
-    const { origin } = req.headers;
-    const notAllowed = CORS.split(',').indexOf(origin || '') === -1;
-    if (CORS && CORS !== '*' && notAllowed) {
-      log('warn', 'Block CORS attempt', { headers: req.headers });
-      return false;
-    }
-    return true;
   }
 }
 
