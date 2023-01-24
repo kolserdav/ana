@@ -1,8 +1,8 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
-import { CORS, FASTIFY_LOGGER, PORT, V1 } from './utils/constants';
+import { APP_URL, FASTIFY_LOGGER, PORT, V1 } from './utils/constants';
 import { log } from './utils/lib';
-import getTestHandler from './api/v1/get.test';
+import getTestHandler from './api/v1/get-test';
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -17,7 +17,7 @@ process.on('unhandledRejection', (err: Error) => {
   });
 
   await fastify.register(cors, {
-    origin: CORS ? CORS.split(',') : undefined,
+    origin: [APP_URL],
   });
 
   fastify.get(`/${V1}/test`, getTestHandler);

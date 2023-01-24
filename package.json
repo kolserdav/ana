@@ -4,13 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:app": "cd app && npm run build",
+    "build:server": "cd server && npm run build",
+    "build": "npm run build:app && npm run build:server",
     "install:server": "cd server && npm i",
     "install:app": "cd app && npm i",
-    "postinstall": "npm run install:server && npm run install:app && npm run script:create-interfaces-symlink",
+    "postinstall": "npm run install:server && npm run install:app && npm run script:create-interfaces-symlink && npm run scripts:copy-test-constants",
     "dev:server": "cd server && npm run dev",
     "dev:app": "cd app && npm run dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:app\"",
-    "script:create-interfaces-symlink": "node scripts/create-interfaces-symlink.js"
+    "script:create-interfaces-symlink": "node scripts/create-interfaces-symlink.js",
+    "scripts:copy-test-constants": "node scripts/copy-test-constants.js",
+    "test": "node --test"
   },
   "keywords": [],
   "author": "kolserdav",
@@ -21,11 +26,14 @@
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "concurrently": "^7.6.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
+    "puppeteer": "^19.6.0",
+    "rimraf": "^4.1.1",
     "typescript": "^4.9.4"
   },
   "dependencies": {

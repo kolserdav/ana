@@ -4,20 +4,16 @@
 const assert = require('assert');
 const { test } = require('node:test');
 const { checkCors, wait } = require('../../dist/utils/lib');
+const { APP_URL } = require('../constants.json');
 
 test('Check CORS', () => {
-  /**
-   * @type {any}
-   */
-  const CORS = process.env.CORS;
-  const cors = CORS.split(',');
-  assert.equal(checkCors({ origin: cors[0] }), true);
+  assert.equal(checkCors({ origin: APP_URL }), true);
 });
 
 const time = 1;
 test('Check Wait', { timeout: time + 2 }, async (t) => {
   await t.test('waiting...', async () => {
     await wait(time);
-    return assert.equal(1, 1);
+    return assert.ok('wait end');
   });
 });

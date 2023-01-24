@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const AMQP_ADDRESS = process.env.AMQP_ADDRESS as string;
-export const CORS = process.env.CORS as string;
+export const APP_URL = process.env.APP_URL as string;
 export const PORT = parseInt(process.env.PORT as string, 10);
 export const WS_PORT = parseInt(process.env.WS_PORT as string, 10);
 export const LOG_LEVEL = parseInt(process.env.LOG_LEVEL as string, 10);

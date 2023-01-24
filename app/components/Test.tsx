@@ -4,9 +4,10 @@ import Request from '@/utils/request';
 import WS from '@/utils/ws';
 import { useEffect, useMemo, useState } from 'react';
 
-const Home = () => {
+const Test = () => {
   const ws = useMemo(() => new WS({ protocol: 'home' }), []);
   const [id, setId] = useState<string>();
+  const [count, setCount] = useState<number>(0);
 
   const req = useMemo(() => new Request(), []);
 
@@ -14,9 +15,8 @@ const Home = () => {
     if (!id) {
       return;
     }
-    console.log(1);
     (async () => {
-      const res = await req.test(id);
+      await req.test(id);
     })();
   }, [req, id]);
 
@@ -49,13 +49,16 @@ const Home = () => {
         case MessageType.SET_CONNECTION_ID:
           setId(id);
           break;
+        case MessageType.TEST:
+          setCount(count + 1);
+          break;
         default:
           log('warn', 'Not implemented on ws message case', rawMessage);
       }
     };
-  }, [ws]);
+  }, [ws, count]);
 
-  return <>Home</>;
+  return <>{count}</>;
 };
 
-export default Home;
+export default Test;
