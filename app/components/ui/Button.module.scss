@@ -1,0 +1,46 @@
+@import '../../styles/constants';
+
+.wrapper {
+  position: relative;
+}
+
+.button {
+  cursor: pointer;
+  width: 100%;
+  height: 42px;
+  border: 0;
+  border-radius: $button-border-radius;
+  transition: all 0.3s ease-in;
+
+  &:hover {
+    background: none;
+    color: $color-red;
+    border: 2px solid $color-red;
+  }
+
+  &.disabled {
+    background-color: $color-gray-light;
+
+    &:hover {
+      background-color: $color-gray-light;
+      border: none;
+      color: $color-white;
+    }
+  }
+
+  &.edit {
+    background: none;
+    color: $color-red;
+    border: 2px solid $color-red;
+    margin: 1rem 0;
+
+    &:hover {
+      color: $color-white;
+      background-color: $color-red;
+    }
+  }
+
+  &.other {
+    transition: all 0.8s ease-in;
+  }
+}

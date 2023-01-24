@@ -16,7 +16,7 @@ enum Role {
 
 model User {
   id      String   @id @default(uuid())
-  name    String?  @db.VarChar(50)
+  name    String?  @db.VarChar(255)
   online  Boolean  @default(true)
   role    Role
   updated DateTime @default(now())

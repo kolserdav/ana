@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 
+// eslint-disable-next-line no-shadow
 export enum LogLevel {
   log = 0,
   info = 1,
@@ -7,6 +8,7 @@ export enum LogLevel {
   error = 3,
 }
 
+// eslint-disable-next-line no-shadow
 export enum MessageType {
   TEST = 'TEST',
   SET_CONNECTION_ID = 'SET_CONNECTION_ID',
@@ -31,4 +33,10 @@ export interface SendMessageArgs<T extends keyof typeof MessageType> {
 export interface Message<T extends keyof typeof MessageType> {
   msg: SendMessageArgs<T>;
   protocol: Protocol;
+}
+
+export function checkEmail(email: string): boolean {
+  return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
+    email
+  );
 }

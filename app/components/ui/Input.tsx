@@ -10,6 +10,7 @@ function Input({
   disabled,
   value,
   name,
+  onBlur,
   onChange,
   success,
 }: {
@@ -18,6 +19,7 @@ function Input({
   value: string;
   name: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
   className?: string;
   error?: boolean;
   success?: boolean;
@@ -32,6 +34,7 @@ function Input({
         id="last-name"
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         required
         type="text"
         className={clsx(
@@ -53,6 +56,7 @@ Input.defaultProps = {
   error: false,
   success: false,
   className: '',
+  onBlur: undefined,
 };
 
 export default Input;
