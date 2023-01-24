@@ -10,7 +10,7 @@ if (existsSync(destPath)) {
 } else {
   copyFile(srcPath, destPath, (err) => {
     if (err) {
-      console.error('Error create symlink', err);
+      console.error('Error copy test constants', err);
       return;
     }
     console.info('Test constants copied:', destPath);

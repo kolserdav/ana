@@ -1,5 +1,4 @@
 node_modules
 dist
-.env 
 tmp
 src/types/interfaces.ts

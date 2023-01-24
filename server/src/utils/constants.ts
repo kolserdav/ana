@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 export const AMQP_ADDRESS = process.env.AMQP_ADDRESS as string;
 export const APP_URL = process.env.APP_URL as string;
