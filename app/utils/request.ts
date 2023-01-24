@@ -31,13 +31,9 @@ class Request {
         log('error', 'Request error', e);
         resolve(1);
       };
-      req.open('GET', `${this.getOrigin()}${url}`);
+      req.open('GET', `${SERVER}${url}`);
       req.send();
     });
-  }
-
-  public getOrigin() {
-    return SERVER;
   }
 
   public test(id: string) {

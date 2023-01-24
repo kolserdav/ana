@@ -1,0 +1,24 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  employer
+  worker
+  moderator
+  admin
+}
+
+model User {
+  id      String   @id @default(uuid())
+  name    String?  @db.VarChar(50)
+  online  Boolean  @default(true)
+  role    Role
+  updated DateTime @default(now())
+  created DateTime @default(now())
+}

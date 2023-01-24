@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import styles from '@/styles/Home.module.scss';
+import Login from '@/components/Login';
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>Home</main>
+      <Login />
     </>
   );
 }

@@ -3,12 +3,22 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "prisma": {
+    "schema": "./server/orm/schema.prisma"
+  },
   "scripts": {
     "build:app": "cd app && npm run build",
     "build:server": "cd server && npm run build",
     "build": "npm run build:app && npm run build:server",
     "install:server": "cd server && npm i",
     "install:app": "cd app && npm i",
+    "migrate:dev": "npm run format && npm run generate && prisma migrate dev --preview-feature",
+    "migrate": "npm run generate && prisma migrate deploy --preview-feature",
+    "migrate:reset": "prisma migrate reset --preview-feature",
+    "migrate:status": "prisma migrate status --preview-feature",
+    "studio": "prisma studio",
+    "generate": "prisma generate",
+    "format": "prisma format",
     "postinstall": "npm run install:server && npm run install:app && npm run scripts",
     "dev:server": "cd server && npm run dev",
     "dev:app": "cd app && npm run dev",
@@ -34,12 +44,14 @@
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
+    "prisma": "^4.9.0",
     "puppeteer": "^19.6.0",
     "rimraf": "^4.1.1",
     "typescript": "^4.9.4"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
+    "@prisma/client": "^4.9.0",
     "date-fns": "^2.29.3",
     "uuid": "^9.0.0"
   }

@@ -1,12 +1,14 @@
 {
   "env": {
     "es2021": true,
-    "node": true
+    "node": true,
+    "browser": true
   },
   "root": true,
   "extends": [
     "plugin:react/recommended",
     "react-app",
+    "airbnb",
     "react-app/jest",
     "eslint:recommended",
     "eslint-config-prettier",
@@ -23,6 +25,21 @@
   "ignorePatterns": ["node_modules"],
   "rules": {
     "no-unused-vars": 1,
-    "prettier/prettier": 1
+    "prettier/prettier": 1,
+    "react/jsx-filename-extension": [
+      1,
+      { "extensions": [".tsx", ".jsx", ".css", ".scss", ".esm", ".hooks", ".lib", ".context"] }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "import/no-extraneous-dependencies": 0
   }
 }

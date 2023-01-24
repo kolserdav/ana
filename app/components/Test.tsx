@@ -4,32 +4,32 @@ import Request from '@/utils/request';
 import WS from '@/utils/ws';
 import { useEffect, useMemo, useState } from 'react';
 
-const Test = () => {
+function Test() {
   const ws = useMemo(() => new WS({ protocol: 'home' }), []);
-  const [id, setId] = useState<string>();
+  const [connId, setConnId] = useState<string>();
   const [count, setCount] = useState<number>(0);
 
   const req = useMemo(() => new Request(), []);
 
   useEffect(() => {
-    if (!id) {
+    if (!connId) {
       return;
     }
     (async () => {
-      await req.test(id);
+      await req.test(connId);
     })();
-  }, [req, id]);
+  }, [req, connId]);
 
   useEffect(() => {
-    if (!id) {
+    if (!connId) {
       return;
     }
     ws.sendMessage({
       type: MessageType.TEST,
-      id,
+      id: connId,
       data: { ok: 'yes' },
     });
-  }, [id, ws]);
+  }, [connId, ws]);
 
   /**
    * Connect to WS
@@ -47,7 +47,7 @@ const Test = () => {
       const { type, id } = rawMessage;
       switch (type) {
         case MessageType.SET_CONNECTION_ID:
-          setId(id);
+          setConnId(id);
           break;
         case MessageType.TEST:
           setCount(count + 1);
@@ -58,7 +58,7 @@ const Test = () => {
     };
   }, [ws, count]);
 
-  return <>{count}</>;
-};
+  return <div>{count}</div>;
+}
 
 export default Test;
