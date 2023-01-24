@@ -30,3 +30,5 @@ export const log = (
     );
   }
 };
+
+export const isTest = () => /http:\/\/192\.168\.0\.\d{1,3}/.test(window?.location.origin);

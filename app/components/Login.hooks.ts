@@ -25,7 +25,11 @@ export const useInputs = () => {
   };
 
   const onBlurEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailError(!checkEmail(email));
+    if (email) {
+      setEmailError(!checkEmail(email));
+    } else {
+      setEmailError(false);
+    }
   };
 
   return { onChangeEmail, onBlurEmail, email, emailDisabled, emailError, emailSuccess, load };

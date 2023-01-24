@@ -6,7 +6,7 @@ import { getLocalStorage, LocalStorageName } from '@/utils/localStorage';
 
 export default function useTheme() {
   const [themeName, setThemeName] = useState<ThemeType>(
-    getLocalStorage(LocalStorageName.THEME) || 'light'
+    getLocalStorage(LocalStorageName.THEME) || 'dark'
   );
   const [theme, setTheme] = useState<Theme>(themes[themeName]);
 

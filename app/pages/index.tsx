@@ -1,9 +1,15 @@
 import Head from 'next/head';
-import styles from '@/styles/Home.module.scss';
+import s from '@/styles/Home.module.scss';
 import Login from '@/components/Login';
 import useTheme from '@/hooks/useTheme';
+import { GetServerSidePropsContext, GetStaticPathsResult, GetStaticPropsContext } from 'next';
+import Request from '@/utils/request';
 
-export default function HomePage() {
+const request = new Request();
+
+export default function HomePage(props: any) {
+  console.log(props);
+
   const { theme } = useTheme();
 
   return (
@@ -14,8 +20,19 @@ export default function HomePage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>Home</main>
-      <Login theme={theme} />
+      <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
+        <Login theme={theme} />
+      </main>
     </>
   );
+}
+
+export async function getStaticProps({ locale }: GetStaticPropsContext) {
+  const localeLogin = await request.getLocale({ field: 'login', locale });
+
+  return {
+    props: {
+      locale: localeLogin,
+    },
+  };
 }

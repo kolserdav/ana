@@ -17,6 +17,7 @@ export enum MessageType {
 
 export type Protocol = 'request' | 'ws';
 export type WSProtocol = 'home';
+export const DEFAULT_LOCALE: LocaleValue = 'ru';
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
@@ -33,6 +34,28 @@ export interface SendMessageArgs<T extends keyof typeof MessageType> {
 export interface Message<T extends keyof typeof MessageType> {
   msg: SendMessageArgs<T>;
   protocol: Protocol;
+}
+
+export type LocaleValue = 'ru';
+
+export interface Locale {
+  server: {
+    error: string;
+    badRequest: string;
+  };
+  app: {
+    login: {
+      email: string;
+      name: string;
+      login: string;
+      register: string;
+    };
+  };
+}
+
+export enum Api {
+  testV1 = '/v1/test',
+  getLocaleV1 = '/v1/get-locale',
 }
 
 export function checkEmail(email: string): boolean {

@@ -7,11 +7,34 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum PageName {
+  index
+}
+
+enum PageField {
+  title
+  description
+}
+
+enum Lang {
+  ru
+}
+
 enum Role {
   employer
   worker
   moderator
   admin
+}
+
+model Page {
+  id      Int       @id @default(autoincrement())
+  name    PageName
+  field   PageField
+  value   String    @db.VarChar(1000)
+  lang    Lang
+  updated DateTime  @default(now())
+  created DateTime  @default(now())
 }
 
 model User {

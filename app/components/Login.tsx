@@ -11,9 +11,11 @@ function Login({ theme }: { theme: Theme }) {
     <div className={s.wrapper}>
       <div className={s.container}>
         <Input
+          theme={theme}
           onChange={onChangeEmail}
           onBlur={onBlurEmail}
           value={email}
+          id="email"
           error={emailError}
           success={emailSuccess}
           disabled={emailDisabled}

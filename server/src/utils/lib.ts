@@ -1,5 +1,7 @@
 import { format } from 'date-fns';
 import { IncomingHttpHeaders } from 'http';
+import ru from '../locales/ru/lang';
+import { Locale, DEFAULT_LOCALE } from '../types/interfaces';
 import { APP_URL, IS_DEV, LOG_LEVEL } from './constants';
 
 // eslint-disable-next-line no-unused-vars
@@ -41,4 +43,13 @@ export const checkCors = (headers: IncomingHttpHeaders) => {
     return false;
   }
   return true;
+};
+
+const locales: Record<string, Locale> = {
+  ru,
+};
+
+export const getLocale = (_value: string | undefined): Locale => {
+  const value = _value || DEFAULT_LOCALE;
+  return (!locales[value] ? locales[DEFAULT_LOCALE] : locales[value]) as Locale;
 };
