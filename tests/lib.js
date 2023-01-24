@@ -13,7 +13,7 @@ async function getPage({ url }) {
   });
   const [page] = await browser.pages();
   await page.goto(url);
-  return page;
+  return { page, browser };
 }
 
 module.exports = { getPage };

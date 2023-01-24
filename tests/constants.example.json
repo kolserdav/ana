@@ -1,1 +1,1 @@
-{ "APP_URL": "http://localhost:3000", "TEST_HEADLESS": true }
+{ "APP_URL": "http://localhost:3000", "TEST_HEADLESS": true, "TIMEOUT": 1000 }

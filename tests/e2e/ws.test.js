@@ -2,13 +2,29 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const assert = require('assert');
 const { test } = require('node:test');
-const { APP_URL } = require('../constants.json');
+const { wait } = require('../../server/dist/utils/lib');
+const { APP_URL, TIMEOUT } = require('../constants.json');
 const { getPage } = require('../lib');
 
-test('Test WS', async () => {
-  const page = await getPage({ url: `${APP_URL}/test` });
-  await page.evaluate(() => {
+const test1 = async () => {
+  let tests = '';
+  const { page, browser } = await getPage({ url: `${APP_URL}/test` });
+  await page.waitForSelector('main');
+  await wait(TIMEOUT);
+  tests = await page.evaluate(async () => {
     const main = document.querySelector('main');
+    let res = '';
+    if (main) {
+      const { innerText } = main;
+      res = innerText;
+    }
+    return res;
   });
-  assert.equal(1, 1);
-});
+  await page.close();
+  await browser.close();
+  await test('Check WS', () => {
+    return assert.equal('2', tests);
+  });
+};
+
+test1();
