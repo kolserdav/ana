@@ -1,12 +1,13 @@
 import cluster, { Worker } from 'cluster';
 
-import { MessageType, Protocol, SendMessageArgs } from '../types/interfaces';
+import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { log } from '../utils/lib';
 import Service from './service';
-import AMQP from '../rabbitmq/amqp';
+import AMQP from '../protocols/amqp';
 import { QUEUE_PREFIX } from '../utils/constants';
 import WS from './ws';
 import QueueHandler from '../components/queueHandler';
+import { ProcessMessage, Protocol, SendProcessMessageArgs } from '../types';
 
 class HandleRequests extends Service {
   private protocol: Protocol;
@@ -96,7 +97,7 @@ class HandleRequests extends Service {
     });
   }
 
-  public sendToQueue<T extends keyof typeof MessageType>(msg: SendMessageArgs<T>) {
+  public sendToQueue<T extends keyof typeof ProcessMessage>(msg: SendProcessMessageArgs<T>) {
     this.sendMessageToMaster<T>({ protocol: this.protocol, msg });
   }
 }

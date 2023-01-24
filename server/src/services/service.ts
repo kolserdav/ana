@@ -1,6 +1,6 @@
 import cluster, { Worker } from 'cluster';
 import EventEmitter from 'events';
-import { MessageType, Message } from '../types/interfaces';
+import { Message, ProcessMessage, SendProcessMessageArgs } from '../types';
 
 class Service extends EventEmitter {
   private readonly workerNotFound = 'Worker not found in Service';
@@ -16,7 +16,7 @@ class Service extends EventEmitter {
     this.worker = _worker;
   }
 
-  protected listenMasterMessages<T extends keyof typeof MessageType>(
+  protected listenMasterMessages<T extends keyof typeof ProcessMessage>(
     cb: (data: Message<T>) => void
   ) {
     if (!process) {
@@ -31,7 +31,7 @@ class Service extends EventEmitter {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  protected listenWorkerMessages<T extends keyof typeof MessageType>(
+  protected listenWorkerMessages<T extends keyof typeof ProcessMessage>(
     cb: (args: Message<T>) => void
   ) {
     if (!this.worker) {
@@ -49,7 +49,10 @@ class Service extends EventEmitter {
     return { worker, handler };
   }
 
-  protected sendMessageToWorker<T extends keyof typeof MessageType>({ protocol, msg }: Message<T>) {
+  protected sendMessageToWorker<T extends keyof typeof ProcessMessage>({
+    protocol,
+    msg,
+  }: Message<T>) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
     }
@@ -59,7 +62,10 @@ class Service extends EventEmitter {
     this.worker.send({ msg, protocol });
   }
 
-  protected sendMessageToMaster<T extends keyof typeof MessageType>({ protocol, msg }: Message<T>) {
+  protected sendMessageToMaster<T extends keyof typeof ProcessMessage>({
+    protocol,
+    msg,
+  }: Message<T>) {
     if (!process.send) {
       throw new Error(this.masterNotFound);
     }

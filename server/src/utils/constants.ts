@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import path from 'path';
-import { LocaleValue } from '../types/interfaces';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
+export const REDIS_PASS = process.env.REDIS_PASS as string;
 export const AMQP_ADDRESS = process.env.AMQP_ADDRESS as string;
 export const APP_URL = process.env.APP_URL as string;
 export const PORT = parseInt(process.env.PORT as string, 10);

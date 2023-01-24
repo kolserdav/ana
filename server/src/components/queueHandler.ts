@@ -1,7 +1,10 @@
-import AMQP from '../rabbitmq/amqp';
+import AMQP from '../protocols/amqp';
+import Redis from '../protocols/redis';
 import WS from '../services/ws';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { log } from '../utils/lib';
+
+const redis = new Redis();
 
 class QueueHandler {
   private ws: WS;
@@ -10,17 +13,17 @@ class QueueHandler {
     this.ws = ws;
   }
 
-  public test(msg: SendMessageArgs<MessageType.TEST>) {
+  public async test(msg: SendMessageArgs<MessageType.TEST>) {
     this.ws.sendMessage(msg);
   }
 
   public async queues({ amqp }: { amqp: AMQP }) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    amqp.consume((msg: SendMessageArgs<any>) => {
+    amqp.consume(async (msg: SendMessageArgs<any>) => {
       const { type } = msg;
       switch (type) {
         case MessageType.TEST:
-          this.test(msg);
+          await this.test(msg);
           break;
         default:
           log('warn', 'Default case of consume queue', msg);

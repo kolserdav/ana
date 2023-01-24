@@ -15,7 +15,6 @@ export enum MessageType {
   SET_ERROR = 'SET_ERROR',
 }
 
-export type Protocol = 'request' | 'ws';
 export type WSProtocol = 'home';
 export const DEFAULT_LOCALE: LocaleValue = 'ru';
 
@@ -29,11 +28,6 @@ export interface SendMessageArgs<T extends keyof typeof MessageType> {
   type: T;
   id: string;
   data: ArgsSubset<T>;
-}
-
-export interface Message<T extends keyof typeof MessageType> {
-  msg: SendMessageArgs<T>;
-  protocol: Protocol;
 }
 
 export type LocaleValue = 'ru';
