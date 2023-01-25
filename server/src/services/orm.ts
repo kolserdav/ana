@@ -50,7 +50,7 @@ export class ORM extends Service implements Database {
   private async run(
     { model, command, args }: ArgsProcessSubset<ProcessMessage.DB_COMMAND>,
     { headers }: DatabaseContext
-  ): Promise<Result<any>> {
+  ): Promise<any> {
     const lang = getLang(headers);
     const locale = getLocale(lang).server;
 
@@ -70,7 +70,7 @@ export class ORM extends Service implements Database {
         stdErrMessage,
         take,
         count,
-      };
+      } as Result<any>;
     }
 
     const oldValue = await redis.client.get(argsStr);
@@ -91,7 +91,7 @@ export class ORM extends Service implements Database {
           skip,
           take,
           count,
-        };
+        } as Result<any>;
       }
     }
 
@@ -111,7 +111,7 @@ export class ORM extends Service implements Database {
         stdErrMessage: err.message,
         take,
         count,
-      };
+      } as Result<any>;
     }
 
     redis.client.set(argsStr, JSON.stringify(result), { EX: REDIS_CACHE_TIMEOUT });
@@ -124,7 +124,7 @@ export class ORM extends Service implements Database {
       skip,
       take,
       count,
-    };
+    } as Result<any>;
   }
 
   public runFromWorker = async ({
@@ -185,8 +185,7 @@ export class ORM extends Service implements Database {
         command: 'findFirst',
       },
       context
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ) as Promise<any>;
+    );
   };
 
   public pageFindManyW: Database['pageFindManyW'] = async (args, context) => {

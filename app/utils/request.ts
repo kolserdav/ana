@@ -19,9 +19,11 @@ class Request {
     method,
   }: {
     url: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body?: any;
     locale?: string;
     method: 'GET' | 'POST' | 'UPDATE' | 'DELETE';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }): Promise<any> {
     return new Promise((resolve) => {
       log('log', 'Send request', { url });
@@ -40,7 +42,8 @@ class Request {
             message: 'Internet error',
             code: 503,
             data: null,
-          });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as Result<any>);
         });
     });
   }

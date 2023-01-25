@@ -1,5 +1,5 @@
 import storeAlert, { changeAlert } from '@/store/alert';
-import { DEFAULT_LOCALE, LogLevel } from '@/types/interfaces';
+import { LogLevel } from '@/types/interfaces';
 import { format } from 'date-fns';
 import { IS_DEV, LOG_LEVEL } from '@/utils/constants';
 
@@ -9,6 +9,7 @@ export const isDev = () => process.env.NODE_ENV === 'development';
 export const log = (
   type: keyof typeof LogLevel,
   text: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any,
   forUser = false,
   infinity = false

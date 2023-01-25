@@ -43,6 +43,7 @@ class WS {
       resolve(0);
     });
 
+  // eslint-disable-next-line class-methods-use-this
   public parseMessage(message: string) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let data: SendMessageArgs<any>;
