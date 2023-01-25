@@ -58,7 +58,7 @@ class Request {
   }: {
     field: keyof Locale['app'];
     locale: string | undefined;
-  }): Promise<1 | Locale['app'][T]> {
+  }): Promise<Result<Locale['app'][T]>> {
     return this.send({ url: `${Api.getLocaleV1}?field=${field}`, locale, method: 'GET' });
   }
 

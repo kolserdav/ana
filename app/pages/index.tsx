@@ -4,13 +4,20 @@ import Login from '@/components/Login';
 import useTheme from '@/hooks/useTheme';
 import { GetStaticPropsContext } from 'next';
 import Request from '@/utils/request';
-import { LocaleValue } from '@/types/interfaces';
+import { LocaleValue, Locale } from '@/types/interfaces';
+import { PageFull } from '@/types';
+import { prepagePage } from '@/utils/lib';
 
 const request = new Request();
 
-export default function HomePage(props: any) {
+interface LoginProps {
+  locale: Locale['app']['login'];
+  page: PageFull;
+}
+
+export default function HomePage({ locale, page }: LoginProps) {
   if (typeof window !== 'undefined') {
-    console.log(props);
+    console.log(page);
   }
 
   const { theme } = useTheme();
@@ -24,13 +31,15 @@ export default function HomePage(props: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Login theme={theme} />
+        <Login theme={theme} locale={locale} />
       </main>
     </>
   );
 }
 
-export async function getStaticProps({ locale }: GetStaticPropsContext) {
+export async function getStaticProps({
+  locale,
+}: GetStaticPropsContext): Promise<{ props: LoginProps }> {
   const localeLogin = await request.getLocale({ field: 'login', locale });
   const page = await request.pageFindMany({
     where: {
@@ -44,11 +53,10 @@ export async function getStaticProps({ locale }: GetStaticPropsContext) {
       ],
     },
   });
-
   return {
     props: {
-      locale: localeLogin,
-      page: page.data,
+      locale: localeLogin.data,
+      page: prepagePage(page.data),
     },
   };
 }
