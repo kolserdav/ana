@@ -9,7 +9,8 @@ const lang: Locale = {
   },
   app: {
     login: {
-      login: 'Войти',
+      login: 'Логин',
+      loginButton: 'Войти',
       register: 'Зарегистрироваться',
       email: 'Почта',
       name: 'Имя',

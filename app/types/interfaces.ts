@@ -34,6 +34,7 @@ export interface Locale {
       name: string;
       login: string;
       register: string;
+      loginButton: string;
     };
   };
 }

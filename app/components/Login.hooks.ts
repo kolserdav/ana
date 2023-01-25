@@ -1,9 +1,7 @@
 import { checkEmail } from '@/types/interfaces';
 import { EMAIL_MAX_LENGTH } from '@/utils/constants';
-import React, { useMemo, useState } from 'react';
-import { v4 } from 'uuid';
+import React, { useState } from 'react';
 
-// eslint-disable-next-line import/prefer-default-export
 export const useEmailInput = () => {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [emailDisabled, setEmailDisabled] = useState<boolean>(false);
@@ -39,5 +37,43 @@ export const useEmailInput = () => {
     emailDisabled,
     emailError,
     emailSuccess,
+  };
+};
+
+export const useLoginInput = () => {
+  const [loginError, setLoginError] = useState<boolean>(false);
+  const [loginDisabled, setLoginDisabled] = useState<boolean>(false);
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
+  const [login, setLogin] = useState<string>('');
+
+  const onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    if (value.length < EMAIL_MAX_LENGTH) {
+      const check = checkEmail(value);
+      setLoginSuccess(check);
+      if (loginError) {
+        setLoginError(!check);
+      }
+      setLogin(value);
+    }
+  };
+
+  const onBlurLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (login) {
+      setLoginError(!checkEmail(login));
+    } else {
+      setLoginError(false);
+    }
+  };
+
+  return {
+    onChangeLogin,
+    onBlurLogin,
+    login,
+    loginDisabled,
+    loginError,
+    loginSuccess,
   };
 };
