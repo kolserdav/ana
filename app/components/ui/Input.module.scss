@@ -2,88 +2,83 @@
 
 .wrapper {
   position: relative;
-}
-
-.input__label {
-  position: absolute;
-  cursor: text;
-  display: flex;
-  align-items: flex-start;
-  left: $input-padding;
-  padding: calc($input-font-size / 2.2);
-  top: $label-top;
-  transition: top $label-transition ease-in;
-  z-index: 0;
-  font-size: $input-font-size;
-
-  &.gray {
-    background-color: $color-gray;
-  }
-}
-
-.inner__box {
-  position: relative;
   width: 100%;
   display: flex;
-}
 
-.input {
-  &:focus {
-    outline: none;
-  }
-
-  &:focus + .input__label {
-    top: calc(($label-shift + $label-top) * -1);
-    padding-top: 0;
-    transition: all $label-transition ease-out;
+  label {
+    position: absolute;
+    cursor: text;
+    display: flex;
+    align-items: flex-start;
+    left: $input-padding;
+    padding: calc($input-font-size / 2.2);
+    top: $label-top;
+    transition: top $label-transition ease-in;
+    z-index: 0;
+    font-size: $input-font-size;
 
     &.gray {
-      background: linear-gradient(to top, $color-gray, white 60%);
+      background-color: $color-gray;
     }
   }
 
-  &:not(:placeholder-shown) + .input__label {
-    top: calc(($label-top + $label-shift) * -1);
-    padding-top: 0;
-
-    &.gray {
-      background: linear-gradient(to top, $color-gray, white 60%);
+  input {
+    &:focus {
+      outline: none;
     }
 
-    transition: all $label-transition ease-out;
-  }
+    &:focus + label {
+      top: calc(($label-shift + $label-top) * -1);
+      padding-top: 0;
+      transition: all $label-transition ease-out;
 
-  &.full__width {
-    width: 100%;
-  }
+      &.gray {
+        background: linear-gradient(to top, $color-gray, white 60%);
+      }
+    }
 
-  &.semi__width {
-    width: 50%;
-    @media (max-width: $mobile-width) {
+    &:not(:placeholder-shown) + label {
+      top: calc(($label-top + $label-shift) * -1);
+      padding-top: 0;
+
+      &.gray {
+        background: linear-gradient(to top, $color-gray, white 60%);
+      }
+
+      transition: all $label-transition ease-out;
+    }
+
+    &.full__width {
       width: 100%;
     }
-  }
 
-  position: relative;
-  border-width: 2px;
-  border-style: groove;
-  border-radius: 5px;
-  font-size: $input-font-size;
-  font-weight: 600;
-  height: $input-height;
-  box-shadow: none;
-  padding: 0 $input-padding;
-  margin-bottom: $input-margin-bottom;
-  margin-left: 0;
-  @media (max-width: $mobile-width) {
-    // margin-left: 0;
-  }
+    &.semi__width {
+      width: 50%;
+      @media (max-width: $mobile-width) {
+        width: 100%;
+      }
+    }
 
-  &.error {
-    // border-style: groove;
-  }
+    position: relative;
+    border-width: 2px;
+    border-style: groove;
+    border-radius: 5px;
+    font-size: $input-font-size;
+    height: $input-height;
+    box-shadow: none;
+    padding: 0 $input-padding;
+    margin-bottom: $input-margin-bottom;
+    margin-left: 0;
+    @media (max-width: $mobile-width) {
+      // margin-left: 0;
+    }
 
-  &.success {
-    // border-width: 2px;
+    &.error {
+      // border-style: groove;
+    }
+
+    &.success {
+      // border-width: 2px;
+    }
   }
 }

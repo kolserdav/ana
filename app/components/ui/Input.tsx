@@ -41,7 +41,7 @@ function Input({
   };
 
   return (
-    <div className={s.inner__box}>
+    <div className={s.wrapper}>
       <input
         disabled={load || disabled}
         placeholder=" "
@@ -64,13 +64,12 @@ function Input({
         className={clsx(
           ubuntu.className,
           className,
-          s.input,
           error ? s.error : success ? s.success : '',
           disabled ? s.disabled : ''
         )}
       />
       <label
-        className={clsx(s.input__label, disabled ? s.disabled : '')}
+        className={disabled ? s.disabled : ''}
         style={{ color: theme.text, background: theme.paper }}
         htmlFor={id}
       >
