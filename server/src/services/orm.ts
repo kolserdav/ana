@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma as P, PrismaPromise, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import cluster, { Worker } from 'cluster';
 import { v4 } from 'uuid';
 import Service from './service';
@@ -9,10 +9,13 @@ import {
   ProcessMessage,
   SendProcessMessageArgs,
 } from '../types';
-import { getLang, getLocale, log } from '../utils/lib';
+import { checkIsFind, checkIsMany, getLang, getLocale, log } from '../utils/lib';
+import { REDIS_CACHE_TIMEOUT, REDIS_RESERVED } from '../utils/constants';
+import Redis from '../protocols/redis';
 import { Result } from '../types/interfaces';
 
 const prisma = new PrismaClient();
+const redis = new Redis();
 
 export class ORM extends Service implements Database {
   private readonly protocol = 'orm';
@@ -47,12 +50,51 @@ export class ORM extends Service implements Database {
   private async run(
     { model, command, args }: ArgsProcessSubset<ProcessMessage.DB_COMMAND>,
     { headers }: DatabaseContext
-  ): Promise<any> {
-    const { skip, take, where } = args;
-    let result;
-    let count: number | undefined;
+  ): Promise<Result<any>> {
     const lang = getLang(headers);
     const locale = getLocale(lang).server;
+
+    const { skip, take, where } = args;
+    let count: number | undefined;
+
+    const argsStr = JSON.stringify(args);
+    if (REDIS_RESERVED.indexOf(argsStr) !== -1) {
+      const stdErrMessage = 'Attempt to reserved redis in to database';
+      log('warn', stdErrMessage, { argsStr });
+      return {
+        status: 'error',
+        message: locale.badRequest,
+        data: checkIsMany(command),
+        skip,
+        code: 400,
+        stdErrMessage,
+        take,
+        count,
+      };
+    }
+
+    const oldValue = await redis.client.get(argsStr);
+    let result;
+    if (oldValue) {
+      try {
+        result = JSON.parse(oldValue);
+      } catch (err) {
+        log('error', 'Error parse redis value on Database', err);
+      }
+      if (result !== undefined) {
+        const isNotFound = result === null || result?.length === 0;
+        return {
+          status: isNotFound ? 'warning' : 'success',
+          message: isNotFound ? locale.notFound : locale.success,
+          data: result,
+          code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
+          skip,
+          take,
+          count,
+        };
+      }
+    }
+
     try {
       if (command === 'findMany') {
         count = await (prisma as any)[model].count({ where });
@@ -63,17 +105,22 @@ export class ORM extends Service implements Database {
       return {
         status: 'error',
         message: locale.error,
-        data: /[a-zA-Z]+Many$/.test(command) ? [] : null,
+        data: checkIsMany(command),
         skip,
+        code: 500,
         stdErrMessage: err.message,
         take,
         count,
       };
     }
+
+    redis.client.set(argsStr, JSON.stringify(result), { EX: REDIS_CACHE_TIMEOUT });
+    const isNotFound = result === null || result?.length === 0;
     return {
-      status: result === null || result?.length === 0 ? 'warning' : 'success',
-      message: result === null || result?.length === 0 ? locale.notFound : locale.success,
+      status: isNotFound ? 'warning' : 'success',
+      message: isNotFound ? locale.notFound : locale.success,
       data: result,
+      code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
       skip,
       take,
       count,
@@ -86,6 +133,7 @@ export class ORM extends Service implements Database {
     model,
     command,
   }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     args: any;
     context: DatabaseContext;
     model: keyof PrismaClient;
@@ -120,7 +168,7 @@ export class ORM extends Service implements Database {
     });
   };
 
-  public userFindFirst: Database['userFindFirst'] = async (args, context) => {
+  public userFindFirstW: Database['userFindFirst'] = async (args, context) => {
     return this.runFromWorker({
       args,
       context,
@@ -129,7 +177,7 @@ export class ORM extends Service implements Database {
     });
   };
 
-  public userFindFirstM: Database['userFindFirst'] = async (args, context) => {
+  public userFindFirst: Database['userFindFirst'] = async (args, context) => {
     return this.run(
       {
         args,
@@ -137,6 +185,16 @@ export class ORM extends Service implements Database {
         command: 'findFirst',
       },
       context
-    );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ) as Promise<any>;
+  };
+
+  public pageFindManyW: Database['pageFindManyW'] = async (args, context) => {
+    return this.runFromWorker({
+      args,
+      context,
+      model: 'page',
+      command: 'findMany',
+    });
   };
 }

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { format } from 'date-fns';
 import { IncomingHttpHeaders } from 'http';
 import ru from '../locales/ru/lang';
@@ -64,3 +65,8 @@ export const getPseudoHeaders = ({ lang }: { lang: LocaleValue }) => {
   headers[LANGUAGE_HEADER] = lang;
   return headers;
 };
+
+export const checkIsMany = (command: Prisma.PrismaAction) =>
+  /[a-zA-Z]+Many$/.test(command) ? [] : null;
+
+export const checkIsFind = (command: Prisma.PrismaAction) => /^find/.test(command);

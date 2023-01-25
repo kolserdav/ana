@@ -2,13 +2,16 @@ import Head from 'next/head';
 import s from '@/styles/Home.module.scss';
 import Login from '@/components/Login';
 import useTheme from '@/hooks/useTheme';
-import { GetServerSidePropsContext, GetStaticPathsResult, GetStaticPropsContext } from 'next';
+import { GetStaticPropsContext } from 'next';
 import Request from '@/utils/request';
+import { LocaleValue } from '@/types/interfaces';
 
 const request = new Request();
 
 export default function HomePage(props: any) {
-  console.log(props);
+  if (typeof window !== 'undefined') {
+    console.log(props);
+  }
 
   const { theme } = useTheme();
 
@@ -29,10 +32,23 @@ export default function HomePage(props: any) {
 
 export async function getStaticProps({ locale }: GetStaticPropsContext) {
   const localeLogin = await request.getLocale({ field: 'login', locale });
+  const page = await request.pageFindMany({
+    where: {
+      AND: [
+        {
+          name: 'index',
+        },
+        {
+          lang: locale as LocaleValue,
+        },
+      ],
+    },
+  });
 
   return {
     props: {
       locale: localeLogin,
+      page: page.data,
     },
   };
 }

@@ -42,6 +42,7 @@ export interface Locale {
 export enum Api {
   testV1 = '/v1/test',
   getLocaleV1 = '/v1/get-locale',
+  postPageFindManyV1 = '/v1/get-page-fields',
 }
 
 export type Status = 'error' | 'warning' | 'success';
@@ -50,6 +51,7 @@ export interface Result<T> {
   status: Status;
   message: string;
   data: T;
+  code: number;
   stdErrMessage?: string;
   skip?: number | undefined;
   take?: number | undefined;

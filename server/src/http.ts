@@ -5,6 +5,7 @@ import { log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
 import { Api } from './types/interfaces';
 import getLocaleHandler from './api/v1/get-locale';
+import postPageFindManyHandler from './api/v1/page/find-many';
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -24,6 +25,7 @@ process.on('unhandledRejection', (err: Error) => {
 
   fastify.get(Api.testV1, getTestHandler);
   fastify.get(Api.getLocaleV1, getLocaleHandler);
+  fastify.post(Api.postPageFindManyV1, postPageFindManyHandler);
 
   fastify.listen({ port: PORT }, (err, address) => {
     if (err) throw err;
