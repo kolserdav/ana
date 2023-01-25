@@ -2,6 +2,9 @@ import WebSocket, { WebSocketServer } from 'ws';
 import { LocaleValue, MessageType, SendMessageArgs } from '../types/interfaces';
 import { IS_DEV, WS_PORT } from '../utils/constants';
 import { log } from '../utils/lib';
+import Redis from '../protocols/redis';
+
+const redis = new Redis();
 
 class WS {
   public connection: WebSocket.Server;
@@ -47,10 +50,12 @@ class WS {
 
   public deleteSocket(id: string) {
     delete this.ws[id];
+    redis.deleteWS(id);
   }
 
   public setSocket({ id, ws, lang }: { id: string; ws: WebSocket; lang: LocaleValue }) {
     this.ws[id] = ws;
+    redis.setWS(id);
     this.sendMessage({
       id,
       lang,

@@ -77,9 +77,10 @@ class HandleRequests extends Service {
 
   public async listenWorker() {
     const amqpS = new AMQP({ caller: this.caller, queue: this.getQueueName() });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.listenWorkerMessages<any>(async ({ protocol, msg }) => {
       if (protocol === 'request') {
-        amqpS.sendToQueue(msg);
+        amqpS.sendToQueue(msg as any);
       }
     });
   }
@@ -97,6 +98,7 @@ class HandleRequests extends Service {
     msg: SendMessageArgs<T>,
     context: DatabaseContext
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.sendMessageToMaster<any>({ protocol: this.protocol, msg: msg as any, context });
   }
 }

@@ -1,12 +1,10 @@
 import AMQP from '../protocols/amqp';
-import Redis from '../protocols/redis';
 import WS from '../services/ws';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { log } from '../utils/lib';
 import { ORM } from '../services/orm';
 
 const orm = new ORM();
-const redis = new Redis();
 
 class QueueHandler {
   private ws: WS;

@@ -3,8 +3,11 @@ import os from 'os';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { AMQP_ADDRESS, QUEUE_MAX_SIZE, RABBITMQ_RECONNECT_TIMEOUT } from '../utils/constants';
 import { log, wait } from '../utils/lib';
+import Redis from '../protocols/redis';
 
 const cpus = os.cpus().length;
+
+const redis = new Redis();
 
 class AMQP {
   private connection: amqp.Connection | undefined | void;
@@ -94,9 +97,13 @@ class AMQP {
     return result;
   }
 
-  public async sendToQueue(msg: any) {
+  public async sendToQueue(msg: SendMessageArgs<any>) {
     if (!this.channel) {
       log('error', this.chanErr('sendToQueue'), { caller: this.caller });
+      return null;
+    }
+    if (!(await redis.checkWS(msg.id))) {
+      log('warn', 'sendToQueue without connected WS', { caller: this.caller });
       return null;
     }
     let msgString = '';
