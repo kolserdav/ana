@@ -1,6 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { PrismaClient, Prisma } from '@prisma/client';
 import type { RequestGenericInterface, FastifyRequest, FastifyReply } from 'fastify';
+import { IncomingHttpHeaders } from 'http';
+
+export type DatabaseContext = {
+  headers: IncomingHttpHeaders;
+};
 
 export type RequestHandler<T extends RequestGenericInterface, R> = (
   req: FastifyRequest<T>,
@@ -28,6 +33,7 @@ export type ArgsProcessSubset<T extends keyof typeof ProcessMessage> =
 export interface Message<T extends keyof typeof ProcessMessage> {
   msg: SendProcessMessageArgs<T>;
   protocol: Protocol;
+  context: DatabaseContext;
 }
 export interface SendProcessMessageArgs<T extends keyof typeof ProcessMessage> {
   type: keyof typeof ProcessMessage;

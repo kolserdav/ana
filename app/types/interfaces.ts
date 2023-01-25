@@ -15,27 +15,18 @@ export enum MessageType {
   SET_ERROR = 'SET_ERROR',
 }
 
-export type WSProtocol = 'home';
-export const DEFAULT_LOCALE: LocaleValue = 'ru';
-
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
   : T extends MessageType.SET_CONNECTION_ID
   ? null
   : never;
 
-export interface SendMessageArgs<T extends keyof typeof MessageType> {
-  type: T;
-  id: string;
-  data: ArgsSubset<T>;
-}
-
-export type LocaleValue = 'ru';
-
 export interface Locale {
   server: {
     error: string;
     badRequest: string;
+    notFound: string;
+    success: string;
   };
   app: {
     login: {
@@ -47,9 +38,32 @@ export interface Locale {
   };
 }
 
+// eslint-disable-next-line no-shadow
 export enum Api {
   testV1 = '/v1/test',
   getLocaleV1 = '/v1/get-locale',
+}
+
+export type Status = 'error' | 'warning' | 'success';
+
+export interface Result<T> {
+  status: Status;
+  message: string;
+  data: T;
+  stdErrMessage?: string;
+  skip?: number | undefined;
+  take?: number | undefined;
+  count?: number | undefined;
+}
+
+export type LocaleValue = 'ru';
+export type WSProtocol = 'home';
+export const DEFAULT_LOCALE: LocaleValue = 'ru';
+export interface SendMessageArgs<T extends keyof typeof MessageType> {
+  type: T;
+  id: string;
+  lang: LocaleValue;
+  data: ArgsSubset<T>;
 }
 
 export function checkEmail(email: string): boolean {

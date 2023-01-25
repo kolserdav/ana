@@ -1,7 +1,7 @@
 import storeAlert, { changeAlert } from '@/store/alert';
-import { LogLevel } from '@/types/interfaces';
+import { DEFAULT_LOCALE, LogLevel } from '@/types/interfaces';
 import { format } from 'date-fns';
-import { IS_DEV, LOG_LEVEL } from './constants';
+import { IS_DEV, LOG_LEVEL } from '@/utils/constants';
 
 export const isDev = () => process.env.NODE_ENV === 'development';
 

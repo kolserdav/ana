@@ -1,4 +1,4 @@
-import { LocaleValue } from '@/types/interfaces';
+import { DEFAULT_LOCALE, LocaleValue } from '@/types/interfaces';
 import { Cookies } from 'react-cookie';
 import { isTest } from './lib';
 
@@ -48,3 +48,5 @@ export const cleanCookie = (name: CookieName) => {
   expires.setMonth(expires.getMonth() - 1);
   setCookie(name, '' as never, { expires });
 };
+
+export const getLangCookie = () => getCookie(CookieName.lang) || DEFAULT_LOCALE;

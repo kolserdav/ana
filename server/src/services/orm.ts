@@ -1,17 +1,23 @@
-import { PrismaClient, Prisma as P, PrismaPromise } from '@prisma/client';
+import { PrismaClient, Prisma as P, PrismaPromise, Prisma } from '@prisma/client';
 import cluster, { Worker } from 'cluster';
 import { v4 } from 'uuid';
 import Service from './service';
 import Database from '../database';
-import { ArgsProcessSubset, ProcessMessage, SendProcessMessageArgs } from '../types';
-import { log } from '../utils/lib';
+import {
+  ArgsProcessSubset,
+  DatabaseContext,
+  ProcessMessage,
+  SendProcessMessageArgs,
+} from '../types';
+import { getLang, getLocale, log } from '../utils/lib';
+import { Result } from '../types/interfaces';
 
 const prisma = new PrismaClient();
 
 export class ORM extends Service implements Database {
   private readonly protocol = 'orm';
 
-  private readonly dbError = 'Database error';
+  private readonly errorStatus = 'error';
 
   constructor(worker?: Worker) {
     let _worker = worker;
@@ -25,38 +31,38 @@ export class ORM extends Service implements Database {
       }
     }
     super(_worker);
+    if (worker && cluster.isPrimary) {
+      this.createServer();
+    }
   }
 
   public createServer() {
-    this.listenMasterMessages<ProcessMessage.DB_COMMAND>(async ({ protocol, msg }) => {
+    this.listenWorkerMessages<ProcessMessage.DB_COMMAND>(async ({ protocol, msg, context }) => {
       if (protocol === 'orm' && msg.type === ProcessMessage.DB_COMMAND) {
         const { data } = msg;
-        const result = await this.run({ ...data });
+        const result = await this.run({ ...data }, context);
         const _msg: SendProcessMessageArgs<ProcessMessage.DB_RESULT> = { ...msg };
         _msg.data = result;
         _msg.type = ProcessMessage.DB_RESULT;
-        this.sendMessageToMaster<ProcessMessage.DB_RESULT>({
+        this.sendMessageToWorker<ProcessMessage.DB_RESULT>({
           protocol,
           msg: _msg,
+          context,
         });
-      } else {
-        log('warn', 'Unexpected protocol or type', { protocol, type: msg.type });
       }
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private async run({
-    model,
-    command,
-    args,
-  }: ArgsProcessSubset<ProcessMessage.DB_COMMAND>): Promise<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    P.CheckSelect<any, any, PrismaPromise<any>>
-  > {
+  private async run(
+    { model, command, args }: ArgsProcessSubset<ProcessMessage.DB_COMMAND>,
+    { headers }: DatabaseContext
+  ): Promise<any> {
     const { skip, take, where } = args;
     let result;
     let count: number | undefined;
+    const lang = getLang(headers);
+    const locale = getLocale(lang).server;
     try {
       if (command === 'findMany') {
         count = await (prisma as any)[model].count({ where });
@@ -66,7 +72,7 @@ export class ORM extends Service implements Database {
       log('error', 'Database error', err);
       return {
         status: 'error',
-        message: '',
+        message: locale.error,
         data: /[a-zA-Z]+Many$/.test(command) ? [] : null,
         skip,
         stdErrMessage: err.message,
@@ -76,7 +82,7 @@ export class ORM extends Service implements Database {
     }
     return {
       status: result === null || result?.length === 0 ? 'warning' : 'success',
-      message: '',
+      message: result === null || result?.length === 0 ? locale.notFound : locale.success,
       data: result,
       skip,
       take,
@@ -84,32 +90,63 @@ export class ORM extends Service implements Database {
     };
   }
 
-  public userFindFirst: Database['userFindFirst'] = async (args, context) => {
+  public runFromWorker = async ({
+    args,
+    context,
+    model,
+    command,
+  }: {
+    args: any;
+    context: DatabaseContext;
+    model: keyof PrismaClient;
+    command: Prisma.PrismaAction;
+  }) => {
     const id = v4();
-    return new Promise((resolve) => {
-      const { worker, handler } = this.listenWorkerMessages<ProcessMessage.DB_RESULT>(
+    return new Promise<any>((resolve) => {
+      const { master, handler } = this.listenMasterMessages<ProcessMessage.DB_RESULT>(
         ({ msg: { id: _id, data } }) => {
           if (id === _id) {
-            if (data === undefined) {
-              log('error', this.dbError, { args, context });
+            if (data.status === this.errorStatus) {
+              log('warn', 'Database request failed', { args, context });
             }
-            worker.removeListener('message', handler);
+            master.removeListener('message', handler);
             resolve(data);
           }
         }
       );
-      this.sendMessageToWorker<ProcessMessage.DB_COMMAND>({
+      this.sendMessageToMaster<ProcessMessage.DB_COMMAND>({
         protocol: this.protocol,
         msg: {
           type: ProcessMessage.DB_COMMAND,
           id,
           data: {
-            model: 'user',
-            command: 'findFirst',
+            model,
+            command,
             args,
           },
         },
+        context,
       });
     });
+  };
+
+  public userFindFirst: Database['userFindFirst'] = async (args, context) => {
+    return this.runFromWorker({
+      args,
+      context,
+      model: 'user',
+      command: 'findFirst',
+    });
+  };
+
+  public userFindFirstM: Database['userFindFirst'] = async (args, context) => {
+    return this.run(
+      {
+        args,
+        model: 'user',
+        command: 'findFirst',
+      },
+      context
+    );
   };
 }

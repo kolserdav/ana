@@ -25,9 +25,11 @@ class Service extends EventEmitter {
     if (cluster.isPrimary) {
       throw new Error(`${this.unexpectedUseProcess}: worker`);
     }
-    process.on('message', (data) => {
+    const handler = (data: unknown) => {
       cb(data as any);
-    });
+    };
+    const master = process.on('message', handler);
+    return { master, handler };
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -49,30 +51,24 @@ class Service extends EventEmitter {
     return { worker, handler };
   }
 
-  protected sendMessageToWorker<T extends keyof typeof ProcessMessage>({
-    protocol,
-    msg,
-  }: Message<T>) {
+  protected sendMessageToWorker<T extends keyof typeof ProcessMessage>(data: Message<T>) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
     }
     if (!cluster.isPrimary) {
       throw new Error(`${this.unexpectedUseProcess}: master`);
     }
-    this.worker.send({ msg, protocol });
+    this.worker.send(data);
   }
 
-  protected sendMessageToMaster<T extends keyof typeof ProcessMessage>({
-    protocol,
-    msg,
-  }: Message<T>) {
+  protected sendMessageToMaster<T extends keyof typeof ProcessMessage>(data: Message<T>) {
     if (!process.send) {
       throw new Error(this.masterNotFound);
     }
     if (cluster.isPrimary) {
       throw new Error(`${this.unexpectedUseProcess}: worker`);
     }
-    process.send({ msg, protocol });
+    process.send(data);
   }
 }
 

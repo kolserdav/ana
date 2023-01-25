@@ -3,6 +3,7 @@ import HandleRequests from './services/handleRequests';
 import { log } from './utils/lib';
 import WS from './services/ws';
 import HandleWS from './services/handleWS';
+import { ORM } from './services/orm';
 
 if (cluster.isPrimary) {
   process.on('uncaughtException', (err: Error) => {
@@ -18,6 +19,7 @@ if (cluster.isPrimary) {
   new HandleRequests({ protocol: 'request', caller, ws, worker });
   new HandleRequests({ protocol: 'ws', caller, ws, worker });
   new HandleWS({ ws });
+  new ORM(worker);
 } else {
   import('./http');
 }

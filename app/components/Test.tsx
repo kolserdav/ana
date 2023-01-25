@@ -1,4 +1,5 @@
 import { MessageType } from '@/types/interfaces';
+import { getLangCookie } from '@/utils/cookies';
 import { log } from '@/utils/lib';
 import Request from '@/utils/request';
 import WS from '@/utils/ws';
@@ -27,6 +28,7 @@ function Test() {
     ws.sendMessage({
       type: MessageType.TEST,
       id: connId,
+      lang: getLangCookie(),
       data: { ok: 'yes' },
     });
   }, [connId, ws]);

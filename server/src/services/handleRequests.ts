@@ -7,7 +7,7 @@ import AMQP from '../protocols/amqp';
 import { QUEUE_PREFIX } from '../utils/constants';
 import WS from './ws';
 import QueueHandler from '../components/queueHandler';
-import { ProcessMessage, Protocol, SendProcessMessageArgs } from '../types';
+import { DatabaseContext, Protocol } from '../types';
 
 class HandleRequests extends Service {
   private protocol: Protocol;
@@ -80,8 +80,6 @@ class HandleRequests extends Service {
     this.listenWorkerMessages<any>(async ({ protocol, msg }) => {
       if (protocol === 'request') {
         amqpS.sendToQueue(msg);
-      } else {
-        log('warn', 'Unexpected protocol or type on "listenWorker"', { protocol, type: msg.type });
       }
     });
   }
@@ -91,14 +89,15 @@ class HandleRequests extends Service {
     this.addListener('message', ({ protocol, msg }) => {
       if (protocol === 'ws') {
         amqpS.sendToQueue(msg);
-      } else {
-        log('warn', 'Unexpected protocol or type on "listenMaster"', { protocol, type: msg.type });
       }
     });
   }
 
-  public sendToQueue<T extends keyof typeof ProcessMessage>(msg: SendProcessMessageArgs<T>) {
-    this.sendMessageToMaster<T>({ protocol: this.protocol, msg });
+  public sendToQueue<T extends keyof typeof MessageType>(
+    msg: SendMessageArgs<T>,
+    context: DatabaseContext
+  ) {
+    this.sendMessageToMaster<any>({ protocol: this.protocol, msg: msg as any, context });
   }
 }
 
