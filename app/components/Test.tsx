@@ -6,7 +6,7 @@ import WS from '@/utils/ws';
 import { useEffect, useMemo, useState } from 'react';
 
 function Test() {
-  const ws = useMemo(() => new WS({ protocol: 'home' }), []);
+  const ws = useMemo(() => new WS({ protocol: 'test' }), []);
   const [connId, setConnId] = useState<string>();
   const [count, setCount] = useState<number>(0);
 

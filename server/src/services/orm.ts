@@ -57,9 +57,10 @@ export class ORM extends Service implements Database {
     const { skip, take, where } = args;
     let count: number | undefined;
 
+    // Check args
     const argsStr = JSON.stringify(args);
     if (REDIS_RESERVED.indexOf(argsStr) !== -1) {
-      const stdErrMessage = 'Attempt to reserved redis in to database';
+      const stdErrMessage = 'Trying to write to a Redis reserved field in a database';
       log('warn', stdErrMessage, { argsStr });
       return {
         status: 'error',
@@ -73,13 +74,14 @@ export class ORM extends Service implements Database {
       } as Result<any>;
     }
 
+    // Get from cache
     const oldValue = await redis.client.get(argsStr);
     let result;
     if (oldValue) {
       try {
         result = JSON.parse(oldValue);
       } catch (err) {
-        log('error', 'Error parse redis value on Database', err);
+        log('error', 'Error parsing Redis value in Database', err);
       }
       if (result !== undefined) {
         const isNotFound = result === null || result?.length === 0;
@@ -95,6 +97,7 @@ export class ORM extends Service implements Database {
       }
     }
 
+    // Run command
     try {
       if (command === 'findMany') {
         count = await (prisma as any)[model].count({ where });

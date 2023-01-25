@@ -59,7 +59,7 @@ export interface Result<T> {
 }
 
 export type LocaleValue = 'ru';
-export type WSProtocol = 'home';
+export type WSProtocol = 'test';
 export const DEFAULT_LOCALE: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export interface SendMessageArgs<T extends keyof typeof MessageType> {
