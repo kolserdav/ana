@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import { v4 } from 'uuid';
 import { Theme } from '@/Theme';
 import { Ubuntu } from '@next/font/google';
 import s from './Input.module.scss';
@@ -16,6 +15,7 @@ function Input({
   name,
   id,
   theme,
+  type,
   onBlur,
   onChange,
   success,
@@ -24,9 +24,12 @@ function Input({
   disabled: boolean;
   value: string;
   name: string;
+  // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   theme: Theme;
   id: string;
+  type: React.HTMLInputTypeAttribute;
+  // eslint-disable-next-line no-unused-vars
   onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
   className?: string;
   error?: boolean;
@@ -57,7 +60,7 @@ function Input({
             ? { borderColor: theme.green, ...style }
             : { borderColor: theme.active, ...style }
         }
-        type="text"
+        type={type}
         className={clsx(
           ubuntu.className,
           className,

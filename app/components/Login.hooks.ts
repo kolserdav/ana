@@ -1,10 +1,10 @@
 import { checkEmail } from '@/types/interfaces';
 import { EMAIL_MAX_LENGTH } from '@/utils/constants';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { v4 } from 'uuid';
 
 // eslint-disable-next-line import/prefer-default-export
-export const useInputs = () => {
-  const [load, setLoad] = useState<boolean>(false);
+export const useEmailInput = () => {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [emailDisabled, setEmailDisabled] = useState<boolean>(false);
   const [emailSuccess, setEmailSuccess] = useState<boolean>(false);
@@ -32,5 +32,12 @@ export const useInputs = () => {
     }
   };
 
-  return { onChangeEmail, onBlurEmail, email, emailDisabled, emailError, emailSuccess, load };
+  return {
+    onChangeEmail,
+    onBlurEmail,
+    email,
+    emailDisabled,
+    emailError,
+    emailSuccess,
+  };
 };

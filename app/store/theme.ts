@@ -1,3 +1,4 @@
+import { DEFAULT_THEME } from '@/utils/constants';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { ThemeType } from '../types';
 import { getLocalStorage, LocalStorageName } from '../utils/localStorage';
@@ -13,12 +14,12 @@ interface Action {
 const slice = createSlice({
   name: 'theme',
   initialState: {
-    theme: getLocalStorage(LocalStorageName.THEME) || 'light',
+    theme: getLocalStorage(LocalStorageName.THEME) || DEFAULT_THEME,
   } as State,
   reducers: {
     changeTheme: (state: State, action: Action) => {
       // eslint-disable-next-line no-param-reassign
-      state.theme = action.payload.theme === 'dark' ? 'light' : 'dark';
+      state.theme = action.payload.theme;
     },
   },
 });

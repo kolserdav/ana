@@ -29,7 +29,36 @@ export class ORM extends Service implements Database {
     }
   }
 
-  public createServer() {
+  public userFindFirstW: Database['userFindFirst'] = async (args, context) => {
+    return this.runFromWorker({
+      args,
+      context,
+      model: 'user',
+      command: 'findFirst',
+    });
+  };
+
+  public userFindFirst: Database['userFindFirst'] = async (args, context) => {
+    return this.run(
+      {
+        args,
+        model: 'user',
+        command: 'findFirst',
+      },
+      context
+    );
+  };
+
+  public pageFindManyW: Database['pageFindManyW'] = async (args, context) => {
+    return this.runFromWorker({
+      args,
+      context,
+      model: 'page',
+      command: 'findMany',
+    });
+  };
+
+  private createServer() {
     this.listenWorkerMessages<ProcessMessage.DB_COMMAND>(async ({ protocol, msg, context }) => {
       if (protocol === 'orm' && msg.type === ProcessMessage.DB_COMMAND) {
         const { data } = msg;
@@ -130,7 +159,7 @@ export class ORM extends Service implements Database {
     } as Result<any>;
   }
 
-  public runFromWorker = async ({
+  private runFromWorker = async ({
     args,
     context,
     model,
@@ -148,7 +177,7 @@ export class ORM extends Service implements Database {
         ({ msg: { id: _id, data } }) => {
           if (id === _id) {
             if (data.status === this.errorStatus) {
-              log('warn', 'Database request failed', { args, context });
+              log('warn', 'Database request failed', { args: JSON.stringify(args), context });
             }
             master.removeListener('message', handler);
             resolve(data);
@@ -168,35 +197,6 @@ export class ORM extends Service implements Database {
         },
         context,
       });
-    });
-  };
-
-  public userFindFirstW: Database['userFindFirst'] = async (args, context) => {
-    return this.runFromWorker({
-      args,
-      context,
-      model: 'user',
-      command: 'findFirst',
-    });
-  };
-
-  public userFindFirst: Database['userFindFirst'] = async (args, context) => {
-    return this.run(
-      {
-        args,
-        model: 'user',
-        command: 'findFirst',
-      },
-      context
-    );
-  };
-
-  public pageFindManyW: Database['pageFindManyW'] = async (args, context) => {
-    return this.runFromWorker({
-      args,
-      context,
-      model: 'page',
-      command: 'findMany',
     });
   };
 }

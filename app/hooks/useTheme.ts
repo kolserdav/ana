@@ -3,10 +3,11 @@ import storeTheme from '@/store/theme';
 import { Theme, themes } from '@/Theme';
 import { ThemeType } from '@/types';
 import { getLocalStorage, LocalStorageName } from '@/utils/localStorage';
+import { DEFAULT_THEME } from '@/utils/constants';
 
 export default function useTheme() {
   const [themeName, setThemeName] = useState<ThemeType>(
-    getLocalStorage(LocalStorageName.THEME) || 'dark'
+    getLocalStorage(LocalStorageName.THEME) || DEFAULT_THEME
   );
   const [theme, setTheme] = useState<Theme>(themes[themeName]);
 
