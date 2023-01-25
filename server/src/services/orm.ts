@@ -20,17 +20,7 @@ export class ORM extends Service implements Database {
   private readonly errorStatus = 'error';
 
   constructor(worker?: Worker) {
-    let _worker = worker;
-    if (!_worker && cluster.isPrimary) {
-      const { workers } = cluster;
-      if (workers) {
-        // eslint-disable-next-line prefer-destructuring
-        _worker = (workers as Record<number, Worker>)[1];
-      } else {
-        log('warn', 'Workers not found', { err: new Error() });
-      }
-    }
-    super(_worker);
+    super(worker);
     if (worker && cluster.isPrimary) {
       this.createServer();
     }

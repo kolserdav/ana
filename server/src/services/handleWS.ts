@@ -1,6 +1,12 @@
 import { v4 } from 'uuid';
 import MessageHandler from '../components/messageHandler';
-import { MessageType } from '../types/interfaces';
+import {
+  DEFAULT_LOCALE,
+  LANGUAGE_HEADER,
+  LocaleValue,
+  MessageType,
+  parseQueryString,
+} from '../types/interfaces';
 import { checkCors } from '../utils/lib';
 import WS from './ws';
 
@@ -18,10 +24,9 @@ class HandleWS {
       return connId;
     };
     const messageHandler = new MessageHandler({ ws: wss });
-    wss.connection.on('connection', (ws, { headers }) => {
+    wss.connection.on('connection', (ws, { headers, url }) => {
       // const protocol = req.headers['sec-websocket-protocol'];
       const id = getConnectionId();
-
       if (!checkCors(headers)) {
         ws.send(
           JSON.stringify({
@@ -36,7 +41,17 @@ class HandleWS {
         return;
       }
 
-      wss.setSocket({ id, ws });
+      const langM = url?.match(/\?.*/);
+
+      let lang: string | null | undefined = null;
+      if (langM) {
+        if (langM[0]) {
+          const { [LANGUAGE_HEADER]: _lang } = parseQueryString(langM[0]);
+          lang = _lang;
+        }
+      }
+
+      wss.setSocket({ id, ws, lang: (lang as LocaleValue) || DEFAULT_LOCALE });
 
       messageHandler.messages({ ws });
 

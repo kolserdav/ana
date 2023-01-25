@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import { IncomingHttpHeaders } from 'http';
 import ru from '../locales/ru/lang';
-import { Locale, DEFAULT_LOCALE, LocaleValue } from '../types/interfaces';
-import { APP_URL, IS_DEV, LANGUAGE_HEADER, LOG_LEVEL } from './constants';
+import { Locale, DEFAULT_LOCALE, LANGUAGE_HEADER, LocaleValue } from '../types/interfaces';
+import { APP_URL, IS_DEV, LOG_LEVEL } from './constants';
 
 // eslint-disable-next-line no-unused-vars
 enum LogLevel {

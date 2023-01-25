@@ -1,5 +1,6 @@
-import { MessageType, SendMessageArgs, WSProtocol } from '@/types/interfaces';
+import { LANGUAGE_HEADER, MessageType, SendMessageArgs, WSProtocol } from '@/types/interfaces';
 import { WS_ADDRESS } from './constants';
+import { getLangCookie } from './cookies';
 import { log } from './lib';
 
 class WS {
@@ -16,7 +17,7 @@ class WS {
     if (typeof window === 'undefined') {
       return null;
     }
-    return new WebSocket(WS_ADDRESS, this.protocol);
+    return new WebSocket(`${WS_ADDRESS}?${LANGUAGE_HEADER}=${getLangCookie()}`, this.protocol);
   }
 
   public sendMessage = <T extends keyof typeof MessageType>(args: SendMessageArgs<T>) =>

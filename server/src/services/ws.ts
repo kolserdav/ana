@@ -1,5 +1,5 @@
 import WebSocket, { WebSocketServer } from 'ws';
-import { MessageType, SendMessageArgs } from '../types/interfaces';
+import { LocaleValue, MessageType, SendMessageArgs } from '../types/interfaces';
 import { IS_DEV, WS_PORT } from '../utils/constants';
 import { log } from '../utils/lib';
 
@@ -49,10 +49,11 @@ class WS {
     delete this.ws[id];
   }
 
-  public setSocket({ id, ws }: { id: string; ws: WebSocket }) {
+  public setSocket({ id, ws, lang }: { id: string; ws: WebSocket; lang: LocaleValue }) {
     this.ws[id] = ws;
     this.sendMessage({
       id,
+      lang,
       type: MessageType.SET_CONNECTION_ID,
       data: null,
     });

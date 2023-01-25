@@ -1,4 +1,4 @@
-import { Api, DEFAULT_LOCALE, Locale, LocaleValue } from '@/types/interfaces';
+import { Api, DEFAULT_LOCALE, LANGUAGE_HEADER, Locale, LocaleValue } from '@/types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
 import { log } from './lib';
@@ -15,7 +15,7 @@ class Request {
     return new Promise((resolve) => {
       log('log', 'Send request', { url });
       fetch(`${SERVER}${url}`, {
-        headers: { 'accept-language': getCookie(CookieName.lang) || locale || DEFAULT_LOCALE },
+        headers: { [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || DEFAULT_LOCALE },
       })
         .then((d) => {
           resolve(d.json());

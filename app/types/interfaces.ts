@@ -59,6 +59,7 @@ export interface Result<T> {
 export type LocaleValue = 'ru';
 export type WSProtocol = 'home';
 export const DEFAULT_LOCALE: LocaleValue = 'ru';
+export const LANGUAGE_HEADER = 'lang';
 export interface SendMessageArgs<T extends keyof typeof MessageType> {
   type: T;
   id: string;
@@ -71,3 +72,22 @@ export function checkEmail(email: string): boolean {
     email
   );
 }
+
+export const parseQueryString = (query: string): Record<string, string> => {
+  const arr = query.replace(/\??/, '').split('&');
+  const res: Record<string, string> = {};
+  arr.forEach((item) => {
+    if (item === '') {
+      return;
+    }
+    const propReg = /^\w+=/;
+    const prop = item.match(propReg);
+    const _prop = prop ? prop[0] : null;
+    if (!_prop) {
+      return;
+    }
+    const propStr = _prop.replace('=', '');
+    res[propStr] = item.replace(propReg, '');
+  });
+  return res;
+};
