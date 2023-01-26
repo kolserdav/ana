@@ -9,11 +9,14 @@ generator client {
 
 enum PageName {
   index
+  login
 }
 
 enum PageField {
   title
   description
+  keywords
+  content
 }
 
 enum Lang {

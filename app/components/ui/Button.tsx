@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import s from './Button.module.scss';
 
-const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '500' });
+const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '500', preload: true });
 
 function Button({
   load,

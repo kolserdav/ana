@@ -17,10 +17,7 @@
     transition: top $label-transition ease-in;
     z-index: 0;
     font-size: $input-font-size;
-
-    &.gray {
-      background-color: $color-gray;
-    }
+    border-radius: 5px;
   }
 
   input {
@@ -31,22 +28,11 @@
     &:focus + label {
       top: calc(($label-shift + $label-top) * -1);
       padding-top: 0;
-      transition: all $label-transition ease-out;
-
-      &.gray {
-        background: linear-gradient(to top, $color-gray, white 60%);
-      }
     }
 
     &:not(:placeholder-shown) + label {
       top: calc(($label-top + $label-shift) * -1);
       padding-top: 0;
-
-      &.gray {
-        background: linear-gradient(to top, $color-gray, white 60%);
-      }
-
-      transition: all $label-transition ease-out;
     }
 
     &.full__width {
@@ -61,7 +47,7 @@
     }
 
     position: relative;
-    border-width: 2px;
+    border-width: $input-border-width;
     border-style: groove;
     border-radius: $input-border-radius;
     margin-bottom: $input-margin-bottom;

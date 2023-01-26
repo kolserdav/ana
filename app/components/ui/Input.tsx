@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Theme } from '@/Theme';
 import { Ubuntu } from '@next/font/google';
+import { LABEL_TRANSITION } from '@/utils/constants';
 import s from './Input.module.scss';
 
-const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '400' });
+const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '400', preload: true });
 
 function Input({
   className,
@@ -15,9 +16,12 @@ function Input({
   name,
   id,
   theme,
+  colorActive,
+  title,
   type,
   onBlur,
   onChange,
+  required,
   success,
   fullWidth,
 }: {
@@ -29,29 +33,54 @@ function Input({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   theme: Theme;
   id: string;
+  colorActive?: boolean;
   type: React.HTMLInputTypeAttribute;
   // eslint-disable-next-line no-unused-vars
   onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
   className?: string;
   error?: boolean;
+  required?: boolean;
+  title?: string;
   success?: boolean;
   fullWidth?: boolean;
 }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [gradient, setGradient] = useState<boolean>(false);
+
+  const backgroundColor = colorActive ? theme.active : theme.paper;
+
   const style: React.CSSProperties = {
     color: theme.text,
-    backgroundColor: theme.paper,
+    backgroundColor,
+  };
+
+  const onClick = () => {
+    setGradient(true);
+  };
+
+  const _onBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+    setGradient(value.length !== 0);
   };
 
   return (
     <div className={s.wrapper}>
       <input
+        ref={inputRef}
         disabled={load || disabled}
         placeholder=" "
         id={id}
         value={value}
+        title={title}
         onChange={onChange}
-        onBlur={onBlur}
-        required
+        onBlur={(e) => {
+          _onBlur(e);
+          if (onBlur) {
+            onBlur(e);
+          }
+        }}
+        onClick={onClick}
+        required={required}
         style={
           error
             ? {
@@ -73,7 +102,13 @@ function Input({
       />
       <label
         className={disabled ? s.disabled : ''}
-        style={{ color: theme.text, background: theme.paper }}
+        style={{
+          color: theme.text,
+          background: !gradient
+            ? backgroundColor
+            : `linear-gradient(to top, ${backgroundColor}, ${theme.paper} 65%)`,
+          transition: `all ${LABEL_TRANSITION} ease-out`,
+        }}
         htmlFor={id}
       >
         {name}
@@ -88,6 +123,9 @@ Input.defaultProps = {
   className: '',
   onBlur: undefined,
   fullWidth: false,
+  required: false,
+  title: undefined,
+  colorActive: false,
 };
 
 export default Input;

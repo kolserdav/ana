@@ -43,6 +43,12 @@ export interface Locale {
       loginButton: string;
       tabs: Tab[];
       tabDefault: string;
+      signUp: string;
+      signIn: string;
+      accountType: string;
+      formDesc: string;
+      password: string;
+      paswordRepeat: string;
     };
   };
 }

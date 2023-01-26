@@ -9,6 +9,10 @@
   align-items: center;
   justify-content: center;
   max-width: $small-width;
+
+  form {
+    padding-top: 1px;
+  }
 }
 
 .container {

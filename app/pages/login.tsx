@@ -11,10 +11,11 @@ import { prepagePage } from '@/utils/lib';
 const request = new Request();
 
 interface LoginProps {
+  locale: Locale['app']['login'];
   page: PageFull;
 }
 
-export default function HomePage({ page }: LoginProps) {
+export default function HomePage({ locale, page }: LoginProps) {
   const { theme } = useTheme();
 
   return (
@@ -25,7 +26,7 @@ export default function HomePage({ page }: LoginProps) {
         <meta name="keywords" content={page.keywords} />
       </Head>
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        Home
+        <Login theme={theme} locale={locale} />
       </main>
     </>
   );
@@ -34,11 +35,12 @@ export default function HomePage({ page }: LoginProps) {
 export async function getStaticProps({
   locale,
 }: GetStaticPropsContext): Promise<{ props: LoginProps }> {
+  const localeLogin = await request.getLocale({ field: 'login', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
         {
-          name: 'index',
+          name: 'login',
         },
         {
           lang: locale as LocaleValue,
@@ -48,6 +50,7 @@ export async function getStaticProps({
   });
   return {
     props: {
+      locale: localeLogin.data,
       page: prepagePage(page.data),
     },
   };
