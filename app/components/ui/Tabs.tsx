@@ -1,5 +1,6 @@
 import { Theme } from '@/Theme';
 import { Tab } from '@/types/interfaces';
+import { TAB_INDEX_DEFAULT } from '@/utils/constants';
 import { Ubuntu } from '@next/font/google';
 import clsx from 'clsx';
 import { useMemo } from 'react';
@@ -56,7 +57,10 @@ function Tabs({
       <Typography theme={theme} variant="label">
         {label}
       </Typography>
-      <div className={s.container} style={{ borderColor: theme.active }}>
+      <div
+        className={s.container}
+        style={{ borderColor: active !== TAB_INDEX_DEFAULT ? theme.green : theme.active }}
+      >
         <div className={s.head}>
           {tabs.map((item) => (
             <div

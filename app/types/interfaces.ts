@@ -49,6 +49,7 @@ export interface Locale {
       formDesc: string;
       password: string;
       paswordRepeat: string;
+      loginOrEmal: string;
     };
   };
 }

@@ -46,6 +46,10 @@ $tab-cell-padding: 0.4rem;
           border-bottom-width: 0;
           opacity: 1;
         }
+
+        &:hover {
+          opacity: 1;
+        }
       }
     }
 

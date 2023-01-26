@@ -9,6 +9,7 @@ const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '500', preload: 
 function Button({
   load,
   onClick,
+  disabled,
   theme,
   children,
   className,
@@ -16,6 +17,7 @@ function Button({
   load: boolean;
   children: React.ReactNode | string;
   theme: Theme;
+  disabled?: boolean;
   // eslint-disable-next-line no-unused-vars
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   className?: string;
@@ -32,10 +34,10 @@ function Button({
   return (
     <div className={s.wrapper}>
       <button
-        disabled={load}
+        disabled={disabled || load}
         onClick={onClick}
         type="button"
-        className={clsx(ubuntu.className, className, s.button, load ? s.disabled : '')}
+        className={clsx(ubuntu.className, className, s.button, load || disabled ? s.disabled : '')}
         style={
           isHover
             ? { borderColor: theme.active }
@@ -55,6 +57,7 @@ function Button({
 
 Button.defaultProps = {
   className: '',
+  disabled: false,
 };
 
 export default Button;

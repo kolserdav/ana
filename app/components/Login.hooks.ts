@@ -1,6 +1,8 @@
 import { checkEmail } from '@/types/interfaces';
 import { EMAIL_MAX_LENGTH, TAB_INDEX_DEFAULT } from '@/utils/constants';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { checkSignUp } from './Login.lib';
 
 export const useEmailInput = () => {
   const [emailError, setEmailError] = useState<boolean>(false);
@@ -71,6 +73,42 @@ export const useLoginInput = () => {
     login,
     loginError,
     loginSuccess,
+  };
+};
+
+export const useLoginOrEmailInput = () => {
+  const [loginOrEmailError, setLoginOrEmailError] = useState<boolean>(false);
+  const [loginOrEmailSuccess, setLoginOrEmailSuccess] = useState<boolean>(false);
+  const [loginOrEmail, setLoginOrEmail] = useState<string>('');
+
+  const onChangeLoginOrEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    if (value.length < EMAIL_MAX_LENGTH) {
+      const check = checkEmail(value);
+      setLoginOrEmailSuccess(check);
+      if (loginOrEmailError) {
+        setLoginOrEmailError(!check);
+      }
+      setLoginOrEmail(value);
+    }
+  };
+
+  const onBlurLoginOrEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (loginOrEmail) {
+      setLoginOrEmailError(!checkEmail(loginOrEmail));
+    } else {
+      setLoginOrEmailError(false);
+    }
+  };
+
+  return {
+    onChangeLoginOrEmail,
+    onBlurLoginOrEmail,
+    loginOrEmail,
+    loginOrEmailError,
+    loginOrEmailSuccess,
   };
 };
 
@@ -154,4 +192,12 @@ export const useTabs = () => {
   };
 
   return { tabActive, onClickTab };
+};
+
+export const useCheckPage = () => {
+  const router = useRouter();
+
+  const isSignUp = checkSignUp(router.asPath);
+
+  return { isSignUp };
 };
