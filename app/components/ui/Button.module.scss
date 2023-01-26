@@ -2,6 +2,8 @@
 
 .wrapper {
   position: relative;
+  margin-top: $form-item-margin-top;
+  margin-bottom: $input-margin-bottom;
 }
 
 .button {

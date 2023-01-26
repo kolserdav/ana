@@ -21,6 +21,12 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? null
   : never;
 
+export interface Tab {
+  id: number;
+  title: string;
+  content: string;
+}
+
 export interface Locale {
   server: {
     error: string;
@@ -35,6 +41,7 @@ export interface Locale {
       login: string;
       register: string;
       loginButton: string;
+      tabs: Tab[];
     };
   };
 }

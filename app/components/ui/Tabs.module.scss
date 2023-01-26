@@ -1,0 +1,49 @@
+@import '../../styles/constants';
+
+$tab-border-width: 2px;
+$tab-cell-padding: 0.4rem;
+
+.wrapper {
+  position: relative;
+  margin-top: $form-item-margin-top;
+  border-width: $tab-border-width;
+  border-style: groove;
+  border-radius: $input-border-radius;
+
+  .head {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    .title {
+      position: relative;
+      cursor: pointer;
+      width: 100%;
+      border-right-width: $tab-border-width;
+      border-right-style: groove;
+      border-bottom-width: $tab-border-width;
+      border-bottom-style: groove;
+      text-align: center;
+      padding: $tab-cell-padding;
+      opacity: 0.5;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &.active {
+        border-bottom: none;
+        opacity: 1;
+      }
+    }
+  }
+
+  .content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: $tab-cell-padding;
+    margin: 0.5rem 0;
+  }
+}

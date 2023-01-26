@@ -1,10 +1,11 @@
 import useLoad from '@/hooks/useLoad';
 import { Theme } from '@/Theme';
 import { Locale } from '@/types/interfaces';
-import { useEmailInput, useLoginInput } from './Login.hooks';
+import { useEmailInput, useLoginInput, useTabs } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
 import Input from './ui/Input';
+import Tabs from './ui/Tabs';
 
 function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login'] }) {
   const { load, setLoad } = useLoad();
@@ -14,6 +15,8 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   const { email, emailDisabled, emailError, emailSuccess, onChangeEmail, onBlurEmail } =
     useEmailInput();
+
+  const { tabActive, onClickTab } = useTabs();
 
   return (
     <div className={s.wrapper}>
@@ -30,6 +33,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           disabled={loginDisabled}
           load={load}
           name={locale.login}
+          fullWidth
         />
         <Input
           theme={theme}
@@ -43,16 +47,20 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           disabled={emailDisabled}
           load={load}
           name={locale.email}
+          fullWidth
         />
-        <Button
-          load={load}
-          theme={theme}
-          onClick={() => {
-            /** */
-          }}
-        >
-          {locale.loginButton}
-        </Button>
+        <Tabs theme={theme} active={tabActive} tabs={locale.tabs} onClick={onClickTab} />
+        <div className={s.actives}>
+          <Button
+            load={load}
+            theme={theme}
+            onClick={() => {
+              /** */
+            }}
+          >
+            {locale.loginButton}
+          </Button>
+        </div>
       </div>
     </div>
   );

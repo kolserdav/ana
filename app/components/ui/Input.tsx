@@ -19,6 +19,7 @@ function Input({
   onBlur,
   onChange,
   success,
+  fullWidth,
 }: {
   load: boolean;
   disabled: boolean;
@@ -34,6 +35,7 @@ function Input({
   className?: string;
   error?: boolean;
   success?: boolean;
+  fullWidth?: boolean;
 }) {
   const style: React.CSSProperties = {
     color: theme.text,
@@ -64,6 +66,7 @@ function Input({
         className={clsx(
           ubuntu.className,
           className,
+          fullWidth ? s.full__width : '',
           error ? s.error : success ? s.success : '',
           disabled ? s.disabled : ''
         )}
@@ -84,6 +87,7 @@ Input.defaultProps = {
   success: false,
   className: '',
   onBlur: undefined,
+  fullWidth: false,
 };
 
 export default Input;

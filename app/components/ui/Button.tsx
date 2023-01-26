@@ -30,7 +30,7 @@ function Button({
   };
 
   return (
-    <div>
+    <div className={s.wrapper}>
       <button
         disabled={load}
         onClick={onClick}

@@ -77,3 +77,13 @@ export const useLoginInput = () => {
     loginSuccess,
   };
 };
+
+export const useTabs = () => {
+  const [tabActive, setTabActive] = useState<number>(0);
+
+  const onClickTab = (id: number) => {
+    setTabActive(id);
+  };
+
+  return { tabActive, onClickTab };
+};

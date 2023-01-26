@@ -4,6 +4,7 @@
   position: relative;
   width: 100%;
   display: flex;
+  margin-top: $form-item-margin-top;
 
   label {
     position: absolute;
@@ -62,12 +63,12 @@
     position: relative;
     border-width: 2px;
     border-style: groove;
-    border-radius: 5px;
+    border-radius: $input-border-radius;
+    margin-bottom: $input-margin-bottom;
     font-size: $input-font-size;
     height: $input-height;
     box-shadow: none;
     padding: 0 $input-padding;
-    margin-bottom: $input-margin-bottom;
     margin-left: 0;
     @media (max-width: $mobile-width) {
       // margin-left: 0;

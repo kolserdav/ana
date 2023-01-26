@@ -8,9 +8,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: $small-width;
 }
 
 .container {
   position: relative;
   max-width: $container-max-width;
+
+  .actives {
+    position: relative;
+    padding-top: $form-item-margin-top;
+  }
 }
