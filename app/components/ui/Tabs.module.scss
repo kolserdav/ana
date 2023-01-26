@@ -9,6 +9,11 @@ $tab-cell-padding: 0.4rem;
   border-width: $tab-border-width;
   border-style: groove;
   border-radius: $input-border-radius;
+  min-height: 10rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .head {
     position: relative;
@@ -26,14 +31,15 @@ $tab-cell-padding: 0.4rem;
       border-bottom-style: groove;
       text-align: center;
       padding: $tab-cell-padding;
-      opacity: 0.5;
+      opacity: 0.3;
 
       &:last-child {
         border-right: none;
       }
 
       &.active {
-        border-bottom: none;
+        cursor: default;
+        border-bottom-width: 0;
         opacity: 1;
       }
     }
@@ -44,6 +50,8 @@ $tab-cell-padding: 0.4rem;
     width: 100%;
     height: 100%;
     padding: $tab-cell-padding;
-    margin: 0.5rem 0;
+    margin: auto 0;
+    text-align: center;
+    white-space: initial;
   }
 }

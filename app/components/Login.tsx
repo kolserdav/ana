@@ -49,7 +49,13 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           name={locale.email}
           fullWidth
         />
-        <Tabs theme={theme} active={tabActive} tabs={locale.tabs} onClick={onClickTab} />
+        <Tabs
+          theme={theme}
+          active={tabActive}
+          tabs={locale.tabs}
+          onClick={onClickTab}
+          tabDefault={locale.tabDefault}
+        />
         <div className={s.actives}>
           <Button
             load={load}

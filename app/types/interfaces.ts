@@ -42,6 +42,7 @@ export interface Locale {
       register: string;
       loginButton: string;
       tabs: Tab[];
+      tabDefault: string;
     };
   };
 }
