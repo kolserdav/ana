@@ -1,0 +1,7 @@
+.wrapper {
+  position: relative;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

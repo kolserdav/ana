@@ -26,7 +26,7 @@ export default function HomePage({ locale, page }: LoginProps) {
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar theme={theme} />
+      <AppBar theme={theme} withoutExpandLess />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Login theme={theme} locale={locale} />
       </main>

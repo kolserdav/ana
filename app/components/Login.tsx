@@ -14,6 +14,7 @@ import {
 import s from './Login.module.scss';
 import Button from './ui/Button';
 import Input from './ui/Input';
+import Link from './ui/Link';
 import Tabs from './ui/Tabs';
 import Typography from './ui/Typography';
 
@@ -170,6 +171,11 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
             </Button>
           </div>
         </form>
+        <div className={s.link}>
+          <Link theme={theme} href={isSignUp ? '/account/sign-in' : '/account/sign-up'}>
+            {isSignUp ? locale.signIn : locale.signUp}
+          </Link>
+        </div>
       </div>
     </div>
   );

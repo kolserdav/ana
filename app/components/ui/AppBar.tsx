@@ -8,7 +8,7 @@ import s from './AppBar.module.scss';
 
 let oldY = 0;
 
-function AppBar({ theme }: { theme: Theme }) {
+function AppBar({ theme, withoutExpandLess }: { theme: Theme; withoutExpandLess?: boolean }) {
   const [showAppBar, setShowAppBar] = useState<boolean>(true);
   const [showExpandLess, setShowExpandLess] = useState<boolean>(false);
 
@@ -53,16 +53,22 @@ function AppBar({ theme }: { theme: Theme }) {
       >
         AppBar
       </div>
-      <button
-        type="button"
-        className={clsx(s.expand__less, showExpandLess ? s.open : '')}
-        style={{ backgroundColor: theme.active }}
-        onClick={scrollToTop}
-      >
-        <ChevronUpIcon />
-      </button>
+      {!withoutExpandLess && (
+        <button
+          type="button"
+          className={clsx(s.expand__less, showExpandLess ? s.open : '')}
+          style={{ backgroundColor: theme.active }}
+          onClick={scrollToTop}
+        >
+          <ChevronUpIcon />
+        </button>
+      )}
     </>
   );
 }
+
+AppBar.defaultProps = {
+  withoutExpandLess: false,
+};
 
 export default AppBar;
