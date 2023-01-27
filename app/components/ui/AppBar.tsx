@@ -63,8 +63,8 @@ function AppBar({ theme, withoutExpandLess }: { theme: Theme; withoutExpandLess?
         className={clsx(s.wrapper, showAppBar ? s.open : '')}
         style={{
           color: theme.text,
-          backgroundColor: theme.active,
-          boxShadow: `0px 2px 8px ${theme.active}`,
+          backgroundColor: 'transparent', // theme.active,
+          boxShadow: 'none', // `0px 2px 8px ${theme.active}`,
         }}
       >
         <Menu theme={theme} />

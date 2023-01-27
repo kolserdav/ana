@@ -4,10 +4,10 @@ $app-bar-transition: 0.2s;
 
 .wrapper {
   position: fixed;
-  z-index: 12;
+  z-index: 11;
   top: calc($app-bar-height * -1);
-  left: 0;
-  width: 100%;
+  right: 0; // left: 0
+  width: 40px; // 100%
   height: $app-bar-height;
   transition: top $app-bar-transition ease-in;
   display: flex;
