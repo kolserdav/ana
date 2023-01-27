@@ -1,3 +1,4 @@
+import storeClick, { changeClick } from '@/store/click';
 import storeScroll, { changeScroll } from '@/store/scroll';
 import '@/styles/globals.scss';
 import { setBodyScroll } from '@/utils/lib';
@@ -17,6 +18,20 @@ export default function App({ Component, pageProps }: AppProps) {
     window.addEventListener('scroll', scrollHandler);
     return () => {
       window.removeEventListener('scroll', scrollHandler);
+    };
+  }, []);
+
+  /**
+   * Click handler
+   */
+  useEffect(() => {
+    const clickHandler = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      storeClick.dispatch(changeClick({ clientX, clientY }));
+    };
+    document.addEventListener('click', clickHandler);
+    return () => {
+      document.removeEventListener('click', clickHandler);
     };
   }, []);
 

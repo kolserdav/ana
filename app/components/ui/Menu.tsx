@@ -1,39 +1,79 @@
+import storeClick from '@/store/click';
+import storeMenuOpen, { changeMenuOpen } from '@/store/menuOpen';
 import { Theme } from '@/Theme';
 import { MENU_TRANSITION } from '@/utils/constants';
-import { setBodyScroll } from '@/utils/lib';
+import { checkClickBy } from '@/utils/lib';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import MenuIcon from '../icons/Menu';
 import MenuOpenIcon from '../icons/MenuOpen';
 import s from './Menu.module.scss';
 
 function Menu({ theme }: { theme: Theme }) {
+  const menuRef = useRef<HTMLMenuElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   const [open, setOpen] = useState<boolean>(false);
   const [_open, _setOpen] = useState<boolean>(false);
 
-  const onClickOpen = () => {
-    setBodyScroll(open);
-    setOpen(!open);
-    setTimeout(() => {
-      _setOpen(!_open);
-    }, MENU_TRANSITION);
-  };
+  const onClickOpen = useMemo(
+    () => () => {
+      storeMenuOpen.dispatch(
+        changeMenuOpen({
+          menuOpen: !open,
+        })
+      );
+      setOpen(!open);
+      setTimeout(() => {
+        _setOpen(!_open);
+      }, MENU_TRANSITION);
+    },
+    [open, _open]
+  );
+
+  /**
+   * Listen document click
+   */
+  useEffect(() => {
+    const cleanSubs = storeClick.subscribe(() => {
+      const { current } = menuRef;
+      const { current: button } = buttonRef;
+      if (current && open && button) {
+        const { clientX, clientY } = storeClick.getState();
+        if (
+          !checkClickBy({ clientX, clientY, current }) &&
+          !checkClickBy({ clientX, clientY, current: button })
+        ) {
+          onClickOpen();
+        }
+      }
+    });
+    return () => {
+      cleanSubs();
+    };
+  }, [open, menuRef, onClickOpen]);
 
   return (
     <div className={s.wrapper}>
-      <button type="button" onClick={onClickOpen} className={clsx(s.button, open ? s.open : '')}>
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={onClickOpen}
+        className={clsx(s.button, open ? s.open : '')}
+      >
         {_open ? <MenuOpenIcon color={theme.text} /> : <MenuIcon color={theme.text} />}
       </button>
-      <div
+      <menu
+        ref={menuRef}
         className={clsx(s.container, open ? s.open : '')}
         style={{
           color: theme.text,
           backgroundColor: theme.paper,
-          boxShadow: `inset 1px 1px 1px 1px ${theme.contrast}`,
+          boxShadow: `inset 1px -1px 4px 1px ${theme.contrast}`,
         }}
       >
         Container
-      </div>
+      </menu>
     </div>
   );
 }

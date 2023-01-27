@@ -1,7 +1,7 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 
 interface State {
-  scroll: boolean;
+  menuOpen: boolean;
 }
 
 interface Action {
@@ -9,22 +9,22 @@ interface Action {
 }
 
 const slice = createSlice({
-  name: 'scroll',
+  name: 'menuOpen',
   initialState: {
-    scroll: false,
+    menuOpen: false,
   } as State,
   reducers: {
-    changeScroll: (state: State, action: Action) => {
+    changeMenuOpen: (state: State, action: Action) => {
       // eslint-disable-next-line no-param-reassign
-      state.scroll = action.payload.scroll;
+      state.menuOpen = action.payload.menuOpen;
     },
   },
 });
 
-export const { changeScroll } = slice.actions;
+export const { changeMenuOpen } = slice.actions;
 
-const storeScroll = configureStore({
+const storeMenuOpen = configureStore({
   reducer: slice.reducer,
 });
 
-export default storeScroll;
+export default storeMenuOpen;

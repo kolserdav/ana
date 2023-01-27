@@ -4,11 +4,11 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
     'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 // Depends NO_SCROLL_CLASS
-.scroll__off {
+.no__scroll {
   overflow: hidden;
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Theme } from '@/Theme';
 import { Ubuntu } from '@next/font/google';

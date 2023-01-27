@@ -1,7 +1,7 @@
 import storeAlert, { changeAlert } from '@/store/alert';
 import { LogLevel } from '@/types/interfaces';
 import { format } from 'date-fns';
-import { IS_DEV, LOG_LEVEL, SCROLL_OFF } from '@/utils/constants';
+import { IS_DEV, LOG_LEVEL, NO_SCROLL_CLASS } from '@/utils/constants';
 import { Page } from '@prisma/client';
 import { PageFull } from '@/types';
 
@@ -46,8 +46,22 @@ export const prepagePage = (pages: Page[]) => {
 
 export const setBodyScroll = (scroll: boolean) => {
   if (scroll) {
-    document.body.classList.remove(SCROLL_OFF);
+    document.body.classList.remove(NO_SCROLL_CLASS);
   } else {
-    document.body.classList.add(SCROLL_OFF);
+    document.body.classList.add(NO_SCROLL_CLASS);
   }
+};
+
+export const checkClickBy = ({
+  current,
+  clientX,
+  clientY,
+}: {
+  current: HTMLElement;
+  clientX: number;
+  clientY: number;
+}) => {
+  const { x, y, height } = current.getBoundingClientRect();
+  const bottom = y + height;
+  return !(clientX < x || clientY < y || clientY > bottom);
 };

@@ -1,6 +1,5 @@
 @import '../../styles/constants';
 
-$menu-width: 320px;
 $container-top: calc($app-bar-height / 2 - 6px);
 
 .wrapper {
@@ -15,30 +14,37 @@ $container-top: calc($app-bar-height / 2 - 6px);
     margin: 0 1rem;
     transform: rotate(180deg);
     border: none;
-    transition: all 0.3s ease-in;
+    transition: all $menu-transition ease-in;
     background-color: transparent;
 
     &:active {
       opacity: 0.5;
-      transition: all 0.3s ease-out;
     }
 
     &.open {
-      margin-right: $menu-width;
+      margin-right: $small-width;
       position: fixed;
       right: 0;
       top: calc($app-bar-height / 2 - $icon-width-default / 2);
+      transition: all $menu-transition ease-out;
+
+      @media (max-width: $small-width) {
+        margin-right: $x-small-width;
+      }
     }
   }
 
   .container {
     position: fixed;
     top: $container-top;
-    width: $menu-width;
-    left: calc(100vw + $menu-width);
-    height: 100%;
-    max-height: calc(100vh - $icon-width-default / 4);
-    transition: all 0.3s ease-in;
+    width: $small-width;
+    margin-block-end: 0;
+    margin-block-start: 0;
+    padding-inline-start: 0;
+    left: calc(100vw + $small-width);
+    margin-top: 0;
+    height: calc(100vh - $icon-width-default * 4);
+    transition: all $menu-transition ease-in;
     border-radius: 6px;
     padding: 1rem;
     display: flex;
@@ -46,9 +52,18 @@ $container-top: calc($app-bar-height / 2 - 6px);
     align-items: center;
     justify-content: center;
 
+    @media (max-width: $small-width) {
+      width: $x-small-width;
+      left: calc(100vw + $x-small-width);
+    }
+
     &.open {
-      left: calc(100vw - $menu-width);
-      transition: all 0.3s ease-out;
+      left: calc(100vw - $small-width);
+      transition: all $menu-transition ease-out;
+
+      @media (max-width: $small-width) {
+        left: calc(100vw - $x-small-width);
+      }
     }
   }
 }
