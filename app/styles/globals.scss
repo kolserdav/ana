@@ -7,6 +7,11 @@ body {
   behavior: smooth;
 }
 
+// Depends NO_SCROLL_CLASS
+.scroll__off {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   text-decoration: none;

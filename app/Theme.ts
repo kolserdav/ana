@@ -2,11 +2,10 @@ export interface Theme {
   paper: string;
   text: string;
   active: string;
-  white: string;
+  contrast: string;
   red: string;
   yellow: string;
   blue: string;
-  black: string;
   green: string;
   cyan: string;
 }
@@ -21,8 +20,7 @@ const colors: Themes = {
     paper: '#212121',
     text: '#cfcfcf',
     active: '#36413e',
-    white: '#fff',
-    black: 'black',
+    contrast: 'white',
     red: 'orange',
     yellow: 'lightgoldenrodyellow',
     blue: '#1a6aaf',
@@ -36,8 +34,7 @@ const colors: Themes = {
     paper: '#fff',
     text: '#5d5e60',
     active: 'rgb(182 181 181)',
-    white: '#fff',
-    black: '#000',
+    contrast: 'black',
     green: 'green',
     cyan: '#0ab1db',
   },

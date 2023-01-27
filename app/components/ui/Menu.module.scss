@@ -1,0 +1,54 @@
+@import '../../styles/constants';
+
+$menu-width: 320px;
+$container-top: calc($app-bar-height / 2 - 6px);
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+
+  .button {
+    cursor: pointer;
+    position: relative;
+    margin: 0 1rem;
+    transform: rotate(180deg);
+    border: none;
+    transition: all 0.3s ease-in;
+    background-color: transparent;
+
+    &:active {
+      opacity: 0.5;
+      transition: all 0.3s ease-out;
+    }
+
+    &.open {
+      margin-right: $menu-width;
+      position: fixed;
+      right: 0;
+      top: calc($app-bar-height / 2 - $icon-width-default / 2);
+    }
+  }
+
+  .container {
+    position: fixed;
+    top: $container-top;
+    width: $menu-width;
+    left: calc(100vw + $menu-width);
+    height: 100%;
+    max-height: calc(100vh - $icon-width-default / 4);
+    transition: all 0.3s ease-in;
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &.open {
+      left: calc(100vw - $menu-width);
+      transition: all 0.3s ease-out;
+    }
+  }
+}

@@ -4,7 +4,9 @@ import { EXPAND_LESS_SHOW_FROM } from '@/utils/constants';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import ChevronUpIcon from '../icons/ChevronUp';
+import MenuIcon from '../icons/Menu';
 import s from './AppBar.module.scss';
+import Menu from './Menu';
 
 let oldY = 0;
 
@@ -42,7 +44,7 @@ function AppBar({ theme, withoutExpandLess }: { theme: Theme; withoutExpandLess?
   }, []);
 
   return (
-    <>
+    <header>
       <div
         className={clsx(s.wrapper, showAppBar ? s.open : '')}
         style={{
@@ -51,7 +53,7 @@ function AppBar({ theme, withoutExpandLess }: { theme: Theme; withoutExpandLess?
           boxShadow: `0px 2px 8px ${theme.active}`,
         }}
       >
-        AppBar
+        <Menu theme={theme} />
       </div>
       {!withoutExpandLess && (
         <button
@@ -63,7 +65,7 @@ function AppBar({ theme, withoutExpandLess }: { theme: Theme; withoutExpandLess?
           <ChevronUpIcon />
         </button>
       )}
-    </>
+    </header>
   );
 }
 
