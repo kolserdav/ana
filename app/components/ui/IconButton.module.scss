@@ -1,0 +1,13 @@
+.wrapper {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+
+  &:active {
+    opacity: 0.5;
+  }
+}

@@ -1,3 +1,4 @@
 node_modules
 tests/constants.json
-.env 
+.env
+tmp

@@ -10,3 +10,5 @@ export const TAB_INDEX_DEFAULT = -1;
 
 // DEPENDS $label-transition
 export const LABEL_TRANSITION = '0.2s';
+export const ICON_WIDTH_DEFAULT = 24;
+export const EXPAND_LESS_SHOW_FROM = -300;

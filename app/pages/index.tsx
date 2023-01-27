@@ -24,6 +24,7 @@ export default function HomePage({ page }: LoginProps) {
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
+
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         Home
       </main>

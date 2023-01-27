@@ -7,6 +7,7 @@ import Request from '@/utils/request';
 import { LocaleValue, Locale } from '@/types/interfaces';
 import { PageFull } from '@/types';
 import { prepagePage } from '@/utils/lib';
+import AppBar from '@/components/ui/AppBar';
 
 const request = new Request();
 
@@ -25,6 +26,7 @@ export default function HomePage({ locale, page }: LoginProps) {
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
+      <AppBar theme={theme} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Login theme={theme} locale={locale} />
       </main>

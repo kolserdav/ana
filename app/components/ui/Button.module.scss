@@ -20,6 +20,11 @@
     border-style: groove;
   }
 
+  &:active {
+    border-width: 2px;
+    border-style: groove;
+  }
+
   &.disabled {
     cursor: default;
     opacity: 0.5;
