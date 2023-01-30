@@ -15,6 +15,17 @@ abstract class Database {
     >
   >;
 
+  public abstract userCreate<T extends Prisma.UserCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>,
+    context: DatabaseContext
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<User | null>,
+      PrismaPromise<Result<Prisma.UserGetPayload<T> | null>>
+    >
+  >;
+
   public abstract pageFindManyW<T extends Prisma.PageFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.PageFindManyArgs>,
     context: DatabaseContext

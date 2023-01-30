@@ -1,3 +1,4 @@
+import useConnId from '@/hooks/useConnId';
 import useLoad from '@/hooks/useLoad';
 import { Theme } from '@/Theme';
 import { Locale } from '@/types/interfaces';
@@ -9,6 +10,8 @@ import {
   usePasswordInput,
   useTabs,
   useSurNameInput,
+  useMessages,
+  useButton,
 } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
@@ -18,15 +21,19 @@ import Tabs from './ui/Tabs';
 import Typography from './ui/Typography';
 
 function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login'] }) {
+  const { setConnId, connId } = useConnId();
+
   const { load, setLoad } = useLoad();
 
   const { isSignUp } = useCheckPage();
 
-  const { name, nameError, onChangeName, onBlurName } = useNameInput({ locale });
+  const { name, nameError, onChangeName, onBlurName, setNameError } = useNameInput({ locale });
 
-  const { surname, surnameError, onChangeSurname, onBlurSurname } = useSurNameInput({ locale });
+  const { surname, surnameError, onChangeSurname, onBlurSurname, setSurnameError } =
+    useSurNameInput({ locale });
 
-  const { email, emailError, emailSuccess, onChangeEmail, onBlurEmail } = useEmailInput({ locale });
+  const { email, emailError, emailSuccess, onChangeEmail, onBlurEmail, setEmailError } =
+    useEmailInput({ locale });
 
   const {
     password,
@@ -39,11 +46,34 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     passwordRepeat,
     passwordRepeatError,
     passwordRepeatSuccess,
+    setPasswordError,
+    setPasswordRepeatError,
   } = usePasswordInput({ locale, isSignUp });
 
   const { tabActive, onClickTab } = useTabs();
 
+  useMessages({ setConnId });
+
   const disabled = tabActive === TAB_INDEX_DEFAULT && isSignUp;
+
+  const { onClickLoginButton, onClickRegisterButton } = useButton({
+    locale,
+    name,
+    nameError,
+    surname,
+    surnameError,
+    setEmailError,
+    setNameError,
+    setPasswordError,
+    setPasswordRepeatError,
+    setSurnameError,
+    password,
+    passwordError,
+    passwordRepeat,
+    passwordRepeatError,
+    email,
+    emailError,
+  });
 
   return (
     <div className={s.wrapper}>
@@ -138,7 +168,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               error={passwordRepeatError}
               success={passwordRepeatSuccess}
               disabled={load}
-              name={`${locale.paswordRepeat}*`}
+              name={`${locale.passwordRepeat}*`}
               fullWidth
             />
           )}
@@ -147,9 +177,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               disabled={disabled}
               load={load}
               theme={theme}
-              onClick={() => {
-                /** */
-              }}
+              onClick={isSignUp ? onClickRegisterButton : onClickLoginButton}
             >
               {locale.loginButton}
             </Button>

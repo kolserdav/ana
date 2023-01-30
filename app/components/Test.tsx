@@ -11,28 +11,6 @@ function Test() {
   const [count, setCount] = useState<number>(0);
 
   const req = useMemo(() => new Request(), []);
-
-  useEffect(() => {
-    if (!connId) {
-      return;
-    }
-    (async () => {
-      await req.test(connId);
-    })();
-  }, [req, connId]);
-
-  useEffect(() => {
-    if (!connId) {
-      return;
-    }
-    ws.sendMessage({
-      type: MessageType.TEST,
-      id: connId,
-      lang: getLangCookie(),
-      data: { ok: 'yes' },
-    });
-  }, [connId, ws]);
-
   /**
    * Connect to WS
    */
@@ -59,6 +37,33 @@ function Test() {
       }
     };
   }, [ws, count]);
+
+  /**
+   * Test request
+   */
+  useEffect(() => {
+    if (!connId) {
+      return;
+    }
+    (async () => {
+      await req.testW(connId);
+    })();
+  }, [req, connId]);
+
+  /**
+   * Test WS message
+   */
+  useEffect(() => {
+    if (!connId) {
+      return;
+    }
+    ws.sendMessage({
+      type: MessageType.TEST,
+      id: connId,
+      lang: getLangCookie(),
+      data: { ok: 'yes' },
+    });
+  }, [connId, ws]);
 
   return <div>{count}</div>;
 }

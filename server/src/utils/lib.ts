@@ -2,7 +2,13 @@ import { Prisma } from '@prisma/client';
 import { format } from 'date-fns';
 import { IncomingHttpHeaders } from 'http';
 import ru from '../locales/ru/lang';
-import { Locale, DEFAULT_LOCALE, LANGUAGE_HEADER, LocaleValue } from '../types/interfaces';
+import {
+  Locale,
+  DEFAULT_LOCALE,
+  LANGUAGE_HEADER,
+  LocaleValue,
+  USER_ID_HEADER,
+} from '../types/interfaces';
 import { APP_URL, IS_DEV, LOG_LEVEL } from './constants';
 
 // eslint-disable-next-line no-unused-vars
@@ -55,9 +61,9 @@ export const getLocale = (_value: string | undefined): Locale => {
   return (!locales[value] ? locales[DEFAULT_LOCALE] : locales[value]) as Locale;
 };
 
-export const getLang = (headers: IncomingHttpHeaders) => {
-  const { [LANGUAGE_HEADER]: lang } = headers;
-  return lang as LocaleValue;
+export const parseHeaders = (headers: IncomingHttpHeaders) => {
+  const { [LANGUAGE_HEADER]: lang, [USER_ID_HEADER]: uuid } = headers;
+  return { lang: lang as LocaleValue, id: uuid as string };
 };
 
 export const getPseudoHeaders = ({ lang }: { lang: LocaleValue }) => {

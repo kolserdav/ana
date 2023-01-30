@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+import { Prisma, User } from '@prisma/client';
+
 // eslint-disable-next-line no-shadow
 export enum LogLevel {
   log = 0,
@@ -13,12 +15,28 @@ export enum MessageType {
   TEST = 'TEST',
   SET_CONNECTION_ID = 'SET_CONNECTION_ID',
   SET_ERROR = 'SET_ERROR',
+  GET_USER_CREATE = 'GET_USER_CREATE',
+  SET_USER_CREATE = 'SET_USER_CREATE',
+}
+
+// eslint-disable-next-line no-shadow
+export enum ErrorCode {
+  errorCreateUser = 'errorCreateUser',
 }
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
   : T extends MessageType.SET_CONNECTION_ID
   ? null
+  : T extends MessageType.GET_USER_CREATE
+  ? Prisma.UserCreateArgs['data']
+  : T extends MessageType.SET_USER_CREATE
+  ? User | null
+  : T extends MessageType.SET_ERROR
+  ? {
+      code: keyof typeof ErrorCode;
+      message: string;
+    }
   : never;
 
 export interface Tab {
@@ -48,7 +66,7 @@ export interface Locale {
       accountType: string;
       formDesc: string;
       password: string;
-      paswordRepeat: string;
+      passwordRepeat: string;
       fieldProhibited: string;
       fieldMustBeNotEmpty: string;
       passwordsDoNotMatch: string;
@@ -85,9 +103,10 @@ export interface Result<T> {
 }
 
 export type LocaleValue = 'ru';
-export type WSProtocol = 'test';
+export type WSProtocol = 'test' | 'login';
 export const DEFAULT_LOCALE: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
+export const USER_ID_HEADER = 'uuid';
 export interface SendMessageArgs<T extends keyof typeof MessageType> {
   type: T;
   id: string;

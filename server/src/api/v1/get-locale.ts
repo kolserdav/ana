@@ -1,14 +1,14 @@
 import { RequestHandler } from '../../types';
 import { APPLICATION_JSON } from '../../utils/constants';
 import { Locale, Result } from '../../types/interfaces';
-import { getLang, getLocale } from '../../utils/lib';
+import { parseHeaders, getLocale } from '../../utils/lib';
 
 const getLocaleHandler: RequestHandler<
   { Querystring: { field: keyof Locale['app'] } },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Result<any>
 > = async ({ query, headers }, reply) => {
-  const lang = getLang(headers);
+  const { lang } = parseHeaders(headers);
   const locale = getLocale(lang).app;
 
   const { field } = query;

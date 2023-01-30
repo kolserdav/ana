@@ -9,7 +9,7 @@ import {
   ProcessMessage,
   SendProcessMessageArgs,
 } from '../types';
-import { checkIsFind, checkIsMany, getLang, getLocale, log } from '../utils/lib';
+import { checkIsFind, checkIsMany, parseHeaders, getLocale, log } from '../utils/lib';
 import { REDIS_CACHE_TIMEOUT, REDIS_RESERVED } from '../utils/constants';
 import Redis from '../protocols/redis';
 import { Result } from '../types/interfaces';
@@ -35,6 +35,15 @@ export class ORM extends Service implements Database {
       context,
       model: 'user',
       command: 'findFirst',
+    });
+  };
+
+  public userCreate: Database['userCreate'] = async (args, context) => {
+    return this.runFromWorker({
+      args,
+      context,
+      model: 'user',
+      command: 'create',
     });
   };
 
@@ -80,7 +89,7 @@ export class ORM extends Service implements Database {
     { model, command, args }: ArgsProcessSubset<ProcessMessage.DB_COMMAND>,
     { headers }: DatabaseContext
   ): Promise<any> {
-    const lang = getLang(headers);
+    const { lang } = parseHeaders(headers);
     const locale = getLocale(lang).server;
 
     const { skip, take, where } = args;

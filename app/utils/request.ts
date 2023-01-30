@@ -1,4 +1,11 @@
-import { Api, DEFAULT_LOCALE, LANGUAGE_HEADER, Locale, Result } from '@/types/interfaces';
+import {
+  Api,
+  DEFAULT_LOCALE,
+  LANGUAGE_HEADER,
+  Locale,
+  Result,
+  USER_ID_HEADER,
+} from '@/types/interfaces';
 import { Page, Prisma, PrismaPromise } from '@prisma/client';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -15,10 +22,12 @@ class Request {
   private async send({
     body,
     url,
+    id,
     locale,
     method,
   }: {
     url: string;
+    id?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body?: any;
     locale?: string;
@@ -30,7 +39,10 @@ class Request {
       fetch(`${SERVER}${url}`, {
         body,
         method,
-        headers: { [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || DEFAULT_LOCALE },
+        headers: {
+          [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || DEFAULT_LOCALE,
+          [USER_ID_HEADER]: id || '',
+        },
       })
         .then((d) => {
           resolve(d.json());
@@ -48,8 +60,8 @@ class Request {
     });
   }
 
-  public test(id: string) {
-    return this.send({ url: `${Api.testV1}?id=${id}`, method: 'GET' });
+  public testW(id: string) {
+    return this.send({ url: Api.testV1, method: 'GET', id });
   }
 
   public async getLocale<T extends keyof Locale['app']>({

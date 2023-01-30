@@ -1,4 +1,4 @@
-import { checkEmail, Locale } from '@/types/interfaces';
+import { checkEmail, Locale, MessageType } from '@/types/interfaces';
 import {
   EMAIL_MAX_LENGTH,
   NAME_MAX_LENGTH,
@@ -6,8 +6,11 @@ import {
   SURNAME_MAX_LENGTH,
   TAB_INDEX_DEFAULT,
 } from '@/utils/constants';
+import { log } from '@/utils/lib';
+import Request from '@/utils/request';
+import WS from '@/utils/ws';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   checkSignUp,
   checkName,
@@ -48,6 +51,7 @@ export const useEmailInput = ({ locale }: { locale: Locale['app']['login'] }) =>
     onBlurEmail,
     email,
     emailError,
+    setEmailError,
     emailSuccess,
   };
 };
@@ -81,6 +85,7 @@ export const useNameInput = ({ locale }: { locale: Locale['app']['login'] }) => 
     onBlurName,
     name,
     nameError,
+    setNameError,
   };
 };
 
@@ -113,6 +118,7 @@ export const useSurNameInput = ({ locale }: { locale: Locale['app']['login'] }) 
     onBlurSurname,
     surname,
     surnameError,
+    setSurnameError,
   };
 };
 
@@ -205,6 +211,8 @@ export const usePasswordInput = ({
     passwordRepeat,
     passwordRepeatError,
     passwordRepeatSuccess,
+    setPasswordError,
+    setPasswordRepeatError,
   };
 };
 
@@ -224,4 +232,124 @@ export const useCheckPage = () => {
   const isSignUp = checkSignUp(router.asPath);
 
   return { isSignUp };
+};
+
+export const useMessages = ({
+  setConnId,
+}: {
+  setConnId: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const ws = useMemo(() => new WS({ protocol: 'login' }), []);
+
+  /**
+   * Connect to WS
+   */
+  useEffect(() => {
+    if (!ws.connection) {
+      return;
+    }
+    ws.connection.onmessage = (msg) => {
+      const { data } = msg;
+      const rawMessage = ws.parseMessage(data);
+      if (!rawMessage) {
+        return;
+      }
+      const { type, id } = rawMessage;
+      switch (type) {
+        case MessageType.SET_CONNECTION_ID:
+          setConnId(id);
+          break;
+        case MessageType.SET_USER_CREATE:
+          console.log(rawMessage);
+          break;
+        default:
+          log('warn', 'Not implemented on ws message case in login', rawMessage);
+      }
+    };
+  }, [ws, setConnId]);
+};
+
+export const useButton = ({
+  name,
+  nameError,
+  surname,
+  surnameError,
+  email,
+  emailError,
+  password,
+  passwordError,
+  passwordRepeat,
+  passwordRepeatError,
+  locale,
+  setNameError,
+  setSurnameError,
+  setEmailError,
+  setPasswordError,
+  setPasswordRepeatError,
+}: {
+  name: string;
+  nameError: string;
+  surname: string;
+  surnameError: string;
+  email: string;
+  emailError: string;
+  password: string;
+  passwordError: string;
+  passwordRepeat: string;
+  passwordRepeatError: string;
+  locale: Locale['app']['login'];
+  setNameError: React.Dispatch<React.SetStateAction<string>>;
+  setSurnameError: React.Dispatch<React.SetStateAction<string>>;
+  setEmailError: React.Dispatch<React.SetStateAction<string>>;
+  setPasswordError: React.Dispatch<React.SetStateAction<string>>;
+  setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const checkLoginFields = () => {
+    let error = false;
+    if (!email || emailError) {
+      error = true;
+      setEmailError(locale.fieldMustBeNotEmpty);
+    }
+    if (!password || passwordError) {
+      error = true;
+      setPasswordError(locale.fieldMustBeNotEmpty);
+    }
+    return error;
+  };
+
+  const checkRegisterFields = () => {
+    let error = false;
+    if (!name || nameError) {
+      setNameError(locale.fieldMustBeNotEmpty);
+      error = true;
+    }
+    if (!surname || surnameError) {
+      setSurnameError(locale.fieldMustBeNotEmpty);
+      error = true;
+    }
+    if (!email || emailError) {
+      error = true;
+      setEmailError(locale.fieldMustBeNotEmpty);
+    }
+    if (!password || passwordError) {
+      setPasswordError(locale.fieldMustBeNotEmpty);
+      error = true;
+    }
+    if (!passwordRepeat || passwordRepeatError) {
+      setPasswordRepeatError(locale.fieldMustBeNotEmpty);
+      error = true;
+    }
+    return error;
+  };
+
+  const onClickLoginButton = () => {
+    const error = checkLoginFields();
+  };
+
+  const onClickRegisterButton = () => {
+    const error = checkRegisterFields();
+
+    //
+  };
+  return { onClickLoginButton, onClickRegisterButton };
 };
