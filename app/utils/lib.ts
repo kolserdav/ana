@@ -65,3 +65,9 @@ export const checkClickBy = ({
   const bottom = y + height;
   return !(clientX < x || clientY < y || clientY > bottom);
 };
+
+export const getKey = ({ index, name }: { index: number; name: string }) => `${name}-${index}`;
+
+export const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};

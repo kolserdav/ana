@@ -6,11 +6,22 @@ import { getLocalStorage, LocalStorageName } from '@/utils/localStorage';
 import { DEFAULT_THEME } from '@/utils/constants';
 
 export default function useTheme() {
-  const [themeName, setThemeName] = useState<ThemeType>(
-    getLocalStorage(LocalStorageName.THEME) || DEFAULT_THEME
-  );
+  const [themeName, setThemeName] = useState<ThemeType>(DEFAULT_THEME);
   const [theme, setTheme] = useState<Theme>(themes[themeName]);
 
+  /**
+   * Set saved theme
+   */
+  useEffect(() => {
+    const savedTheme = getLocalStorage(LocalStorageName.THEME);
+    if (savedTheme && savedTheme !== DEFAULT_THEME) {
+      setTheme(themes[savedTheme]);
+    }
+  }, []);
+
+  /**
+   * Listen change theme
+   */
   useEffect(() => {
     const cleanSubs = storeTheme.subscribe(() => {
       const { theme: _theme } = storeTheme.getState();

@@ -36,6 +36,9 @@ const lang: Locale = {
       paswordRepeat: 'Повтор пароля',
       loginOrEmal: 'Логин или почта',
     },
+    appBar: {
+      darkTheme: 'Темная тема',
+    },
   },
 };
 

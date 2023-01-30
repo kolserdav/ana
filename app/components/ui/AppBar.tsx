@@ -1,73 +1,47 @@
-import storeMenuOpen from '@/store/menuOpen';
-import storeScroll from '@/store/scroll';
 import { Theme } from '@/Theme';
-import { EXPAND_LESS_SHOW_FROM } from '@/utils/constants';
+import { Locale } from '@/types/interfaces';
+import { scrollToTop } from '@/utils/lib';
+import { Ubuntu } from '@next/font/google';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 import ChevronUpIcon from '../icons/ChevronUp';
+import { useAppBar, useChangeTheme } from './AppBar.hooks';
 import s from './AppBar.module.scss';
 import Menu from './Menu';
+import Switch from './Switch';
 
-let oldY = 0;
+const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], preload: true, weight: '500' });
 
-function AppBar({ theme, withoutExpandLess }: { theme: Theme; withoutExpandLess?: boolean }) {
-  const [showAppBar, setShowAppBar] = useState<boolean>(true);
-  const [showExpandLess, setShowExpandLess] = useState<boolean>(false);
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+function AppBar({
+  theme,
+  withoutExpandLess,
+  full,
+  locale,
+}: {
+  theme: Theme;
+  locale: Locale['app']['appBar'];
+  withoutExpandLess?: boolean;
+  full?: boolean;
+}) {
+  const { showAppBar, showExpandLess } = useAppBar();
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  /**
-   * Listen scroll
-   */
-  useEffect(() => {
-    const hideOnScroll = () => {
-      const rects = document.body.getBoundingClientRect();
-      const { y } = rects;
-      if (y > oldY || oldY === 0) {
-        setShowAppBar(true);
-      } else if (!menuOpen) {
-        setShowAppBar(false);
-      }
-      oldY = y;
-      if (y < EXPAND_LESS_SHOW_FROM && !menuOpen) {
-        setShowExpandLess(true);
-      } else {
-        setShowExpandLess(false);
-      }
-    };
-    const cleanSubs = storeScroll.subscribe(hideOnScroll);
-    return () => {
-      cleanSubs();
-    };
-  }, [menuOpen]);
-
-  /**
-   * Listen menu open
-   */
-  useEffect(() => {
-    const cleanSubs = storeMenuOpen.subscribe(() => {
-      const { menuOpen: _menuOpen } = storeMenuOpen.getState();
-      setMenuOpen(_menuOpen);
-    });
-    return () => {
-      cleanSubs();
-    };
-  }, []);
+  const { darkTheme, onClickChangeTheme } = useChangeTheme();
 
   return (
     <header>
       <div
-        className={clsx(s.wrapper, showAppBar ? s.open : '')}
+        className={clsx(s.wrapper, ubuntu.className, full ? s.full : '', showAppBar ? s.open : '')}
         style={{
           color: theme.text,
-          backgroundColor: 'transparent', // theme.active,
-          boxShadow: 'none', // `0px 2px 8px ${theme.active}`,
+          backgroundColor: full ? theme.active : 'transparent',
+          boxShadow: full ? `0px 2px 8px ${theme.active}` : 'none',
         }}
       >
-        <Menu theme={theme} />
+        <Menu theme={theme}>
+          <div className={clsx(s.menu__item)}>
+            <div style={{ color: theme.text }}>{locale.darkTheme}</div>
+            <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
+          </div>
+        </Menu>
       </div>
       {!withoutExpandLess && (
         <button
@@ -85,6 +59,7 @@ function AppBar({ theme, withoutExpandLess }: { theme: Theme; withoutExpandLess?
 
 AppBar.defaultProps = {
   withoutExpandLess: false,
+  full: false,
 };
 
 export default AppBar;

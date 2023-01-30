@@ -12,11 +12,12 @@ import AppBar from '@/components/ui/AppBar';
 const request = new Request();
 
 interface LoginProps {
-  locale: Locale['app']['login'];
+  localeLogin: Locale['app']['login'];
+  localeAppBar: Locale['app']['appBar'];
   page: PageFull;
 }
 
-export default function HomePage({ locale, page }: LoginProps) {
+export default function HomePage({ localeLogin, page, localeAppBar }: LoginProps) {
   const { theme } = useTheme();
 
   return (
@@ -26,11 +27,9 @@ export default function HomePage({ locale, page }: LoginProps) {
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar theme={theme} withoutExpandLess />
+      <AppBar theme={theme} withoutExpandLess locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Login theme={theme} locale={locale} />
-        <Login theme={theme} locale={locale} />
-        <Login theme={theme} locale={locale} />
+        <Login theme={theme} locale={localeLogin} />
       </main>
     </>
   );
@@ -40,6 +39,7 @@ export async function getStaticProps({
   locale,
 }: GetStaticPropsContext): Promise<{ props: LoginProps }> {
   const localeLogin = await request.getLocale({ field: 'login', locale });
+  const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
@@ -54,7 +54,8 @@ export async function getStaticProps({
   });
   return {
     props: {
-      locale: localeLogin.data,
+      localeAppBar: localeAppBar.data,
+      localeLogin: localeLogin.data,
       page: prepagePage(page.data),
     },
   };

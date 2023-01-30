@@ -1,0 +1,31 @@
+@import '../../styles/constants';
+
+$switch-width: 40px;
+$switch-round: 20px;
+$switch-transition: 0.1s;
+
+.wrapper {
+  position: relative;
+  width: $switch-width;
+  height: $switch-round;
+  border-radius: calc($switch-round / 2);
+  cursor: pointer;
+
+  .round {
+    position: absolute;
+    left: 0;
+    width: $switch-round;
+    height: $switch-round;
+    border-radius: 50%;
+    transition: all $switch-transition ease-in;
+
+    &.active {
+      left: calc($switch-width - $switch-round);
+      transition: all $switch-transition ease-out;
+    }
+  }
+
+  &.disabled {
+    cursor: default;
+  }
+}

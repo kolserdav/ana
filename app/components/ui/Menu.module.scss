@@ -49,8 +49,8 @@ $container-top: calc($app-bar-height / 2 - 6px);
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
 
     @media (max-width: $small-width) {
       width: $x-small-width;

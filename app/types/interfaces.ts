@@ -51,6 +51,9 @@ export interface Locale {
       paswordRepeat: string;
       loginOrEmal: string;
     };
+    appBar: {
+      darkTheme: string;
+    };
   };
 }
 
