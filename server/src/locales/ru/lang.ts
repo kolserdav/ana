@@ -9,13 +9,13 @@ const lang: Locale = {
   },
   app: {
     login: {
-      login: 'Логин',
       loginButton: 'Войти',
       register: 'Зарегистрироваться',
       signIn: 'Войти в существующий аккаунт',
       signUp: 'Зарегистрировать новый аккаунт',
       email: 'Почта',
       name: 'Имя',
+      surname: 'Фамилия',
       accountType: 'Зарегистрировать как',
       formDesc: 'Поля помеченные * обязательны для заполенения',
       tabs: [
@@ -34,7 +34,6 @@ const lang: Locale = {
         'Выберите тип учетной записи.<br><br> В дальнейшем вы сможете переключаться между ними',
       password: 'Пароль',
       paswordRepeat: 'Повтор пароля',
-      loginOrEmal: 'Логин или почта',
     },
     appBar: {
       darkTheme: 'Темная тема',

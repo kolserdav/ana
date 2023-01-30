@@ -40,39 +40,75 @@ export const useEmailInput = () => {
   };
 };
 
-export const useLoginInput = () => {
-  const [loginError, setLoginError] = useState<boolean>(false);
-  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
-  const [login, setLogin] = useState<string>('');
+export const useNameInput = () => {
+  const [nameError, setNameError] = useState<boolean>(false);
+  const [nameSuccess, setNameSuccess] = useState<boolean>(false);
+  const [name, setName] = useState<string>('');
 
-  const onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
     if (value.length < EMAIL_MAX_LENGTH) {
       const check = checkEmail(value);
-      setLoginSuccess(check);
-      if (loginError) {
-        setLoginError(!check);
+      setNameSuccess(check);
+      if (nameError) {
+        setNameError(!check);
       }
-      setLogin(value);
+      setName(value);
     }
   };
 
-  const onBlurLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (login) {
-      setLoginError(!checkEmail(login));
+  const onBlurName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (name) {
+      setNameError(!checkEmail(name));
     } else {
-      setLoginError(false);
+      setNameError(false);
     }
   };
 
   return {
-    onChangeLogin,
-    onBlurLogin,
-    login,
-    loginError,
-    loginSuccess,
+    onChangeName,
+    onBlurName,
+    name,
+    nameError,
+    nameSuccess,
+  };
+};
+
+export const useSurNameInput = () => {
+  const [surnameError, setSurnameError] = useState<boolean>(false);
+  const [surnameSuccess, setSurnameSuccess] = useState<boolean>(false);
+  const [surname, setSurname] = useState<string>('');
+
+  const onChangeSurname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    if (value.length < EMAIL_MAX_LENGTH) {
+      const check = checkEmail(value);
+      setSurnameSuccess(check);
+      if (surnameError) {
+        setSurnameError(!check);
+      }
+      setSurname(value);
+    }
+  };
+
+  const onBlurSurname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (surname) {
+      setSurnameError(!checkEmail(surname));
+    } else {
+      setSurnameError(false);
+    }
+  };
+
+  return {
+    onChangeSurname,
+    onBlurSurname,
+    surname,
+    surnameError,
+    surnameSuccess,
   };
 };
 

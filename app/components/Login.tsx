@@ -5,11 +5,12 @@ import { TAB_INDEX_DEFAULT } from '@/utils/constants';
 import {
   useCheckPage,
   useEmailInput,
-  useLoginInput,
+  useNameInput,
   useLoginOrEmailInput,
   usePasswordInput,
   usePasswordRepeatInput,
   useTabs,
+  useSurNameInput,
 } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
@@ -23,7 +24,10 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   const { isSignUp } = useCheckPage();
 
-  const { login, loginError, loginSuccess, onChangeLogin, onBlurLogin } = useLoginInput();
+  const { name, nameError, nameSuccess, onChangeName, onBlurName } = useNameInput();
+
+  const { surname, surnameError, surnameSuccess, onChangeSurname, onBlurSurname } =
+    useSurNameInput();
 
   const { email, emailError, emailSuccess, onChangeEmail, onBlurEmail } = useEmailInput();
 
@@ -63,18 +67,32 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           {isSignUp && (
             <Input
               theme={theme}
-              onChange={onChangeLogin}
-              onBlur={onBlurLogin}
-              value={login}
-              id="login"
-              type="login"
+              onChange={onChangeName}
+              onBlur={onBlurName}
+              value={name}
+              id="name"
+              type="text"
               required
-              colorActive
-              error={loginError}
-              success={loginSuccess}
+              error={nameError}
+              success={nameSuccess}
               disabled={load}
-              load={load}
-              name={`${locale.login}*`}
+              name={`${locale.name}*`}
+              fullWidth
+            />
+          )}
+          {isSignUp && (
+            <Input
+              theme={theme}
+              onChange={onChangeName}
+              onBlur={onBlurName}
+              value={surname}
+              id="surname"
+              type="text"
+              required
+              error={surnameError}
+              success={surnameSuccess}
+              disabled={load}
+              name={`${locale.surname}*`}
               fullWidth
             />
           )}
@@ -91,7 +109,6 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               error={emailError}
               success={emailSuccess}
               disabled={load}
-              load={load}
               name={`${locale.email}*`}
               fullWidth
             />
@@ -112,15 +129,14 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               onChange={onChangeLoginOrEmail}
               onBlur={onBlurLoginOrEmail}
               value={loginOrEmail}
-              id="login-or-email"
-              type="text"
+              id="email"
+              type="email"
               required
               colorActive
               error={loginOrEmailError}
               success={loginOrEmailSuccess}
               disabled={load}
-              load={load}
-              name={`${locale.loginOrEmal}*`}
+              name={`${locale.email}*`}
               fullWidth
             />
           )}
@@ -136,7 +152,6 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
             error={passwordError}
             success={passwordSuccess}
             disabled={load}
-            load={load}
             name={`${locale.password}*`}
             fullWidth
           />
@@ -153,7 +168,6 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               error={passwordRepeatError}
               success={passwordRepeatSuccess}
               disabled={load}
-              load={load}
               name={`${locale.paswordRepeat}*`}
               fullWidth
             />

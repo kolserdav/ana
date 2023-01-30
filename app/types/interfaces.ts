@@ -38,7 +38,7 @@ export interface Locale {
     login: {
       email: string;
       name: string;
-      login: string;
+      surname: string;
       register: string;
       loginButton: string;
       tabs: Tab[];
@@ -49,7 +49,6 @@ export interface Locale {
       formDesc: string;
       password: string;
       paswordRepeat: string;
-      loginOrEmal: string;
     };
     appBar: {
       darkTheme: string;

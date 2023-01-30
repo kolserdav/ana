@@ -39,10 +39,13 @@ model Page {
 }
 
 model User {
-  id      String   @id @default(uuid())
-  name    String?  @db.VarChar(255)
-  online  Boolean  @default(true)
-  role    Role
-  updated DateTime @default(now())
-  created DateTime @default(now())
+  id       String   @id @default(uuid())
+  name     String   @db.VarChar(12)
+  surname  String   @db.VarChar(35)
+  email    String   @db.VarChar(255)
+  online   Boolean  @default(true)
+  role     Role
+  password String
+  updated  DateTime @default(now())
+  created  DateTime @default(now())
 }

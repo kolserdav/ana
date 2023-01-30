@@ -10,7 +10,6 @@ const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '400', preload: 
 function Input({
   className,
   error,
-  load,
   disabled,
   value,
   name,
@@ -25,7 +24,6 @@ function Input({
   success,
   fullWidth,
 }: {
-  load: boolean;
   disabled: boolean;
   value: string;
   name: string;
@@ -67,7 +65,7 @@ function Input({
     <div className={s.wrapper}>
       <input
         ref={inputRef}
-        disabled={load || disabled}
+        disabled={disabled}
         placeholder=" "
         id={id}
         value={value}
