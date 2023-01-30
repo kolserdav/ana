@@ -36,7 +36,7 @@ function Input({
   // eslint-disable-next-line no-unused-vars
   onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
   className?: string;
-  error?: boolean;
+  error?: string;
   required?: boolean;
   title?: string;
   success?: boolean;
@@ -111,12 +111,15 @@ function Input({
       >
         {name}
       </label>
+      <span style={{ color: theme.yellow }} className={s.error}>
+        {error}
+      </span>
     </div>
   );
 }
 
 Input.defaultProps = {
-  error: false,
+  error: '',
   success: false,
   className: '',
   onBlur: undefined,

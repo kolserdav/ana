@@ -6,9 +6,7 @@ import {
   useCheckPage,
   useEmailInput,
   useNameInput,
-  useLoginOrEmailInput,
   usePasswordInput,
-  usePasswordRepeatInput,
   useTabs,
   useSurNameInput,
 } from './Login.hooks';
@@ -24,31 +22,24 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   const { isSignUp } = useCheckPage();
 
-  const { name, nameError, nameSuccess, onChangeName, onBlurName } = useNameInput();
+  const { name, nameError, onChangeName, onBlurName } = useNameInput({ locale });
 
-  const { surname, surnameError, surnameSuccess, onChangeSurname, onBlurSurname } =
-    useSurNameInput();
+  const { surname, surnameError, onChangeSurname, onBlurSurname } = useSurNameInput({ locale });
 
-  const { email, emailError, emailSuccess, onChangeEmail, onBlurEmail } = useEmailInput();
-
-  const {
-    loginOrEmail,
-    loginOrEmailError,
-    loginOrEmailSuccess,
-    onChangeLoginOrEmail,
-    onBlurLoginOrEmail,
-  } = useLoginOrEmailInput();
-
-  const { password, passwordError, passwordSuccess, onChangePassword, onBlurPassword } =
-    usePasswordInput();
+  const { email, emailError, emailSuccess, onChangeEmail, onBlurEmail } = useEmailInput({ locale });
 
   const {
+    password,
+    passwordError,
+    passwordSuccess,
+    onChangePassword,
+    onBlurPassword,
+    onChangePasswordRepeat,
+    onBlurPasswordRepeat,
     passwordRepeat,
     passwordRepeatError,
     passwordRepeatSuccess,
-    onChangePasswordRepeat,
-    onBlurPasswordRepeat,
-  } = usePasswordRepeatInput();
+  } = usePasswordInput({ locale, isSignUp });
 
   const { tabActive, onClickTab } = useTabs();
 
@@ -74,7 +65,6 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               type="text"
               required
               error={nameError}
-              success={nameSuccess}
               disabled={load}
               name={`${locale.name}*`}
               fullWidth
@@ -83,36 +73,33 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           {isSignUp && (
             <Input
               theme={theme}
-              onChange={onChangeName}
-              onBlur={onBlurName}
+              onChange={onChangeSurname}
+              onBlur={onBlurSurname}
               value={surname}
               id="surname"
               type="text"
               required
               error={surnameError}
-              success={surnameSuccess}
               disabled={load}
               name={`${locale.surname}*`}
               fullWidth
             />
           )}
-          {isSignUp && (
-            <Input
-              theme={theme}
-              onChange={onChangeEmail}
-              onBlur={onBlurEmail}
-              value={email}
-              id="email"
-              type="email"
-              required
-              colorActive
-              error={emailError}
-              success={emailSuccess}
-              disabled={load}
-              name={`${locale.email}*`}
-              fullWidth
-            />
-          )}
+          <Input
+            theme={theme}
+            onChange={onChangeEmail}
+            onBlur={onBlurEmail}
+            value={email}
+            id="email"
+            type="email"
+            required
+            colorActive
+            error={emailError}
+            success={emailSuccess}
+            disabled={load}
+            name={`${locale.email}*`}
+            fullWidth
+          />
           {isSignUp && (
             <Tabs
               label={`${locale.accountType}*`}
@@ -121,23 +108,6 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               tabs={locale.tabs}
               onClick={onClickTab}
               tabDefault={locale.tabDefault}
-            />
-          )}
-          {!isSignUp && (
-            <Input
-              theme={theme}
-              onChange={onChangeLoginOrEmail}
-              onBlur={onBlurLoginOrEmail}
-              value={loginOrEmail}
-              id="email"
-              type="email"
-              required
-              colorActive
-              error={loginOrEmailError}
-              success={loginOrEmailSuccess}
-              disabled={load}
-              name={`${locale.email}*`}
-              fullWidth
             />
           )}
           <Input

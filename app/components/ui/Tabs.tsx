@@ -94,7 +94,7 @@ function Tabs({
         </div>
         <div
           style={{ color: theme.text }}
-          className={clsx(s.content, isDefault ? ubuntuBold.className : ubuntu.className)}
+          className={clsx(isDefault ? ubuntuBold.className : ubuntu.className, s.content)}
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: !isDefault ? activeTab.content : tabDefault }}
         />

@@ -1,11 +1,23 @@
-import { checkEmail } from '@/types/interfaces';
-import { EMAIL_MAX_LENGTH, TAB_INDEX_DEFAULT } from '@/utils/constants';
+import { checkEmail, Locale } from '@/types/interfaces';
+import {
+  EMAIL_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  SURNAME_MAX_LENGTH,
+  TAB_INDEX_DEFAULT,
+} from '@/utils/constants';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { checkSignUp } from './Login.lib';
+import {
+  checkSignUp,
+  checkName,
+  checkOnlyLetters,
+  checkOnlyNumbers,
+  checkPassword,
+} from './Login.lib';
 
-export const useEmailInput = () => {
-  const [emailError, setEmailError] = useState<boolean>(false);
+export const useEmailInput = ({ locale }: { locale: Locale['app']['login'] }) => {
+  const [emailError, setEmailError] = useState<string>('');
   const [emailSuccess, setEmailSuccess] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
 
@@ -17,7 +29,7 @@ export const useEmailInput = () => {
       const check = checkEmail(value);
       setEmailSuccess(check);
       if (emailError) {
-        setEmailError(!check);
+        setEmailError('');
       }
       setEmail(value);
     }
@@ -25,9 +37,9 @@ export const useEmailInput = () => {
 
   const onBlurEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (email) {
-      setEmailError(!checkEmail(email));
+      setEmailError(!checkEmail(email) ? locale.emailIsUnacceptable : '');
     } else {
-      setEmailError(false);
+      setEmailError('');
     }
   };
 
@@ -40,30 +52,27 @@ export const useEmailInput = () => {
   };
 };
 
-export const useNameInput = () => {
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [nameSuccess, setNameSuccess] = useState<boolean>(false);
+export const useNameInput = ({ locale }: { locale: Locale['app']['login'] }) => {
+  const [nameError, setNameError] = useState<string>('');
   const [name, setName] = useState<string>('');
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
-    if (value.length < EMAIL_MAX_LENGTH) {
-      const check = checkEmail(value);
-      setNameSuccess(check);
-      if (nameError) {
-        setNameError(!check);
-      }
+    if (value.length < NAME_MAX_LENGTH) {
       setName(value);
+      if (nameError && checkName(value)) {
+        setNameError('');
+      }
     }
   };
 
   const onBlurName = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (name) {
-      setNameError(!checkEmail(name));
+      setNameError(!checkName(name) ? locale.fieldProhibited : '');
     } else {
-      setNameError(false);
+      setNameError('');
     }
   };
 
@@ -72,34 +81,30 @@ export const useNameInput = () => {
     onBlurName,
     name,
     nameError,
-    nameSuccess,
   };
 };
 
-export const useSurNameInput = () => {
-  const [surnameError, setSurnameError] = useState<boolean>(false);
-  const [surnameSuccess, setSurnameSuccess] = useState<boolean>(false);
+export const useSurNameInput = ({ locale }: { locale: Locale['app']['login'] }) => {
+  const [surnameError, setSurnameError] = useState<string>('');
   const [surname, setSurname] = useState<string>('');
 
   const onChangeSurname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
-    if (value.length < EMAIL_MAX_LENGTH) {
-      const check = checkEmail(value);
-      setSurnameSuccess(check);
-      if (surnameError) {
-        setSurnameError(!check);
-      }
+    if (value.length < SURNAME_MAX_LENGTH) {
       setSurname(value);
+      if (surnameError && checkName(value)) {
+        setSurnameError('');
+      }
     }
   };
 
   const onBlurSurname = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (surname) {
-      setSurnameError(!checkEmail(surname));
+      setSurnameError(!checkName(surname) ? locale.fieldProhibited : '');
     } else {
-      setSurnameError(false);
+      setSurnameError('');
     }
   };
 
@@ -108,70 +113,84 @@ export const useSurNameInput = () => {
     onBlurSurname,
     surname,
     surnameError,
-    surnameSuccess,
   };
 };
 
-export const useLoginOrEmailInput = () => {
-  const [loginOrEmailError, setLoginOrEmailError] = useState<boolean>(false);
-  const [loginOrEmailSuccess, setLoginOrEmailSuccess] = useState<boolean>(false);
-  const [loginOrEmail, setLoginOrEmail] = useState<string>('');
-
-  const onChangeLoginOrEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = e;
-    if (value.length < EMAIL_MAX_LENGTH) {
-      const check = checkEmail(value);
-      setLoginOrEmailSuccess(check);
-      if (loginOrEmailError) {
-        setLoginOrEmailError(!check);
-      }
-      setLoginOrEmail(value);
-    }
-  };
-
-  const onBlurLoginOrEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (loginOrEmail) {
-      setLoginOrEmailError(!checkEmail(loginOrEmail));
-    } else {
-      setLoginOrEmailError(false);
-    }
-  };
-
-  return {
-    onChangeLoginOrEmail,
-    onBlurLoginOrEmail,
-    loginOrEmail,
-    loginOrEmailError,
-    loginOrEmailSuccess,
-  };
-};
-
-export const usePasswordInput = () => {
-  const [passwordError, setPasswordError] = useState<boolean>(false);
+export const usePasswordInput = ({
+  locale,
+  isSignUp,
+}: {
+  locale: Locale['app']['login'];
+  isSignUp: boolean;
+}) => {
+  const [passwordError, setPasswordError] = useState<string>('');
   const [passwordSuccess, setPasswordSuccess] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
+  const [passwordRepeatError, setPasswordRepeatError] = useState<string>('');
+  const [passwordRepeatSuccess, setPasswordRepeatSuccess] = useState<boolean>(false);
+  const [passwordRepeat, setPasswordRepeat] = useState<string>('');
 
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
-    if (value.length < EMAIL_MAX_LENGTH) {
-      const check = checkEmail(value);
-      setPasswordSuccess(check);
-      if (passwordError) {
-        setPasswordError(!check);
-      }
-      setPassword(value);
+    setPassword(value);
+    if (passwordSuccess) {
+      setPasswordSuccess(false);
+    }
+    if (
+      passwordError &&
+      checkPassword({ password, locale }) &&
+      password.length >= PASSWORD_MIN_LENGTH
+    ) {
+      setPasswordError('');
     }
   };
 
   const onBlurPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (password) {
-      setPasswordError(!checkEmail(password));
+    if (password.length < PASSWORD_MIN_LENGTH) {
+      setPasswordError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
     } else {
-      setPasswordError(false);
+      const psErr = checkPassword({ password, locale });
+      setPasswordError(psErr);
+      if (psErr === '' && isSignUp && passwordRepeat && passwordRepeat !== password) {
+        setPasswordRepeatError(locale.passwordsDoNotMatch);
+      } else {
+        setPasswordRepeatSuccess(true);
+        setPasswordSuccess(true);
+      }
+    }
+  };
+
+  const onChangePasswordRepeat = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    if (passwordRepeatSuccess) {
+      setPasswordRepeatSuccess(false);
+    }
+    setPasswordRepeat(value);
+    if (
+      passwordRepeatError &&
+      checkPassword({ password: passwordRepeat, locale }) &&
+      passwordRepeat.length >= PASSWORD_MIN_LENGTH
+    ) {
+      setPasswordRepeatError('');
+    }
+  };
+
+  const onBlurPasswordRepeat = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (passwordRepeat.length < PASSWORD_MIN_LENGTH) {
+      setPasswordRepeatError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
+    } else {
+      const psErr = checkPassword({ password: passwordRepeat, locale });
+      setPasswordRepeatError(psErr);
+      if (psErr === '' && isSignUp && password && passwordRepeat !== password) {
+        setPasswordRepeatError(locale.passwordsDoNotMatch);
+      } else {
+        setPasswordRepeatSuccess(true);
+        setPasswordSuccess(true);
+      }
     }
   };
 
@@ -181,37 +200,6 @@ export const usePasswordInput = () => {
     password,
     passwordError,
     passwordSuccess,
-  };
-};
-
-export const usePasswordRepeatInput = () => {
-  const [passwordRepeatError, setPasswordRepeatError] = useState<boolean>(false);
-  const [passwordRepeatSuccess, setPasswordRepeatSuccess] = useState<boolean>(false);
-  const [passwordRepeat, setPasswordRepeat] = useState<string>('');
-
-  const onChangePasswordRepeat = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = e;
-    if (value.length < EMAIL_MAX_LENGTH) {
-      const check = checkEmail(value);
-      setPasswordRepeatSuccess(check);
-      if (passwordRepeatError) {
-        setPasswordRepeatError(!check);
-      }
-      setPasswordRepeat(value);
-    }
-  };
-
-  const onBlurPasswordRepeat = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (passwordRepeat) {
-      setPasswordRepeatError(!checkEmail(passwordRepeat));
-    } else {
-      setPasswordRepeatError(false);
-    }
-  };
-
-  return {
     onChangePasswordRepeat,
     onBlurPasswordRepeat,
     passwordRepeat,

@@ -61,6 +61,12 @@ $tab-cell-padding: 0.4rem;
       margin: auto 0;
       text-align: center;
       white-space: initial;
+
+      i {
+        opacity: 0.7;
+        font-weight: 400;
+        font-size: small;
+      }
     }
   }
 }

@@ -49,6 +49,14 @@ export interface Locale {
       formDesc: string;
       password: string;
       paswordRepeat: string;
+      fieldProhibited: string;
+      fieldMustBeNotEmpty: string;
+      passwordsDoNotMatch: string;
+      passwordMinLengthIs: string;
+      passwordMustContain: string;
+      number: string;
+      letter: string;
+      emailIsUnacceptable: string;
     };
     appBar: {
       darkTheme: string;

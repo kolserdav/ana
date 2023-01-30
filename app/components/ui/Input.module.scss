@@ -5,6 +5,7 @@
   width: 100%;
   display: flex;
   margin-top: $form-item-margin-top;
+  flex-direction: column;
 
   label {
     position: absolute;
@@ -67,5 +68,9 @@
     &.success {
       // border-width: 2px;
     }
+  }
+
+  .error {
+    margin-bottom: -1px;
   }
 }

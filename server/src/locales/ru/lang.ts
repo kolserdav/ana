@@ -31,9 +31,17 @@ const lang: Locale = {
         },
       ],
       tabDefault:
-        'Выберите тип учетной записи.<br><br> В дальнейшем вы сможете переключаться между ними',
+        'Выберите тип учетной записи.<br><br> <i>В дальнейшем вы сможете переключаться между ними</i>',
       password: 'Пароль',
       paswordRepeat: 'Повтор пароля',
+      fieldMustBeNotEmpty: 'Поле не должно быть пустым',
+      fieldProhibited: 'Поле содержит запрещенные символы',
+      passwordMinLengthIs: 'Минимальная длина пароля',
+      passwordMustContain: 'Пароль должен содержать хотя-бы одну ',
+      number: 'цифру',
+      letter: 'букву',
+      passwordsDoNotMatch: 'Пароли не совпадают',
+      emailIsUnacceptable: 'Почта имеет недопустимый вид',
     },
     appBar: {
       darkTheme: 'Темная тема',
