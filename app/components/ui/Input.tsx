@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Theme } from '@/Theme';
 import { Ubuntu } from '@next/font/google';
@@ -61,8 +61,14 @@ function Input({
     setGradient(value.length !== 0);
   };
 
+  useEffect(() => {
+    if (value === '') {
+      setGradient(false);
+    }
+  }, [value]);
+
   return (
-    <div className={s.wrapper}>
+    <div className={clsx(s.wrapper, ubuntu.className)}>
       <input
         ref={inputRef}
         disabled={disabled}
@@ -91,7 +97,6 @@ function Input({
         }
         type={type}
         className={clsx(
-          ubuntu.className,
           className,
           fullWidth ? s.full__width : '',
           error ? s.error : success ? s.success : '',

@@ -15,6 +15,7 @@ function Tabs({
   tabs,
   active,
   tabDefault,
+  error,
   label,
   onClick,
 }: {
@@ -23,6 +24,7 @@ function Tabs({
   active: number;
   label: string;
   tabDefault?: string;
+  error?: string;
   // eslint-disable-next-line no-unused-vars
   onClick: (id: number) => void;
 }) {
@@ -53,13 +55,16 @@ function Tabs({
   };
 
   return (
-    <div className={clsx(s.wrapper, ubuntu.className)}>
+    <div className={clsx(s.wrapper, ubuntu.className, error ? s.error : '')}>
       <Typography theme={theme} variant="label">
         {label}
       </Typography>
       <div
         className={s.container}
-        style={{ borderColor: active !== TAB_INDEX_DEFAULT ? theme.green : theme.active }}
+        style={{
+          borderColor:
+            active !== TAB_INDEX_DEFAULT ? theme.green : error ? theme.red : theme.active,
+        }}
       >
         <div className={s.head}>
           {tabs.map((item) => (
@@ -99,12 +104,16 @@ function Tabs({
           dangerouslySetInnerHTML={{ __html: !isDefault ? activeTab.content : tabDefault }}
         />
       </div>
+      <span className={s.error} style={{ color: theme.yellow }}>
+        {error}
+      </span>
     </div>
   );
 }
 
 Tabs.defaultProps = {
   tabDefault: undefined,
+  error: '',
 };
 
 export default Tabs;

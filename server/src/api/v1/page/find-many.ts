@@ -7,7 +7,7 @@ import { Page, Prisma } from '@prisma/client';
 const orm = new ORM();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postPageFindManyHandler: RequestHandler<
+const pageFindManyHandler: RequestHandler<
   { Body: Prisma.PageFindManyArgs },
   Result<Page[]>
 > = async ({ headers, body }, reply) => {
@@ -16,4 +16,4 @@ const postPageFindManyHandler: RequestHandler<
   return page;
 };
 
-export default postPageFindManyHandler;
+export default pageFindManyHandler;

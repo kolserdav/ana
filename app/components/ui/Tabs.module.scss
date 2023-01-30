@@ -8,6 +8,10 @@ $tab-cell-padding: 0.4rem;
   margin-top: $form-item-margin-top;
   margin-bottom: calc($form-item-margin-top * 2);
 
+  &.error {
+    margin-bottom: 0;
+  }
+
   .container {
     position: relative;
     height: 100%;
@@ -69,4 +73,10 @@ $tab-cell-padding: 0.4rem;
       }
     }
   }
+}
+
+.error {
+  position: relative;
+  font-size: small;
+  margin-bottom: calc($form-item-margin-top * 2);
 }

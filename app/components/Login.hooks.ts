@@ -1,4 +1,10 @@
-import { checkEmail, Locale, MessageType } from '@/types/interfaces';
+import {
+  checkEmail,
+  DEFAULT_LOCALE,
+  Locale,
+  MessageType,
+  SendMessageArgs,
+} from '@/types/interfaces';
 import {
   EMAIL_MAX_LENGTH,
   NAME_MAX_LENGTH,
@@ -6,20 +12,22 @@ import {
   SURNAME_MAX_LENGTH,
   TAB_INDEX_DEFAULT,
 } from '@/utils/constants';
+import { CookieName, getCookie } from '@/utils/cookies';
 import { log } from '@/utils/lib';
-import Request from '@/utils/request';
 import WS from '@/utils/ws';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  checkSignUp,
-  checkName,
-  checkOnlyLetters,
-  checkOnlyNumbers,
-  checkPassword,
-} from './Login.lib';
+import { checkSignUp, checkName, checkPassword } from './Login.lib';
 
-export const useEmailInput = ({ locale }: { locale: Locale['app']['login'] }) => {
+export const useEmailInput = ({
+  locale,
+  connId,
+  ws,
+}: {
+  locale: Locale['app']['login'];
+  connId: string;
+  ws: WS;
+}) => {
   const [emailError, setEmailError] = useState<string>('');
   const [emailSuccess, setEmailSuccess] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
@@ -40,7 +48,18 @@ export const useEmailInput = ({ locale }: { locale: Locale['app']['login'] }) =>
 
   const onBlurEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (email) {
-      setEmailError(!checkEmail(email) ? locale.emailIsUnacceptable : '');
+      const check = checkEmail(email);
+      setEmailError(!check ? locale.emailIsUnacceptable : '');
+      if (check) {
+        ws.sendMessage({
+          type: MessageType.GET_USER_CHECK_EMAIL,
+          id: connId,
+          lang: getCookie(CookieName.lang) || DEFAULT_LOCALE,
+          data: {
+            email,
+          },
+        });
+      }
     } else {
       setEmailError('');
     }
@@ -53,6 +72,8 @@ export const useEmailInput = ({ locale }: { locale: Locale['app']['login'] }) =>
     emailError,
     setEmailError,
     emailSuccess,
+    setEmail,
+    setEmailSuccess,
   };
 };
 
@@ -82,6 +103,7 @@ export const useNameInput = ({ locale }: { locale: Locale['app']['login'] }) => 
 
   return {
     onChangeName,
+    setName,
     onBlurName,
     name,
     nameError,
@@ -89,7 +111,7 @@ export const useNameInput = ({ locale }: { locale: Locale['app']['login'] }) => 
   };
 };
 
-export const useSurNameInput = ({ locale }: { locale: Locale['app']['login'] }) => {
+export const useSurnameInput = ({ locale }: { locale: Locale['app']['login'] }) => {
   const [surnameError, setSurnameError] = useState<string>('');
   const [surname, setSurname] = useState<string>('');
 
@@ -116,6 +138,7 @@ export const useSurNameInput = ({ locale }: { locale: Locale['app']['login'] }) 
   return {
     onChangeSurname,
     onBlurSurname,
+    setSurname,
     surname,
     surnameError,
     setSurnameError,
@@ -213,17 +236,23 @@ export const usePasswordInput = ({
     passwordRepeatSuccess,
     setPasswordError,
     setPasswordRepeatError,
+    setPassword,
+    setPasswordRepeat,
+    setPasswordSuccess,
+    setPasswordRepeatSuccess,
   };
 };
 
 export const useTabs = () => {
   const [tabActive, setTabActive] = useState<number>(TAB_INDEX_DEFAULT);
+  const [tabsError, setTabsError] = useState<string>('');
 
   const onClickTab = (id: number) => {
+    setTabsError('');
     setTabActive(id);
   };
 
-  return { tabActive, onClickTab };
+  return { tabActive, onClickTab, tabsError, setTabsError, setTabActive };
 };
 
 export const useCheckPage = () => {
@@ -236,10 +265,28 @@ export const useCheckPage = () => {
 
 export const useMessages = ({
   setConnId,
+  setEmailError,
+  ws,
+  locale,
+  isSignUp,
 }: {
   setConnId: React.Dispatch<React.SetStateAction<string>>;
+  setEmailError: React.Dispatch<React.SetStateAction<string>>;
+  ws: WS;
+  locale: Locale['app']['login'];
+  isSignUp: boolean;
 }) => {
-  const ws = useMemo(() => new WS({ protocol: 'login' }), []);
+  const setUserCheckEmail = useMemo(
+    () =>
+      ({ data }: SendMessageArgs<MessageType.SET_USER_CHECK_EMAIL>) => {
+        if (isSignUp && data) {
+          setEmailError(locale.emailIsRegistered);
+        } else if (!isSignUp && !data) {
+          setEmailError(locale.emailIsNotRegistered);
+        }
+      },
+    [setEmailError, isSignUp, locale]
+  );
 
   /**
    * Connect to WS
@@ -248,6 +295,7 @@ export const useMessages = ({
     if (!ws.connection) {
       return;
     }
+    // eslint-disable-next-line no-param-reassign
     ws.connection.onmessage = (msg) => {
       const { data } = msg;
       const rawMessage = ws.parseMessage(data);
@@ -262,11 +310,17 @@ export const useMessages = ({
         case MessageType.SET_USER_CREATE:
           console.log(rawMessage);
           break;
+        case MessageType.SET_USER_CHECK_EMAIL:
+          setUserCheckEmail(rawMessage);
+          break;
+        case MessageType.SET_ERROR:
+          console.log(rawMessage);
+          break;
         default:
           log('warn', 'Not implemented on ws message case in login', rawMessage);
       }
     };
-  }, [ws, setConnId]);
+  }, [ws, setConnId, setUserCheckEmail]);
 };
 
 export const useButton = ({
@@ -282,10 +336,12 @@ export const useButton = ({
   passwordRepeatError,
   locale,
   setNameError,
+  setTabsError,
   setSurnameError,
   setEmailError,
   setPasswordError,
   setPasswordRepeatError,
+  tabSelected,
 }: {
   name: string;
   nameError: string;
@@ -299,46 +355,70 @@ export const useButton = ({
   passwordRepeatError: string;
   locale: Locale['app']['login'];
   setNameError: React.Dispatch<React.SetStateAction<string>>;
+  setTabsError: React.Dispatch<React.SetStateAction<string>>;
   setSurnameError: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
+  tabSelected: boolean;
 }) => {
+  const [buttonError, setButtonError] = useState<string>('');
+
   const checkLoginFields = () => {
     let error = false;
     if (!email || emailError) {
       error = true;
-      setEmailError(locale.fieldMustBeNotEmpty);
+      if (!email) {
+        setEmailError(locale.fieldMustBeNotEmpty);
+      }
     }
     if (!password || passwordError) {
       error = true;
-      setPasswordError(locale.fieldMustBeNotEmpty);
+      if (!password) {
+        setPasswordError(locale.fieldMustBeNotEmpty);
+      }
     }
+    setButtonError(error ? locale.eliminateRemarks : '');
     return error;
   };
 
   const checkRegisterFields = () => {
     let error = false;
+    if (!tabSelected) {
+      error = true;
+      setTabsError(locale.neededSelect);
+    }
     if (!name || nameError) {
-      setNameError(locale.fieldMustBeNotEmpty);
+      if (!name) {
+        setNameError(locale.fieldMustBeNotEmpty);
+      }
       error = true;
     }
     if (!surname || surnameError) {
-      setSurnameError(locale.fieldMustBeNotEmpty);
+      if (!surname) {
+        setSurnameError(locale.fieldMustBeNotEmpty);
+      }
       error = true;
     }
     if (!email || emailError) {
       error = true;
-      setEmailError(locale.fieldMustBeNotEmpty);
+      if (!email) {
+        setEmailError(locale.fieldMustBeNotEmpty);
+      }
     }
     if (!password || passwordError) {
-      setPasswordError(locale.fieldMustBeNotEmpty);
+      if (!password) {
+        setPasswordError(locale.fieldMustBeNotEmpty);
+      }
       error = true;
     }
     if (!passwordRepeat || passwordRepeatError) {
-      setPasswordRepeatError(locale.fieldMustBeNotEmpty);
+      if (!passwordRepeat) {
+        setPasswordRepeatError(locale.fieldMustBeNotEmpty);
+      }
       error = true;
     }
+    setButtonError(error ? locale.eliminateRemarks : '');
     return error;
   };
 
@@ -351,5 +431,59 @@ export const useButton = ({
 
     //
   };
-  return { onClickLoginButton, onClickRegisterButton };
+  return { onClickLoginButton, onClickRegisterButton, buttonError };
+};
+
+export const useClean = ({
+  setEmail,
+  setEmailError,
+  setName,
+  setNameError,
+  setPassword,
+  setPasswordError,
+  setPasswordRepeat,
+  setPasswordRepeatError,
+  setSurname,
+  setSurnameError,
+  setTabActive,
+  setTabsError,
+  setEmailSuccess,
+  setPasswordRepeatSuccess,
+  setPasswordSuccess,
+}: {
+  setNameError: React.Dispatch<React.SetStateAction<string>>;
+  setTabsError: React.Dispatch<React.SetStateAction<string>>;
+  setSurnameError: React.Dispatch<React.SetStateAction<string>>;
+  setEmailError: React.Dispatch<React.SetStateAction<string>>;
+  setPasswordError: React.Dispatch<React.SetStateAction<string>>;
+  setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  setTabActive: React.Dispatch<React.SetStateAction<number>>;
+  setSurname: React.Dispatch<React.SetStateAction<string>>;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  setPasswordRepeat: React.Dispatch<React.SetStateAction<string>>;
+  setEmailSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setPasswordSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setPasswordRepeatSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const cleanAllFields = () => {
+    setEmail('');
+    setEmailError('');
+    setName('');
+    setNameError('');
+    setPassword('');
+    setPasswordError('');
+    setPasswordRepeat('');
+    setPasswordRepeatError('');
+    setSurname('');
+    setSurnameError('');
+    setTabActive(TAB_INDEX_DEFAULT);
+    setTabsError('');
+    setEmailSuccess(false);
+    setPasswordRepeatSuccess(false);
+    setPasswordSuccess(false);
+  };
+
+  return { cleanAllFields };
 };

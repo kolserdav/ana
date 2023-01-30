@@ -46,7 +46,7 @@ function Test() {
       return;
     }
     (async () => {
-      await req.testW(connId);
+      await req.test(connId);
     })();
   }, [req, connId]);
 

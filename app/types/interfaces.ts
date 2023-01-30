@@ -17,11 +17,14 @@ export enum MessageType {
   SET_ERROR = 'SET_ERROR',
   GET_USER_CREATE = 'GET_USER_CREATE',
   SET_USER_CREATE = 'SET_USER_CREATE',
+  GET_USER_CHECK_EMAIL = 'GET_USER_CHECK_EMAIL',
+  SET_USER_CHECK_EMAIL = 'SET_USER_CHECK_EMAIL',
 }
 
 // eslint-disable-next-line no-shadow
 export enum ErrorCode {
-  errorCreateUser = 'errorCreateUser',
+  createUser = 'createUser',
+  userCheckEmail = 'userCheckEmail',
 }
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
@@ -37,6 +40,12 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
       code: keyof typeof ErrorCode;
       message: string;
     }
+  : T extends MessageType.GET_USER_CHECK_EMAIL
+  ? {
+      email: string;
+    }
+  : T extends MessageType.SET_USER_CHECK_EMAIL
+  ? boolean
   : never;
 
 export interface Tab {
@@ -75,6 +84,10 @@ export interface Locale {
       number: string;
       letter: string;
       emailIsUnacceptable: string;
+      neededSelect: string;
+      eliminateRemarks: string;
+      emailIsRegistered: string;
+      emailIsNotRegistered: string;
     };
     appBar: {
       darkTheme: string;
@@ -86,7 +99,8 @@ export interface Locale {
 export enum Api {
   testV1 = '/v1/test',
   getLocaleV1 = '/v1/get-locale',
-  postPageFindManyV1 = '/v1/get-page-fields',
+  postPageFindManyV1 = '/v1/page-get-fields',
+  postUserCreateV1 = '/v1/user-create',
 }
 
 export type Status = 'error' | 'warning' | 'success';

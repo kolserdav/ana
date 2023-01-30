@@ -60,7 +60,7 @@ class Request {
     });
   }
 
-  public testW(id: string) {
+  public test(id: string) {
     return this.send({ url: Api.testV1, method: 'GET', id });
   }
 

@@ -31,7 +31,7 @@ class QueueHandler {
         type: MessageType.SET_ERROR,
         lang,
         data: {
-          code: ErrorCode.errorCreateUser,
+          code: ErrorCode.createUser,
           message: locale.error,
         },
       });
@@ -41,6 +41,39 @@ class QueueHandler {
       lang,
       type: MessageType.SET_USER_CREATE,
       data: user.data,
+    });
+  }
+
+  public async getUserCheckEmail({
+    id,
+    lang,
+    data: { email },
+  }: SendMessageArgs<MessageType.GET_USER_CHECK_EMAIL>) {
+    const locale = getLocale(lang).server;
+    const user = await orm.userFindFirst(
+      {
+        where: {
+          email,
+        },
+      },
+      { headers: getPseudoHeaders({ lang }) }
+    );
+    if (user.status === 'error') {
+      this.ws.sendMessage({
+        id,
+        type: MessageType.SET_ERROR,
+        lang,
+        data: {
+          code: ErrorCode.userCheckEmail,
+          message: locale.error,
+        },
+      });
+    }
+    this.ws.sendMessage({
+      id,
+      lang,
+      type: MessageType.SET_USER_CHECK_EMAIL,
+      data: user.data !== null,
     });
   }
 
@@ -54,6 +87,9 @@ class QueueHandler {
           break;
         case MessageType.GET_USER_CREATE:
           await this.getUserCreate(msg);
+          break;
+        case MessageType.GET_USER_CHECK_EMAIL:
+          await this.getUserCheckEmail(msg);
           break;
         default:
           log('warn', 'Default case of consume queue', msg);

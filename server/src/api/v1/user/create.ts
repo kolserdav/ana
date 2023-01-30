@@ -8,7 +8,7 @@ import { Prisma } from '@prisma/client';
 const handleRequests = new HandleRequests({ protocol: 'request', caller: 'user-create' });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getTestHandler: RequestHandler<{ Body: Prisma.UserCreateArgs['data'] }, any> = async (
+const userCreateHandler: RequestHandler<{ Body: Prisma.UserCreateArgs['data'] }, any> = async (
   { query, headers, body },
   reply
 ) => {
@@ -27,4 +27,4 @@ const getTestHandler: RequestHandler<{ Body: Prisma.UserCreateArgs['data'] }, an
   return query;
 };
 
-export default getTestHandler;
+export default userCreateHandler;

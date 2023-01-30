@@ -33,7 +33,7 @@ const lang: Locale = {
       tabDefault:
         'Выберите тип учетной записи.<br><br> <i>В дальнейшем вы сможете переключаться между ними</i>',
       password: 'Пароль',
-      paswordRepeat: 'Повтор пароля',
+      passwordRepeat: 'Повтор пароля',
       fieldMustBeNotEmpty: 'Поле не должно быть пустым',
       fieldProhibited: 'Поле содержит запрещенные символы',
       passwordMinLengthIs: 'Минимальная длина пароля',
@@ -42,6 +42,10 @@ const lang: Locale = {
       letter: 'букву',
       passwordsDoNotMatch: 'Пароли не совпадают',
       emailIsUnacceptable: 'Почта имеет недопустимый вид',
+      neededSelect: 'Необходимо сделать выбор',
+      eliminateRemarks: 'Устраните замечания в форме',
+      emailIsNotRegistered: 'Данная почта не зарегистрирована на сервисе',
+      emailIsRegistered: 'На данную почту уже существует учетная запись',
     },
     appBar: {
       darkTheme: 'Темная тема',

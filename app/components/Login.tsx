@@ -1,5 +1,7 @@
+import useChangeLocation from '@/hooks/useChangeLocation';
 import useConnId from '@/hooks/useConnId';
 import useLoad from '@/hooks/useLoad';
+import useWS from '@/hooks/useWS';
 import { Theme } from '@/Theme';
 import { Locale } from '@/types/interfaces';
 import { TAB_INDEX_DEFAULT } from '@/utils/constants';
@@ -9,9 +11,10 @@ import {
   useNameInput,
   usePasswordInput,
   useTabs,
-  useSurNameInput,
+  useSurnameInput,
   useMessages,
   useButton,
+  useClean,
 } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
@@ -21,19 +24,31 @@ import Tabs from './ui/Tabs';
 import Typography from './ui/Typography';
 
 function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login'] }) {
+  const { ws } = useWS({ protocol: 'login' });
+
   const { setConnId, connId } = useConnId();
 
   const { load, setLoad } = useLoad();
 
   const { isSignUp } = useCheckPage();
 
-  const { name, nameError, onChangeName, onBlurName, setNameError } = useNameInput({ locale });
+  const { name, nameError, onChangeName, onBlurName, setNameError, setName } = useNameInput({
+    locale,
+  });
 
-  const { surname, surnameError, onChangeSurname, onBlurSurname, setSurnameError } =
-    useSurNameInput({ locale });
+  const { surname, surnameError, onChangeSurname, onBlurSurname, setSurnameError, setSurname } =
+    useSurnameInput({ locale });
 
-  const { email, emailError, emailSuccess, onChangeEmail, onBlurEmail, setEmailError } =
-    useEmailInput({ locale });
+  const {
+    email,
+    emailError,
+    emailSuccess,
+    onChangeEmail,
+    onBlurEmail,
+    setEmailError,
+    setEmail,
+    setEmailSuccess,
+  } = useEmailInput({ locale, connId, ws });
 
   const {
     password,
@@ -48,15 +63,41 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     passwordRepeatSuccess,
     setPasswordError,
     setPasswordRepeatError,
+    setPassword,
+    setPasswordRepeat,
+    setPasswordRepeatSuccess,
+    setPasswordSuccess,
   } = usePasswordInput({ locale, isSignUp });
 
-  const { tabActive, onClickTab } = useTabs();
+  const { tabActive, onClickTab, setTabsError, tabsError, setTabActive } = useTabs();
 
-  useMessages({ setConnId });
+  const { cleanAllFields } = useClean({
+    setEmail,
+    setEmailError,
+    setName,
+    setNameError,
+    setPassword,
+    setPasswordError,
+    setPasswordRepeat,
+    setPasswordRepeatError,
+    setSurname,
+    setSurnameError,
+    setTabActive,
+    setTabsError,
+    setEmailSuccess,
+    setPasswordRepeatSuccess,
+    setPasswordSuccess,
+  });
 
-  const disabled = tabActive === TAB_INDEX_DEFAULT && isSignUp;
+  useChangeLocation(() => {
+    cleanAllFields();
+  });
 
-  const { onClickLoginButton, onClickRegisterButton } = useButton({
+  useMessages({ setConnId, ws, setEmailError, locale, isSignUp });
+
+  const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
+
+  const { onClickLoginButton, onClickRegisterButton, buttonError } = useButton({
     locale,
     name,
     nameError,
@@ -73,6 +114,8 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     passwordRepeatError,
     email,
     emailError,
+    tabSelected,
+    setTabsError,
   });
 
   return (
@@ -138,6 +181,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               tabs={locale.tabs}
               onClick={onClickTab}
               tabDefault={locale.tabDefault}
+              error={tabsError}
             />
           )}
           <Input
@@ -174,8 +218,8 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           )}
           <div className={s.actives}>
             <Button
-              disabled={disabled}
-              load={load}
+              error={buttonError}
+              disabled={load}
               theme={theme}
               onClick={isSignUp ? onClickRegisterButton : onClickLoginButton}
             >

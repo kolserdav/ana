@@ -18,6 +18,10 @@ class MessageHandler {
     handleRequests.emit('message', { protocol, msg });
   }
 
+  private async getUserCheckEmail(msg: SendMessageArgs<MessageType.GET_USER_CHECK_EMAIL>) {
+    handleRequests.emit('message', { protocol, msg });
+  }
+
   public messages({ ws }: { ws: WebSocket }) {
     ws.on('message', async (msg) => {
       const rawMessage = this.ws.parseMessage(msg);
@@ -25,6 +29,9 @@ class MessageHandler {
       switch (type) {
         case MessageType.TEST:
           await this.test(rawMessage);
+          break;
+        case MessageType.GET_USER_CHECK_EMAIL:
+          await this.getUserCheckEmail(rawMessage);
           break;
         default:
           log('warn', 'Not implemented WS message', rawMessage);
