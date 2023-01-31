@@ -1,6 +1,7 @@
 import {
   checkEmail,
   DEFAULT_LOCALE,
+  ErrorCode,
   Locale,
   MessageType,
   SendMessageArgs,
@@ -12,7 +13,7 @@ import {
   SURNAME_MAX_LENGTH,
   TAB_INDEX_DEFAULT,
 } from '@/utils/constants';
-import { CookieName, getCookie } from '@/utils/cookies';
+import { CookieName, getCookie, getLangCookie, setCookie } from '@/utils/cookies';
 import { log } from '@/utils/lib';
 import WS from '@/utils/ws';
 import { useRouter } from 'next/router';
@@ -46,6 +47,7 @@ export const useEmailInput = ({
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const onBlurEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (email) {
       const check = checkEmail(email);
@@ -93,6 +95,7 @@ export const useNameInput = ({ locale }: { locale: Locale['app']['login'] }) => 
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const onBlurName = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (name) {
       setNameError(!checkName(name) ? locale.fieldProhibited : '');
@@ -127,6 +130,7 @@ export const useSurnameInput = ({ locale }: { locale: Locale['app']['login'] }) 
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const onBlurSurname = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (surname) {
       setSurnameError(!checkName(surname) ? locale.fieldProhibited : '');
@@ -176,6 +180,7 @@ export const usePasswordInput = ({
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const onBlurPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (password.length < PASSWORD_MIN_LENGTH) {
       setPasswordError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
@@ -208,6 +213,7 @@ export const usePasswordInput = ({
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const onBlurPasswordRepeat = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (passwordRepeat.length < PASSWORD_MIN_LENGTH) {
       setPasswordRepeatError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
@@ -266,15 +272,23 @@ export const useCheckPage = () => {
 export const useMessages = ({
   setConnId,
   setEmailError,
+  setLoad,
   ws,
   locale,
   isSignUp,
+  cleanAllFields,
+  email,
+  password,
 }: {
   setConnId: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   ws: WS;
   locale: Locale['app']['login'];
   isSignUp: boolean;
+  cleanAllFields: () => void;
+  email: string;
+  password: string;
 }) => {
   const setUserCheckEmail = useMemo(
     () =>
@@ -286,6 +300,43 @@ export const useMessages = ({
         }
       },
     [setEmailError, isSignUp, locale]
+  );
+
+  const setUserCreate = useMemo(
+    () =>
+      ({ id, lang }: SendMessageArgs<MessageType.SET_USER_CREATE>) => {
+        ws.sendMessage({
+          id,
+          type: MessageType.GET_USER_LOGIN,
+          lang,
+          data: {
+            email,
+            password,
+          },
+        });
+        log('info', locale.successRegistration, '', true);
+      },
+    [email, locale.successRegistration, password, ws]
+  );
+
+  const setUserLogin = useMemo(
+    () =>
+      ({ data: { token } }: SendMessageArgs<MessageType.SET_USER_LOGIN>) => {
+        setCookie(CookieName._utoken, token);
+        cleanAllFields();
+        setLoad(false);
+        log('info', locale.successLogin, '', !isSignUp);
+      },
+    [cleanAllFields, isSignUp, locale.successLogin, setLoad]
+  );
+
+  const setError = useMemo(
+    () =>
+      ({ data: { status, message, httpCode } }: SendMessageArgs<MessageType.SET_ERROR>) => {
+        setLoad(false);
+        log(status, message, { httpCode }, true);
+      },
+    [setLoad]
   );
 
   /**
@@ -308,22 +359,26 @@ export const useMessages = ({
           setConnId(id);
           break;
         case MessageType.SET_USER_CREATE:
-          console.log(rawMessage);
+          setUserCreate(rawMessage);
+          break;
+        case MessageType.SET_USER_LOGIN:
+          setUserLogin(rawMessage);
           break;
         case MessageType.SET_USER_CHECK_EMAIL:
           setUserCheckEmail(rawMessage);
           break;
         case MessageType.SET_ERROR:
-          console.log(rawMessage);
+          setError(rawMessage);
           break;
         default:
           log('warn', 'Not implemented on ws message case in login', rawMessage);
       }
     };
-  }, [ws, setConnId, setUserCheckEmail]);
+  }, [ws, setConnId, setUserCheckEmail, setError, setUserCreate, setUserLogin]);
 };
 
 export const useButton = ({
+  connId,
   name,
   nameError,
   surname,
@@ -341,8 +396,12 @@ export const useButton = ({
   setEmailError,
   setPasswordError,
   setPasswordRepeatError,
+  setLoad,
   tabSelected,
+  tabActive,
+  ws,
 }: {
+  connId: string;
   name: string;
   nameError: string;
   surname: string;
@@ -360,9 +419,17 @@ export const useButton = ({
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tabSelected: boolean;
+  tabActive: number;
+  ws: WS;
 }) => {
   const [buttonError, setButtonError] = useState<string>('');
+
+  const role = useMemo(
+    () => locale.tabs.find((item) => item.id === tabActive)?.value || 'employer',
+    [tabActive, locale]
+  );
 
   const checkLoginFields = () => {
     let error = false;
@@ -424,12 +491,40 @@ export const useButton = ({
 
   const onClickLoginButton = () => {
     const error = checkLoginFields();
+    if (error) {
+      return;
+    }
+    setLoad(true);
+    ws.sendMessage({
+      type: MessageType.GET_USER_LOGIN,
+      id: connId,
+      lang: getLangCookie(),
+      data: {
+        email,
+        password,
+      },
+    });
   };
 
   const onClickRegisterButton = () => {
     const error = checkRegisterFields();
-
-    //
+    if (error) {
+      return;
+    }
+    setLoad(true);
+    ws.sendMessage({
+      type: MessageType.GET_USER_CREATE,
+      id: connId,
+      lang: getLangCookie(),
+      data: {
+        name,
+        email,
+        password,
+        passwordRepeat,
+        surname,
+        role,
+      },
+    });
   };
   return { onClickLoginButton, onClickRegisterButton, buttonError };
 };

@@ -15,7 +15,7 @@ const getLocaleHandler: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(200);
   return {
-    status: 'success',
+    status: 'info',
     message: '',
     code: 200,
     data: locale[field],

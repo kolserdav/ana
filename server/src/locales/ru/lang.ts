@@ -6,6 +6,7 @@ const lang: Locale = {
     badRequest: 'Неверный запрос',
     notFound: 'Не найдено',
     success: 'Успешный запрос',
+    wrongPassword: 'Неверный логин или пароль',
   },
   app: {
     login: {
@@ -21,11 +22,13 @@ const lang: Locale = {
       tabs: [
         {
           id: 0,
+          value: 'employer',
           title: 'Заказчик',
           content: 'Вы сможете создавать заказы и контролировать ход их выполнения',
         },
         {
           id: 1,
+          value: 'worker',
           title: 'Исполнитель',
           content: 'Вы сможете принимать заказы и зарабатывать деньги своим трудом',
         },
@@ -46,6 +49,8 @@ const lang: Locale = {
       eliminateRemarks: 'Устраните замечания в форме',
       emailIsNotRegistered: 'Данная почта не зарегистрирована на сервисе',
       emailIsRegistered: 'На данную почту уже существует учетная запись',
+      successLogin: 'Успешный вход',
+      successRegistration: 'Успешная регистрация',
     },
     appBar: {
       darkTheme: 'Темная тема',

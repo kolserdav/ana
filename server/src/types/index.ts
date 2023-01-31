@@ -40,3 +40,8 @@ export interface SendProcessMessageArgs<T extends keyof typeof ProcessMessage> {
   id: string;
   data: ArgsProcessSubset<T>;
 }
+
+export interface JWTFull {
+  id: string;
+  iat: number;
+}

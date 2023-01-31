@@ -22,6 +22,14 @@ class MessageHandler {
     handleRequests.emit('message', { protocol, msg });
   }
 
+  private async getUserCreate(msg: SendMessageArgs<MessageType.GET_USER_CREATE>) {
+    handleRequests.emit('message', { protocol, msg });
+  }
+
+  private async getUserLogin(msg: SendMessageArgs<MessageType.GET_USER_LOGIN>) {
+    handleRequests.emit('message', { protocol, msg });
+  }
+
   public messages({ ws }: { ws: WebSocket }) {
     ws.on('message', async (msg) => {
       const rawMessage = this.ws.parseMessage(msg);
@@ -32,6 +40,12 @@ class MessageHandler {
           break;
         case MessageType.GET_USER_CHECK_EMAIL:
           await this.getUserCheckEmail(rawMessage);
+          break;
+        case MessageType.GET_USER_CREATE:
+          await this.getUserCreate(rawMessage);
+          break;
+        case MessageType.GET_USER_LOGIN:
+          await this.getUserLogin(rawMessage);
           break;
         default:
           log('warn', 'Not implemented WS message', rawMessage);

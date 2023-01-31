@@ -8,10 +8,14 @@ const cookies = new Cookies();
 export enum CookieName {
   // eslint-disable-next-line no-unused-vars
   lang = 'lang',
+  // eslint-disable-next-line no-unused-vars
+  _utoken = '_utoken',
 }
 
 type CookieValue<T extends keyof typeof CookieName> = T extends CookieName.lang
   ? LocaleValue
+  : T extends CookieName._utoken
+  ? string
   : never;
 
 export function getCookie<T extends keyof typeof CookieName>(name: T): CookieValue<T> | null {

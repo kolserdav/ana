@@ -8,6 +8,7 @@ import {
   LANGUAGE_HEADER,
   LocaleValue,
   USER_ID_HEADER,
+  Status,
 } from '../types/interfaces';
 import { APP_URL, IS_DEV, LOG_LEVEL } from './constants';
 
@@ -76,3 +77,7 @@ export const checkIsMany = (command: Prisma.PrismaAction) =>
   /[a-zA-Z]+Many$/.test(command) ? [] : null;
 
 export const checkIsFind = (command: Prisma.PrismaAction) => /^find/.test(command);
+
+export const getHttpCode = (status: Status) => {
+  return status === 'warn' ? 404 : 500;
+};

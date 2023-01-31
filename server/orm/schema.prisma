@@ -45,7 +45,8 @@ model User {
   email    String   @db.VarChar(255)
   online   Boolean  @default(true)
   role     Role
-  password String
+  password String   @db.VarChar(64)
+  salt     String   @db.VarChar(255)
   updated  DateTime @default(now())
   created  DateTime @default(now())
 }

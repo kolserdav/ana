@@ -93,7 +93,17 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     cleanAllFields();
   });
 
-  useMessages({ setConnId, ws, setEmailError, locale, isSignUp });
+  useMessages({
+    setConnId,
+    ws,
+    setEmailError,
+    locale,
+    isSignUp,
+    email,
+    password,
+    cleanAllFields,
+    setLoad,
+  });
 
   const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
 
@@ -116,6 +126,10 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     emailError,
     tabSelected,
     setTabsError,
+    tabActive,
+    ws,
+    connId,
+    setLoad,
   });
 
   return (

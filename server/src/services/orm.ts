@@ -39,12 +39,14 @@ export class ORM extends Service implements Database {
   };
 
   public userCreate: Database['userCreate'] = async (args, context) => {
-    return this.runFromWorker({
-      args,
-      context,
-      model: 'user',
-      command: 'create',
-    });
+    return this.run(
+      {
+        args,
+        model: 'user',
+        command: 'create',
+      },
+      context
+    );
   };
 
   public userFindFirst: Database['userFindFirst'] = async (args, context) => {
@@ -124,7 +126,7 @@ export class ORM extends Service implements Database {
       if (result !== undefined) {
         const isNotFound = result === null || result?.length === 0;
         return {
-          status: isNotFound ? 'warning' : 'success',
+          status: isNotFound ? 'warning' : 'info',
           message: isNotFound ? locale.notFound : locale.success,
           data: result,
           code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
@@ -158,7 +160,7 @@ export class ORM extends Service implements Database {
     redis.client.set(argsStr, JSON.stringify(result), { EX: REDIS_CACHE_TIMEOUT });
     const isNotFound = result === null || result?.length === 0;
     return {
-      status: isNotFound ? 'warning' : 'success',
+      status: isNotFound ? 'warning' : 'info',
       message: isNotFound ? locale.notFound : locale.success,
       data: result,
       code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,

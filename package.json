@@ -33,6 +33,7 @@
   "author": "kolserdav",
   "license": "ISC",
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "18.11.18",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
@@ -53,6 +54,7 @@
     "@fastify/cors": "^8.2.0",
     "@prisma/client": "^4.9.0",
     "date-fns": "^2.29.3",
+    "jsonwebtoken": "^9.0.0",
     "uuid": "^9.0.0"
   }
 }

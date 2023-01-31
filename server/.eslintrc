@@ -20,6 +20,7 @@
   "rules": {
     "no-unused-vars": 1,
     "prettier/prettier": 1,
-    "@typescript-eslint/no-var-requires": 1
+    "@typescript-eslint/no-var-requires": 1,
+    "@typescript-eslint/ban-ts-comment": 1
   }
 }
