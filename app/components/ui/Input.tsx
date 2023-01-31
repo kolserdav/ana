@@ -24,7 +24,7 @@ function Input({
   success,
   fullWidth,
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   value: string;
   name: string;
   // eslint-disable-next-line no-unused-vars
@@ -62,9 +62,7 @@ function Input({
   };
 
   useEffect(() => {
-    if (value === '') {
-      setGradient(false);
-    }
+    setGradient(value !== '');
   }, [value]);
 
   return (
@@ -108,7 +106,9 @@ function Input({
         style={{
           color: theme.text,
           background: !gradient
-            ? backgroundColor
+            ? disabled
+              ? 'transparent'
+              : backgroundColor
             : `linear-gradient(to top, ${backgroundColor}, ${theme.paper} 65%)`,
           transition: `all ${LABEL_TRANSITION} ease-out`,
         }}
@@ -132,6 +132,7 @@ Input.defaultProps = {
   required: false,
   title: undefined,
   colorActive: false,
+  disabled: false,
 };
 
 export default Input;

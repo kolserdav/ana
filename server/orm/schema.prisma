@@ -42,11 +42,11 @@ model User {
   id       String   @id @default(uuid())
   name     String   @db.VarChar(24)
   surname  String   @db.VarChar(35)
-  email    String   @db.VarChar(255)
+  email    String   @unique @db.VarChar(255)
   online   Boolean  @default(true)
   role     Role
   password String   @db.VarChar(64)
-  salt     String   @db.VarChar(255)
+  salt     String   @db.VarChar(32)
   updated  DateTime @default(now())
   created  DateTime @default(now())
 }

@@ -1,6 +1,7 @@
 @import '../../styles/constants';
 
 $tab-cell-padding: 0.4rem;
+$tab-title-default-opacity: 0.3;
 
 .wrapper {
   position: relative;
@@ -39,7 +40,15 @@ $tab-cell-padding: 0.4rem;
         border-bottom-style: groove;
         text-align: center;
         padding: $tab-cell-padding;
-        opacity: 0.3;
+        opacity: $tab-title-default-opacity;
+
+        &.disabled {
+          cursor: default;
+
+          &:hover {
+            opacity: $tab-title-default-opacity;
+          }
+        }
 
         &:last-child {
           border-right: none;
@@ -49,6 +58,10 @@ $tab-cell-padding: 0.4rem;
           cursor: default;
           border-bottom-width: 0;
           opacity: 1;
+
+          &:hover {
+            opacity: 1;
+          }
         }
 
         &:hover {

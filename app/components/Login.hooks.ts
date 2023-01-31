@@ -1,7 +1,6 @@
 import {
   checkEmail,
   DEFAULT_LOCALE,
-  ErrorCode,
   Locale,
   MessageType,
   SendMessageArgs,
@@ -18,7 +17,7 @@ import { log } from '@/utils/lib';
 import WS from '@/utils/ws';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { checkSignUp, checkName, checkPassword } from './Login.lib';
+import { checkSignUp, checkName, checkPasswordError } from './Login.lib';
 
 export const useEmailInput = ({
   locale,
@@ -39,6 +38,16 @@ export const useEmailInput = ({
     } = e;
     if (value.length < EMAIL_MAX_LENGTH) {
       const check = checkEmail(value);
+      if (check) {
+        ws.sendMessage({
+          type: MessageType.GET_USER_CHECK_EMAIL,
+          id: connId,
+          lang: getCookie(CookieName.lang) || DEFAULT_LOCALE,
+          data: {
+            email: value,
+          },
+        });
+      }
       setEmailSuccess(check);
       if (emailError) {
         setEmailError('');
@@ -51,19 +60,9 @@ export const useEmailInput = ({
   const onBlurEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (email) {
       const check = checkEmail(email);
-      setEmailError(!check ? locale.emailIsUnacceptable : '');
-      if (check) {
-        ws.sendMessage({
-          type: MessageType.GET_USER_CHECK_EMAIL,
-          id: connId,
-          lang: getCookie(CookieName.lang) || DEFAULT_LOCALE,
-          data: {
-            email,
-          },
-        });
+      if (!check) {
+        setEmailError(locale.emailIsUnacceptable);
       }
-    } else {
-      setEmailError('');
     }
   };
 
@@ -173,8 +172,8 @@ export const usePasswordInput = ({
     }
     if (
       passwordError &&
-      checkPassword({ password, locale }) &&
-      password.length >= PASSWORD_MIN_LENGTH
+      !checkPasswordError({ password, locale }) &&
+      value.length >= PASSWORD_MIN_LENGTH
     ) {
       setPasswordError('');
     }
@@ -182,17 +181,21 @@ export const usePasswordInput = ({
 
   // eslint-disable-next-line no-unused-vars
   const onBlurPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (password.length < PASSWORD_MIN_LENGTH) {
-      setPasswordError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
-    } else {
-      const psErr = checkPassword({ password, locale });
-      setPasswordError(psErr);
-      if (psErr === '' && isSignUp && passwordRepeat && passwordRepeat !== password) {
-        setPasswordRepeatError(locale.passwordsDoNotMatch);
+    if (password) {
+      if (password.length < PASSWORD_MIN_LENGTH) {
+        setPasswordError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
       } else {
-        setPasswordRepeatSuccess(true);
-        setPasswordSuccess(true);
+        const psErr = checkPasswordError({ password, locale });
+        setPasswordError(psErr);
+        if (psErr === '' && isSignUp && passwordRepeat && passwordRepeat !== password) {
+          setPasswordRepeatError(locale.passwordsDoNotMatch);
+        } else {
+          setPasswordRepeatSuccess(true);
+          setPasswordSuccess(true);
+        }
       }
+    } else {
+      setPassword('');
     }
   };
 
@@ -204,28 +207,38 @@ export const usePasswordInput = ({
       setPasswordRepeatSuccess(false);
     }
     setPasswordRepeat(value);
-    if (
-      passwordRepeatError &&
-      checkPassword({ password: passwordRepeat, locale }) &&
-      passwordRepeat.length >= PASSWORD_MIN_LENGTH
-    ) {
+    const psErr = checkPasswordError({ password: value, locale });
+    if (passwordRepeatError && psErr === '' && value.length >= PASSWORD_MIN_LENGTH) {
       setPasswordRepeatError('');
+      if (
+        password &&
+        checkPasswordError({ password, locale }) === '' &&
+        password.length >= PASSWORD_MIN_LENGTH &&
+        password === passwordRepeat
+      ) {
+        setPasswordRepeatError('');
+        setPasswordRepeatSuccess(true);
+      }
     }
   };
 
   // eslint-disable-next-line no-unused-vars
   const onBlurPasswordRepeat = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (passwordRepeat.length < PASSWORD_MIN_LENGTH) {
-      setPasswordRepeatError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
-    } else {
-      const psErr = checkPassword({ password: passwordRepeat, locale });
-      setPasswordRepeatError(psErr);
-      if (psErr === '' && isSignUp && password && passwordRepeat !== password) {
-        setPasswordRepeatError(locale.passwordsDoNotMatch);
+    if (passwordRepeat) {
+      if (passwordRepeat.length < PASSWORD_MIN_LENGTH) {
+        setPasswordRepeatError(`${locale.passwordMinLengthIs}: ${PASSWORD_MIN_LENGTH}`);
       } else {
-        setPasswordRepeatSuccess(true);
-        setPasswordSuccess(true);
+        const psErr = checkPasswordError({ password: passwordRepeat, locale });
+        setPasswordRepeatError(psErr);
+        if (psErr === '' && isSignUp && password && passwordRepeat !== password) {
+          setPasswordRepeatError(locale.passwordsDoNotMatch);
+        } else {
+          setPasswordRepeatSuccess(true);
+          setPasswordSuccess(true);
+        }
       }
+    } else {
+      setPasswordRepeatError('');
     }
   };
 
@@ -272,6 +285,7 @@ export const useCheckPage = () => {
 export const useMessages = ({
   setConnId,
   setEmailError,
+  setEmailSuccess,
   setLoad,
   ws,
   locale,
@@ -282,6 +296,7 @@ export const useMessages = ({
 }: {
   setConnId: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
+  setEmailSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   ws: WS;
   locale: Locale['app']['login'];
@@ -295,11 +310,13 @@ export const useMessages = ({
       ({ data }: SendMessageArgs<MessageType.SET_USER_CHECK_EMAIL>) => {
         if (isSignUp && data) {
           setEmailError(locale.emailIsRegistered);
+          setEmailSuccess(false);
         } else if (!isSignUp && !data) {
           setEmailError(locale.emailIsNotRegistered);
+          setEmailSuccess(false);
         }
       },
-    [setEmailError, isSignUp, locale]
+    [setEmailError, isSignUp, locale, setEmailSuccess]
   );
 
   const setUserCreate = useMemo(
@@ -325,7 +342,7 @@ export const useMessages = ({
         setCookie(CookieName._utoken, token);
         cleanAllFields();
         setLoad(false);
-        log('info', locale.successLogin, '', !isSignUp);
+        log('info', locale.successLogin, { token }, !isSignUp);
       },
     [cleanAllFields, isSignUp, locale.successLogin, setLoad]
   );

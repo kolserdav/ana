@@ -18,6 +18,7 @@ function Tabs({
   error,
   label,
   onClick,
+  disabled,
 }: {
   theme: Theme;
   tabs: Tab[];
@@ -25,6 +26,7 @@ function Tabs({
   label: string;
   tabDefault?: string;
   error?: string;
+  disabled?: boolean;
   // eslint-disable-next-line no-unused-vars
   onClick: (id: number) => void;
 }) {
@@ -73,7 +75,9 @@ function Tabs({
               tabIndex={item.id}
               onKeyDown={onKeyDownListener}
               onClick={() => {
-                onClick(item.id);
+                if (!disabled) {
+                  onClick(item.id);
+                }
               }}
               style={
                 active === item.id
@@ -90,7 +94,11 @@ function Tabs({
                       ...titleStyle,
                     }
               }
-              className={clsx(s.title, active === item.id ? s.active : '')}
+              className={clsx(
+                s.title,
+                disabled ? s.disabled : '',
+                active === item.id ? s.active : ''
+              )}
               key={item.id}
             >
               {item.title}
@@ -114,6 +122,7 @@ function Tabs({
 Tabs.defaultProps = {
   tabDefault: undefined,
   error: '',
+  disabled: false,
 };
 
 export default Tabs;

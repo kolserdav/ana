@@ -103,6 +103,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     password,
     cleanAllFields,
     setLoad,
+    setEmailSuccess,
   });
 
   const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
@@ -192,6 +193,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               label={`${locale.accountType}*`}
               theme={theme}
               active={tabActive}
+              disabled={load}
               tabs={locale.tabs}
               onClick={onClickTab}
               tabDefault={locale.tabDefault}

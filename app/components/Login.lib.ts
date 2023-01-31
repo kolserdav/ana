@@ -10,7 +10,7 @@ export const checkOnlyNumbers = (str: string) => /^\d+$/.test(str);
 
 export const checkOnlyLetters = (str: string) => /^[a-zA-Zа-яА-Я]+$/.test(str);
 
-export const checkPassword = ({
+export const checkPasswordError = ({
   password,
   locale,
 }: {

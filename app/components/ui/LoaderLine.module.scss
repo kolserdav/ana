@@ -1,0 +1,34 @@
+.wrapper {
+  z-index: 12;
+  position: fixed;
+  display: flex;
+  background-color: transparent;
+  top: 0;
+  width: 100%;
+  height: 4px;
+
+  .container {
+    &.open {
+      z-index: 12;
+      width: 0;
+      height: 100%;
+      background-color: #23a6d5;
+      background-size: 400% 400%;
+      animation: gradient 2s ease infinite;
+    }
+  }
+}
+
+@keyframes gradient {
+  0% {
+    width: 0;
+  }
+
+  50% {
+    width: 50%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}

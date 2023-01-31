@@ -11,6 +11,7 @@ export const DEFAULT_THEME: ThemeType = 'dark';
 export const TAB_INDEX_DEFAULT = -1;
 export const PASSWORD_MIN_LENGTH = 6;
 export const ALERT_TIMEOUT = 3000;
+export const LOAD_PAGE_TIMEOUT = 1800;
 
 // Deps $label-transition
 export const LABEL_TRANSITION = '0.2s';
