@@ -244,7 +244,11 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           </div>
         </form>
         <div className={s.link}>
-          <Link theme={theme} href={isSignUp ? '/account/sign-in' : '/account/sign-up'}>
+          <Link
+            disabled={load}
+            theme={theme}
+            href={isSignUp ? '/account/sign-in' : '/account/sign-up'}
+          >
             {isSignUp ? locale.signIn : locale.signUp}
           </Link>
         </div>

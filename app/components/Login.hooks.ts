@@ -172,10 +172,20 @@ export const usePasswordInput = ({
     }
     if (
       passwordError &&
-      !checkPasswordError({ password, locale }) &&
+      checkPasswordError({ password, locale }) === '' &&
       value.length >= PASSWORD_MIN_LENGTH
     ) {
       setPasswordError('');
+    }
+    if (
+      passwordRepeat &&
+      checkPasswordError({ password: passwordRepeat, locale }) === '' &&
+      passwordRepeat.length >= PASSWORD_MIN_LENGTH &&
+      value === passwordRepeat
+    ) {
+      setPasswordRepeatSuccess(true);
+      setPasswordRepeatError('');
+      setPasswordSuccess(true);
     }
   };
 
@@ -210,15 +220,16 @@ export const usePasswordInput = ({
     const psErr = checkPasswordError({ password: value, locale });
     if (passwordRepeatError && psErr === '' && value.length >= PASSWORD_MIN_LENGTH) {
       setPasswordRepeatError('');
-      if (
-        password &&
-        checkPasswordError({ password, locale }) === '' &&
-        password.length >= PASSWORD_MIN_LENGTH &&
-        password === passwordRepeat
-      ) {
-        setPasswordRepeatError('');
-        setPasswordRepeatSuccess(true);
-      }
+    }
+    if (
+      password &&
+      checkPasswordError({ password, locale }) === '' &&
+      password.length >= PASSWORD_MIN_LENGTH &&
+      password === value
+    ) {
+      setPasswordRepeatSuccess(true);
+      setPasswordError('');
+      setPasswordSuccess(true);
     }
   };
 
@@ -500,6 +511,10 @@ export const useButton = ({
       if (!passwordRepeat) {
         setPasswordRepeatError(locale.fieldMustBeNotEmpty);
       }
+      error = true;
+    }
+    if (passwordRepeat !== password) {
+      setPasswordRepeatError(locale.passwordsDoNotMatch);
       error = true;
     }
     setButtonError(error ? locale.eliminateRemarks : '');
