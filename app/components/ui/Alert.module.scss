@@ -17,30 +17,30 @@ $alert-indent: 1rem;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0.5rem;
-  transition: all $alert-transition ease-in;
+  transition: left $alert-transition ease-in, bottom $alert-transition-y ease-in;
 
   &.i__0 {
-    top: calc(100vh - $alert-height - $alert-indent);
+    bottom: calc($alert-indent);
   }
 
   &.i__1 {
-    top: calc(100vh - $alert-height * 2 - $alert-indent * 2);
+    bottom: calc($alert-height + $alert-indent * 2);
   }
 
   &.i__2 {
-    top: calc(100vh - $alert-height * 3 - $alert-indent * 3);
+    bottom: calc($alert-height * 2 + $alert-indent * 3);
   }
 
   &.i__3 {
-    top: calc(100vh - $alert-height * 4 - $alert-indent * 4);
+    bottom: calc($alert-height * 3 + $alert-indent * 4);
   }
 
   &.i__4 {
-    top: calc(100vh - $alert-height * 5 - $alert-indent * 5);
+    bottom: calc($alert-height * 4 + $alert-indent * 5);
   }
 
   &.open {
     left: calc(100vw - $alert-width - $alert-indent);
-    transition: all $alert-transition ease-out;
+    transition: left $alert-transition ease-out, bottom $alert-transition-y ease-out;
   }
 }

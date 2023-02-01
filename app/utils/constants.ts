@@ -32,3 +32,5 @@ export const MENU_TRANSITION = 300;
 export const NO_SCROLL_CLASS = 'no__scroll';
 // Deps $alert-transition
 export const ALERT_TRANSITION = 400;
+// Deps $alert-transition-y
+export const ALERT_TRANSITION_Y = 100;
