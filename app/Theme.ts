@@ -8,6 +8,8 @@ export interface Theme {
   blue: string;
   green: string;
   cyan: string;
+  black: string;
+  white: string;
 }
 
 export type Themes = {
@@ -22,10 +24,12 @@ const colors: Themes = {
     active: '#36413e',
     contrast: 'white',
     red: 'orange',
-    yellow: 'lightgoldenrodyellow',
+    yellow: 'yellow',
     blue: '#1a6aaf',
     green: '#02e721',
     cyan: 'cyan',
+    black: 'black',
+    white: 'white',
   },
   light: {
     red: 'red',
@@ -37,6 +41,8 @@ const colors: Themes = {
     contrast: 'black',
     green: 'green',
     cyan: '#0ab1db',
+    black: 'black',
+    white: 'white',
   },
 };
 

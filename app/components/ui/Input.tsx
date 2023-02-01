@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Theme } from '@/Theme';
-import { Ubuntu } from '@next/font/google';
 import { LABEL_TRANSITION } from '@/utils/constants';
+import { ubuntu500 } from '@/fonts/ubuntu';
 import s from './Input.module.scss';
-
-const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '400', preload: true });
 
 function Input({
   className,
@@ -54,11 +52,15 @@ function Input({
   };
 
   const onClick = () => {
-    setGradient(true);
+    if (colorActive) {
+      setGradient(true);
+    }
   };
 
   const _onBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
-    setGradient(value.length !== 0);
+    if (colorActive) {
+      setGradient(value.length !== 0);
+    }
   };
 
   useEffect(() => {
@@ -66,7 +68,7 @@ function Input({
   }, [value]);
 
   return (
-    <div className={clsx(s.wrapper, ubuntu.className)}>
+    <div className={clsx(s.wrapper, ubuntu500.className)}>
       <input
         ref={inputRef}
         disabled={disabled}
@@ -110,7 +112,9 @@ function Input({
               ? 'transparent'
               : backgroundColor
             : `linear-gradient(to top, ${backgroundColor}, ${theme.paper} 65%)`,
-          transition: `all ${LABEL_TRANSITION} ease-out`,
+          transition: !gradient
+            ? `all ${LABEL_TRANSITION} ease-out`
+            : `all ${LABEL_TRANSITION} ease-in`,
         }}
         htmlFor={id}
       >

@@ -293,6 +293,8 @@ export const useCheckPage = () => {
   return { isSignUp };
 };
 
+let send = false;
+
 export const useMessages = ({
   setConnId,
   setEmailError,
@@ -366,6 +368,27 @@ export const useMessages = ({
       },
     [setLoad]
   );
+
+  useEffect(() => {
+    if (!send) {
+      send = true;
+      setTimeout(() => {
+        log('info', 'test 1', {}, true);
+      }, 200);
+      setTimeout(() => {
+        log('warn', 'test 2', {}, true);
+      }, 400);
+      setTimeout(() => {
+        log('error', 'test 3', {}, true);
+      }, 600);
+      setTimeout(() => {
+        log('warn', 'test 4', {}, true);
+      }, 800);
+      setTimeout(() => {
+        log('error', 'test 5', {}, true);
+      }, 1000);
+    }
+  }, []);
 
   /**
    * Connect to WS

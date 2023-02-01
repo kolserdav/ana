@@ -1,10 +1,8 @@
+import { ubuntu500 } from '@/fonts/ubuntu';
 import { Theme } from '@/Theme';
-import { Ubuntu } from '@next/font/google';
 import clsx from 'clsx';
 import { useState } from 'react';
 import s from './Button.module.scss';
-
-const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '500', preload: true });
 
 function Button({
   onClick,
@@ -32,7 +30,7 @@ function Button({
   };
 
   return (
-    <div className={clsx(s.wrapper, ubuntu.className)}>
+    <div className={clsx(s.wrapper, ubuntu500.className)}>
       <button
         disabled={disabled}
         onClick={onClick}

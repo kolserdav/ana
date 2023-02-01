@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { IS_DEV, LOG_LEVEL, NO_SCROLL_CLASS } from '@/utils/constants';
 import { Page } from '@prisma/client';
 import { PageFull } from '@/types';
+import React from 'react';
 
 export const isDev = () => process.env.NODE_ENV === 'development';
 
@@ -13,8 +14,7 @@ export const log = (
   text: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any,
-  forUser = false,
-  infinity = false
+  forUser = false
 ) => {
   if (LogLevel[type] >= LOG_LEVEL) {
     // eslint-disable-next-line no-console
@@ -24,10 +24,8 @@ export const log = (
     storeAlert.dispatch(
       changeAlert({
         alert: {
-          type,
-          children: text,
-          open: true,
-          infinity,
+          status: type,
+          message: text,
         },
       })
     );
@@ -71,3 +69,7 @@ export const getKey = ({ index, name }: { index: number; name: string }) => `${n
 export const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+export const getDangerouslyCurrent = (elem: React.ReactElement): HTMLElement =>
+  // @ts-ignore
+  elem.ref?.current || null;

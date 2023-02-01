@@ -1,14 +1,11 @@
+import { ubuntu400, ubuntu700 } from '@/fonts/ubuntu';
 import { Theme } from '@/Theme';
 import { Tab } from '@/types/interfaces';
 import { TAB_INDEX_DEFAULT } from '@/utils/constants';
-import { Ubuntu } from '@next/font/google';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import s from './Tabs.module.scss';
 import Typography from './Typography';
-
-const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '400', preload: true });
-const ubuntuBold = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '700', preload: true });
 
 function Tabs({
   theme,
@@ -57,7 +54,7 @@ function Tabs({
   };
 
   return (
-    <div className={clsx(s.wrapper, ubuntu.className, error ? s.error : '')}>
+    <div className={clsx(s.wrapper, ubuntu400.className, error ? s.error : '')}>
       <Typography theme={theme} variant="label">
         {label}
       </Typography>
@@ -107,7 +104,7 @@ function Tabs({
         </div>
         <div
           style={{ color: theme.text }}
-          className={clsx(isDefault ? ubuntuBold.className : ubuntu.className, s.content)}
+          className={clsx(isDefault ? ubuntu700.className : ubuntu400.className, s.content)}
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: !isDefault ? activeTab.content : tabDefault }}
         />

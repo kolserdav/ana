@@ -1,22 +1,18 @@
 import Head from 'next/head';
 import s from '@/styles/Home.module.scss';
-import Login from '@/components/Login';
-import useTheme from '@/hooks/useTheme';
 import { GetStaticPropsContext } from 'next';
 import Request from '@/utils/request';
 import { LocaleValue, Locale } from '@/types/interfaces';
-import { PageFull } from '@/types';
+import { AppProps, PageFull } from '@/types';
 import { prepagePage } from '@/utils/lib';
 
 const request = new Request();
 
-interface LoginProps {
+interface LoginProps extends AppProps {
   page: PageFull;
 }
 
-export default function HomePage({ page }: LoginProps) {
-  const { theme } = useTheme();
-
+export default function HomePage({ page, app: { theme } }: LoginProps) {
   return (
     <>
       <Head>
@@ -34,7 +30,7 @@ export default function HomePage({ page }: LoginProps) {
 
 export async function getStaticProps({
   locale,
-}: GetStaticPropsContext): Promise<{ props: LoginProps }> {
+}: GetStaticPropsContext): Promise<{ props: Omit<LoginProps, 'app'> }> {
   const page = await request.pageFindMany({
     where: {
       AND: [

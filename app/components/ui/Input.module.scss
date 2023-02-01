@@ -15,7 +15,6 @@
     left: $input-padding;
     padding: calc($input-font-size / 2.2);
     top: $label-top;
-    transition: top $label-transition ease-in;
     z-index: 0;
     font-size: $input-font-size;
     border-radius: 5px;

@@ -4,10 +4,9 @@ import { Prisma, Role, User } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum LogLevel {
-  log = 0,
-  info = 1,
-  warn = 2,
-  error = 3,
+  info = 0,
+  warn = 1,
+  error = 2,
 }
 
 // eslint-disable-next-line no-shadow

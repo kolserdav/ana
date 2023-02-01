@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import s from './Button.module.scss';
+import s from './IconButton.module.scss';
 
 function IconButton(
   props: React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>

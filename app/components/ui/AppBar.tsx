@@ -1,15 +1,13 @@
+import { ubuntu500 } from '@/fonts/ubuntu';
 import { Theme } from '@/Theme';
 import { Locale } from '@/types/interfaces';
 import { scrollToTop } from '@/utils/lib';
-import { Ubuntu } from '@next/font/google';
 import clsx from 'clsx';
 import ChevronUpIcon from '../icons/ChevronUp';
 import { useAppBar, useChangeTheme } from './AppBar.hooks';
 import s from './AppBar.module.scss';
 import Menu from './Menu';
 import Switch from './Switch';
-
-const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], preload: true, weight: '500' });
 
 function AppBar({
   theme,
@@ -29,7 +27,12 @@ function AppBar({
   return (
     <header>
       <div
-        className={clsx(s.wrapper, ubuntu.className, full ? s.full : '', showAppBar ? s.open : '')}
+        className={clsx(
+          s.wrapper,
+          ubuntu500.className,
+          full ? s.full : '',
+          showAppBar ? s.open : ''
+        )}
         style={{
           color: theme.text,
           backgroundColor: full ? theme.active : 'transparent',

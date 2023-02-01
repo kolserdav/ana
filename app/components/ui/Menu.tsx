@@ -2,7 +2,7 @@ import storeClick from '@/store/click';
 import storeMenuOpen, { changeMenuOpen } from '@/store/menuOpen';
 import { Theme } from '@/Theme';
 import { MENU_TRANSITION } from '@/utils/constants';
-import { checkClickBy, getKey } from '@/utils/lib';
+import { checkClickBy } from '@/utils/lib';
 import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import MenuIcon from '../icons/Menu';
