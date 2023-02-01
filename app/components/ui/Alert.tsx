@@ -1,7 +1,7 @@
 import { ubuntu400 } from '@/fonts/ubuntu';
 import storeAlert from '@/store/alert';
 import { Theme } from '@/Theme';
-import { ALERT_ID_PREFIX, ALERT_TRANSITION } from '@/utils/constants';
+import { ALERT_ID_PREFIX, ALERT_TIMEOUT, ALERT_TRANSITION } from '@/utils/constants';
 import { getDangerouslyCurrent } from '@/utils/lib';
 import clsx from 'clsx';
 import React, { createRef, useEffect, useMemo, useState } from 'react';
@@ -12,6 +12,7 @@ import WarnIcon from '../icons/Warn';
 import s from './Alert.module.scss';
 import IconButton from './IconButton';
 
+let deletedIndex = -1;
 const getButtonId = (button: HTMLButtonElement | null) => {
   if (button === null) {
     return null;
@@ -31,6 +32,15 @@ const getItemClassName = (index: number) => s[`i__${index}`];
 function Alert({ theme }: { theme: Theme }) {
   const [alerts, setAlerts] = useState<React.ReactElement[]>([]);
   const [toDelete, setToDelete] = useState<number[]>([]);
+
+  const closeById = useMemo(
+    () => (idN: number) => {
+      const _toDelete = toDelete.slice();
+      _toDelete.push(idN);
+      setToDelete(_toDelete);
+    },
+    [toDelete]
+  );
 
   const onClickCloseHandler = useMemo(
     () => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -55,15 +65,12 @@ function Alert({ theme }: { theme: Theme }) {
       if (idN === null) {
         return;
       }
-      const _toDelete = toDelete.slice();
-      _toDelete.push(idN);
-      setToDelete(_toDelete);
+      closeById(idN);
     },
-    [toDelete]
+    [closeById]
   );
 
   useEffect(() => {
-    let deletedIndex = -1;
     alerts.forEach((item, i) => {
       const del = getButtonId(getDangerouslyCurrent(item)?.querySelector('button'));
       if (del !== null && toDelete.indexOf(del) !== -1) {
@@ -91,6 +98,7 @@ function Alert({ theme }: { theme: Theme }) {
         const _toDelete = toDelete.slice();
         _toDelete.splice(toDeletedIndex, 1);
         setToDelete(_toDelete);
+        deletedIndex = -1;
       }, ALERT_TRANSITION);
     }
   }, [alerts, toDelete]);
@@ -107,7 +115,7 @@ function Alert({ theme }: { theme: Theme }) {
       const index = _alerts.length;
       _alerts.push(
         <div
-          key={index}
+          key={getItemClassName(index)}
           ref={createRef()}
           style={{
             color: theme.black,
@@ -132,12 +140,17 @@ function Alert({ theme }: { theme: Theme }) {
           </IconButton>
         </div>
       );
+      /*
+      setTimeout(() => {
+        closeById(index);
+      }, ALERT_TIMEOUT);
+      */
       setAlerts(_alerts);
     });
     return () => {
       cleanSubs();
     };
-  }, [alerts, theme, onClickCloseHandler]);
+  }, [alerts, theme, onClickCloseHandler, closeById]);
 
   /**
    * Change class
