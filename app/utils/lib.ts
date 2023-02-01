@@ -73,3 +73,10 @@ export const scrollToTop = () => {
 export const getDangerouslyCurrent = (elem: React.ReactElement): HTMLElement =>
   // @ts-ignore
   elem.ref?.current || null;
+
+export const waitForTimeout = async (timeout: number) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(0);
+    }, timeout);
+  });

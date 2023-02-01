@@ -1,10 +1,11 @@
 import { ubuntu400 } from '@/fonts/ubuntu';
 import storeAlert from '@/store/alert';
 import { Theme } from '@/Theme';
-import { ALERT_ID_PREFIX, ALERT_TIMEOUT, ALERT_TRANSITION } from '@/utils/constants';
-import { getDangerouslyCurrent } from '@/utils/lib';
+import { ALERT_TIMEOUT, ALERT_TRANSITION, ALERT_TRANSITION_Y } from '@/utils/constants';
+import { getDangerouslyCurrent, waitForTimeout } from '@/utils/lib';
 import clsx from 'clsx';
 import React, { createRef, useEffect, useMemo, useState } from 'react';
+import { v4 } from 'uuid';
 import CloseCircleIcon from '../icons/CloseCircle';
 import ErrorIcon from '../icons/Error';
 import InfoIcon from '../icons/Info';
@@ -12,31 +13,27 @@ import WarnIcon from '../icons/Warn';
 import s from './Alert.module.scss';
 import IconButton from './IconButton';
 
-let deletedIndex = -1;
 const getButtonId = (button: HTMLButtonElement | null) => {
-  if (button === null) {
-    return null;
-  }
-  let id = button.getAttribute('id');
-  id = id?.replace(ALERT_ID_PREFIX, '') || null;
+  const id = button?.getAttribute('id');
   if (!id) {
     return null;
   }
-  return parseInt(id, 10);
+  return id;
 };
 
 const itemClassNameRegexp = /_i__\d+/;
 
 const getItemClassName = (index: number) => s[`i__${index}`];
 
+let closed = false;
 function Alert({ theme }: { theme: Theme }) {
   const [alerts, setAlerts] = useState<React.ReactElement[]>([]);
-  const [toDelete, setToDelete] = useState<number[]>([]);
+  const [toDelete, setToDelete] = useState<string[]>([]);
 
   const closeById = useMemo(
-    () => (idN: number) => {
+    () => async (idS: string) => {
       const _toDelete = toDelete.slice();
-      _toDelete.push(idN);
+      _toDelete.push(idS);
       setToDelete(_toDelete);
     },
     [toDelete]
@@ -71,36 +68,47 @@ function Alert({ theme }: { theme: Theme }) {
   );
 
   useEffect(() => {
-    alerts.forEach((item, i) => {
-      const del = getButtonId(getDangerouslyCurrent(item)?.querySelector('button'));
-      if (del !== null && toDelete.indexOf(del) !== -1) {
-        deletedIndex = i;
-        setTimeout(() => {
-          const current = getDangerouslyCurrent(item);
-          if (!current) {
-            return;
-          }
-          current.classList.remove(s.open);
-        }, 0);
+    const closeHandler = async () => {
+      if (closed) {
+        await waitForTimeout(0);
+        await closeHandler();
+        return;
       }
-    });
-    if (deletedIndex !== -1) {
-      const _alerts = alerts.slice();
-      setTimeout(() => {
-        _alerts.splice(deletedIndex, 1);
-        setAlerts(_alerts);
-        let toDeletedIndex = -1;
-        toDelete.forEach((_, ind) => {
-          if (ind === deletedIndex) {
-            toDeletedIndex = ind;
-          }
-        });
-        const _toDelete = toDelete.slice();
-        _toDelete.splice(toDeletedIndex, 1);
-        setToDelete(_toDelete);
-        deletedIndex = -1;
-      }, ALERT_TRANSITION);
-    }
+      let deletedIndex = -1;
+      alerts.forEach((item, i) => {
+        const del = getButtonId(getDangerouslyCurrent(item)?.querySelector('button'));
+        if (del !== null && toDelete.indexOf(del) !== -1) {
+          deletedIndex = i;
+          setTimeout(() => {
+            const current = getDangerouslyCurrent(item);
+            if (!current) {
+              return;
+            }
+            current.classList.remove(s.open);
+          }, 0);
+        }
+      });
+      if (deletedIndex !== -1) {
+        const _alerts = alerts.slice();
+        closed = true;
+        setTimeout(() => {
+          _alerts.splice(deletedIndex, 1);
+          setAlerts(_alerts);
+          let toDeletedIndex = -1;
+          toDelete.forEach((_, ind) => {
+            if (ind === deletedIndex) {
+              toDeletedIndex = ind;
+            }
+          });
+          const _toDelete = toDelete.slice();
+          _toDelete.splice(toDeletedIndex, 1);
+          setToDelete(_toDelete);
+          deletedIndex = -1;
+          closed = false;
+        }, ALERT_TRANSITION);
+      }
+    };
+    closeHandler();
   }, [alerts, toDelete]);
 
   /**
@@ -113,6 +121,7 @@ function Alert({ theme }: { theme: Theme }) {
       } = storeAlert.getState();
       const _alerts = alerts.slice();
       const index = _alerts.length;
+      const id = v4();
       _alerts.push(
         <div
           key={getItemClassName(index)}
@@ -135,16 +144,14 @@ function Alert({ theme }: { theme: Theme }) {
           <p style={{ color: theme.black }} className={s.text}>
             {message}
           </p>
-          <IconButton id={`${ALERT_ID_PREFIX}${index}`} onClick={onClickCloseHandler}>
+          <IconButton id={id} onClick={onClickCloseHandler}>
             <CloseCircleIcon color={theme.black} />
           </IconButton>
         </div>
       );
-      /*
       setTimeout(() => {
-        closeById(index);
+        closeById(id);
       }, ALERT_TIMEOUT);
-      */
       setAlerts(_alerts);
     });
     return () => {
@@ -157,12 +164,15 @@ function Alert({ theme }: { theme: Theme }) {
    */
   useEffect(() => {
     alerts.forEach((item) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const current = getDangerouslyCurrent(item);
         if (!current) {
           return;
         }
         current.classList.add(s.open);
+        closed = true;
+        await waitForTimeout(ALERT_TIMEOUT);
+        closed = false;
       }, 100);
     });
   }, [alerts]);
