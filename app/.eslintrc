@@ -45,6 +45,7 @@
     "no-nested-ternary": 0,
     "react/jsx-props-no-spreading": 1,
     "class-methods-use-this": 1,
-    "@typescript-eslint/ban-ts-comment": 1
+    "@typescript-eslint/ban-ts-comment": 1,
+    "no-plusplus": 0
   }
 }

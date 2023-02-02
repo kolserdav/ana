@@ -1,7 +1,7 @@
 import { ubuntu400 } from '@/fonts/ubuntu';
 import storeAlert from '@/store/alert';
 import { Theme } from '@/Theme';
-import { ALERT_TIMEOUT, ALERT_TRANSITION, ALERT_TRANSITION_Y } from '@/utils/constants';
+import { ALERT_COUNT_MAX, ALERT_TIMEOUT, ALERT_TRANSITION } from '@/utils/constants';
 import { getDangerouslyCurrent, waitForTimeout } from '@/utils/lib';
 import clsx from 'clsx';
 import React, { createRef, useEffect, useMemo, useState } from 'react';
@@ -27,7 +27,7 @@ const getItemClassName = (index: number) => s[`i__${index}`];
 
 let closed = false;
 function Alert({ theme }: { theme: Theme }) {
-  const [alerts, setAlerts] = useState<React.ReactElement[]>([]);
+  const [alerts, setAlerts] = useState<Record<string, React.ReactElement>>({});
   const [toDelete, setToDelete] = useState<string[]>([]);
 
   const closeById = useMemo(
@@ -67,6 +67,9 @@ function Alert({ theme }: { theme: Theme }) {
     [closeById]
   );
 
+  /**
+   * Close item
+   */
   useEffect(() => {
     const closeHandler = async () => {
       if (closed) {
@@ -74,36 +77,46 @@ function Alert({ theme }: { theme: Theme }) {
         await closeHandler();
         return;
       }
-      let deletedIndex = -1;
-      alerts.forEach((item, i) => {
+      let deletedId = '0';
+      Object.keys(alerts).forEach((key, i) => {
+        const item = alerts[key];
         const del = getButtonId(getDangerouslyCurrent(item)?.querySelector('button'));
         if (del !== null && toDelete.indexOf(del) !== -1) {
-          deletedIndex = i;
-          setTimeout(() => {
-            const current = getDangerouslyCurrent(item);
-            if (!current) {
-              return;
-            }
-            current.classList.remove(s.open);
-          }, 0);
+          deletedId = del;
+          const current = getDangerouslyCurrent(item);
+          if (!current) {
+            return;
+          }
+          current.classList.remove(s.open);
         }
       });
-      if (deletedIndex !== -1) {
-        const _alerts = alerts.slice();
+      if (deletedId !== '0') {
         closed = true;
         setTimeout(() => {
-          _alerts.splice(deletedIndex, 1);
-          setAlerts(_alerts);
           let toDeletedIndex = -1;
-          toDelete.forEach((_, ind) => {
-            if (ind === deletedIndex) {
+          toDelete.every((item, ind) => {
+            if (item === deletedId) {
               toDeletedIndex = ind;
+              const _alerts = { ...alerts };
+              let deletedKey = '-1';
+              Object.keys(alerts).every((key) => {
+                const _item = alerts[key];
+                const del = getButtonId(getDangerouslyCurrent(_item)?.querySelector('button'));
+                if (del === deletedId) {
+                  deletedKey = key;
+                  return false;
+                }
+                return true;
+              });
+              delete _alerts[deletedKey];
+              setAlerts(_alerts);
+              return false;
             }
+            return true;
           });
           const _toDelete = toDelete.slice();
           _toDelete.splice(toDeletedIndex, 1);
           setToDelete(_toDelete);
-          deletedIndex = -1;
           closed = false;
         }, ALERT_TRANSITION);
       }
@@ -115,14 +128,24 @@ function Alert({ theme }: { theme: Theme }) {
    * Listen store alert
    */
   useEffect(() => {
+    const getAlertIndex = () => {
+      let index: number | null = 0;
+      for (let i = 0; i < ALERT_COUNT_MAX; i++) {
+        if (!alerts[i]) {
+          index = i;
+          break;
+        }
+      }
+      return index;
+    };
     const cleanSubs = storeAlert.subscribe(() => {
       const {
         alert: { message, status },
       } = storeAlert.getState();
-      const _alerts = alerts.slice();
-      const index = _alerts.length;
+      const _alerts = { ...alerts };
+      const index = getAlertIndex();
       const id = v4();
-      _alerts.push(
+      _alerts[index] = (
         <div
           key={getItemClassName(index)}
           ref={createRef()}
@@ -163,7 +186,8 @@ function Alert({ theme }: { theme: Theme }) {
    * Change class
    */
   useEffect(() => {
-    alerts.forEach((item) => {
+    Object.keys(alerts).forEach((key) => {
+      const item = alerts[key];
       setTimeout(async () => {
         const current = getDangerouslyCurrent(item);
         if (!current) {
@@ -179,7 +203,8 @@ function Alert({ theme }: { theme: Theme }) {
 
   useMemo(
     () =>
-      alerts.forEach((item, index) => {
+      Object.keys(alerts).forEach((key, index) => {
+        const item = alerts[key];
         const current = getDangerouslyCurrent(item);
         if (!current) {
           return;
@@ -198,7 +223,15 @@ function Alert({ theme }: { theme: Theme }) {
   );
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{alerts}</>;
+  return (
+    <>
+      {alerts[0]}
+      {alerts[1]}
+      {alerts[2]}
+      {alerts[3]}
+      {alerts[4]}
+    </>
+  );
 }
 
 export default Alert;
