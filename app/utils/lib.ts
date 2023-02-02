@@ -4,7 +4,6 @@ import { format } from 'date-fns';
 import { IS_DEV, LOG_LEVEL, NO_SCROLL_CLASS } from '@/utils/constants';
 import { Page } from '@prisma/client';
 import { PageFull } from '@/types';
-import React from 'react';
 
 export const isDev = () => process.env.NODE_ENV === 'development';
 
@@ -14,7 +13,8 @@ export const log = (
   text: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any,
-  forUser = false
+  forUser = false,
+  infinity = false
 ) => {
   if (LogLevel[type] >= LOG_LEVEL) {
     // eslint-disable-next-line no-console
@@ -26,6 +26,7 @@ export const log = (
         alert: {
           status: type,
           message: text,
+          infinity,
         },
       })
     );

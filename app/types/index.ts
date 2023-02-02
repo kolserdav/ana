@@ -19,6 +19,7 @@ export interface IconProps {
 export interface AlertProps {
   status: Status;
   message: string;
+  infinity: boolean;
 }
 
 export interface AppProps {

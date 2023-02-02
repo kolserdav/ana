@@ -12,6 +12,7 @@ $alert-indent: 1rem;
   border-radius: $input-border-radius;
   left: calc(100vw + $alert-width + $alert-indent);
   background-color: wheat;
+  font-size: small;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -39,10 +40,35 @@ $alert-indent: 1rem;
     bottom: calc($alert-height * 4 + $alert-indent * 5);
   }
 
+  &.i__5 {
+    bottom: calc($alert-height * 5 + $alert-indent * 6);
+  }
+
+  &.i__6 {
+    bottom: calc($alert-height * 6 + $alert-indent * 7);
+  }
+
+  &.i__7 {
+    bottom: calc($alert-height * 7 + $alert-indent * 8);
+  }
+
+  &.i__8 {
+    bottom: calc($alert-height * 8 + $alert-indent * 9);
+  }
+
+  &.i__9 {
+    bottom: calc($alert-height * 9 + $alert-indent * 10);
+  }
+
   &.open {
     animation: open $alert-transition ease-in;
     left: calc(100vw - $alert-width - $alert-indent);
     transition: bottom $alert-transition-y ease-out;
+  }
+
+  .pseudo__close {
+    position: relative;
+    width: $icon-width-default;
   }
 }
 

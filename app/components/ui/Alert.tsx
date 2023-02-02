@@ -2,14 +2,11 @@ import { ubuntu400 } from '@/fonts/ubuntu';
 import storeAlert from '@/store/alert';
 import { Theme } from '@/Theme';
 import { AlertProps } from '@/types';
-import { ALERT_TIMEOUT, ALERT_TRANSITION } from '@/utils/constants';
+import { ALERT_TIMEOUT, ALERT_TRANSITION, ALERT_TRANSITION_Y } from '@/utils/constants';
 import clsx from 'clsx';
-import React, { createRef, useEffect, useMemo, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import CloseCircleIcon from '../icons/CloseCircle';
-import ErrorIcon from '../icons/Error';
-import InfoIcon from '../icons/Info';
-import WarnIcon from '../icons/Warn';
 import s from './Alert.module.scss';
 import IconButton from './IconButton';
 
@@ -86,12 +83,15 @@ function Alert({ theme }: { theme: Theme }) {
    * Delete item
    */
   useEffect(() => {
-    if (toDelete) {
-      setTimeout(() => {
-        setDeleted(toDelete);
-      }, ALERT_TRANSITION);
-      setToDelete(null);
-    }
+    const addDeleted = async () => {
+      if (toDelete) {
+        setTimeout(() => {
+          setDeleted(toDelete);
+        }, ALERT_TRANSITION);
+        setToDelete(null);
+      }
+    };
+    addDeleted();
   }, [toDelete]);
 
   /**
@@ -100,20 +100,46 @@ function Alert({ theme }: { theme: Theme }) {
   useEffect(() => {
     const cleanSubs = storeAlert.subscribe(() => {
       const {
-        alert: { message, status },
+        alert: { message, status, infinity },
       } = storeAlert.getState();
       const _alerts = alerts.slice();
       const id = v4();
+      const mayMinOne = _alerts.length && _alerts.length;
+      const indexPrev = _alerts.length - 1;
+      const indexPrePrev = _alerts.length - 2;
+      const indexPrePrePrev = _alerts.length - 3;
+      const prev = _alerts[indexPrev];
+      const prePrev = _alerts[indexPrePrev];
+      const prePrePrev = _alerts[indexPrePrePrev];
+      const index = mayMinOne
+        ? prev
+          ? prev.infinity
+            ? prePrev
+              ? prePrev.infinity
+                ? prePrePrev
+                  ? indexPrePrePrev
+                  : indexPrePrev
+                : indexPrePrev
+              : indexPrev
+            : indexPrev
+          : indexPrev
+        : indexPrev;
+      const timeout = infinity
+        ? 0
+        : ALERT_TIMEOUT + (ALERT_TRANSITION + ALERT_TRANSITION_Y) * index;
+      setTimeout(() => {
+        if (!infinity) {
+          closeById(id);
+        }
+      }, timeout);
+
       _alerts.push({
         message,
         status,
         id,
+        infinity,
         ref: createRef<HTMLDivElement>(),
       });
-
-      setTimeout(() => {
-        closeById(id);
-      }, ALERT_TIMEOUT);
 
       setAlerts(_alerts);
     });
@@ -159,6 +185,9 @@ function Alert({ theme }: { theme: Theme }) {
     });
   }, [alerts, deleted]);
 
+  /**
+   * Listend deleted
+   */
   useEffect(() => {
     if (deleted) {
       setAlerts(alerts.filter((item) => item.id !== deleted));
@@ -185,20 +214,14 @@ function Alert({ theme }: { theme: Theme }) {
           }}
           className={clsx(s.item, ubuntu400.className)}
         >
-          {item.status === 'warn' ? (
-            <WarnIcon color={theme.red} />
-          ) : item.status === 'error' ? (
-            <ErrorIcon color={theme.yellow} />
-          ) : (
-            <InfoIcon color={theme.black} />
-          )}
-
           <p style={{ color: theme.black }} className={s.text}>
             {item.message}
           </p>
-          <IconButton id={item.id} onClick={onClickCloseHandler}>
-            <CloseCircleIcon color={theme.black} />
-          </IconButton>
+          {item.infinity && (
+            <IconButton id={item.id} onClick={onClickCloseHandler}>
+              <CloseCircleIcon color={theme.black} />
+            </IconButton>
+          )}
         </div>
       ))}
     </>

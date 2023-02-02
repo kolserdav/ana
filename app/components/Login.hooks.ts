@@ -6,6 +6,7 @@ import {
   SendMessageArgs,
 } from '@/types/interfaces';
 import {
+  ALERT_TIMEOUT,
   EMAIL_MAX_LENGTH,
   NAME_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
@@ -373,20 +374,20 @@ export const useMessages = ({
     if (!send) {
       send = true;
       setTimeout(() => {
-        log('info', 'test 1', {}, true);
-      }, 200);
+        log('info', 'Соединение с сервером разорвано, попробуйте позденее', {}, true);
+      }, 110);
       setTimeout(() => {
-        log('warn', 'test 2', {}, true);
-      }, 400);
+        log('warn', 'test 2', {}, true, true);
+      }, 120);
       setTimeout(() => {
         log('error', 'test 3', {}, true);
-      }, 600);
+      }, 130);
       setTimeout(() => {
-        log('warn', 'test 4', {}, true);
-      }, 800);
+        log('warn', 'test 4', {}, true, true);
+      }, 140);
       setTimeout(() => {
         log('error', 'test 5', {}, true);
-      }, 1000);
+      }, 150);
     }
   }, []);
 

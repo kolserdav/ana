@@ -13,7 +13,7 @@ export const PASSWORD_MIN_LENGTH = 6;
 export const ALERT_TIMEOUT = 1000;
 export const LOAD_PAGE_TIMEOUT = 1800;
 export const LABEL_TRANSITION = '0.2s';
-export const ALERT_COUNT_MAX: 2 | 3 | 4 | 5 = 5;
+export const ALERT_COUNT_MAX: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 = 10;
 export const FONT_SUBSETS: (
   | 'cyrillic'
   | 'latin'
