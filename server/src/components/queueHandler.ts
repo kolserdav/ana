@@ -23,6 +23,7 @@ class QueueHandler {
     id,
     lang,
     data: _data,
+    timeout,
   }: SendMessageArgs<MessageType.GET_USER_CREATE>) {
     const locale = getLocale(lang).server;
     const data: Prisma.UserCreateArgs['data'] = { ..._data } as any;
@@ -43,6 +44,7 @@ class QueueHandler {
         id,
         type: MessageType.SET_ERROR,
         lang,
+        timeout,
         data: {
           status: user.status,
           code: ErrorCode.createUser,
@@ -55,6 +57,7 @@ class QueueHandler {
     this.ws.sendMessage({
       id,
       lang,
+      timeout,
       type: MessageType.SET_USER_CREATE,
       data: user.data,
     });
@@ -63,6 +66,7 @@ class QueueHandler {
   public async getUserCheckEmail({
     id,
     lang,
+    timeout,
     data: { email },
   }: SendMessageArgs<MessageType.GET_USER_CHECK_EMAIL>) {
     const locale = getLocale(lang).server;
@@ -79,6 +83,7 @@ class QueueHandler {
         id,
         type: MessageType.SET_ERROR,
         lang,
+        timeout,
         data: {
           status: user.status,
           code: ErrorCode.userCheckEmail,
@@ -91,6 +96,7 @@ class QueueHandler {
     this.ws.sendMessage({
       id,
       lang,
+      timeout,
       type: MessageType.SET_USER_CHECK_EMAIL,
       data: user.data !== null,
     });
@@ -99,6 +105,7 @@ class QueueHandler {
   private async getUserLogin({
     lang,
     id,
+    timeout,
     data: { email, password },
   }: SendMessageArgs<MessageType.GET_USER_LOGIN>) {
     const locale = getLocale(lang).server;
@@ -115,6 +122,7 @@ class QueueHandler {
         id,
         type: MessageType.SET_ERROR,
         lang,
+        timeout,
         data: {
           status: user.status,
           code: ErrorCode.userLogin,
@@ -131,8 +139,9 @@ class QueueHandler {
         id,
         type: MessageType.SET_ERROR,
         lang,
+        timeout,
         data: {
-          status: user.status,
+          status: 'warn',
           code: ErrorCode.userLogin,
           message: locale.wrongPassword,
           httpCode: 401,
@@ -150,6 +159,7 @@ class QueueHandler {
         id,
         type: MessageType.SET_ERROR,
         lang,
+        timeout,
         data: {
           status: 'error',
           code: ErrorCode.userLogin,
@@ -163,6 +173,7 @@ class QueueHandler {
     this.ws.sendMessage({
       id,
       lang,
+      timeout,
       type: MessageType.SET_USER_LOGIN,
       data: { token },
     });

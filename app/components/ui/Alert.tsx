@@ -2,7 +2,12 @@ import { ubuntu400 } from '@/fonts/ubuntu';
 import storeAlert from '@/store/alert';
 import { Theme } from '@/Theme';
 import { AlertProps } from '@/types';
-import { ALERT_COUNT_MAX, ALERT_DURATION, ALERT_TRANSITION } from '@/utils/constants';
+import {
+  ALERT_COUNT_MAX,
+  ALERT_DURATION,
+  ALERT_TRANSITION,
+  ALERT_TRANSITION_Y,
+} from '@/utils/constants';
 import clsx from 'clsx';
 import React, { createRef, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
@@ -106,7 +111,7 @@ function Alert({ theme }: { theme: Theme }) {
    * Listen store alert
    */
   useEffect(() => {
-    const cleanSubs = storeAlert.subscribe(() => {
+    const cleanSubs = storeAlert.subscribe(async () => {
       const {
         alert: { message, status, infinity },
       } = storeAlert.getState();
@@ -115,16 +120,19 @@ function Alert({ theme }: { theme: Theme }) {
       }
       const _alerts = alerts.slice();
 
-      if (_alerts.length >= ALERT_COUNT_MAX) {
-        setTimeout(() => {
-          const immediateId = alertIds[0];
-          if (immediateId) {
-            if (immediateId !== mouseOver) {
-              closeById(immediateId);
+      if (alertIds.length >= ALERT_COUNT_MAX) {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            const immediateId = alertIds[0];
+            if (immediateId) {
+              if (immediateId !== mouseOver) {
+                closeById(immediateId);
+              }
+              delete timeouts[immediateId];
             }
-            delete timeouts[immediateId];
-          }
-        }, ALERT_TRANSITION * (ALERT_COUNT_MAX - _alerts.length));
+            resolve(0);
+          }, ALERT_TRANSITION_Y * (ALERT_COUNT_MAX - _alerts.length));
+        });
       }
 
       const id = v4();
@@ -134,7 +142,7 @@ function Alert({ theme }: { theme: Theme }) {
         : _alerts[_alerts.length - 1]
         ? _alerts.length - 1
         : 0;
-      const duration = infinity ? 0 : ALERT_DURATION + ALERT_TRANSITION * durationShift;
+      const duration = infinity ? 0 : ALERT_DURATION + ALERT_TRANSITION * (durationShift / 2);
       timeouts[id] = setTimeout(() => {
         delete timeouts[id];
         if (!infinity) {

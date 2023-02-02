@@ -29,7 +29,7 @@ class WS {
         log('error', 'sendMessage', e);
         resolve(1);
       }
-      log('log', 'sendMessage', args);
+      log('info', 'sendMessage', args);
       if (!this.connection) {
         log('error', 'Send message without connection');
         return;

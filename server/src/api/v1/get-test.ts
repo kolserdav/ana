@@ -14,6 +14,7 @@ const getTestHandler: RequestHandler<any, any> = async ({ query, headers }, repl
       type: MessageType.TEST,
       id,
       lang,
+      timeout: new Date().getTime(),
       data: {
         ok: 'yes',
       },

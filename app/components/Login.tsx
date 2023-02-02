@@ -93,22 +93,9 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     cleanAllFields();
   });
 
-  useMessages({
-    setConnId,
-    ws,
-    setEmailError,
-    locale,
-    isSignUp,
-    email,
-    password,
-    cleanAllFields,
-    setLoad,
-    setEmailSuccess,
-  });
-
   const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
 
-  const { onClickLoginButton, onClickRegisterButton, buttonError } = useButton({
+  const { onClickLoginButton, onClickRegisterButton, buttonError, setButtonError } = useButton({
     locale,
     name,
     nameError,
@@ -131,6 +118,20 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     ws,
     connId,
     setLoad,
+  });
+
+  useMessages({
+    setConnId,
+    ws,
+    setEmailError,
+    locale,
+    isSignUp,
+    email,
+    password,
+    cleanAllFields,
+    setLoad,
+    setEmailSuccess,
+    setButtonError,
   });
 
   return (

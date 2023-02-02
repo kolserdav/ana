@@ -35,7 +35,7 @@ class Request {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }): Promise<any> {
     return new Promise((resolve) => {
-      log('log', 'Send request', { method, url });
+      log('info', 'Send request', { method, url });
       fetch(`${SERVER}${url}`, {
         body,
         method,

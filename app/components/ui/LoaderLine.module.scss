@@ -1,3 +1,5 @@
+@import '../../styles//constants';
+
 .wrapper {
   z-index: 12;
   position: fixed;
@@ -14,7 +16,7 @@
       height: 100%;
       background-color: #23a6d5;
       background-size: 400% 400%;
-      animation: gradient 2s ease infinite;
+      animation: gradient $load-page-duration ease infinite;
     }
   }
 }

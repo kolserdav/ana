@@ -1,3 +1,8 @@
+// Deps ALERT_TRANSITION
+$alert-transition: 0.3s;
+
+// Deps ALERT_TRANSITION-Y
+$alert-transition-y: 0.1s;
 $container-max-width: 1200px;
 $button-border-radius: 8px;
 $color-gray: #e9edf2;
@@ -22,8 +27,5 @@ $menu-transition: 0.3s;
 // Deps ICON_WIDTH_DEFAULT
 $icon-width-default: 24px;
 
-// Deps ALERT_TRANSITION
-$alert-transition: 0.4s;
-
-// Deps ALERT_TRANSITION-Y
-$alert-transition-y: 0.1s;
+// Deps LOAD_PAGE_DURATION
+$load-page-duration: 1s;

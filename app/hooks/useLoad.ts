@@ -1,5 +1,5 @@
 import storeLoad, { changeLoad } from '@/store/load';
-import { LOAD_PAGE_TIMEOUT } from '@/utils/constants';
+import { LOAD_PAGE_DURATION } from '@/utils/constants';
 import { useEffect, useState } from 'react';
 
 const useLoad = () => {
@@ -8,7 +8,7 @@ const useLoad = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoad(false);
-    }, LOAD_PAGE_TIMEOUT);
+    }, LOAD_PAGE_DURATION);
   }, []);
 
   /**

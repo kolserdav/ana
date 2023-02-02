@@ -1,12 +1,12 @@
 import {
   checkEmail,
   DEFAULT_LOCALE,
+  ErrorCode,
   Locale,
   MessageType,
   SendMessageArgs,
 } from '@/types/interfaces';
 import {
-  ALERT_DURATION,
   EMAIL_MAX_LENGTH,
   NAME_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
@@ -14,7 +14,7 @@ import {
   TAB_INDEX_DEFAULT,
 } from '@/utils/constants';
 import { CookieName, getCookie, getLangCookie, setCookie } from '@/utils/cookies';
-import { log } from '@/utils/lib';
+import { awaitResponse, log } from '@/utils/lib';
 import WS from '@/utils/ws';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -43,6 +43,7 @@ export const useEmailInput = ({
         ws.sendMessage({
           type: MessageType.GET_USER_CHECK_EMAIL,
           id: connId,
+          timeout: new Date().getTime(),
           lang: getCookie(CookieName.lang) || DEFAULT_LOCALE,
           data: {
             email: value,
@@ -294,8 +295,6 @@ export const useCheckPage = () => {
   return { isSignUp };
 };
 
-let send = false;
-
 export const useMessages = ({
   setConnId,
   setEmailError,
@@ -307,11 +306,13 @@ export const useMessages = ({
   cleanAllFields,
   email,
   password,
+  setButtonError,
 }: {
   setConnId: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
   setEmailSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  setButtonError: React.Dispatch<React.SetStateAction<string>>;
   ws: WS;
   locale: Locale['app']['login'];
   isSignUp: boolean;
@@ -340,6 +341,7 @@ export const useMessages = ({
           id,
           type: MessageType.GET_USER_LOGIN,
           lang,
+          timeout: new Date().getTime(),
           data: {
             email,
             password,
@@ -363,30 +365,22 @@ export const useMessages = ({
 
   const setError = useMemo(
     () =>
-      ({ data: { status, message, httpCode } }: SendMessageArgs<MessageType.SET_ERROR>) => {
+      async ({
+        data: { status, message, httpCode, code },
+        timeout,
+      }: SendMessageArgs<MessageType.SET_ERROR>) => {
+        await awaitResponse(timeout);
+        switch (code) {
+          case ErrorCode.userLogin:
+            setButtonError(message);
+            break;
+          default:
+        }
         setLoad(false);
         log(status, message, { httpCode }, true);
       },
-    [setLoad]
+    [setLoad, setButtonError]
   );
-
-  useEffect(() => {
-    if (!send) {
-      const s = () => {
-        send = true;
-        setTimeout(() => {
-          log('info', 'Соединение с сервером разорвано, попробуйте позденее', {}, true);
-        }, 0);
-        setTimeout(() => {
-          log('warn', 'test 2', {}, true);
-        }, 500);
-      };
-      s();
-      setInterval(() => {
-        s();
-      }, 2000);
-    }
-  }, []);
 
   /**
    * Connect to WS
@@ -547,10 +541,14 @@ export const useButton = ({
     if (error) {
       return;
     }
+    if (buttonError) {
+      setButtonError('');
+    }
     setLoad(true);
     ws.sendMessage({
       type: MessageType.GET_USER_LOGIN,
       id: connId,
+      timeout: new Date().getTime(),
       lang: getLangCookie(),
       data: {
         email,
@@ -564,11 +562,15 @@ export const useButton = ({
     if (error) {
       return;
     }
+    if (buttonError) {
+      setButtonError('');
+    }
     setLoad(true);
     ws.sendMessage({
       type: MessageType.GET_USER_CREATE,
       id: connId,
       lang: getLangCookie(),
+      timeout: new Date().getTime(),
       data: {
         name,
         email,
@@ -579,7 +581,7 @@ export const useButton = ({
       },
     });
   };
-  return { onClickLoginButton, onClickRegisterButton, buttonError };
+  return { onClickLoginButton, onClickRegisterButton, buttonError, setButtonError };
 };
 
 export const useClean = ({

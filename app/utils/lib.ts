@@ -1,7 +1,7 @@
 import storeAlert, { changeAlert } from '@/store/alert';
 import { LogLevel } from '@/types/interfaces';
 import { format } from 'date-fns';
-import { IS_DEV, LOG_LEVEL, NO_SCROLL_CLASS } from '@/utils/constants';
+import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from '@/utils/constants';
 import { Page } from '@prisma/client';
 import { PageFull } from '@/types';
 
@@ -77,3 +77,12 @@ export const waitForTimeout = async (timeout: number) =>
       resolve(0);
     }, timeout);
   });
+
+export const getChangeDate = (timeout: number) => new Date().getTime() - timeout;
+
+export const awaitResponse = async (timeout: number) => {
+  const diffs = LOAD_PAGE_DURATION - getChangeDate(timeout);
+  if (diffs > 0) {
+    await waitForTimeout(diffs);
+  }
+};

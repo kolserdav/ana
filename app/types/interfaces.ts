@@ -140,6 +140,7 @@ export interface SendMessageArgs<T extends keyof typeof MessageType> {
   type: T;
   id: string;
   lang: LocaleValue;
+  timeout: number;
   data: ArgsSubset<T>;
 }
 

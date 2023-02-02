@@ -4,6 +4,8 @@
   position: relative;
   margin-top: $form-item-margin-top;
   margin-bottom: $input-margin-bottom;
+  display: flex;
+  flex-direction: column;
 }
 
 .button {
@@ -36,5 +38,9 @@
 }
 
 .error {
+  content: ' ';
+  position: relative;
+  height: 1rem;
+  width: 100%;
   font-size: small;
 }

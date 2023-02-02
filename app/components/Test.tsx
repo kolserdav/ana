@@ -61,6 +61,7 @@ function Test() {
       type: MessageType.TEST,
       id: connId,
       lang: getLangCookie(),
+      timeout: new Date().getTime(),
       data: { ok: 'yes' },
     });
   }, [connId, ws]);

@@ -59,6 +59,7 @@ class WS {
     this.sendMessage({
       id,
       lang,
+      timeout: new Date().getTime(),
       type: MessageType.SET_CONNECTION_ID,
       data: null,
     });
