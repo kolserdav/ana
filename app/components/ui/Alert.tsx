@@ -25,10 +25,10 @@ const itemClassNameRegexp = /_i__\d+/;
 
 const getItemClassName = (index: number) => s[`i__${index}`];
 
-let closed = false;
 function Alert({ theme }: { theme: Theme }) {
   const [alerts, setAlerts] = useState<Record<string, React.ReactElement>>({});
   const [toDelete, setToDelete] = useState<string[]>([]);
+  const [deletedId, setDeletedI] = useState<string>('0');
 
   const closeById = useMemo(
     () => async (idS: string) => {
@@ -72,57 +72,58 @@ function Alert({ theme }: { theme: Theme }) {
    */
   useEffect(() => {
     const closeHandler = async () => {
-      if (closed) {
-        await waitForTimeout(0);
-        await closeHandler();
-        return;
-      }
-      let deletedId = '0';
-      Object.keys(alerts).forEach((key, i) => {
+      Object.keys(alerts).every((key, i) => {
         const item = alerts[key];
         const del = getButtonId(getDangerouslyCurrent(item)?.querySelector('button'));
         if (del !== null && toDelete.indexOf(del) !== -1) {
-          deletedId = del;
+          setDeletedI(del);
           const current = getDangerouslyCurrent(item);
           if (!current) {
-            return;
+            return false;
           }
           current.classList.remove(s.open);
+          return false;
         }
+        return true;
       });
-      if (deletedId !== '0') {
-        closed = true;
-        setTimeout(() => {
-          let toDeletedIndex = -1;
-          toDelete.every((item, ind) => {
-            if (item === deletedId) {
-              toDeletedIndex = ind;
-              const _alerts = { ...alerts };
-              let deletedKey = '-1';
-              Object.keys(alerts).every((key) => {
-                const _item = alerts[key];
-                const del = getButtonId(getDangerouslyCurrent(_item)?.querySelector('button'));
-                if (del === deletedId) {
-                  deletedKey = key;
-                  return false;
-                }
-                return true;
-              });
-              delete _alerts[deletedKey];
-              setAlerts(_alerts);
-              return false;
-            }
-            return true;
-          });
-          const _toDelete = toDelete.slice();
-          _toDelete.splice(toDeletedIndex, 1);
-          setToDelete(_toDelete);
-          closed = false;
-        }, ALERT_TRANSITION);
-      }
     };
     closeHandler();
   }, [alerts, toDelete]);
+
+  /**
+   * Delete item
+   */
+  useEffect(() => {
+    console.log(deletedId);
+    if (deletedId !== '0') {
+      setTimeout(() => {
+        let toDeletedIndex = -1;
+        toDelete.every((item, ind) => {
+          if (item === deletedId) {
+            toDeletedIndex = ind;
+            const _alerts = { ...alerts };
+            let deletedKey = '-1';
+            Object.keys(alerts).every((key) => {
+              const _item = alerts[key];
+              const del = getButtonId(getDangerouslyCurrent(_item)?.querySelector('button'));
+              if (del === deletedId) {
+                deletedKey = key;
+                return false;
+              }
+              return true;
+            });
+            delete _alerts[deletedKey];
+            setAlerts(_alerts);
+            return false;
+          }
+          return true;
+        });
+        const _toDelete = toDelete.slice();
+        _toDelete.splice(toDeletedIndex, 1);
+        setToDelete(_toDelete);
+      }, ALERT_TRANSITION);
+    }
+  }, [deletedId, alerts, toDelete]);
 
   /**
    * Listen store alert
@@ -194,9 +195,7 @@ function Alert({ theme }: { theme: Theme }) {
           return;
         }
         current.classList.add(s.open);
-        closed = true;
         await waitForTimeout(ALERT_TIMEOUT);
-        closed = false;
       }, 100);
     });
   }, [alerts]);
