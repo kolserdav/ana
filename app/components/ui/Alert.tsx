@@ -10,6 +10,8 @@ import CloseCircleIcon from '../icons/CloseCircle';
 import s from './Alert.module.scss';
 import IconButton from './IconButton';
 
+type AlertElement = AlertProps & { id: string; ref: React.RefObject<HTMLDivElement> };
+
 const getButtonId = (button: HTMLButtonElement | null) => {
   const id = button?.getAttribute('id');
   if (!id) {
@@ -22,10 +24,10 @@ const itemClassNameRegexp = /_i__\d+/;
 
 const getItemClassName = (index: number) => s[`i__${index}`];
 
+let mouseOver = '';
+let activeIndex = -1;
 function Alert({ theme }: { theme: Theme }) {
-  const [alerts, setAlerts] = useState<
-    (AlertProps & { id: string; ref: React.RefObject<HTMLDivElement> })[]
-  >([]);
+  const [alerts, setAlerts] = useState<AlertElement[]>([]);
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [deleted, setDeleted] = useState<string | null>(null);
 
@@ -34,6 +36,7 @@ function Alert({ theme }: { theme: Theme }) {
   };
 
   const onClickCloseHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { target }: { target: HTMLElement } = e as any;
     let button: HTMLButtonElement | null = null;
     switch (target.nodeName.toLowerCase()) {
@@ -104,32 +107,18 @@ function Alert({ theme }: { theme: Theme }) {
       } = storeAlert.getState();
       const _alerts = alerts.slice();
       const id = v4();
-      const mayMinOne = _alerts.length && _alerts.length;
-      const indexPrev = _alerts.length - 1;
-      const indexPrePrev = _alerts.length - 2;
-      const indexPrePrePrev = _alerts.length - 3;
-      const prev = _alerts[indexPrev];
-      const prePrev = _alerts[indexPrePrev];
-      const prePrePrev = _alerts[indexPrePrePrev];
-      const index = mayMinOne
-        ? prev
-          ? prev.infinity
-            ? prePrev
-              ? prePrev.infinity
-                ? prePrePrev
-                  ? indexPrePrePrev
-                  : indexPrePrev
-                : indexPrePrev
-              : indexPrev
-            : indexPrev
-          : indexPrev
-        : indexPrev;
-      const timeout = infinity
-        ? 0
-        : ALERT_TIMEOUT + (ALERT_TRANSITION + ALERT_TRANSITION_Y) * index;
+      const infins = _alerts.filter((item) => item.infinity);
+      const index = _alerts[_alerts.length - infins.length - 1]
+        ? _alerts.length - infins.length
+        : _alerts[_alerts.length - 1]
+        ? _alerts.length - 1
+        : 0;
+      const timeout = infinity ? 0 : ALERT_TIMEOUT + ALERT_TRANSITION * index;
       setTimeout(() => {
         if (!infinity) {
-          closeById(id);
+          if (id !== mouseOver) {
+            closeById(id);
+          }
         }
       }, timeout);
 
@@ -158,13 +147,20 @@ function Alert({ theme }: { theme: Theme }) {
         return;
       }
       const { classList } = current;
-      if (!classList.contains(getItemClassName(index))) {
+      if (mouseOver === item.id) {
+        current.classList.add(s.fixed);
+      }
+      if (!classList.contains(getItemClassName(index)) && mouseOver !== item.id) {
         classList.forEach((classN) => {
           if (itemClassNameRegexp.test(classN)) {
             current.classList.remove(classN);
           }
         });
-        current.classList.add(getItemClassName(index));
+        const _index = activeIndex !== -1 && index === activeIndex ? index - 1 : index;
+        current.classList.add(getItemClassName(_index));
+      } else if (activeIndex !== -1) {
+        classList.remove(getItemClassName(index));
+        current.classList.add(getItemClassName(index - 1));
       }
     });
   }, [alerts]);
@@ -194,6 +190,51 @@ function Alert({ theme }: { theme: Theme }) {
       setDeleted(null);
     }
   }, [alerts, deleted]);
+
+  /**
+   * Listen mouse
+   */
+  useEffect(() => {
+    const mouseOverWrapper =
+      ({ id }: AlertElement, index: number) =>
+      () => {
+        mouseOver = id;
+        activeIndex = index;
+      };
+    const mouseOutWrapper =
+      ({ id }: AlertElement, infinity: boolean) =>
+      () => {
+        setTimeout(() => {
+          if (id !== mouseOver && !infinity) {
+            closeById(id);
+          }
+        }, ALERT_TIMEOUT);
+        mouseOver = '';
+        activeIndex = -1;
+      };
+    alerts.forEach((item, index) => {
+      const { current } = item.ref;
+      if (!current) {
+        return;
+      }
+      current.addEventListener('mouseover', mouseOverWrapper(item, index));
+      current.addEventListener('touchmove', mouseOverWrapper(item, index));
+      current.addEventListener('mouseout', mouseOutWrapper(item, item.infinity));
+      current.addEventListener('touchend', mouseOutWrapper(item, item.infinity));
+    });
+    return () => {
+      alerts.forEach((item, index) => {
+        const { current } = item.ref;
+        if (!current) {
+          return;
+        }
+        current.removeEventListener('mouseover', mouseOverWrapper(item, index));
+        current.removeEventListener('touchmove', mouseOverWrapper(item, index));
+        current.removeEventListener('mouseout', mouseOutWrapper(item, item.infinity));
+        current.removeEventListener('touchend', mouseOutWrapper(item, item.infinity));
+      });
+    };
+  }, [alerts]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return (

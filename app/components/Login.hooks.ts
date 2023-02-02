@@ -375,19 +375,19 @@ export const useMessages = ({
       send = true;
       setTimeout(() => {
         log('info', 'Соединение с сервером разорвано, попробуйте позденее', {}, true);
-      }, 110);
+      }, 200);
       setTimeout(() => {
-        log('warn', 'test 2', {}, true, true);
-      }, 120);
+        log('warn', 'test 2', {}, true);
+      }, 400);
       setTimeout(() => {
         log('error', 'test 3', {}, true);
-      }, 130);
+      }, 600);
       setTimeout(() => {
-        log('warn', 'test 4', {}, true, true);
-      }, 140);
+        log('warn', 'test 4', {}, true);
+      }, 800);
       setTimeout(() => {
         log('error', 'test 5', {}, true);
-      }, 150);
+      }, 1000);
     }
   }, []);
 

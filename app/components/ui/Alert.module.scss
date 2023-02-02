@@ -8,11 +8,11 @@ $alert-indent: 1rem;
   position: fixed;
   width: $alert-width;
   height: $alert-height;
-  z-index: 13;
   border-radius: $input-border-radius;
   left: calc(100vw + $alert-width + $alert-indent);
   background-color: wheat;
   font-size: small;
+  z-index: 12;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -69,6 +69,10 @@ $alert-indent: 1rem;
   .pseudo__close {
     position: relative;
     width: $icon-width-default;
+  }
+
+  &.fixed {
+    z-index: 13;
   }
 }
 
