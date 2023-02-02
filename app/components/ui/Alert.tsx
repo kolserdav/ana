@@ -2,7 +2,7 @@ import { ubuntu400 } from '@/fonts/ubuntu';
 import storeAlert from '@/store/alert';
 import { Theme } from '@/Theme';
 import { AlertProps } from '@/types';
-import { ALERT_TIMEOUT, ALERT_TRANSITION, ALERT_TRANSITION_Y } from '@/utils/constants';
+import { ALERT_COUNT_MAX, ALERT_DURATION, ALERT_TRANSITION } from '@/utils/constants';
 import clsx from 'clsx';
 import React, { createRef, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
@@ -26,6 +26,11 @@ const getItemClassName = (index: number) => s[`i__${index}`];
 
 let mouseOver = '';
 let activeIndex = -1;
+let infs = 0;
+let alertIds: string[] = [];
+
+const timeouts: Record<string, NodeJS.Timeout> = {};
+
 function Alert({ theme }: { theme: Theme }) {
   const [alerts, setAlerts] = useState<AlertElement[]>([]);
   const [toDelete, setToDelete] = useState<string | null>(null);
@@ -105,22 +110,39 @@ function Alert({ theme }: { theme: Theme }) {
       const {
         alert: { message, status, infinity },
       } = storeAlert.getState();
+      if (infinity) {
+        infs++;
+      }
       const _alerts = alerts.slice();
+
+      if (_alerts.length >= ALERT_COUNT_MAX) {
+        setTimeout(() => {
+          const immediateId = alertIds[0];
+          if (immediateId) {
+            if (immediateId !== mouseOver) {
+              closeById(immediateId);
+            }
+            delete timeouts[immediateId];
+          }
+        }, ALERT_TRANSITION * (ALERT_COUNT_MAX - _alerts.length));
+      }
+
       const id = v4();
       const infins = _alerts.filter((item) => item.infinity);
-      const index = _alerts[_alerts.length - infins.length - 1]
+      const durationShift = _alerts[_alerts.length - infins.length - 1]
         ? _alerts.length - infins.length
         : _alerts[_alerts.length - 1]
         ? _alerts.length - 1
         : 0;
-      const timeout = infinity ? 0 : ALERT_TIMEOUT + ALERT_TRANSITION * index;
-      setTimeout(() => {
+      const duration = infinity ? 0 : ALERT_DURATION + ALERT_TRANSITION * durationShift;
+      timeouts[id] = setTimeout(() => {
+        delete timeouts[id];
         if (!infinity) {
           if (id !== mouseOver) {
             closeById(id);
           }
         }
-      }, timeout);
+      }, duration);
 
       _alerts.push({
         message,
@@ -130,6 +152,7 @@ function Alert({ theme }: { theme: Theme }) {
         ref: createRef<HTMLDivElement>(),
       });
 
+      alertIds = _alerts.map((item) => item.id);
       setAlerts(_alerts);
     });
     return () => {
@@ -158,7 +181,7 @@ function Alert({ theme }: { theme: Theme }) {
         });
         const _index = activeIndex !== -1 && index === activeIndex ? index - 1 : index;
         current.classList.add(getItemClassName(_index));
-      } else if (activeIndex !== -1) {
+      } else if (activeIndex !== -1 && mouseOver !== item.id) {
         classList.remove(getItemClassName(index));
         current.classList.add(getItemClassName(index - 1));
       }
@@ -186,7 +209,15 @@ function Alert({ theme }: { theme: Theme }) {
    */
   useEffect(() => {
     if (deleted) {
-      setAlerts(alerts.filter((item) => item.id !== deleted));
+      const _alerts = alerts.filter((item) => {
+        const isDel = item.id === deleted;
+        if (isDel && item.infinity) {
+          infs--;
+        }
+        return !isDel;
+      });
+      alertIds = _alerts.map((item) => item.id);
+      setAlerts(_alerts);
       setDeleted(null);
     }
   }, [alerts, deleted]);
@@ -208,7 +239,7 @@ function Alert({ theme }: { theme: Theme }) {
           if (id !== mouseOver && !infinity) {
             closeById(id);
           }
-        }, ALERT_TIMEOUT);
+        }, ALERT_DURATION);
         mouseOver = '';
         activeIndex = -1;
       };
@@ -218,9 +249,11 @@ function Alert({ theme }: { theme: Theme }) {
         return;
       }
       current.addEventListener('mouseover', mouseOverWrapper(item, index));
+      current.addEventListener('touchstart', mouseOverWrapper(item, index));
       current.addEventListener('touchmove', mouseOverWrapper(item, index));
       current.addEventListener('mouseout', mouseOutWrapper(item, item.infinity));
       current.addEventListener('touchend', mouseOutWrapper(item, item.infinity));
+      current.addEventListener('touchcancel', mouseOutWrapper(item, item.infinity));
     });
     return () => {
       alerts.forEach((item, index) => {
@@ -229,10 +262,41 @@ function Alert({ theme }: { theme: Theme }) {
           return;
         }
         current.removeEventListener('mouseover', mouseOverWrapper(item, index));
+        current.removeEventListener('touchstart', mouseOverWrapper(item, index));
         current.removeEventListener('touchmove', mouseOverWrapper(item, index));
         current.removeEventListener('mouseout', mouseOutWrapper(item, item.infinity));
         current.removeEventListener('touchend', mouseOutWrapper(item, item.infinity));
+        current.removeEventListener('touchcancel', mouseOutWrapper(item, item.infinity));
       });
+    };
+  }, [alerts]);
+
+  /**
+   * Drop down deactivated
+   */
+  useEffect(() => {
+    let interval = setInterval(() => {
+      /** */
+    }, Infinity);
+    if (activeIndex !== -1 && alerts.length === 1) {
+      const _activeIndex = parseInt(`${activeIndex}`, 10);
+      interval = setInterval(() => {
+        if (activeIndex === -1) {
+          clearInterval(interval);
+          const al = alerts[0];
+          const { current } = al.ref;
+          if (!current) {
+            return;
+          }
+          setTimeout(() => {
+            current.classList.remove(getItemClassName(_activeIndex));
+            current.classList.add(getItemClassName(infs));
+          }, ALERT_TRANSITION);
+        }
+      }, 10);
+    }
+    return () => {
+      clearInterval(interval);
     };
   }, [alerts]);
 
@@ -242,6 +306,7 @@ function Alert({ theme }: { theme: Theme }) {
       {alerts.map((item) => (
         <div
           key={item.id}
+          draggable
           ref={item.ref}
           style={{
             color: theme.black,
