@@ -17,7 +17,7 @@ $alert-indent: 1rem;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0.5rem;
-  transition: left $alert-transition ease-in, bottom $alert-transition-y ease-in;
+  transition: left $alert-transition ease-out;
 
   &.i__0 {
     bottom: calc($alert-indent);
@@ -40,7 +40,18 @@ $alert-indent: 1rem;
   }
 
   &.open {
+    animation: open $alert-transition ease-in;
     left: calc(100vw - $alert-width - $alert-indent);
-    transition: left $alert-transition ease-out, bottom $alert-transition-y ease-out;
+    transition: bottom $alert-transition-y ease-out;
+  }
+}
+
+@keyframes open {
+  0% {
+    left: calc(100vw + $alert-width + $alert-indent);
+  }
+
+  100% {
+    left: calc(100vw - $alert-width - $alert-indent);
   }
 }

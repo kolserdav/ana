@@ -1,8 +1,8 @@
 import { ubuntu400 } from '@/fonts/ubuntu';
 import storeAlert from '@/store/alert';
 import { Theme } from '@/Theme';
-import { ALERT_COUNT_MAX, ALERT_TIMEOUT, ALERT_TRANSITION } from '@/utils/constants';
-import { getDangerouslyCurrent, waitForTimeout } from '@/utils/lib';
+import { AlertProps } from '@/types';
+import { ALERT_TIMEOUT, ALERT_TRANSITION } from '@/utils/constants';
 import clsx from 'clsx';
 import React, { createRef, useEffect, useMemo, useState } from 'react';
 import { v4 } from 'uuid';
@@ -26,209 +26,181 @@ const itemClassNameRegexp = /_i__\d+/;
 const getItemClassName = (index: number) => s[`i__${index}`];
 
 function Alert({ theme }: { theme: Theme }) {
-  const [alerts, setAlerts] = useState<Record<string, React.ReactElement>>({});
-  const [toDelete, setToDelete] = useState<string[]>([]);
-  const [deletedId, setDeletedI] = useState<string>('0');
+  const [alerts, setAlerts] = useState<
+    (AlertProps & { id: string; ref: React.RefObject<HTMLDivElement> })[]
+  >([]);
+  const [toDelete, setToDelete] = useState<string | null>(null);
+  const [deleted, setDeleted] = useState<string | null>(null);
 
-  const closeById = useMemo(
-    () => async (idS: string) => {
-      const _toDelete = toDelete.slice();
-      _toDelete.push(idS);
-      setToDelete(_toDelete);
-    },
-    [toDelete]
-  );
+  const closeById = (idS: string) => {
+    setToDelete(idS);
+  };
 
-  const onClickCloseHandler = useMemo(
-    () => (e: React.MouseEvent<HTMLButtonElement>) => {
-      const { target }: { target: HTMLElement } = e as any;
-      let button: HTMLButtonElement | null = null;
-      switch (target.nodeName.toLowerCase()) {
-        case 'path':
-          button = target.parentElement?.parentElement as HTMLButtonElement;
-          break;
-        case 'svg':
-          button = target.parentElement as HTMLButtonElement;
-          break;
-        case 'button':
-          button = target as HTMLButtonElement;
-          break;
-        default:
-      }
-      if (!button) {
-        return;
-      }
-      const idN = getButtonId(button);
-      if (idN === null) {
-        return;
-      }
-      closeById(idN);
-    },
-    [closeById]
-  );
+  const onClickCloseHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { target }: { target: HTMLElement } = e as any;
+    let button: HTMLButtonElement | null = null;
+    switch (target.nodeName.toLowerCase()) {
+      case 'path':
+        button = target.parentElement?.parentElement as HTMLButtonElement;
+        break;
+      case 'svg':
+        button = target.parentElement as HTMLButtonElement;
+        break;
+      case 'button':
+        button = target as HTMLButtonElement;
+        break;
+      default:
+    }
+    if (!button) {
+      return;
+    }
+    const idN = getButtonId(button);
+    if (idN === null) {
+      return;
+    }
+    closeById(idN);
+  };
 
   /**
    * Close item
    */
   useEffect(() => {
     const closeHandler = async () => {
-      Object.keys(alerts).every((key, i) => {
-        const item = alerts[key];
-        const del = getButtonId(getDangerouslyCurrent(item)?.querySelector('button'));
-        if (del !== null && toDelete.indexOf(del) !== -1) {
-          setDeletedI(del);
-          const current = getDangerouslyCurrent(item);
-          if (!current) {
-            return false;
+      alerts.every((item) => {
+        if (toDelete === item.id) {
+          const { current } = item.ref;
+          if (current) {
+            current.classList.remove(s.open);
           }
-          current.classList.remove(s.open);
           return false;
         }
         return true;
       });
     };
-    closeHandler();
+    if (toDelete) {
+      closeHandler();
+    }
   }, [alerts, toDelete]);
 
   /**
    * Delete item
    */
   useEffect(() => {
-    console.log(deletedId);
-    if (deletedId !== '0') {
+    if (toDelete) {
       setTimeout(() => {
-        let toDeletedIndex = -1;
-        toDelete.every((item, ind) => {
-          if (item === deletedId) {
-            toDeletedIndex = ind;
-            const _alerts = { ...alerts };
-            let deletedKey = '-1';
-            Object.keys(alerts).every((key) => {
-              const _item = alerts[key];
-              const del = getButtonId(getDangerouslyCurrent(_item)?.querySelector('button'));
-              if (del === deletedId) {
-                deletedKey = key;
-                return false;
-              }
-              return true;
-            });
-            delete _alerts[deletedKey];
-            setAlerts(_alerts);
-            return false;
-          }
-          return true;
-        });
-        const _toDelete = toDelete.slice();
-        _toDelete.splice(toDeletedIndex, 1);
-        setToDelete(_toDelete);
+        setDeleted(toDelete);
       }, ALERT_TRANSITION);
+      setToDelete(null);
     }
-  }, [deletedId, alerts, toDelete]);
+  }, [toDelete]);
 
   /**
    * Listen store alert
    */
   useEffect(() => {
-    const getAlertIndex = () => {
-      let index: number | null = 0;
-      for (let i = 0; i < ALERT_COUNT_MAX; i++) {
-        if (!alerts[i]) {
-          index = i;
-          break;
-        }
-      }
-      return index;
-    };
     const cleanSubs = storeAlert.subscribe(() => {
       const {
         alert: { message, status },
       } = storeAlert.getState();
-      const _alerts = { ...alerts };
-      const index = getAlertIndex();
+      const _alerts = alerts.slice();
       const id = v4();
-      _alerts[index] = (
+      _alerts.push({
+        message,
+        status,
+        id,
+        ref: createRef<HTMLDivElement>(),
+      });
+
+      setTimeout(() => {
+        closeById(id);
+      }, ALERT_TIMEOUT);
+
+      setAlerts(_alerts);
+    });
+    return () => {
+      cleanSubs();
+    };
+  }, [alerts, theme]);
+
+  /**
+   * Set item classes
+   */
+  useEffect(() => {
+    alerts.forEach((item, index) => {
+      const { current } = item.ref;
+      if (!current) {
+        return;
+      }
+      const { classList } = current;
+      if (!classList.contains(getItemClassName(index))) {
+        classList.forEach((classN) => {
+          if (itemClassNameRegexp.test(classN)) {
+            current.classList.remove(classN);
+          }
+        });
+        current.classList.add(getItemClassName(index));
+      }
+    });
+  }, [alerts]);
+
+  /**
+   * Set open classes
+   */
+  useEffect(() => {
+    alerts.forEach((item) => {
+      const { current } = item.ref;
+      if (!current) {
+        return;
+      }
+      const { classList } = current;
+      if (!classList.contains(s.open) && item.id !== deleted) {
+        current.classList.add(s.open);
+      }
+    });
+  }, [alerts, deleted]);
+
+  useEffect(() => {
+    if (deleted) {
+      setAlerts(alerts.filter((item) => item.id !== deleted));
+      setDeleted(null);
+    }
+  }, [alerts, deleted]);
+
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return (
+    <>
+      {alerts.map((item) => (
         <div
-          key={getItemClassName(index)}
-          ref={createRef()}
+          key={item.id}
+          ref={item.ref}
           style={{
             color: theme.black,
+
             backgroundColor:
-              status === 'warn' ? theme.yellow : status === 'error' ? theme.red : theme.blue,
+              item.status === 'warn'
+                ? theme.yellow
+                : item.status === 'error'
+                ? theme.red
+                : theme.blue,
           }}
-          className={clsx(s.item, ubuntu400.className, getItemClassName(index))}
+          className={clsx(s.item, ubuntu400.className)}
         >
-          {status === 'warn' ? (
+          {item.status === 'warn' ? (
             <WarnIcon color={theme.red} />
-          ) : status === 'error' ? (
+          ) : item.status === 'error' ? (
             <ErrorIcon color={theme.yellow} />
           ) : (
             <InfoIcon color={theme.black} />
           )}
 
           <p style={{ color: theme.black }} className={s.text}>
-            {message}
+            {item.message}
           </p>
-          <IconButton id={id} onClick={onClickCloseHandler}>
+          <IconButton id={item.id} onClick={onClickCloseHandler}>
             <CloseCircleIcon color={theme.black} />
           </IconButton>
         </div>
-      );
-      setTimeout(() => {
-        closeById(id);
-      }, ALERT_TIMEOUT);
-      setAlerts(_alerts);
-    });
-    return () => {
-      cleanSubs();
-    };
-  }, [alerts, theme, onClickCloseHandler, closeById]);
-
-  /**
-   * Change class
-   */
-  useEffect(() => {
-    Object.keys(alerts).forEach((key) => {
-      const item = alerts[key];
-      setTimeout(async () => {
-        const current = getDangerouslyCurrent(item);
-        if (!current) {
-          return;
-        }
-        current.classList.add(s.open);
-        await waitForTimeout(ALERT_TIMEOUT);
-      }, 100);
-    });
-  }, [alerts]);
-
-  useMemo(
-    () =>
-      Object.keys(alerts).forEach((key, index) => {
-        const item = alerts[key];
-        const current = getDangerouslyCurrent(item);
-        if (!current) {
-          return;
-        }
-        const { classList } = current;
-        if (!classList.contains(getItemClassName(index))) {
-          classList.forEach((classN) => {
-            if (itemClassNameRegexp.test(classN)) {
-              current.classList.remove(classN);
-            }
-          });
-          current.classList.add(getItemClassName(index));
-        }
-      }),
-    [alerts]
-  );
-
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return (
-    <>
-      {alerts[0]}
-      {alerts[1]}
-      {alerts[2]}
-      {alerts[3]}
-      {alerts[4]}
+      ))}
     </>
   );
 }

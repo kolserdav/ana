@@ -377,16 +377,16 @@ export const useMessages = ({
       }, 200);
       setTimeout(() => {
         log('warn', 'test 2', {}, true);
-      }, 200);
+      }, 400);
       setTimeout(() => {
         log('error', 'test 3', {}, true);
-      }, 200);
+      }, 600);
       setTimeout(() => {
         log('warn', 'test 4', {}, true);
-      }, 200);
+      }, 800);
       setTimeout(() => {
         log('error', 'test 5', {}, true);
-      }, 200);
+      }, 1000);
     }
   }, []);
 
