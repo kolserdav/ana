@@ -26,6 +26,17 @@ abstract class Database {
     >
   >;
 
+  public abstract userUpdate<T extends Prisma.UserUpdateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>,
+    context: DatabaseContext
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<User | null>,
+      PrismaPromise<Result<Prisma.UserGetPayload<T> | null>>
+    >
+  >;
+
   public abstract pageFindManyW<T extends Prisma.PageFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.PageFindManyArgs>,
     context: DatabaseContext

@@ -1,8 +1,15 @@
 .wrapper {
   position: relative;
+  width: 100%;
 
   &:hover {
     text-decoration: underline;
+  }
+
+  &.without__hover {
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   &.disabled {

@@ -30,6 +30,10 @@ class MessageHandler {
     handleRequests.emit('message', { protocol, msg });
   }
 
+  private async getForgotPassword(msg: SendMessageArgs<MessageType.GET_FORGOT_PASSWORD>) {
+    handleRequests.emit('message', { protocol, msg });
+  }
+
   public messages({ ws }: { ws: WebSocket }) {
     ws.on('message', async (msg) => {
       const rawMessage = this.ws.parseMessage(msg);
@@ -46,6 +50,9 @@ class MessageHandler {
           break;
         case MessageType.GET_USER_LOGIN:
           await this.getUserLogin(rawMessage);
+          break;
+        case MessageType.GET_FORGOT_PASSWORD:
+          await this.getForgotPassword(rawMessage);
           break;
         default:
           log('warn', 'Not implemented WS message', rawMessage);

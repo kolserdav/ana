@@ -258,7 +258,6 @@ function Alert({ theme }: { theme: Theme }) {
       }
       current.addEventListener('mouseover', mouseOverWrapper(item, index));
       current.addEventListener('touchstart', mouseOverWrapper(item, index));
-      current.addEventListener('touchmove', mouseOverWrapper(item, index));
       current.addEventListener('mouseout', mouseOutWrapper(item, item.infinity));
       current.addEventListener('touchend', mouseOutWrapper(item, item.infinity));
       current.addEventListener('touchcancel', mouseOutWrapper(item, item.infinity));
@@ -271,7 +270,6 @@ function Alert({ theme }: { theme: Theme }) {
         }
         current.removeEventListener('mouseover', mouseOverWrapper(item, index));
         current.removeEventListener('touchstart', mouseOverWrapper(item, index));
-        current.removeEventListener('touchmove', mouseOverWrapper(item, index));
         current.removeEventListener('mouseout', mouseOutWrapper(item, item.infinity));
         current.removeEventListener('touchend', mouseOutWrapper(item, item.infinity));
         current.removeEventListener('touchcancel', mouseOutWrapper(item, item.infinity));

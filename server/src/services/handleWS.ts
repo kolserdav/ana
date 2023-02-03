@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import MessageHandler from '../components/messageHandler';
 import {
-  DEFAULT_LOCALE,
+  LOCALE_DEFAULT,
   LANGUAGE_HEADER,
   LocaleValue,
   MessageType,
@@ -51,7 +51,7 @@ class HandleWS {
         }
       }
 
-      wss.setSocket({ id, ws, lang: (lang as LocaleValue) || DEFAULT_LOCALE });
+      wss.setSocket({ id, ws, lang: (lang as LocaleValue) || LOCALE_DEFAULT });
 
       messageHandler.messages({ ws });
 

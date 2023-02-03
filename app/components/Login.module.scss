@@ -17,15 +17,29 @@
 
 .container {
   position: relative;
+  height: 100%;
+  min-height: 50vh;
   max-width: $container-max-width;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .actives {
     position: relative;
     padding-top: $form-item-margin-top;
+  }
+
+  .restore__desc {
+    position: relative;
+    height: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: flex-end;
   }
 }
 
 .link {
   padding-top: $form-item-margin-top;
   text-align: right;
+  margin-top: 2rem;
 }

@@ -1,9 +1,5 @@
 import { Locale } from '@/types/interfaces';
 
-export function checkSignUp(asPath: string) {
-  return /\/account\/sign-up/.test(asPath);
-}
-
 export const checkName = (name: string) => /^[a-zA-Zа-яА-Я]+$/.test(name);
 
 export const checkOnlyNumbers = (str: string) => /^\d+$/.test(str);

@@ -2,6 +2,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import type { RequestGenericInterface, FastifyRequest, FastifyReply } from 'fastify';
 import { IncomingHttpHeaders } from 'http';
+import { LocaleValue } from './interfaces';
 
 export type DatabaseContext = {
   headers: IncomingHttpHeaders;
@@ -44,4 +45,19 @@ export interface SendProcessMessageArgs<T extends keyof typeof ProcessMessage> {
 export interface JWTFull {
   id: string;
   iat: number;
+}
+
+export type EmailType = 'restore-password';
+
+export interface SendEmailParams<T extends EmailType> {
+  type: T;
+  locale: LocaleValue;
+  email: string;
+  data: T extends 'restore-password'
+    ? {
+        name: string;
+        link: string;
+        expire: number;
+      }
+    : never;
 }

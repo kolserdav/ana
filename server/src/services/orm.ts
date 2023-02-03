@@ -49,6 +49,17 @@ export class ORM extends Service implements Database {
     );
   };
 
+  public userUpdate: Database['userUpdate'] = async (args, context) => {
+    return this.run(
+      {
+        args,
+        model: 'user',
+        command: 'update',
+      },
+      context
+    );
+  };
+
   public userFindFirst: Database['userFindFirst'] = async (args, context) => {
     return this.run(
       {

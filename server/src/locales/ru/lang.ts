@@ -7,6 +7,7 @@ const lang: Locale = {
     notFound: 'Не найдено',
     success: 'Успешный запрос',
     wrongPassword: 'Неверный логин или пароль',
+    emailIsSend: 'На указанную почту отправлено письмо с инструкцией',
   },
   app: {
     login: {
@@ -51,9 +52,19 @@ const lang: Locale = {
       emailIsRegistered: 'На данную почту уже существует учетная запись',
       successLogin: 'Успешный вход',
       successRegistration: 'Успешная регистрация',
+      forgotPassword: 'Забыли пароль?',
+      restorePassword: 'Восстановление пароля',
+      sendRestoreMail: 'Отправить письмо',
+      restoreDesc: 'На указанную почту будет выслано письмо с инструкцией по восстановлению пароля',
+      changePassword: 'Сменить пароль',
+      newPassword: 'Новый пароль',
+      save: 'Сохранить',
     },
     appBar: {
       darkTheme: 'Темная тема',
+      homePage: 'Главная страница',
+      login: 'Вход',
+      logout: 'Выход',
     },
   },
 };

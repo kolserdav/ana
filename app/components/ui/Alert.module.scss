@@ -19,6 +19,7 @@ $alert-indent: 1rem;
   justify-content: space-between;
   padding: 1rem 0.5rem;
   transition: left $alert-transition ease-out;
+  user-select: all;
 
   &.i__0 {
     bottom: calc($alert-indent);

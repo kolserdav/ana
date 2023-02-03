@@ -1,11 +1,14 @@
 import { ubuntu500 } from '@/fonts/ubuntu';
 import { Theme } from '@/Theme';
 import { Locale } from '@/types/interfaces';
-import { scrollToTop } from '@/utils/lib';
+import { Pages, PAGE_LOGIN_IN_MENU } from '@/utils/constants';
+import { checkRouterPath, scrollToTop } from '@/utils/lib';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
 import ChevronUpIcon from '../icons/ChevronUp';
 import { useAppBar, useChangeTheme } from './AppBar.hooks';
 import s from './AppBar.module.scss';
+import Link from './Link';
 import Menu from './Menu';
 import Switch from './Switch';
 
@@ -20,6 +23,8 @@ function AppBar({
   withoutExpandLess?: boolean;
   full?: boolean;
 }) {
+  const router = useRouter();
+
   const { showAppBar, showExpandLess } = useAppBar();
 
   const { darkTheme, onClickChangeTheme } = useChangeTheme();
@@ -40,10 +45,24 @@ function AppBar({
         }}
       >
         <Menu theme={theme}>
+          {!checkRouterPath(router.asPath, Pages.home) && (
+            <Link withoutHover theme={theme} href={Pages.home}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.homePage}</div>
+              </div>
+            </Link>
+          )}
           <div className={clsx(s.menu__item)}>
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
+          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && (
+            <Link withoutHover theme={theme} href={PAGE_LOGIN_IN_MENU}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.login}</div>
+              </div>
+            </Link>
+          )}
         </Menu>
       </div>
       {!withoutExpandLess && (

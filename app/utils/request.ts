@@ -1,6 +1,6 @@
 import {
   Api,
-  DEFAULT_LOCALE,
+  LOCALE_DEFAULT,
   LANGUAGE_HEADER,
   Locale,
   Result,
@@ -40,7 +40,7 @@ class Request {
         body,
         method,
         headers: {
-          [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || DEFAULT_LOCALE,
+          [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || LOCALE_DEFAULT,
           [USER_ID_HEADER]: id || '',
         },
       })

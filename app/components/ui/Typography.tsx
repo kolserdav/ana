@@ -11,16 +11,27 @@ function Typography({
   theme,
   center,
   className,
+  small,
+  right,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | string[];
   theme: Theme;
   center?: boolean;
   className?: string;
+  small?: boolean;
+  right?: boolean;
 }) {
   return (
     <div
-      className={clsx(s.wrapper, ubuntu.className, className, center ? s.center : '')}
+      className={clsx(
+        s.wrapper,
+        ubuntu.className,
+        className,
+        center ? s.center : '',
+        small ? s.small : '',
+        right ? s.right : ''
+      )}
       style={{ color: theme.text }}
     >
       {variant === 'p' ? (
@@ -49,6 +60,8 @@ function Typography({
 Typography.defaultProps = {
   center: false,
   className: '',
+  small: false,
+  right: false,
 };
 
 export default Typography;

@@ -86,3 +86,23 @@ export const awaitResponse = async (timeout: number) => {
     await waitForTimeout(diffs);
   }
 };
+
+export const checkRouterPath = (asPath: string, checkValue: string | string[]) => {
+  const checkOne = (_checkValue: string) => {
+    const checkReg = new RegExp(`^${_checkValue}(\\?=?[a-zA-Z%-_0-9]*)?$`);
+    return checkReg.test(asPath);
+  };
+
+  if (typeof checkValue === 'string') {
+    return checkOne(checkValue);
+  }
+  let checkMany = false;
+  checkValue.forEach((item) => {
+    if (!checkMany) {
+      checkMany = checkOne(item);
+    }
+  });
+  return checkMany;
+};
+
+checkRouterPath('/test', '/test');

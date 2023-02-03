@@ -4,7 +4,7 @@ import { IncomingHttpHeaders } from 'http';
 import ru from '../locales/ru/lang';
 import {
   Locale,
-  DEFAULT_LOCALE,
+  LOCALE_DEFAULT,
   LANGUAGE_HEADER,
   LocaleValue,
   USER_ID_HEADER,
@@ -58,8 +58,8 @@ const locales: Record<string, Locale> = {
 };
 
 export const getLocale = (_value: string | undefined): Locale => {
-  const value = _value || DEFAULT_LOCALE;
-  return (!locales[value] ? locales[DEFAULT_LOCALE] : locales[value]) as Locale;
+  const value = _value || LOCALE_DEFAULT;
+  return (!locales[value] ? locales[LOCALE_DEFAULT] : locales[value]) as Locale;
 };
 
 export const parseHeaders = (headers: IncomingHttpHeaders) => {

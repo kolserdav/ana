@@ -5,6 +5,19 @@ export const IS_DEV = process.env.NODE_ENV === 'development';
 export const LOG_LEVEL = parseInt(process.env.NEXT_PUBLIC_LOG_LEVEL as string, 10);
 export const WS_ADDRESS = process.env.NEXT_PUBLIC_WS_ADDRESS as string;
 
+// eslint-disable-next-line no-shadow
+export enum Pages {
+  // eslint-disable-next-line no-unused-vars
+  home = '/',
+  // eslint-disable-next-line no-unused-vars
+  signIn = '/account/sign-in',
+  // eslint-disable-next-line no-unused-vars
+  signUp = '/account/sign-up',
+  // eslint-disable-next-line no-unused-vars
+  restorePassword = '/account/restore-password',
+}
+
+export const PAGE_LOGIN_IN_MENU = Pages.signIn;
 export const ALERT_DURATION = 3000;
 export const ALERT_COUNT_MAX: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 = 3;
 // Deps $alert-transition

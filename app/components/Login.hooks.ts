@@ -1,24 +1,29 @@
+import useQueryString from '@/hooks/useQueryString';
 import {
   checkEmail,
-  DEFAULT_LOCALE,
+  LOCALE_DEFAULT,
   ErrorCode,
   Locale,
   MessageType,
   SendMessageArgs,
+  PAGE_RESTORE_PASSWORD_CALLBACK,
+  EMAIL_QS,
+  KEY_QS,
 } from '@/types/interfaces';
 import {
   EMAIL_MAX_LENGTH,
   NAME_MAX_LENGTH,
+  Pages,
   PASSWORD_MIN_LENGTH,
   SURNAME_MAX_LENGTH,
   TAB_INDEX_DEFAULT,
 } from '@/utils/constants';
 import { CookieName, getCookie, getLangCookie, setCookie } from '@/utils/cookies';
-import { awaitResponse, log } from '@/utils/lib';
+import { awaitResponse, checkRouterPath, log } from '@/utils/lib';
 import WS from '@/utils/ws';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { checkSignUp, checkName, checkPasswordError } from './Login.lib';
+import { checkName, checkPasswordError } from './Login.lib';
 
 export const useEmailInput = ({
   locale,
@@ -44,7 +49,7 @@ export const useEmailInput = ({
           type: MessageType.GET_USER_CHECK_EMAIL,
           id: connId,
           timeout: new Date().getTime(),
-          lang: getCookie(CookieName.lang) || DEFAULT_LOCALE,
+          lang: getCookie(CookieName.lang) || LOCALE_DEFAULT,
           data: {
             email: value,
           },
@@ -290,9 +295,11 @@ export const useTabs = () => {
 export const useCheckPage = () => {
   const router = useRouter();
 
-  const isSignUp = checkSignUp(router.asPath);
+  const isSignUp = checkRouterPath(router.asPath, Pages.signUp);
+  const isRestore = checkRouterPath(router.asPath, Pages.restorePassword);
+  const isChangePass = checkRouterPath(router.asPath, PAGE_RESTORE_PASSWORD_CALLBACK);
 
-  return { isSignUp };
+  return { isSignUp, isRestore, isChangePass };
 };
 
 export const useMessages = ({
@@ -363,6 +370,16 @@ export const useMessages = ({
     [cleanAllFields, isSignUp, locale.successLogin, setLoad]
   );
 
+  const setForgotPassword = useMemo(
+    () =>
+      ({ data: { message } }: SendMessageArgs<MessageType.SET_FORGOT_PASSWORD>) => {
+        log('info', message, {}, true);
+        setLoad(false);
+        cleanAllFields();
+      },
+    [cleanAllFields, setLoad]
+  );
+
   const setError = useMemo(
     () =>
       async ({
@@ -413,11 +430,14 @@ export const useMessages = ({
         case MessageType.SET_ERROR:
           setError(rawMessage);
           break;
+        case MessageType.SET_FORGOT_PASSWORD:
+          setForgotPassword(rawMessage);
+          break;
         default:
           log('warn', 'Not implemented on ws message case in login', rawMessage);
       }
     };
-  }, [ws, setConnId, setUserCheckEmail, setError, setUserCreate, setUserLogin]);
+  }, [ws, setConnId, setUserCheckEmail, setError, setUserCreate, setUserLogin, setForgotPassword]);
 };
 
 export const useButton = ({
@@ -440,6 +460,7 @@ export const useButton = ({
   setPasswordError,
   setPasswordRepeatError,
   setLoad,
+  isChangePass,
   tabSelected,
   tabActive,
   ws,
@@ -465,14 +486,29 @@ export const useButton = ({
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tabSelected: boolean;
   tabActive: number;
+  isChangePass: boolean;
   ws: WS;
 }) => {
   const [buttonError, setButtonError] = useState<string>('');
+
+  const { e, k } = useQueryString<{ [EMAIL_QS]: string; [KEY_QS]: string }>();
 
   const role = useMemo(
     () => locale.tabs.find((item) => item.id === tabActive)?.value || 'employer',
     [tabActive, locale]
   );
+
+  const checkRestoreFields = () => {
+    let error = false;
+    if (!email || emailError) {
+      error = true;
+      if (!email) {
+        setEmailError(locale.fieldMustBeNotEmpty);
+      }
+    }
+    setButtonError(error ? locale.eliminateRemarks : '');
+    return error;
+  };
 
   const checkLoginFields = () => {
     let error = false;
@@ -487,6 +523,28 @@ export const useButton = ({
       if (!password) {
         setPasswordError(locale.fieldMustBeNotEmpty);
       }
+    }
+    setButtonError(error ? locale.eliminateRemarks : '');
+    return error;
+  };
+
+  const checkChangePasswordFields = () => {
+    let error = false;
+    if (!password || passwordError) {
+      error = true;
+      if (!password) {
+        setPasswordError(locale.fieldMustBeNotEmpty);
+      }
+    }
+    if (!passwordRepeat || passwordRepeatError) {
+      if (!passwordRepeat) {
+        setPasswordRepeatError(locale.fieldMustBeNotEmpty);
+      }
+      error = true;
+    }
+    if (!e || !k) {
+      alert(1);
+      error = true;
     }
     setButtonError(error ? locale.eliminateRemarks : '');
     return error;
@@ -557,6 +615,37 @@ export const useButton = ({
     });
   };
 
+  const onClickRestoreButton = () => {
+    const error = checkRestoreFields();
+    if (error) {
+      return;
+    }
+    if (buttonError) {
+      setButtonError('');
+    }
+    setLoad(true);
+    ws.sendMessage({
+      timeout: new Date().getTime(),
+      id: connId,
+      lang: getLangCookie(),
+      type: MessageType.GET_FORGOT_PASSWORD,
+      data: {
+        email,
+      },
+    });
+  };
+
+  const onClickChangePasswordButton = () => {
+    const error = checkChangePasswordFields();
+    if (error) {
+      return;
+    }
+    if (buttonError) {
+      setButtonError('');
+    }
+    setLoad(true);
+  };
+
   const onClickRegisterButton = () => {
     const error = checkRegisterFields();
     if (error) {
@@ -581,7 +670,14 @@ export const useButton = ({
       },
     });
   };
-  return { onClickLoginButton, onClickRegisterButton, buttonError, setButtonError };
+  return {
+    onClickLoginButton,
+    onClickRegisterButton,
+    buttonError,
+    setButtonError,
+    onClickRestoreButton,
+    onClickChangePasswordButton,
+  };
 };
 
 export const useClean = ({

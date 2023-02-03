@@ -4,7 +4,7 @@ import useLoad from '@/hooks/useLoad';
 import useWS from '@/hooks/useWS';
 import { Theme } from '@/Theme';
 import { Locale } from '@/types/interfaces';
-import { TAB_INDEX_DEFAULT } from '@/utils/constants';
+import { Pages, TAB_INDEX_DEFAULT } from '@/utils/constants';
 import {
   useCheckPage,
   useEmailInput,
@@ -18,6 +18,7 @@ import {
 } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
+import Card from './ui/Card';
 import Input from './ui/Input';
 import Link from './ui/Link';
 import Tabs from './ui/Tabs';
@@ -30,7 +31,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   const { load, setLoad } = useLoad();
 
-  const { isSignUp } = useCheckPage();
+  const { isSignUp, isRestore, isChangePass } = useCheckPage();
 
   const { name, nameError, onChangeName, onBlurName, setNameError, setName } = useNameInput({
     locale,
@@ -67,7 +68,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     setPasswordRepeat,
     setPasswordRepeatSuccess,
     setPasswordSuccess,
-  } = usePasswordInput({ locale, isSignUp });
+  } = usePasswordInput({ locale, isSignUp: isSignUp || isChangePass });
 
   const { tabActive, onClickTab, setTabsError, tabsError, setTabActive } = useTabs();
 
@@ -95,7 +96,14 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
 
-  const { onClickLoginButton, onClickRegisterButton, buttonError, setButtonError } = useButton({
+  const {
+    onClickLoginButton,
+    onClickRegisterButton,
+    buttonError,
+    setButtonError,
+    onClickRestoreButton,
+    onClickChangePasswordButton,
+  } = useButton({
     locale,
     name,
     nameError,
@@ -118,6 +126,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     ws,
     connId,
     setLoad,
+    isChangePass,
   });
 
   useMessages({
@@ -136,14 +145,29 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   return (
     <div className={s.wrapper}>
+      <Typography center theme={theme} variant="h1">
+        {isSignUp
+          ? locale.signUp
+          : isRestore
+          ? locale.restorePassword
+          : isChangePass
+          ? locale.changePassword
+          : locale.signIn}
+      </Typography>
       <div className={s.container}>
-        <Typography center theme={theme} variant="h1">
-          {isSignUp ? locale.signUp : locale.signIn}
-        </Typography>
-        <Typography theme={theme} variant="p">
-          {locale.formDesc}
-        </Typography>
+        {isRestore && (
+          <div className={s.restore__desc}>
+            <Card theme={theme}>
+              <Typography right theme={theme} variant="p">
+                {locale.restoreDesc}
+              </Typography>
+            </Card>
+          </div>
+        )}
         <form>
+          <Typography theme={theme} small variant="p">
+            {locale.formDesc}
+          </Typography>
           {isSignUp && (
             <Input
               theme={theme}
@@ -174,21 +198,23 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               fullWidth
             />
           )}
-          <Input
-            theme={theme}
-            onChange={onChangeEmail}
-            onBlur={onBlurEmail}
-            value={email}
-            id="email"
-            type="email"
-            required
-            colorActive
-            error={emailError}
-            success={emailSuccess}
-            disabled={load}
-            name={`${locale.email}*`}
-            fullWidth
-          />
+          {!isChangePass && (
+            <Input
+              theme={theme}
+              onChange={onChangeEmail}
+              onBlur={onBlurEmail}
+              value={email}
+              id="email"
+              type="email"
+              required
+              colorActive
+              error={emailError}
+              success={emailSuccess}
+              disabled={load}
+              name={`${locale.email}*`}
+              fullWidth
+            />
+          )}
           {isSignUp && (
             <Tabs
               label={`${locale.accountType}*`}
@@ -201,58 +227,78 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               error={tabsError}
             />
           )}
-          <Input
-            theme={theme}
-            onChange={onChangePassword}
-            onBlur={onBlurPassword}
-            value={password}
-            id="password"
-            type="password"
-            required
-            colorActive
-            error={passwordError}
-            success={passwordSuccess}
-            disabled={load}
-            name={`${locale.password}*`}
-            fullWidth
-          />
-          {isSignUp && (
+          {!isRestore && (
             <Input
               theme={theme}
-              onChange={onChangePasswordRepeat}
-              onBlur={onBlurPasswordRepeat}
-              value={passwordRepeat}
-              id="password-repeat"
+              onChange={onChangePassword}
+              onBlur={onBlurPassword}
+              value={password}
+              id="password"
               type="password"
               required
               colorActive
-              error={passwordRepeatError}
-              success={passwordRepeatSuccess}
+              error={passwordError}
+              success={passwordSuccess}
               disabled={load}
-              name={`${locale.passwordRepeat}*`}
+              name={`${isChangePass ? locale.newPassword : locale.password}*`}
               fullWidth
             />
           )}
+          {isSignUp ||
+            (isChangePass && (
+              <Input
+                theme={theme}
+                onChange={onChangePasswordRepeat}
+                onBlur={onBlurPasswordRepeat}
+                value={passwordRepeat}
+                id="password-repeat"
+                type="password"
+                required
+                colorActive
+                error={passwordRepeatError}
+                success={passwordRepeatSuccess}
+                disabled={load}
+                name={`${locale.passwordRepeat}*`}
+                fullWidth
+              />
+            ))}
           <div className={s.actives}>
             <Button
               error={buttonError}
               disabled={load}
               theme={theme}
-              onClick={isSignUp ? onClickRegisterButton : onClickLoginButton}
+              onClick={
+                isSignUp
+                  ? onClickRegisterButton
+                  : isRestore
+                  ? onClickRestoreButton
+                  : isChangePass
+                  ? onClickChangePasswordButton
+                  : onClickLoginButton
+              }
             >
-              {locale.loginButton}
+              {isSignUp
+                ? locale.register
+                : isRestore
+                ? locale.sendRestoreMail
+                : isChangePass
+                ? locale.save
+                : locale.loginButton}
             </Button>
+            {!isSignUp && !isRestore && !isChangePass && (
+              <Link disabled={load} theme={theme} href={Pages.restorePassword}>
+                {locale.forgotPassword}
+              </Link>
+            )}
           </div>
+          {!isChangePass && (
+            <div className={s.link}>
+              <Link disabled={load} theme={theme} href={isSignUp ? Pages.signIn : Pages.signUp}>
+                {isSignUp || isRestore ? locale.signIn : locale.signUp}
+              </Link>
+            </div>
+          )}
         </form>
-        <div className={s.link}>
-          <Link
-            disabled={load}
-            theme={theme}
-            href={isSignUp ? '/account/sign-in' : '/account/sign-up'}
-          >
-            {isSignUp ? locale.signIn : locale.signUp}
-          </Link>
-        </div>
       </div>
     </div>
   );

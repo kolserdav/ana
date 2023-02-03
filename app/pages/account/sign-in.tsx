@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import s from '@/styles/Home.module.scss';
+import s from '@/styles/Page.module.scss';
 import Login from '@/components/Login';
 import { GetStaticPropsContext } from 'next';
 import Request from '@/utils/request';

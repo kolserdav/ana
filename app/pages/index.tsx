@@ -1,18 +1,21 @@
 import Head from 'next/head';
-import s from '@/styles/Home.module.scss';
 import { GetStaticPropsContext } from 'next';
 import Request from '@/utils/request';
-import { LocaleValue, Locale } from '@/types/interfaces';
+import { Locale, LocaleValue } from '@/types/interfaces';
 import { AppProps, PageFull } from '@/types';
 import { prepagePage } from '@/utils/lib';
+import s from '@/styles/Page.module.scss';
+import Home from '@/components/Home';
+import AppBar from '@/components/ui/AppBar';
 
 const request = new Request();
 
 interface LoginProps extends AppProps {
   page: PageFull;
+  localeAppBar: Locale['app']['appBar'];
 }
 
-export default function HomePage({ page, app: { theme } }: LoginProps) {
+export default function HomePage({ page, app: { theme }, localeAppBar }: LoginProps) {
   return (
     <>
       <Head>
@@ -20,9 +23,9 @@ export default function HomePage({ page, app: { theme } }: LoginProps) {
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-
+      <AppBar locale={localeAppBar} theme={theme} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        Home
+        <Home />
       </main>
     </>
   );
@@ -31,6 +34,7 @@ export default function HomePage({ page, app: { theme } }: LoginProps) {
 export async function getStaticProps({
   locale,
 }: GetStaticPropsContext): Promise<{ props: Omit<LoginProps, 'app'> }> {
+  const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
@@ -46,6 +50,7 @@ export async function getStaticProps({
   return {
     props: {
       page: prepagePage(page.data),
+      localeAppBar: localeAppBar.data,
     },
   };
 }

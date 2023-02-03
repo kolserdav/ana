@@ -9,6 +9,10 @@ export enum LogLevel {
   error = 2,
 }
 
+export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
+export const EMAIL_QS = 'e';
+export const KEY_QS = 'k';
+
 // eslint-disable-next-line no-shadow
 export enum MessageType {
   TEST = 'TEST',
@@ -20,6 +24,8 @@ export enum MessageType {
   SET_USER_CHECK_EMAIL = 'SET_USER_CHECK_EMAIL',
   GET_USER_LOGIN = 'GET_USER_LOGIN',
   SET_USER_LOGIN = 'SET_USER_LOGIN',
+  GET_FORGOT_PASSWORD = 'GET_FORGOT_PASSWORD',
+  SET_FORGOT_PASSWORD = 'SET_FORGOT_PASSWORD',
 }
 
 // eslint-disable-next-line no-shadow
@@ -27,6 +33,7 @@ export enum ErrorCode {
   createUser = 'createUser',
   userCheckEmail = 'userCheckEmail',
   userLogin = 'userLogin',
+  forgotPassword = 'forgotPassword',
 }
 export type Status = 'error' | 'warn' | 'info';
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
@@ -59,6 +66,14 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? {
       token: string;
     }
+  : T extends MessageType.GET_FORGOT_PASSWORD
+  ? {
+      email: string;
+    }
+  : T extends MessageType.SET_FORGOT_PASSWORD
+  ? {
+      message: string;
+    }
   : never;
 
 export interface Tab {
@@ -75,6 +90,7 @@ export interface Locale {
     notFound: string;
     success: string;
     wrongPassword: string;
+    emailIsSend: string;
   };
   app: {
     login: {
@@ -105,9 +121,19 @@ export interface Locale {
       emailIsNotRegistered: string;
       successLogin: string;
       successRegistration: string;
+      forgotPassword: string;
+      restorePassword: string;
+      sendRestoreMail: string;
+      restoreDesc: string;
+      changePassword: string;
+      newPassword: string;
+      save: string;
     };
     appBar: {
       darkTheme: string;
+      homePage: string;
+      login: string;
+      logout: string;
     };
   };
 }
@@ -133,7 +159,7 @@ export interface Result<T> {
 
 export type LocaleValue = 'ru';
 export type WSProtocol = 'test' | 'login';
-export const DEFAULT_LOCALE: LocaleValue = 'ru';
+export const LOCALE_DEFAULT: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';
 export interface SendMessageArgs<T extends keyof typeof MessageType> {
