@@ -35,6 +35,8 @@ export default function HomePage({ localeLogin, page, localeAppBar, app: { theme
 export async function getStaticProps({
   locale,
 }: GetStaticPropsContext): Promise<{ props: Omit<LoginProps, 'app'> }> {
+  // TODO check url
+  console.log(__filename);
   const localeLogin = await request.getLocale({ field: 'login', locale });
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const page = await request.pageFindMany({

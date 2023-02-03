@@ -10,6 +10,9 @@ generator client {
 enum PageName {
   index
   login
+  registration
+  restorePassword
+  changePassword
 }
 
 enum PageField {
