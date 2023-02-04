@@ -199,7 +199,7 @@ export class ORM extends Service implements Database {
         ({ msg: { id: _id, data } }) => {
           if (id === _id) {
             if (data.status === this.errorStatus) {
-              log('warn', 'Database request failed', { args: JSON.stringify(args), context });
+              log('warn', 'Database request failed', { args, context });
             }
             master.removeListener('message', handler);
             resolve(data);

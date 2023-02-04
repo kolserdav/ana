@@ -37,11 +37,12 @@ class Request {
     return new Promise((resolve) => {
       log('info', 'Send request', { method, url });
       fetch(`${SERVER}${url}`, {
-        body,
+        body: body ? JSON.stringify(body) : undefined,
         method,
         headers: {
           [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || LOCALE_DEFAULT,
           [USER_ID_HEADER]: id || '',
+          'Content-Type': 'application/json',
         },
       })
         .then((d) => {

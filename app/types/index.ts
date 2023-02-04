@@ -1,6 +1,6 @@
 import { Theme } from '@/Theme';
 import { PageField } from '@prisma/client';
-import { Status } from './interfaces';
+import { Locale, Status } from './interfaces';
 
 export type ThemeType = 'light' | 'dark';
 
@@ -26,4 +26,10 @@ export interface AppProps {
   app: {
     theme: Theme;
   };
+}
+
+export interface LoginProps extends AppProps {
+  localeLogin: Locale['app']['login'];
+  localeAppBar: Locale['app']['appBar'];
+  page: PageFull;
 }

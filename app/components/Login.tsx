@@ -293,7 +293,11 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           </div>
           {!isChangePass && (
             <div className={s.link}>
-              <Link disabled={load} theme={theme} href={isSignUp ? Pages.signIn : Pages.signUp}>
+              <Link
+                disabled={load}
+                theme={theme}
+                href={isSignUp || isRestore ? Pages.signIn : Pages.signUp}
+              >
                 {isSignUp || isRestore ? locale.signIn : locale.signUp}
               </Link>
             </div>
