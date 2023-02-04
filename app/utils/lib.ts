@@ -60,9 +60,10 @@ export const checkClickBy = ({
   clientX: number;
   clientY: number;
 }) => {
-  const { x, y, height } = current.getBoundingClientRect();
+  const { x, y, height, width } = current.getBoundingClientRect();
   const bottom = y + height;
-  return !(clientX < x || clientY < y || clientY > bottom);
+  const right = x + width;
+  return !(clientX < x || clientY < y || clientY > bottom || clientX > right);
 };
 
 export const getKey = ({ index, name }: { index: number; name: string }) => `${name}-${index}`;

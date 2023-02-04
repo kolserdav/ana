@@ -9,18 +9,16 @@ function Typography({
   variant,
   children,
   theme,
-  center,
   className,
   small,
-  right,
+  align,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | string[];
   theme: Theme;
-  center?: boolean;
   className?: string;
   small?: boolean;
-  right?: boolean;
+  align?: 'center' | 'right' | 'justify';
 }) {
   return (
     <div
@@ -28,9 +26,16 @@ function Typography({
         s.wrapper,
         ubuntu.className,
         className,
-        center ? s.center : '',
         small ? s.small : '',
-        right ? s.right : ''
+        align
+          ? align === 'center'
+            ? s.center
+            : align === 'right'
+            ? s.right
+            : align === 'justify'
+            ? s.justify
+            : ''
+          : ''
       )}
       style={{ color: theme.text }}
     >
@@ -58,10 +63,9 @@ function Typography({
 }
 
 Typography.defaultProps = {
-  center: false,
   className: '',
   small: false,
-  right: false,
+  align: 'left',
 };
 
 export default Typography;

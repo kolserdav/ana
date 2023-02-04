@@ -461,6 +461,7 @@ export const useButton = ({
   setPasswordRepeatError,
   setLoad,
   isChangePass,
+  setErrorDialogOpen,
   tabSelected,
   tabActive,
   ws,
@@ -484,6 +485,7 @@ export const useButton = ({
   setPasswordError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   tabSelected: boolean;
   tabActive: number;
   isChangePass: boolean;
@@ -543,7 +545,7 @@ export const useButton = ({
       error = true;
     }
     if (!e || !k) {
-      alert(1);
+      setErrorDialogOpen(true);
       error = true;
     }
     setButtonError(error ? locale.eliminateRemarks : '');
@@ -732,4 +734,10 @@ export const useClean = ({
   };
 
   return { cleanAllFields };
+};
+
+export const useErrorDialog = () => {
+  const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+
+  return { errorDialogOpen, setErrorDialogOpen };
 };

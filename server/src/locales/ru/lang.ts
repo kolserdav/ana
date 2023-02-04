@@ -59,6 +59,8 @@ const lang: Locale = {
       changePassword: 'Сменить пароль',
       newPassword: 'Новый пароль',
       save: 'Сохранить',
+      changePasswordError: 'Неверные параметры страницы',
+      sendNewLetter: 'Запросить новое письмо для восстановления пароля',
     },
     appBar: {
       darkTheme: 'Темная тема',

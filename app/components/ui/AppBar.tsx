@@ -46,7 +46,7 @@ function AppBar({
       >
         <Menu theme={theme}>
           {!checkRouterPath(router.asPath, Pages.home) && (
-            <Link withoutHover theme={theme} href={Pages.home}>
+            <Link fullWidth withoutHover theme={theme} href={Pages.home}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.homePage}</div>
               </div>
@@ -57,7 +57,7 @@ function AppBar({
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
           {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && (
-            <Link withoutHover theme={theme} href={PAGE_LOGIN_IN_MENU}>
+            <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.login}</div>
               </div>

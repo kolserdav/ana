@@ -1,0 +1,30 @@
+.wrapper {
+  position: fixed;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background-color: rgba($color: #000, $alpha: 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.open {
+    z-index: 14;
+  }
+
+  .container {
+    position: relative;
+    width: auto;
+    min-width: 320px;
+    height: auto;
+    min-height: 200px;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+}

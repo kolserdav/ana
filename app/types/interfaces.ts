@@ -128,6 +128,8 @@ export interface Locale {
       changePassword: string;
       newPassword: string;
       save: string;
+      changePasswordError: string;
+      sendNewLetter: string;
     };
     appBar: {
       darkTheme: string;

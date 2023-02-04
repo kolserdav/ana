@@ -11,9 +11,10 @@ interface LinkProps {
   disabled?: boolean;
   withoutHover?: boolean;
   className?: string;
+  fullWidth?: boolean;
 }
 
-function Link({ children, theme, disabled, withoutHover, className, href }: LinkProps) {
+function Link({ children, theme, disabled, withoutHover, className, href, fullWidth }: LinkProps) {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     disabled ? (
@@ -23,7 +24,12 @@ function Link({ children, theme, disabled, withoutHover, className, href }: Link
     ) : (
       <NextLink
         href={href}
-        className={clsx(s.wrapper, withoutHover ? s.without__hover : '', className)}
+        className={clsx(
+          s.wrapper,
+          withoutHover ? s.without__hover : '',
+          className,
+          fullWidth ? s.full__width : ''
+        )}
       >
         <span style={{ color: theme.blue }}>{children}</span>
       </NextLink>
@@ -35,6 +41,7 @@ Link.defaultProps = {
   disabled: false,
   withoutHover: false,
   className: '',
+  fullWidth: false,
 };
 
 export default Link;

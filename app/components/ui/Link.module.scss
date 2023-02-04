@@ -1,6 +1,10 @@
 .wrapper {
   position: relative;
-  width: 100%;
+  width: auto;
+
+  &.full__width {
+    width: 100%;
+  }
 
   &:hover {
     text-decoration: underline;

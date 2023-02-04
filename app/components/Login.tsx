@@ -15,10 +15,12 @@ import {
   useMessages,
   useButton,
   useClean,
+  useErrorDialog,
 } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
 import Card from './ui/Card';
+import Dialog from './ui/Dialog';
 import Input from './ui/Input';
 import Link from './ui/Link';
 import Tabs from './ui/Tabs';
@@ -96,6 +98,8 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
 
+  const { errorDialogOpen, setErrorDialogOpen } = useErrorDialog();
+
   const {
     onClickLoginButton,
     onClickRegisterButton,
@@ -127,6 +131,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     connId,
     setLoad,
     isChangePass,
+    setErrorDialogOpen,
   });
 
   useMessages({
@@ -145,7 +150,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
 
   return (
     <div className={s.wrapper}>
-      <Typography center theme={theme} variant="h1">
+      <Typography align="center" theme={theme} variant="h1">
         {isSignUp
           ? locale.signUp
           : isRestore
@@ -158,7 +163,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
         {isRestore && (
           <div className={s.restore__desc}>
             <Card theme={theme}>
-              <Typography right theme={theme} variant="p">
+              <Typography align="justify" theme={theme} variant="p">
                 {locale.restoreDesc}
               </Typography>
             </Card>
@@ -304,6 +309,14 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
           )}
         </form>
       </div>
+      <Dialog theme={theme} open={errorDialogOpen}>
+        <Typography align="center" theme={theme} variant="h4">
+          {locale.changePasswordError}
+        </Typography>
+        <Link theme={theme} href={Pages.restorePassword}>
+          {locale.sendNewLetter}
+        </Link>
+      </Dialog>
     </div>
   );
 }
