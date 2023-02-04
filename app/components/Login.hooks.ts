@@ -2,7 +2,6 @@ import useQueryString from '@/hooks/useQueryString';
 import {
   checkEmail,
   LOCALE_DEFAULT,
-  ErrorCode,
   Locale,
   MessageType,
   SendMessageArgs,
@@ -307,10 +306,12 @@ export const useMessages = ({
   setEmailError,
   setEmailSuccess,
   setLoad,
+  onClickLoginButton,
   ws,
   locale,
   isSignUp,
   cleanAllFields,
+  setPageError,
   email,
   password,
   setButtonError,
@@ -320,6 +321,8 @@ export const useMessages = ({
   setEmailSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setButtonError: React.Dispatch<React.SetStateAction<string>>;
+  setPageError: React.Dispatch<React.SetStateAction<string>>;
+  onClickLoginButton: () => void;
   ws: WS;
   locale: Locale['app']['login'];
   isSignUp: boolean;
@@ -327,78 +330,6 @@ export const useMessages = ({
   email: string;
   password: string;
 }) => {
-  const setUserCheckEmail = useMemo(
-    () =>
-      ({ data }: SendMessageArgs<MessageType.SET_USER_CHECK_EMAIL>) => {
-        if (isSignUp && data) {
-          setEmailError(locale.emailIsRegistered);
-          setEmailSuccess(false);
-        } else if (!isSignUp && !data) {
-          setEmailError(locale.emailIsNotRegistered);
-          setEmailSuccess(false);
-        }
-      },
-    [setEmailError, isSignUp, locale, setEmailSuccess]
-  );
-
-  const setUserCreate = useMemo(
-    () =>
-      ({ id, lang }: SendMessageArgs<MessageType.SET_USER_CREATE>) => {
-        ws.sendMessage({
-          id,
-          type: MessageType.GET_USER_LOGIN,
-          lang,
-          timeout: new Date().getTime(),
-          data: {
-            email,
-            password,
-          },
-        });
-        log('info', locale.successRegistration, '', true);
-      },
-    [email, locale.successRegistration, password, ws]
-  );
-
-  const setUserLogin = useMemo(
-    () =>
-      ({ data: { token } }: SendMessageArgs<MessageType.SET_USER_LOGIN>) => {
-        setCookie(CookieName._utoken, token);
-        cleanAllFields();
-        setLoad(false);
-        log('info', locale.successLogin, { token }, !isSignUp);
-      },
-    [cleanAllFields, isSignUp, locale.successLogin, setLoad]
-  );
-
-  const setForgotPassword = useMemo(
-    () =>
-      ({ data: { message } }: SendMessageArgs<MessageType.SET_FORGOT_PASSWORD>) => {
-        log('info', message, {}, true);
-        setLoad(false);
-        cleanAllFields();
-      },
-    [cleanAllFields, setLoad]
-  );
-
-  const setError = useMemo(
-    () =>
-      async ({
-        data: { status, message, httpCode, code },
-        timeout,
-      }: SendMessageArgs<MessageType.SET_ERROR>) => {
-        await awaitResponse(timeout);
-        switch (code) {
-          case ErrorCode.userLogin:
-            setButtonError(message);
-            break;
-          default:
-        }
-        setLoad(false);
-        log(status, message, { httpCode }, true);
-      },
-    [setLoad, setButtonError]
-  );
-
   /**
    * Connect to WS
    */
@@ -406,14 +337,73 @@ export const useMessages = ({
     if (!ws.connection) {
       return;
     }
+
+    const setUserLogin = ({ data: { token } }: SendMessageArgs<MessageType.SET_USER_LOGIN>) => {
+      setCookie(CookieName._utoken, token);
+      cleanAllFields();
+      log('info', locale.successLogin, { token }, !isSignUp);
+    };
+
+    const setError = async ({
+      data: { status, message, httpCode, type },
+      timeout,
+    }: SendMessageArgs<MessageType.SET_ERROR>) => {
+      await awaitResponse(timeout);
+      switch (type) {
+        case MessageType.GET_USER_LOGIN:
+          setButtonError(message);
+          break;
+        case MessageType.GET_CHECK_RESTORE_KEY:
+          setPageError(message);
+          break;
+        default:
+      }
+      log(status, message, { httpCode }, true);
+    };
+
+    const setForgotPassword = ({
+      data: { message },
+    }: SendMessageArgs<MessageType.SET_FORGOT_PASSWORD>) => {
+      log('info', message, {}, true);
+      cleanAllFields();
+    };
+
+    const setUserCreate = ({ id, lang }: SendMessageArgs<MessageType.SET_USER_CREATE>) => {
+      ws.sendMessage({
+        id,
+        type: MessageType.GET_USER_LOGIN,
+        lang,
+        timeout: new Date().getTime(),
+        data: {
+          email,
+          password,
+        },
+      });
+      log('info', locale.successRegistration, '', true);
+    };
+
+    const setUserCheckEmail = ({ data }: SendMessageArgs<MessageType.SET_USER_CHECK_EMAIL>) => {
+      if (isSignUp && data) {
+        setEmailError(locale.emailIsRegistered);
+        setEmailSuccess(false);
+      } else if (!isSignUp && !data) {
+        setEmailError(locale.emailIsNotRegistered);
+        setEmailSuccess(false);
+      }
+    };
+
+    const setRestorePassword = ({ data }: SendMessageArgs<MessageType.SET_RESTORE_PASSWORD>) => {
+      onClickLoginButton();
+    };
+
     // eslint-disable-next-line no-param-reassign
-    ws.connection.onmessage = (msg) => {
+    ws.connection.onmessage = async (msg) => {
       const { data } = msg;
       const rawMessage = ws.parseMessage(data);
       if (!rawMessage) {
         return;
       }
-      const { type, id } = rawMessage;
+      const { type, id, timeout } = rawMessage;
       switch (type) {
         case MessageType.SET_CONNECTION_ID:
           setConnId(id);
@@ -430,14 +420,36 @@ export const useMessages = ({
         case MessageType.SET_ERROR:
           setError(rawMessage);
           break;
+        case MessageType.SET_CHECK_RESTORE_KEY:
+          //
+          break;
         case MessageType.SET_FORGOT_PASSWORD:
           setForgotPassword(rawMessage);
+          break;
+        case MessageType.SET_RESTORE_PASSWORD:
+          setRestorePassword(rawMessage);
           break;
         default:
           log('warn', 'Not implemented on ws message case in login', rawMessage);
       }
+      await awaitResponse(timeout);
+      setLoad(false);
     };
-  }, [ws, setConnId, setUserCheckEmail, setError, setUserCreate, setUserLogin, setForgotPassword]);
+  }, [
+    ws,
+    setConnId,
+    setLoad,
+    setButtonError,
+    setPageError,
+    cleanAllFields,
+    isSignUp,
+    locale,
+    email,
+    password,
+    setEmailError,
+    setEmailSuccess,
+    onClickLoginButton,
+  ]);
 };
 
 export const useButton = ({
@@ -460,10 +472,10 @@ export const useButton = ({
   setPasswordError,
   setPasswordRepeatError,
   setLoad,
-  isChangePass,
   setErrorDialogOpen,
   tabSelected,
   tabActive,
+  setEmail,
   ws,
 }: {
   connId: string;
@@ -480,6 +492,7 @@ export const useButton = ({
   locale: Locale['app']['login'];
   setNameError: React.Dispatch<React.SetStateAction<string>>;
   setTabsError: React.Dispatch<React.SetStateAction<string>>;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
   setSurnameError: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordError: React.Dispatch<React.SetStateAction<string>>;
@@ -488,10 +501,10 @@ export const useButton = ({
   setErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   tabSelected: boolean;
   tabActive: number;
-  isChangePass: boolean;
   ws: WS;
 }) => {
   const [buttonError, setButtonError] = useState<string>('');
+  const [pageError, setPageError] = useState<string>('');
 
   const { e, k } = useQueryString<{ [EMAIL_QS]: string; [KEY_QS]: string }>();
 
@@ -545,7 +558,7 @@ export const useButton = ({
       error = true;
     }
     if (!e || !k) {
-      setErrorDialogOpen(true);
+      setPageError(locale.wrongParameters);
       error = true;
     }
     setButtonError(error ? locale.eliminateRemarks : '');
@@ -646,6 +659,18 @@ export const useButton = ({
       setButtonError('');
     }
     setLoad(true);
+    setEmail(e);
+    ws.sendMessage({
+      type: MessageType.GET_RESTORE_PASSWORD,
+      id: connId,
+      timeout: new Date().getTime(),
+      lang: getLangCookie(),
+      data: {
+        email: e,
+        password,
+        key: k,
+      },
+    });
   };
 
   const onClickRegisterButton = () => {
@@ -672,6 +697,29 @@ export const useButton = ({
       },
     });
   };
+
+  /**
+   * Open error dialog
+   */
+  useEffect(() => {
+    setErrorDialogOpen(pageError !== '');
+  }, [pageError, setErrorDialogOpen]);
+
+  /**
+   * Check key
+   */
+  useEffect(() => {
+    if (e && k) {
+      ws.sendMessage({
+        id: connId,
+        lang: getLangCookie(),
+        timeout: new Date().getTime(),
+        type: MessageType.GET_CHECK_RESTORE_KEY,
+        data: { email: e, key: k },
+      });
+    }
+  }, [e, k, connId, ws]);
+
   return {
     onClickLoginButton,
     onClickRegisterButton,
@@ -679,6 +727,8 @@ export const useButton = ({
     setButtonError,
     onClickRestoreButton,
     onClickChangePasswordButton,
+    pageError,
+    setPageError,
   };
 };
 

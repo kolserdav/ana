@@ -28,5 +28,5 @@ export const PASSWORD_SALT_LENGTH = 16;
 export const PASWWORD_HASH_LENGTH = 64;
 export const PASSWORD_ITERATIONS = 1000;
 export const PASSWORD_ALGORITHM = 'sha512';
-export const RESTORE_LINK_TIMEOUT = new Date(0, 0, 2, 0, 0, 0, 0);
+export const RESTORE_LINK_TIMEOUT_IN_HOURS = 48;
 export const NULL_TIMEOUT = new Date(0, 0, 0, 0, 0, 0, 0);

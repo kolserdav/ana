@@ -8,6 +8,8 @@ const lang: Locale = {
     success: 'Успешный запрос',
     wrongPassword: 'Неверный логин или пароль',
     emailIsSend: 'На указанную почту отправлено письмо с инструкцией',
+    linkExpired: 'Просроченная ссылка',
+    linkUnaccepted: 'Недействительная ссылка',
   },
   app: {
     login: {
@@ -59,7 +61,7 @@ const lang: Locale = {
       changePassword: 'Сменить пароль',
       newPassword: 'Новый пароль',
       save: 'Сохранить',
-      changePasswordError: 'Неверные параметры страницы',
+      wrongParameters: 'Неверные параметры страницы',
       sendNewLetter: 'Запросить новое письмо для восстановления пароля',
     },
     appBar: {

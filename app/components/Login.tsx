@@ -4,7 +4,7 @@ import useLoad from '@/hooks/useLoad';
 import useWS from '@/hooks/useWS';
 import { Theme } from '@/Theme';
 import { Locale } from '@/types/interfaces';
-import { Pages, TAB_INDEX_DEFAULT } from '@/utils/constants';
+import { LOAD_PAGE_DURATION, Pages, TAB_INDEX_DEFAULT } from '@/utils/constants';
 import {
   useCheckPage,
   useEmailInput,
@@ -92,10 +92,6 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     setPasswordSuccess,
   });
 
-  useChangeLocation(() => {
-    cleanAllFields();
-  });
-
   const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
 
   const { errorDialogOpen, setErrorDialogOpen } = useErrorDialog();
@@ -107,6 +103,8 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     setButtonError,
     onClickRestoreButton,
     onClickChangePasswordButton,
+    setPageError,
+    pageError,
   } = useButton({
     locale,
     name,
@@ -130,8 +128,15 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     ws,
     connId,
     setLoad,
-    isChangePass,
     setErrorDialogOpen,
+    setEmail,
+  });
+
+  useChangeLocation(() => {
+    setLoad(true);
+    setTimeout(() => setLoad(false), LOAD_PAGE_DURATION);
+    cleanAllFields();
+    setPageError('');
   });
 
   useMessages({
@@ -146,6 +151,8 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
     setLoad,
     setEmailSuccess,
     setButtonError,
+    setPageError,
+    onClickLoginButton,
   });
 
   return (
@@ -311,7 +318,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
       </div>
       <Dialog theme={theme} open={errorDialogOpen}>
         <Typography align="center" theme={theme} variant="h4">
-          {locale.changePasswordError}
+          {pageError}
         </Typography>
         <Link theme={theme} href={Pages.restorePassword}>
           {locale.sendNewLetter}

@@ -26,15 +26,12 @@ export enum MessageType {
   SET_USER_LOGIN = 'SET_USER_LOGIN',
   GET_FORGOT_PASSWORD = 'GET_FORGOT_PASSWORD',
   SET_FORGOT_PASSWORD = 'SET_FORGOT_PASSWORD',
+  GET_CHECK_RESTORE_KEY = 'GET_CHECK_RESTORE_KEY',
+  SET_CHECK_RESTORE_KEY = 'SET_CHECK_RESTORE_KEY',
+  GET_RESTORE_PASSWORD = 'GET_RESTORE_PASSWORD',
+  SET_RESTORE_PASSWORD = 'SET_RESTORE_PASSWORD',
 }
 
-// eslint-disable-next-line no-shadow
-export enum ErrorCode {
-  createUser = 'createUser',
-  userCheckEmail = 'userCheckEmail',
-  userLogin = 'userLogin',
-  forgotPassword = 'forgotPassword',
-}
 export type Status = 'error' | 'warn' | 'info';
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
@@ -46,7 +43,7 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? User | null
   : T extends MessageType.SET_ERROR
   ? {
-      code: keyof typeof ErrorCode;
+      type: keyof typeof MessageType;
       message: string;
       status: Status;
       httpCode: number;
@@ -74,6 +71,21 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? {
       message: string;
     }
+  : T extends MessageType.GET_CHECK_RESTORE_KEY
+  ? {
+      email: string;
+      key: string;
+    }
+  : T extends MessageType.SET_CHECK_RESTORE_KEY
+  ? null
+  : T extends MessageType.GET_RESTORE_PASSWORD
+  ? {
+      email: string;
+      key: string;
+      password: string;
+    }
+  : T extends MessageType.SET_RESTORE_PASSWORD
+  ? null
   : never;
 
 export interface Tab {
@@ -91,6 +103,8 @@ export interface Locale {
     success: string;
     wrongPassword: string;
     emailIsSend: string;
+    linkExpired: string;
+    linkUnaccepted: string;
   };
   app: {
     login: {
@@ -128,7 +142,7 @@ export interface Locale {
       changePassword: string;
       newPassword: string;
       save: string;
-      changePasswordError: string;
+      wrongParameters: string;
       sendNewLetter: string;
     };
     appBar: {

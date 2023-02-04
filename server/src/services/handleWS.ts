@@ -1,5 +1,4 @@
 import { v4 } from 'uuid';
-import MessageHandler from '../components/messageHandler';
 import {
   LOCALE_DEFAULT,
   LANGUAGE_HEADER,
@@ -8,7 +7,11 @@ import {
   parseQueryString,
 } from '../types/interfaces';
 import { checkCors } from '../utils/lib';
+import HandleRequests from './handleRequests';
 import WS from './ws';
+
+const protocol = 'ws';
+const handleRequests = new HandleRequests({ protocol, caller: 'message-handler' });
 
 class HandleWS {
   constructor({ ws }: { ws: WS }) {
@@ -23,7 +26,6 @@ class HandleWS {
       }
       return connId;
     };
-    const messageHandler = new MessageHandler({ ws: wss });
     wss.connection.on('connection', (ws, { headers, url }) => {
       // const protocol = req.headers['sec-websocket-protocol'];
       const id = getConnectionId();
@@ -53,7 +55,10 @@ class HandleWS {
 
       wss.setSocket({ id, ws, lang: (lang as LocaleValue) || LOCALE_DEFAULT });
 
-      messageHandler.messages({ ws });
+      ws.on('message', async (msg) => {
+        const rawMessage = wss.parseMessage(msg);
+        handleRequests.emit('message', { protocol, msg: rawMessage });
+      });
 
       ws.on('close', () => {
         wss.deleteSocket(id);

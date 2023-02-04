@@ -80,6 +80,7 @@ class HandleRequests extends Service {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.listenWorkerMessages<any>(async ({ protocol, msg }) => {
       if (protocol === 'request') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         amqpS.sendToQueue(msg as any);
       }
     });
