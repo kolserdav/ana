@@ -492,7 +492,7 @@ class User {
       });
       return;
     }
-    const { created } = user.data.RestoreLink[0];
+    const { created, id: restoreLinkId } = user.data.RestoreLink[0];
     const diffsInHours = differenceInHours(new Date(), new Date(created));
     if (diffsInHours >= RESTORE_LINK_TIMEOUT_IN_HOURS) {
       ws.sendMessage({
@@ -522,6 +522,11 @@ class User {
           salt,
           password: hash,
           updated: new Date(),
+          RestoreLink: {
+            delete: {
+              id: restoreLinkId,
+            },
+          },
         },
       },
       { headers: getPseudoHeaders({ lang }) }
