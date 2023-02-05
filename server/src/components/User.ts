@@ -7,13 +7,14 @@ import {
   EMAIL_QS,
   KEY_QS,
   MessageType,
+  PAGE_CONFIRM_EMAIL,
   PAGE_RESTORE_PASSWORD_CALLBACK,
   SendMessageArgs,
 } from '../types/interfaces';
 import { createPasswordHash, createRandomSalt, createToken } from '../utils/auth';
-import { APP_URL, NULL_TIMEOUT, RESTORE_LINK_TIMEOUT_IN_HOURS } from '../utils/constants';
+import { APP_URL, RESTORE_LINK_TIMEOUT_IN_HOURS } from '../utils/constants';
 import { sendEmail } from '../utils/email';
-import { getHttpCode, getLocale, getPseudoHeaders } from '../utils/lib';
+import { getHttpCode, getLocale, getPseudoHeaders, log } from '../utils/lib';
 
 const orm = new ORM();
 
@@ -44,15 +45,21 @@ class User {
     }
     data.password = hash;
     data.salt = salt;
-    // @ts-ignore
-    delete data.passwordRepeat;
     const user = await orm.userCreate(
       {
-        data,
+        data: {
+          ...data,
+          ConfirmLink: {
+            create: {},
+          },
+        },
+        include: {
+          ConfirmLink: true,
+        },
       },
       { headers: getPseudoHeaders({ lang }) }
     );
-    if (user.status !== 'info') {
+    if (user.status !== 'info' || !user.data || !user.data?.ConfirmLink?.[0]) {
       ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
@@ -67,6 +74,22 @@ class User {
       });
       return;
     }
+
+    const sendRes = await sendEmail<'confirm-email'>({
+      email,
+      type: 'confirm-email',
+      locale: lang,
+      data: {
+        name: user.data.name,
+        link: `${APP_URL}${PAGE_CONFIRM_EMAIL}?${EMAIL_QS}=${user.data.email}&${KEY_QS}=${user.data.ConfirmLink[0].id}`,
+      },
+    });
+
+    if (sendRes === 1) {
+      log('warn', 'Not send email to user', { user });
+      return;
+    }
+
     ws.sendMessage({
       id,
       lang,
@@ -277,7 +300,7 @@ class User {
       },
       { headers: getPseudoHeaders({ lang }) }
     );
-    if (restore.status === 'error' || !restore.data || !restore.data.RestoreLink[0]) {
+    if (restore.status === 'error' || !restore.data || !restore.data?.RestoreLink?.[0]) {
       ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
@@ -554,6 +577,134 @@ class User {
       lang,
       type: MessageType.SET_RESTORE_PASSWORD,
       data: null,
+    });
+  }
+
+  public async getConfirmEmail(
+    {
+      id,
+      timeout,
+      type,
+      lang,
+      data: { email, key },
+    }: SendMessageArgs<MessageType.GET_CONFIRM_EMAIL>,
+    ws: WS
+  ) {
+    const locale = getLocale(lang).server;
+    if (!checkEmail(email)) {
+      ws.sendMessage({
+        type: MessageType.SET_ERROR,
+        lang,
+        id,
+        timeout,
+        data: {
+          status: 'warn',
+          type,
+          httpCode: 400,
+          message: locale.badRequest,
+        },
+      });
+      return;
+    }
+    const user = await orm.userFindFirst(
+      {
+        where: { email },
+        include: {
+          ConfirmLink: {
+            where: {
+              id: key,
+            },
+          },
+        },
+      },
+      { headers: getPseudoHeaders({ lang }) }
+    );
+    if (user.status !== 'info' || !user.data) {
+      ws.sendMessage({
+        id,
+        type: MessageType.SET_ERROR,
+        lang,
+        timeout,
+        data: {
+          status: user.status,
+          type,
+          message: user.status === 'error' ? locale.error : locale.notFound,
+          httpCode: getHttpCode(user.status),
+        },
+      });
+      return;
+    }
+    if (user.data.confirm) {
+      ws.sendMessage({
+        timeout,
+        id,
+        lang,
+        type: MessageType.SET_CONFIRM_EMAIL,
+        data: {
+          message: locale.successConfirmEmail,
+        },
+      });
+      return;
+    }
+    const cLink = user.data.ConfirmLink[0];
+    if (!cLink) {
+      ws.sendMessage({
+        id,
+        type: MessageType.SET_ERROR,
+        lang,
+        timeout,
+        data: {
+          status: 'warn',
+          type,
+          message: locale.linkUnaccepted,
+          httpCode: 404,
+        },
+      });
+      return;
+    }
+
+    const update = await orm.userUpdate(
+      {
+        where: {
+          id: user.data.id,
+        },
+        data: {
+          ConfirmLink: {
+            delete: {
+              id: cLink.id,
+            },
+          },
+          confirm: true,
+          updated: new Date(),
+        },
+      },
+      { headers: getPseudoHeaders({ lang }) }
+    );
+
+    if (update.status !== 'info' || !update.data) {
+      ws.sendMessage({
+        id,
+        type: MessageType.SET_ERROR,
+        lang,
+        timeout,
+        data: {
+          status: update.status,
+          type,
+          message: update.status === 'error' ? locale.error : locale.notFound,
+          httpCode: getHttpCode(update.status),
+        },
+      });
+      return;
+    }
+
+    ws.sendMessage({
+      timeout,
+      id,
+      lang,
+      type: MessageType.SET_CONFIRM_EMAIL,
+      data: {
+        message: locale.successConfirmEmail,
+      },
     });
   }
 }

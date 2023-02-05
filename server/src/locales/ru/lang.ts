@@ -10,6 +10,9 @@ const lang: Locale = {
     emailIsSend: 'На указанную почту отправлено письмо с инструкцией',
     linkExpired: 'Просроченная ссылка',
     linkUnaccepted: 'Недействительная ссылка',
+    letterNotSend:
+      'Учетная запись создана, но письмо подтверждения почты не отправлено из-за ошибки',
+    successConfirmEmail: 'Данная почта успешно подтверждена',
   },
   app: {
     login: {
@@ -69,6 +72,10 @@ const lang: Locale = {
       homePage: 'Главная страница',
       login: 'Вход',
       logout: 'Выход',
+    },
+    confirmEmail: {
+      title: 'Подтверждение почты',
+      paramsNotFound: 'Не найдены необходимые параметры страницы',
     },
   },
 };

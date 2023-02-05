@@ -256,24 +256,23 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
               fullWidth
             />
           )}
-          {isSignUp ||
-            (isChangePass && (
-              <Input
-                theme={theme}
-                onChange={onChangePasswordRepeat}
-                onBlur={onBlurPasswordRepeat}
-                value={passwordRepeat}
-                id="password-repeat"
-                type="password"
-                required
-                colorActive
-                error={passwordRepeatError}
-                success={passwordRepeatSuccess}
-                disabled={load}
-                name={`${locale.passwordRepeat}*`}
-                fullWidth
-              />
-            ))}
+          {(isSignUp || isChangePass) && (
+            <Input
+              theme={theme}
+              onChange={onChangePasswordRepeat}
+              onBlur={onBlurPasswordRepeat}
+              value={passwordRepeat}
+              id="password-repeat"
+              type="password"
+              required
+              colorActive
+              error={passwordRepeatError}
+              success={passwordRepeatSuccess}
+              disabled={load}
+              name={`${locale.passwordRepeat}*`}
+              fullWidth
+            />
+          )}
           <div className={s.actives}>
             <Button
               error={buttonError}

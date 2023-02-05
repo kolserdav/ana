@@ -43,6 +43,9 @@ class QueueHandler {
         case MessageType.GET_RESTORE_PASSWORD:
           await user.getRestorePassword(msg, this.ws);
           break;
+        case MessageType.GET_CONFIRM_EMAIL:
+          await user.getConfirmEmail(msg, this.ws);
+          break;
         default:
           log('warn', 'Default case of consume queue', msg);
       }

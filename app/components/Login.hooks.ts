@@ -691,7 +691,6 @@ export const useButton = ({
         name,
         email,
         password,
-        passwordRepeat,
         surname,
         role,
       },

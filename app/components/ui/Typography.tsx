@@ -1,4 +1,5 @@
 import { Theme } from '@/Theme';
+import { Status } from '@/types/interfaces';
 import { Ubuntu } from '@next/font/google';
 import clsx from 'clsx';
 import s from './Typography.module.scss';
@@ -12,6 +13,7 @@ function Typography({
   className,
   small,
   align,
+  styleName,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | string[];
@@ -19,6 +21,7 @@ function Typography({
   className?: string;
   small?: boolean;
   align?: 'center' | 'right' | 'justify';
+  styleName?: Status;
 }) {
   return (
     <div
@@ -37,7 +40,16 @@ function Typography({
             : ''
           : ''
       )}
-      style={{ color: theme.text }}
+      style={{
+        color:
+          styleName === 'warn'
+            ? theme.yellow
+            : styleName === 'error'
+            ? theme.red
+            : styleName === 'info'
+            ? theme.green
+            : theme.text,
+      }}
     >
       {variant === 'p' ? (
         <p>{children}</p>
@@ -66,6 +78,7 @@ Typography.defaultProps = {
   className: '',
   small: false,
   align: 'left',
+  styleName: undefined,
 };
 
 export default Typography;

@@ -13,6 +13,7 @@ enum PageName {
   registration
   restorePassword
   changePassword
+  confirmEmail
 }
 
 enum PageField {
@@ -46,6 +47,7 @@ model User {
   name        String        @db.VarChar(24)
   surname     String        @db.VarChar(35)
   email       String        @unique @db.VarChar(255)
+  confirm     Boolean       @default(false)
   online      Boolean       @default(true)
   role        Role
   password    String        @db.VarChar(64)
@@ -53,9 +55,17 @@ model User {
   updated     DateTime      @default(now())
   created     DateTime      @default(now())
   RestoreLink RestoreLink[]
+  ConfirmLink ConfirmLink[]
 }
 
 model RestoreLink {
+  id      String   @id @default(uuid())
+  userId  String
+  User    User     @relation(fields: [userId], references: [id])
+  created DateTime @default(now())
+}
+
+model ConfirmLink {
   id      String   @id @default(uuid())
   userId  String
   User    User     @relation(fields: [userId], references: [id])

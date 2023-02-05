@@ -10,6 +10,7 @@ export enum LogLevel {
 }
 
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
+export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
 export const EMAIL_QS = 'e';
 export const KEY_QS = 'k';
 
@@ -30,6 +31,8 @@ export enum MessageType {
   SET_CHECK_RESTORE_KEY = 'SET_CHECK_RESTORE_KEY',
   GET_RESTORE_PASSWORD = 'GET_RESTORE_PASSWORD',
   SET_RESTORE_PASSWORD = 'SET_RESTORE_PASSWORD',
+  GET_CONFIRM_EMAIL = 'GET_CONFIRM_EMAIL',
+  SET_CONFIRM_EMAIL = 'SET_CONFIRM_EMAIL',
 }
 
 export type Status = 'error' | 'warn' | 'info';
@@ -38,7 +41,7 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   : T extends MessageType.SET_CONNECTION_ID
   ? null
   : T extends MessageType.GET_USER_CREATE
-  ? Omit<Prisma.UserCreateArgs['data'], 'salt'> & { passwordRepeat: string }
+  ? Omit<Prisma.UserCreateArgs['data'], 'salt'>
   : T extends MessageType.SET_USER_CREATE
   ? User | null
   : T extends MessageType.SET_ERROR
@@ -86,6 +89,15 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
     }
   : T extends MessageType.SET_RESTORE_PASSWORD
   ? null
+  : T extends MessageType.GET_CONFIRM_EMAIL
+  ? {
+      email: string;
+      key: string;
+    }
+  : T extends MessageType.SET_CONFIRM_EMAIL
+  ? {
+      message: string;
+    }
   : never;
 
 export interface Tab {
@@ -105,6 +117,8 @@ export interface Locale {
     emailIsSend: string;
     linkExpired: string;
     linkUnaccepted: string;
+    letterNotSend: string;
+    successConfirmEmail: string;
   };
   app: {
     login: {
@@ -151,6 +165,10 @@ export interface Locale {
       login: string;
       logout: string;
     };
+    confirmEmail: {
+      title: string;
+      paramsNotFound: string;
+    };
   };
 }
 
@@ -174,7 +192,7 @@ export interface Result<T> {
 }
 
 export type LocaleValue = 'ru';
-export type WSProtocol = 'test' | 'login';
+export type WSProtocol = 'test' | 'login' | 'confirm-email';
 export const LOCALE_DEFAULT: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';

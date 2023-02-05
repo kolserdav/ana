@@ -47,7 +47,7 @@ export interface JWTFull {
   iat: number;
 }
 
-export type EmailType = 'restore-password';
+export type EmailType = 'restore-password' | 'confirm-email';
 
 export interface SendEmailParams<T extends EmailType> {
   type: T;
@@ -58,6 +58,11 @@ export interface SendEmailParams<T extends EmailType> {
         name: string;
         link: string;
         expire: number;
+      }
+    : T extends 'confirm-email'
+    ? {
+        name: string;
+        link: string;
       }
     : never;
 }
