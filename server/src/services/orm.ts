@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import cluster, { Worker } from 'cluster';
 import { v4 } from 'uuid';
 import Service from './service';
@@ -6,13 +6,7 @@ import Database from '../database';
 import { checkIsFind, checkIsMany, log } from '../utils/lib';
 import { REDIS_CACHE_TIMEOUT, REDIS_RESERVED } from '../utils/constants';
 import Redis from '../protocols/redis';
-import {
-  MessageType,
-  DBResult,
-  SendMessageArgs,
-  DBCommandProps,
-  RequestContext,
-} from '../types/interfaces';
+import { MessageType, DBResult, SendMessageArgs, DBCommandProps } from '../types/interfaces';
 import { ProcessMessage } from '../types';
 
 const prisma = new PrismaClient();
@@ -30,15 +24,12 @@ export class ORM extends Service implements Database {
     }
   }
 
-  public userFindFirstW: Database['userFindFirst'] = async (args, context) => {
-    return this.runFromWorker(
-      {
-        args,
-        model: 'user',
-        command: 'findFirst',
-      },
-      context
-    );
+  public userFindFirstW: Database['userFindFirst'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'user',
+      command: 'findFirst',
+    });
   };
 
   public userCreate: Database['userCreate'] = async (args) => {
@@ -65,15 +56,12 @@ export class ORM extends Service implements Database {
     });
   };
 
-  public pageFindManyW: Database['pageFindManyW'] = async (args, context) => {
-    return this.runFromWorker(
-      {
-        args,
-        model: 'page',
-        command: 'findMany',
-      },
-      context
-    );
+  public pageFindManyW: Database['pageFindManyW'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'page',
+      command: 'findMany',
+    });
   };
 
   private createServer() {
@@ -171,11 +159,9 @@ export class ORM extends Service implements Database {
     } as DBResult<any>;
   }
 
-  private runFromWorker = async (
-    { args, model, command }: DBCommandProps,
-    { lang, timeout }: RequestContext
-  ) => {
+  private runFromWorker = async ({ args, model, command }: DBCommandProps) => {
     const id = v4();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new Promise<any>((resolve) => {
       const { master, handler } = this.listenMasterMessages<MessageType.DB_RESULT>(
         ({ msg: { id: _id, data } }) => {
@@ -193,8 +179,6 @@ export class ORM extends Service implements Database {
         msg: {
           type: MessageType.DB_COMMAND,
           id,
-          lang,
-          timeout,
           data: {
             model,
             command,

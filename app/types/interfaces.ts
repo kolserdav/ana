@@ -16,9 +16,12 @@ export const KEY_QS = 'k';
 
 // eslint-disable-next-line no-shadow
 export enum MessageType {
+  // Test
   TEST = 'TEST',
+  // Database
   DB_COMMAND = 'DB_COMMAND',
   DB_RESULT = 'DB_RESULT',
+  // WebSocket
   SET_CONNECTION_ID = 'SET_CONNECTION_ID',
   SET_ERROR = 'SET_ERROR',
   GET_USER_CREATE = 'GET_USER_CREATE',
@@ -35,6 +38,9 @@ export enum MessageType {
   SET_RESTORE_PASSWORD = 'SET_RESTORE_PASSWORD',
   GET_CONFIRM_EMAIL = 'GET_CONFIRM_EMAIL',
   SET_CONFIRM_EMAIL = 'SET_CONFIRM_EMAIL',
+  // HTTP
+  GET_USER_FIND_FIRST = 'GET_USER_FIND_FIRST',
+  SET_USER_FIND_FIRST = 'SET_USER_FIND_FIRST',
 }
 
 export interface RequestContext {
@@ -64,11 +70,13 @@ export type DBResult<T> = Omit<Result<T>, 'message'>;
 export type Status = 'error' | 'warn' | 'info';
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
-  : T extends MessageType.DB_COMMAND
+  : // Database
+  T extends MessageType.DB_COMMAND
   ? DBCommandProps
   : T extends MessageType.DB_RESULT
   ? DBResult<any>
-  : T extends MessageType.SET_CONNECTION_ID
+  : // WebSocket
+  T extends MessageType.SET_CONNECTION_ID
   ? null
   : T extends MessageType.GET_USER_CREATE
   ? Omit<Prisma.UserCreateArgs['data'], 'salt'>
@@ -95,6 +103,7 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   : T extends MessageType.SET_USER_LOGIN
   ? {
       token: string;
+      userId: string;
     }
   : T extends MessageType.GET_FORGOT_PASSWORD
   ? {
@@ -128,6 +137,11 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? {
       message: string;
     }
+  : // HTTP
+  T extends MessageType.GET_USER_FIND_FIRST
+  ? Prisma.UserFindFirstArgs
+  : T extends MessageType.SET_USER_FIND_FIRST
+  ? Partial<Pick<User, 'password' | 'salt'>> | null
   : unknown;
 
 export interface Tab {
@@ -210,10 +224,11 @@ export interface Locale {
 
 // eslint-disable-next-line no-shadow
 export enum Api {
-  testV1 = '/v1/test',
-  getLocaleV1 = '/v1/get-locale',
-  postPageFindManyV1 = '/v1/page-get-fields',
-  postUserCreateV1 = '/v1/user-create',
+  testV1 = '/v1/test.php',
+  getLocaleV1 = '/v1/get-locale.php',
+  postPageFindManyV1 = '/v1/page-get-fields.php',
+  postUserCreateV1 = '/v1/user-create.php',
+  getUserFindFirst = '/v1/user-find-first.php',
 }
 
 export type LocaleValue = 'ru';

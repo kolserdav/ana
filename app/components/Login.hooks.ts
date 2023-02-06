@@ -338,8 +338,11 @@ export const useMessages = ({
       return;
     }
 
-    const setUserLogin = ({ data: { token } }: SendMessageArgs<MessageType.SET_USER_LOGIN>) => {
+    const setUserLogin = ({
+      data: { token, userId },
+    }: SendMessageArgs<MessageType.SET_USER_LOGIN>) => {
       setCookie(CookieName._utoken, token);
+      setCookie(CookieName._uuid, userId);
       cleanAllFields();
       log('info', locale.successLogin, { token }, !isSignUp);
     };

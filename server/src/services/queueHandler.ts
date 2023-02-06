@@ -39,14 +39,20 @@ class QueueHandler extends Service {
     this.ws?.sendMessage(msg);
   }
 
-  public async queues({ amqp }: { amqp: AMQP }) {
+  public async consumeCaller({ amqp }: { amqp: AMQP }) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     amqp.consume(async (msg: SendMessageArgs<any>) => {
       const { type } = msg;
       if (!this.ws) {
+        if (!this.worker) {
+          return;
+        }
         switch (type) {
           case MessageType.TEST:
             await this.testW(msg);
+            break;
+          case MessageType.GET_USER_FIND_FIRST:
+            await user.getUserFindFirst(msg, this);
             break;
           default:
         }

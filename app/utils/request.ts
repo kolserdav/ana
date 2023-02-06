@@ -43,7 +43,7 @@ class Request {
         method,
         headers: {
           [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || LOCALE_DEFAULT,
-          [USER_ID_HEADER]: id || '',
+          [USER_ID_HEADER]: id || getCookie(CookieName._uuid) || '',
           'Content-Type': 'application/json',
         },
       })
@@ -75,6 +75,10 @@ class Request {
     locale: string | undefined;
   }): Promise<Result<Locale['app'][T]>> {
     return this.send({ url: `${Api.getLocaleV1}?field=${field}`, locale, method: 'GET' });
+  }
+
+  public async getUser(): Promise<SendMessageArgs<MessageType.SET_USER_FIND_FIRST>> {
+    return this.send({ url: Api.getUserFindFirst, method: 'GET' });
   }
 
   public async pageFindMany<T extends Prisma.PageFindManyArgs>(

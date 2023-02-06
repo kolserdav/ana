@@ -56,7 +56,7 @@ class Service extends EventEmitter {
     return { worker, handler };
   }
 
-  protected sendMessageToWorker<T extends keyof typeof MessageType>(data: ProcessMessage<T>) {
+  public sendMessageToWorker<T extends keyof typeof MessageType>(data: ProcessMessage<T>) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
     }

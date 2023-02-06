@@ -10,8 +10,8 @@ const orm = new ORM();
 const pageFindManyHandler: RequestHandler<
   { Body: Prisma.PageFindManyArgs },
   Result<Page[]>
-> = async ({ headers, body }, reply) => {
-  const page = await orm.pageFindManyW(body, { headers });
+> = async ({ body }, reply) => {
+  const page = await orm.pageFindManyW(body);
   reply.type(APPLICATION_JSON).code(page.code);
   return page;
 };

@@ -14,7 +14,8 @@ import {
 import { createPasswordHash, createRandomSalt, createToken } from '../utils/auth';
 import { APP_URL, RESTORE_LINK_TIMEOUT_IN_HOURS } from '../utils/constants';
 import { sendEmail } from '../utils/email';
-import { getHttpCode, getLocale, getPseudoHeaders, log } from '../utils/lib';
+import { getHttpCode, getLocale, log } from '../utils/lib';
+import Service from '../services/service';
 
 const orm = new ORM();
 
@@ -45,20 +46,17 @@ class User {
     }
     data.password = hash;
     data.salt = salt;
-    const user = await orm.userCreate(
-      {
-        data: {
-          ...data,
-          ConfirmLink: {
-            create: {},
-          },
-        },
-        include: {
-          ConfirmLink: true,
+    const user = await orm.userCreate({
+      data: {
+        ...data,
+        ConfirmLink: {
+          create: {},
         },
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+      include: {
+        ConfirmLink: true,
+      },
+    });
     if (user.status !== 'info' || !user.data || !user.data?.ConfirmLink?.[0]) {
       ws.sendMessage({
         id,
@@ -119,14 +117,11 @@ class User {
       });
       return;
     }
-    const user = await orm.userFindFirst(
-      {
-        where: {
-          email,
-        },
+    const user = await orm.userFindFirst({
+      where: {
+        email,
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+    });
     if (user.status === 'error') {
       ws.sendMessage({
         id,
@@ -177,14 +172,11 @@ class User {
       });
       return;
     }
-    const user = await orm.userFindFirst(
-      {
-        where: {
-          email,
-        },
+    const user = await orm.userFindFirst({
+      where: {
+        email,
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+    });
     if (user.status !== 'info' || !user.data) {
       ws.sendMessage({
         id,
@@ -243,7 +235,7 @@ class User {
       lang,
       timeout,
       type: MessageType.SET_USER_LOGIN,
-      data: { token },
+      data: { token, userId: user.data.id },
     });
   }
 
@@ -267,10 +259,7 @@ class User {
       });
       return;
     }
-    const user = await orm.userFindFirst(
-      { where: { email } },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+    const user = await orm.userFindFirst({ where: { email } });
     if (user.status !== 'info' || !user.data) {
       ws.sendMessage({
         id,
@@ -286,20 +275,17 @@ class User {
       });
       return;
     }
-    const restore = await orm.userUpdate(
-      {
-        where: { id: user.data.id },
-        data: {
-          RestoreLink: {
-            create: {},
-          },
-        },
-        include: {
-          RestoreLink: true,
+    const restore = await orm.userUpdate({
+      where: { id: user.data.id },
+      data: {
+        RestoreLink: {
+          create: {},
         },
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+      include: {
+        RestoreLink: true,
+      },
+    });
     if (restore.status === 'error' || !restore.data || !restore.data?.RestoreLink?.[0]) {
       ws.sendMessage({
         type: MessageType.SET_ERROR,
@@ -377,19 +363,16 @@ class User {
       });
       return;
     }
-    const user = await orm.userFindFirst(
-      {
-        where: { email },
-        include: {
-          RestoreLink: {
-            where: {
-              id: key,
-            },
+    const user = await orm.userFindFirst({
+      where: { email },
+      include: {
+        RestoreLink: {
+          where: {
+            id: key,
           },
         },
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+    });
     if (user.status !== 'info' || !user.data) {
       ws.sendMessage({
         id,
@@ -472,19 +455,16 @@ class User {
       });
       return;
     }
-    const user = await orm.userFindFirst(
-      {
-        where: { email },
-        include: {
-          RestoreLink: {
-            where: {
-              id: key,
-            },
+    const user = await orm.userFindFirst({
+      where: { email },
+      include: {
+        RestoreLink: {
+          where: {
+            id: key,
           },
         },
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+    });
     if (user.status !== 'info' || !user.data) {
       ws.sendMessage({
         id,
@@ -536,24 +516,21 @@ class User {
     const salt = createRandomSalt();
     const hash = createPasswordHash({ password, salt });
 
-    const res = await orm.userUpdate(
-      {
-        where: {
-          id: user.data.id,
-        },
-        data: {
-          salt,
-          password: hash,
-          updated: new Date(),
-          RestoreLink: {
-            delete: {
-              id: restoreLinkId,
-            },
+    const res = await orm.userUpdate({
+      where: {
+        id: user.data.id,
+      },
+      data: {
+        salt,
+        password: hash,
+        updated: new Date(),
+        RestoreLink: {
+          delete: {
+            id: restoreLinkId,
           },
         },
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+    });
 
     if (res.status !== 'info') {
       ws.sendMessage({
@@ -606,19 +583,16 @@ class User {
       });
       return;
     }
-    const user = await orm.userFindFirst(
-      {
-        where: { email },
-        include: {
-          ConfirmLink: {
-            where: {
-              id: key,
-            },
+    const user = await orm.userFindFirst({
+      where: { email },
+      include: {
+        ConfirmLink: {
+          where: {
+            id: key,
           },
         },
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+    });
     if (user.status !== 'info' || !user.data) {
       ws.sendMessage({
         id,
@@ -663,23 +637,20 @@ class User {
       return;
     }
 
-    const update = await orm.userUpdate(
-      {
-        where: {
-          id: user.data.id,
-        },
-        data: {
-          ConfirmLink: {
-            delete: {
-              id: cLink.id,
-            },
-          },
-          confirm: true,
-          updated: new Date(),
-        },
+    const update = await orm.userUpdate({
+      where: {
+        id: user.data.id,
       },
-      { headers: getPseudoHeaders({ lang }) }
-    );
+      data: {
+        ConfirmLink: {
+          delete: {
+            id: cLink.id,
+          },
+        },
+        confirm: true,
+        updated: new Date(),
+      },
+    });
 
     if (update.status !== 'info' || !update.data) {
       ws.sendMessage({
@@ -705,6 +676,24 @@ class User {
       data: {
         message: locale.successConfirmEmail,
       },
+    });
+  }
+
+  public async getUserFindFirst(
+    msg: SendMessageArgs<MessageType.GET_USER_FIND_FIRST>,
+    service: Service
+  ) {
+    const user = await orm.userFindFirst(msg.data);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const _msg: SendMessageArgs<MessageType.SET_USER_FIND_FIRST> = { ...msg } as any;
+    _msg.data = user.data;
+    if (_msg.data) {
+      delete _msg.data.password;
+      delete _msg.data.salt;
+    }
+    service.sendMessageToWorker({
+      protocol: 'request',
+      msg: _msg,
     });
   }
 }

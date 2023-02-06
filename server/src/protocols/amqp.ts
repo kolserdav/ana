@@ -1,20 +1,20 @@
 import amqp from 'amqplib';
+import { Worker } from 'cluster';
 import os from 'os';
+import QueueHandler from '../services/queueHandler';
+import { Protocol } from '../types';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { AMQP_ADDRESS, QUEUE_MAX_SIZE, RABBITMQ_RECONNECT_TIMEOUT } from '../utils/constants';
 import { log, wait } from '../utils/lib';
-import Redis from '../protocols/redis';
 
 const cpus = os.cpus().length;
-
-const redis = new Redis();
 
 class AMQP {
   private connection: amqp.Connection | undefined | void;
 
   private channel: amqp.Channel | undefined;
 
-  private caller: string;
+  private caller: boolean;
 
   private queue: string;
 
@@ -24,7 +24,7 @@ class AMQP {
 
   private readonly chanErr = (method: string) => `AMQP channel on method '${method}' is missing`;
 
-  constructor({ caller, queue }: { caller: string; queue: string }) {
+  constructor({ caller, queue }: { caller: boolean; queue: string }) {
     this.caller = caller;
     this.queue = queue;
     this.queueIndex = 0;
@@ -54,9 +54,7 @@ class AMQP {
     });
 
     await this.createChannel();
-    for (let i = 0; i < cpus; i++) {
-      await this.assertQueue(this.getQueue(i));
-    }
+    await this.assertQueue(this.getQueue());
   }
 
   private clean() {
@@ -64,8 +62,8 @@ class AMQP {
     this.channel = undefined;
   }
 
-  private getQueue(index: number) {
-    return `${this.queue}_${index}`;
+  private getQueue() {
+    return this.queue;
   }
 
   private async createChannel() {
@@ -97,13 +95,22 @@ class AMQP {
     return result;
   }
 
+  public async handleQueues(protocol: Protocol, worker?: Worker) {
+    const queueHandler = new QueueHandler({ worker, protocol });
+    await new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if (this.checkChannel()) {
+          clearInterval(interval);
+          resolve(0);
+        }
+      }, 100);
+    });
+    queueHandler.consumeCaller({ amqp: this });
+  }
+
   public async sendToQueue(msg: SendMessageArgs<any>) {
     if (!this.channel) {
       log('error', this.chanErr('sendToQueue'), { caller: this.caller });
-      return null;
-    }
-    if (!(await redis.checkWS(msg.id))) {
-      log('warn', 'sendToQueue without connected WS', { caller: this.caller });
       return null;
     }
     let msgString = '';
@@ -112,7 +119,7 @@ class AMQP {
     } catch (e) {
       log('error', 'Error stringify msg', { e, msg });
     }
-    const result = this.channel.sendToQueue(this.getQueue(this.queueIndex), Buffer.from(msgString));
+    const result = this.channel.sendToQueue(this.getQueue(), Buffer.from(msgString));
     this.setQueueIndex();
     return result;
   }
@@ -123,42 +130,40 @@ class AMQP {
       log('error', this.chanErr('consume'), { caller: this.caller });
       return;
     }
-    for (let i = 0; i < cpus; i++) {
-      const queue = this.getQueue(i);
-      this.channel.consume(
-        queue,
-        (msg) => {
-          if (!msg) {
-            log('log', 'Consume message is missing', { msg, queue, i });
-            return;
-          }
-          const msgStr = msg.content.toString();
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          let msgJSON: null | SendMessageArgs<any> = null;
-          try {
-            msgJSON = JSON.parse(msgStr);
-          } catch (e) {
-            log('error', 'Error parse consumed msg', { e, queue, msgStr });
-            return;
-          }
-          if (msgJSON === null) {
-            return;
-          }
-          cb(msgJSON);
-          if (!this.channel) {
-            log('error', this.chanErr('consumeCallback'), { caller: this.caller });
-            return;
-          }
-          this.channel.ack(msg);
-        },
-        {
-          noAck: false,
-          arguments: {
-            'x-classic-offset': 'first',
-          },
+    const queue = this.getQueue();
+    this.channel.consume(
+      queue,
+      (msg) => {
+        if (!msg) {
+          log('log', 'Consume message is missing', { msg, queue });
+          return;
         }
-      );
-    }
+        const msgStr = msg.content.toString();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let msgJSON: null | SendMessageArgs<any> = null;
+        try {
+          msgJSON = JSON.parse(msgStr);
+        } catch (e) {
+          log('error', 'Error parse consumed msg', { e, queue, msgStr });
+          return;
+        }
+        if (msgJSON === null) {
+          return;
+        }
+        cb(msgJSON);
+        if (!this.channel) {
+          log('error', this.chanErr('consumeCallback'), { caller: this.caller });
+          return;
+        }
+        this.channel.ack(msg);
+      },
+      {
+        noAck: false,
+        arguments: {
+          'x-classic-offset': 'first',
+        },
+      }
+    );
   }
 }
 

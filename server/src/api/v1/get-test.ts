@@ -12,7 +12,7 @@ const getTestHandler: RequestHandler<any, SendMessageArgs<MessageType.TEST>> = a
   reply
 ) => {
   const { lang, id } = parseHeaders(headers);
-  const res = await handleRequests.sendToQueue({
+  const res = await handleRequests.sendToQueue<MessageType.TEST>({
     type: MessageType.TEST,
     id,
     lang,
@@ -22,7 +22,7 @@ const getTestHandler: RequestHandler<any, SendMessageArgs<MessageType.TEST>> = a
     },
   });
   reply.type(APPLICATION_JSON).code(200);
-  return res.msg;
+  return res;
 };
 
 export default getTestHandler;

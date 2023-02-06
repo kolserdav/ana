@@ -4,8 +4,7 @@ import { RequestContext, Result } from './types/interfaces';
 
 abstract class Database {
   public abstract userFindFirst<T extends Prisma.UserFindFirstArgs>(
-    args: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>,
-    context: RequestContext
+    args: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>
   ): Promise<
     Prisma.CheckSelect<
       T,
@@ -15,8 +14,7 @@ abstract class Database {
   >;
 
   public abstract userCreate<T extends Prisma.UserCreateArgs>(
-    args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>,
-    context: RequestContext
+    args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>
   ): Promise<
     Prisma.CheckSelect<
       T,
@@ -26,8 +24,7 @@ abstract class Database {
   >;
 
   public abstract userUpdate<T extends Prisma.UserUpdateArgs>(
-    args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>,
-    context: RequestContext
+    args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>
   ): Promise<
     Prisma.CheckSelect<
       T,
@@ -37,8 +34,7 @@ abstract class Database {
   >;
 
   public abstract pageFindManyW<T extends Prisma.PageFindManyArgs>(
-    args: Prisma.SelectSubset<T, Prisma.PageFindManyArgs>,
-    context: RequestContext
+    args: Prisma.SelectSubset<T, Prisma.PageFindManyArgs>
   ): Promise<
     Prisma.CheckSelect<
       T,

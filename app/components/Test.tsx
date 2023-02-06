@@ -48,7 +48,7 @@ function Test() {
     }
     (async () => {
       const res = await req.test(connId);
-      if (res.data?.ok === 'yes') {
+      if (res.data.ok === 'yes') {
         setCount(count + 1);
         setLoad(false);
       }

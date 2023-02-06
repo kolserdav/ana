@@ -10,11 +10,15 @@ export enum CookieName {
   lang = 'lang',
   // eslint-disable-next-line no-unused-vars
   _utoken = '_utoken',
+  // eslint-disable-next-line no-unused-vars
+  _uuid = '_uuid',
 }
 
 type CookieValue<T extends keyof typeof CookieName> = T extends CookieName.lang
   ? LocaleValue
   : T extends CookieName._utoken
+  ? string
+  : T extends CookieName._uuid
   ? string
   : never;
 

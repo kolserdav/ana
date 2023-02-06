@@ -7,36 +7,28 @@ import {
   parseQueryString,
   SendMessageArgs,
 } from '../types/interfaces';
-import { IS_DEV, QUEUE_PREFIX, WS_PORT } from '../utils/constants';
+import { IS_DEV, WS_PORT } from '../utils/constants';
 import { checkCors, log } from '../utils/lib';
 import Redis from './redis';
 import AMQP from './amqp';
 import { v4 } from 'uuid';
-import QueueHandler from '../services/queueHandler';
 
 const redis = new Redis();
+const protocol = 'ws';
+const amqp = new AMQP({ caller: true, queue: `caller-${protocol}` });
 
 class WS {
   public connection: WebSocket.Server;
-
-  public readonly protocol = 'ws';
-
-  private readonly caller = 'handle-ws';
 
   public ws: Record<string, WebSocket> = {};
 
   constructor() {
     this.connection = this.createWSServer();
     this.handleWSConnections();
-    this.handleQueues();
-  }
-
-  private getQueueName() {
-    return `${QUEUE_PREFIX}_${this.protocol}`;
+    amqp.handleQueues(protocol);
   }
 
   private handleWSConnections() {
-    const amqpS = new AMQP({ caller: this.caller, queue: this.getQueueName() });
     const getConnectionId = (): string => {
       const connId = v4();
       if (this.ws[connId]) {
@@ -75,28 +67,13 @@ class WS {
 
       ws.on('message', async (msg) => {
         const rawMessage = this.parseMessage(msg);
-        amqpS.sendToQueue(rawMessage);
+        amqp.sendToQueue(rawMessage);
       });
 
       ws.on('close', () => {
         this.deleteSocket(id);
       });
     });
-  }
-
-  private async handleQueues() {
-    const queue = this.getQueueName();
-    const amqpW = new AMQP({ caller: `consumer-${this.protocol}`, queue });
-    const queueHandler = new QueueHandler({ ws: this });
-    await new Promise((resolve) => {
-      const interval = setInterval(() => {
-        if (amqpW.checkChannel()) {
-          clearInterval(interval);
-          resolve(0);
-        }
-      }, 100);
-    });
-    queueHandler.queues({ amqp: amqpW });
   }
 
   public sendMessage<T extends keyof typeof MessageType>(msg: SendMessageArgs<T>) {
