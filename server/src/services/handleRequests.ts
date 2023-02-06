@@ -2,20 +2,23 @@ import cluster, { Worker } from 'cluster';
 
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import Service from './service';
+import QueueMaster from '../services/queueMaster';
 import AMQP from '../protocols/amqp';
 
 const protocol = 'request';
-const amqp = new AMQP({ caller: true, queue: `caller-${protocol}` });
 
 class HandleRequests extends Service {
-  private readonly caller = 'handle-request';
+  private amqpM: QueueMaster | undefined;
+
+  private amqpW: AMQP | undefined;
 
   constructor({ worker }: { worker?: Worker }) {
     super(worker);
-
     if (cluster.isPrimary) {
+      this.amqpM = new QueueMaster({ protocol });
+      this.amqpW = new AMQP({ queue: `worker-${protocol}` });
       this.listenWorker();
-      amqp.handleQueues(protocol, worker);
+      this.amqpM.handleQueues();
     }
   }
 
@@ -24,7 +27,7 @@ class HandleRequests extends Service {
     this.listenWorkerMessages<any>(async ({ protocol: _protocol, msg }) => {
       if (protocol === _protocol) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        amqp.sendToQueue(msg as any);
+        this.amqpW?.sendToQueue(msg as any);
       }
     });
   }

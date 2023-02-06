@@ -10,7 +10,7 @@ class Service extends EventEmitter {
 
   private readonly unexpectedUseProcess = 'Unexpected use process';
 
-  protected worker: Worker | undefined;
+  public worker: Worker | undefined;
 
   constructor(_worker?: Worker) {
     super();

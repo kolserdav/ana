@@ -1,39 +1,22 @@
 import amqp from 'amqplib';
-import { Worker } from 'cluster';
-import os from 'os';
-import QueueHandler from '../services/queueHandler';
-import { Protocol } from '../types';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { AMQP_ADDRESS, QUEUE_MAX_SIZE, RABBITMQ_RECONNECT_TIMEOUT } from '../utils/constants';
 import { log, wait } from '../utils/lib';
-
-const cpus = os.cpus().length;
 
 class AMQP {
   private connection: amqp.Connection | undefined | void;
 
   private channel: amqp.Channel | undefined;
 
-  private caller: boolean;
-
-  private queue: string;
-
-  private queueIndex: number;
+  public queue: string;
 
   private readonly connErr = (method: string) => `AMQP connection on method '${method}' is missing`;
 
   private readonly chanErr = (method: string) => `AMQP channel on method '${method}' is missing`;
 
-  constructor({ caller, queue }: { caller: boolean; queue: string }) {
-    this.caller = caller;
+  constructor({ queue }: { queue: string }) {
     this.queue = queue;
-    this.queueIndex = 0;
     this.createConnection();
-  }
-
-  private setQueueIndex() {
-    const added = this.queueIndex + 1;
-    this.queueIndex = added < cpus ? added : 0;
   }
 
   private async createConnection(): Promise<void> {
@@ -54,7 +37,7 @@ class AMQP {
     });
 
     await this.createChannel();
-    await this.assertQueue(this.getQueue());
+    await this.assertQueue();
   }
 
   private clean() {
@@ -68,7 +51,7 @@ class AMQP {
 
   private async createChannel() {
     if (!this.connection) {
-      log('error', this.connErr('createChannel'), { caller: this.caller });
+      log('error', this.connErr('createChannel'), { queue: this.queue });
       return;
     }
     this.channel = await this.connection.createChannel();
@@ -78,12 +61,12 @@ class AMQP {
     return this.channel !== undefined;
   }
 
-  private async assertQueue(queue: string) {
+  private async assertQueue() {
     if (!this.channel) {
-      log('error', this.chanErr('assertQueue'), { caller: this.caller, queue });
+      log('error', this.chanErr('assertQueue'), { queue: this.queue });
       return null;
     }
-    const result = await this.channel.assertQueue(queue, {
+    const result = await this.channel.assertQueue(this.queue, {
       exclusive: false,
       durable: true,
       autoDelete: false,
@@ -95,22 +78,10 @@ class AMQP {
     return result;
   }
 
-  public async handleQueues(protocol: Protocol, worker?: Worker) {
-    const queueHandler = new QueueHandler({ worker, protocol });
-    await new Promise((resolve) => {
-      const interval = setInterval(() => {
-        if (this.checkChannel()) {
-          clearInterval(interval);
-          resolve(0);
-        }
-      }, 100);
-    });
-    queueHandler.consumeCaller({ amqp: this });
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async sendToQueue(msg: SendMessageArgs<any>) {
     if (!this.channel) {
-      log('error', this.chanErr('sendToQueue'), { caller: this.caller });
+      log('error', this.chanErr('sendToQueue'), { queue: this.queue });
       return null;
     }
     let msgString = '';
@@ -119,23 +90,22 @@ class AMQP {
     } catch (e) {
       log('error', 'Error stringify msg', { e, msg });
     }
+    log('log', 'Send to queue', { msg, queue: this.queue });
     const result = this.channel.sendToQueue(this.getQueue(), Buffer.from(msgString));
-    this.setQueueIndex();
     return result;
   }
 
   // eslint-disable-next-line no-unused-vars
   public consume<T extends keyof typeof MessageType>(cb: (msg: SendMessageArgs<T>) => void) {
     if (!this.channel) {
-      log('error', this.chanErr('consume'), { caller: this.caller });
+      log('error', this.chanErr('consume'), { queue: this.queue });
       return;
     }
-    const queue = this.getQueue();
     this.channel.consume(
-      queue,
+      this.queue,
       (msg) => {
         if (!msg) {
-          log('log', 'Consume message is missing', { msg, queue });
+          log('log', 'Consume message is missing', { msg, queue: this.queue });
           return;
         }
         const msgStr = msg.content.toString();
@@ -144,7 +114,7 @@ class AMQP {
         try {
           msgJSON = JSON.parse(msgStr);
         } catch (e) {
-          log('error', 'Error parse consumed msg', { e, queue, msgStr });
+          log('error', 'Error parse consumed msg', { e, queue: this.queue, msgStr });
           return;
         }
         if (msgJSON === null) {
@@ -152,7 +122,7 @@ class AMQP {
         }
         cb(msgJSON);
         if (!this.channel) {
-          log('error', this.chanErr('consumeCallback'), { caller: this.caller });
+          log('error', this.chanErr('consumeCallback'), { queue: this.queue });
           return;
         }
         this.channel.ack(msg);

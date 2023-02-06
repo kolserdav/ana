@@ -10,22 +10,31 @@ import {
 import { IS_DEV, WS_PORT } from '../utils/constants';
 import { checkCors, log } from '../utils/lib';
 import Redis from './redis';
-import AMQP from './amqp';
 import { v4 } from 'uuid';
+import cluster from 'cluster';
+import QueueMaster from '../services/queueMaster';
+import AMQP from './amqp';
 
 const redis = new Redis();
 const protocol = 'ws';
-const amqp = new AMQP({ caller: true, queue: `caller-${protocol}` });
 
 class WS {
-  public connection: WebSocket.Server;
+  public connection: WebSocket.Server | undefined;
 
   public ws: Record<string, WebSocket> = {};
 
+  public amqpM: QueueMaster | undefined;
+
+  public amqpW: AMQP | undefined;
+
   constructor() {
-    this.connection = this.createWSServer();
-    this.handleWSConnections();
-    amqp.handleQueues(protocol);
+    if (cluster.isPrimary) {
+      this.connection = this.createWSServer();
+      this.handleWSConnections();
+      this.amqpM = new QueueMaster({ protocol });
+      this.amqpM.handleQueues();
+      this.amqpW = new AMQP({ queue: `worker-${protocol}` });
+    }
   }
 
   private handleWSConnections() {
@@ -36,7 +45,7 @@ class WS {
       }
       return connId;
     };
-    this.connection.on('connection', (ws, { headers, url }) => {
+    this.connection?.on('connection', (ws, { headers, url }) => {
       // const protocol = req.headers['sec-websocket-protocol'];
       const id = getConnectionId();
       if (!checkCors(headers)) {
@@ -67,7 +76,7 @@ class WS {
 
       ws.on('message', async (msg) => {
         const rawMessage = this.parseMessage(msg);
-        amqp.sendToQueue(rawMessage);
+        this.amqpW?.sendToQueue(rawMessage);
       });
 
       ws.on('close', () => {

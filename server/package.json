@@ -7,7 +7,7 @@
     "watch": "tsc -p . -w",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc -p .",
-    "start:dev": "nodemon dist/index.js",
+    "start:dev": "concurrently \"nodemon dist/index.js\" \"nodemon dist/worker.js\"",
     "start": "env-cmd node dist/index.js",
     "dev": "concurrently \"npm run watch\" \"npm run start:dev\""
   },

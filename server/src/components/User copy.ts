@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { differenceInHours } from 'date-fns';
 import { ORM } from '../services/orm';
+import WS from '../protocols/ws';
 import {
   checkEmail,
   EMAIL_QS,
@@ -14,14 +15,14 @@ import { createPasswordHash, createRandomSalt, createToken } from '../utils/auth
 import { APP_URL, RESTORE_LINK_TIMEOUT_IN_HOURS } from '../utils/constants';
 import { sendEmail } from '../utils/email';
 import { getHttpCode, getLocale, log } from '../utils/lib';
-import AMQP from '../protocols/amqp';
+import Service from '../services/service';
 
 const orm = new ORM();
 
 class User {
   public async getUserCreate(
     { id, lang, data: _data, timeout, type }: SendMessageArgs<MessageType.GET_USER_CREATE>,
-    amqp: AMQP
+    ws: WS
   ) {
     const locale = getLocale(lang).server;
     const data: Prisma.UserCreateArgs['data'] = { ..._data } as any;
@@ -29,7 +30,7 @@ class User {
     const hash = createPasswordHash({ salt, password: _data.password });
     const { email } = data;
     if (!checkEmail(email)) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -57,7 +58,7 @@ class User {
       },
     });
     if (user.status !== 'info' || !user.data || !user.data?.ConfirmLink?.[0]) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -87,7 +88,7 @@ class User {
       return;
     }
 
-    amqp.sendToQueue({
+    ws.sendMessage({
       id,
       lang,
       timeout,
@@ -98,11 +99,11 @@ class User {
 
   public async getUserCheckEmail(
     { id, lang, timeout, data: { email }, type }: SendMessageArgs<MessageType.GET_USER_CHECK_EMAIL>,
-    amqp: AMQP
+    ws: WS
   ) {
     const locale = getLocale(lang).server;
     if (!checkEmail(email)) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -122,7 +123,7 @@ class User {
       },
     });
     if (user.status === 'error') {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -136,7 +137,7 @@ class User {
       });
       return;
     }
-    amqp.sendToQueue({
+    ws.sendMessage({
       id,
       lang,
       timeout,
@@ -153,11 +154,11 @@ class User {
       data: { email, password },
       type,
     }: SendMessageArgs<MessageType.GET_USER_LOGIN>,
-    amqp: AMQP
+    ws: WS
   ) {
     const locale = getLocale(lang).server;
     if (!checkEmail(email)) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -177,7 +178,7 @@ class User {
       },
     });
     if (user.status !== 'info' || !user.data) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -194,7 +195,7 @@ class User {
 
     const hash = createPasswordHash({ password, salt: user.data.salt });
     if (hash !== user.data.password) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -214,7 +215,7 @@ class User {
     });
 
     if (!token) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -229,7 +230,7 @@ class User {
       return;
     }
 
-    amqp.sendToQueue({
+    ws.sendMessage({
       id,
       lang,
       timeout,
@@ -240,11 +241,11 @@ class User {
 
   public async getForgotPassword(
     { data: { email }, lang, id, timeout, type }: SendMessageArgs<MessageType.GET_FORGOT_PASSWORD>,
-    amqp: AMQP
+    ws: WS
   ) {
     const locale = getLocale(lang).server;
     if (!checkEmail(email)) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -260,7 +261,7 @@ class User {
     }
     const user = await orm.userFindFirst({ where: { email } });
     if (user.status !== 'info' || !user.data) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -286,7 +287,7 @@ class User {
       },
     });
     if (restore.status === 'error' || !restore.data || !restore.data?.RestoreLink?.[0]) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -311,7 +312,7 @@ class User {
       },
     });
     if (sendRes === 1) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -325,7 +326,7 @@ class User {
       });
       return;
     }
-    amqp.sendToQueue({
+    ws.sendMessage({
       timeout,
       id,
       lang,
@@ -344,11 +345,11 @@ class User {
       timeout,
       type,
     }: SendMessageArgs<MessageType.GET_CHECK_RESTORE_KEY>,
-    amqp: AMQP
+    ws: WS
   ) {
     const locale = getLocale(lang).server;
     if (!checkEmail(email)) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -373,7 +374,7 @@ class User {
       },
     });
     if (user.status !== 'info' || !user.data) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -388,7 +389,7 @@ class User {
       return;
     }
     if (!user.data.RestoreLink[0]) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -405,7 +406,7 @@ class User {
     const { created } = user.data.RestoreLink[0];
     const diffsInHours = differenceInHours(new Date(), created);
     if (diffsInHours >= RESTORE_LINK_TIMEOUT_IN_HOURS) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -419,7 +420,7 @@ class User {
       });
       return;
     }
-    amqp.sendToQueue({
+    ws.sendMessage({
       timeout,
       id,
       lang,
@@ -436,11 +437,11 @@ class User {
       timeout,
       type,
     }: SendMessageArgs<MessageType.GET_RESTORE_PASSWORD>,
-    amqp: AMQP
+    ws: WS
   ) {
     const locale = getLocale(lang).server;
     if (!checkEmail(email)) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -465,7 +466,7 @@ class User {
       },
     });
     if (user.status !== 'info' || !user.data) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -480,7 +481,7 @@ class User {
       return;
     }
     if (!user.data.RestoreLink[0]) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -497,7 +498,7 @@ class User {
     const { created, id: restoreLinkId } = user.data.RestoreLink[0];
     const diffsInHours = differenceInHours(new Date(), new Date(created));
     if (diffsInHours >= RESTORE_LINK_TIMEOUT_IN_HOURS) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -532,7 +533,7 @@ class User {
     });
 
     if (res.status !== 'info') {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -547,7 +548,7 @@ class User {
       return;
     }
 
-    amqp.sendToQueue({
+    ws.sendMessage({
       timeout,
       id,
       lang,
@@ -564,11 +565,11 @@ class User {
       lang,
       data: { email, key },
     }: SendMessageArgs<MessageType.GET_CONFIRM_EMAIL>,
-    amqp: AMQP
+    ws: WS
   ) {
     const locale = getLocale(lang).server;
     if (!checkEmail(email)) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         type: MessageType.SET_ERROR,
         lang,
         id,
@@ -593,7 +594,7 @@ class User {
       },
     });
     if (user.status !== 'info' || !user.data) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -608,7 +609,7 @@ class User {
       return;
     }
     if (user.data.confirm) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         timeout,
         id,
         lang,
@@ -621,7 +622,7 @@ class User {
     }
     const cLink = user.data.ConfirmLink[0];
     if (!cLink) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -652,7 +653,7 @@ class User {
     });
 
     if (update.status !== 'info' || !update.data) {
-      amqp.sendToQueue({
+      ws.sendMessage({
         id,
         type: MessageType.SET_ERROR,
         lang,
@@ -667,7 +668,7 @@ class User {
       return;
     }
 
-    amqp.sendToQueue({
+    ws.sendMessage({
       timeout,
       id,
       lang,
@@ -678,7 +679,10 @@ class User {
     });
   }
 
-  public async getUserFindFirst(msg: SendMessageArgs<MessageType.GET_USER_FIND_FIRST>, amqp: AMQP) {
+  public async getUserFindFirst(
+    msg: SendMessageArgs<MessageType.GET_USER_FIND_FIRST>,
+    service: Service
+  ) {
     const user = await orm.userFindFirst(msg.data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const _msg: SendMessageArgs<MessageType.SET_USER_FIND_FIRST> = { ...msg } as any;
@@ -687,7 +691,10 @@ class User {
       delete _msg.data.password;
       delete _msg.data.salt;
     }
-    amqp.sendToQueue(_msg);
+    service.sendMessageToWorker({
+      protocol: 'request',
+      msg: _msg,
+    });
   }
 }
 
