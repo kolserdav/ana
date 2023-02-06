@@ -1,26 +1,57 @@
+import { Worker } from 'cluster';
 import AMQP from '../protocols/amqp';
-import WS from '../services/ws';
+import WS from '../protocols/ws';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { log } from '../utils/lib';
-import User from './User';
+import User from '../components/User';
+import Service from './service';
+import { Protocol } from '../types';
 
 const user = new User();
 
-class QueueHandler {
-  private ws: WS;
+class QueueHandler extends Service {
+  private ws: WS | undefined;
 
-  constructor({ ws }: { ws: WS }) {
+  private protocol: Protocol;
+
+  constructor({
+    ws,
+    worker,
+    protocol,
+  }: {
+    protocol: Protocol;
+    ws?: WS | undefined;
+    worker?: Worker | undefined;
+  }) {
+    super(worker);
+    this.protocol = protocol;
     this.ws = ws;
   }
 
+  public async testW(msg: SendMessageArgs<MessageType.TEST>) {
+    this.sendMessageToWorker({
+      protocol: this.protocol,
+      msg,
+    });
+  }
+
   public async test(msg: SendMessageArgs<MessageType.TEST>) {
-    this.ws.sendMessage(msg);
+    this.ws?.sendMessage(msg);
   }
 
   public async queues({ amqp }: { amqp: AMQP }) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     amqp.consume(async (msg: SendMessageArgs<any>) => {
       const { type } = msg;
+      if (!this.ws) {
+        switch (type) {
+          case MessageType.TEST:
+            await this.testW(msg);
+            break;
+          default:
+        }
+        return;
+      }
       switch (type) {
         case MessageType.TEST:
           await this.test(msg);

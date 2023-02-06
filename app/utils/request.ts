@@ -5,6 +5,8 @@ import {
   Locale,
   Result,
   USER_ID_HEADER,
+  SendMessageArgs,
+  MessageType,
 } from '@/types/interfaces';
 import { Page, Prisma, PrismaPromise } from '@prisma/client';
 import { SERVER } from './constants';
@@ -61,7 +63,7 @@ class Request {
     });
   }
 
-  public test(id: string) {
+  public async test(id: string): Promise<SendMessageArgs<MessageType.TEST>> {
     return this.send({ url: Api.testV1, method: 'GET', id });
   }
 

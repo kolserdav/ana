@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma, PrismaClient, Role, User } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum LogLevel {
@@ -17,6 +17,8 @@ export const KEY_QS = 'k';
 // eslint-disable-next-line no-shadow
 export enum MessageType {
   TEST = 'TEST',
+  DB_COMMAND = 'DB_COMMAND',
+  DB_RESULT = 'DB_RESULT',
   SET_CONNECTION_ID = 'SET_CONNECTION_ID',
   SET_ERROR = 'SET_ERROR',
   GET_USER_CREATE = 'GET_USER_CREATE',
@@ -35,9 +37,37 @@ export enum MessageType {
   SET_CONFIRM_EMAIL = 'SET_CONFIRM_EMAIL',
 }
 
+export interface RequestContext {
+  lang: LocaleValue;
+  timeout: number;
+}
+
+export interface DBCommandProps {
+  model: keyof PrismaClient;
+  command: Prisma.PrismaAction;
+  args: Prisma.SelectSubset<any, any>;
+}
+
+export interface Result<T> {
+  status: Status;
+  message: string;
+  data: T;
+  code: number;
+  stdErrMessage?: string;
+  skip?: number | undefined;
+  take?: number | undefined;
+  count?: number | undefined;
+}
+
+export type DBResult<T> = Omit<Result<T>, 'message'>;
+
 export type Status = 'error' | 'warn' | 'info';
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
+  : T extends MessageType.DB_COMMAND
+  ? DBCommandProps
+  : T extends MessageType.DB_RESULT
+  ? DBResult<any>
   : T extends MessageType.SET_CONNECTION_ID
   ? null
   : T extends MessageType.GET_USER_CREATE
@@ -98,13 +128,19 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? {
       message: string;
     }
-  : never;
+  : unknown;
 
 export interface Tab {
   id: number;
   value: Role;
   title: string;
   content: string;
+}
+
+export interface SendMessageArgs<T extends keyof typeof MessageType> extends RequestContext {
+  type: T;
+  id: string;
+  data: ArgsSubset<T>;
 }
 
 export interface Locale {
@@ -180,29 +216,12 @@ export enum Api {
   postUserCreateV1 = '/v1/user-create',
 }
 
-export interface Result<T> {
-  status: Status;
-  message: string;
-  data: T;
-  code: number;
-  stdErrMessage?: string;
-  skip?: number | undefined;
-  take?: number | undefined;
-  count?: number | undefined;
-}
-
 export type LocaleValue = 'ru';
 export type WSProtocol = 'test' | 'login' | 'confirm-email';
 export const LOCALE_DEFAULT: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';
-export interface SendMessageArgs<T extends keyof typeof MessageType> {
-  type: T;
-  id: string;
-  lang: LocaleValue;
-  timeout: number;
-  data: ArgsSubset<T>;
-}
+export const AUTHORIZATION_HEADER = 'Authorization';
 
 export function checkEmail(email: string): boolean {
   return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(

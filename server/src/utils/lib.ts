@@ -9,6 +9,7 @@ import {
   LocaleValue,
   USER_ID_HEADER,
   Status,
+  AUTHORIZATION_HEADER,
 } from '../types/interfaces';
 import { APP_URL, IS_DEV, LOG_LEVEL } from './constants';
 
@@ -63,8 +64,12 @@ export const getLocale = (_value: string | undefined): Locale => {
 };
 
 export const parseHeaders = (headers: IncomingHttpHeaders) => {
-  const { [LANGUAGE_HEADER]: lang, [USER_ID_HEADER]: uuid } = headers;
-  return { lang: lang as LocaleValue, id: uuid as string };
+  const {
+    [LANGUAGE_HEADER]: lang,
+    [USER_ID_HEADER]: uuid,
+    [AUTHORIZATION_HEADER]: authorization,
+  } = headers;
+  return { lang: lang as LocaleValue, id: uuid as string, token: authorization as string };
 };
 
 export const getPseudoHeaders = ({ lang }: { lang: LocaleValue }) => {

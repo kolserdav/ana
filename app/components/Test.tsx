@@ -1,3 +1,4 @@
+import useLoad from '@/hooks/useLoad';
 import { MessageType } from '@/types/interfaces';
 import { getLangCookie } from '@/utils/cookies';
 import { log } from '@/utils/lib';
@@ -9,7 +10,7 @@ function Test() {
   const ws = useMemo(() => new WS({ protocol: 'test' }), []);
   const [connId, setConnId] = useState<string>();
   const [count, setCount] = useState<number>(0);
-
+  const { setLoad } = useLoad();
   const req = useMemo(() => new Request(), []);
   /**
    * Connect to WS
@@ -42,13 +43,17 @@ function Test() {
    * Test request
    */
   useEffect(() => {
-    if (!connId) {
+    if (!connId || count >= 2) {
       return;
     }
     (async () => {
-      await req.test(connId);
+      const res = await req.test(connId);
+      if (res.data?.ok === 'yes') {
+        setCount(count + 1);
+        setLoad(false);
+      }
     })();
-  }, [req, connId]);
+  }, [req, connId, count, setLoad]);
 
   /**
    * Test WS message

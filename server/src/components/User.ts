@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { differenceInHours } from 'date-fns';
 import { ORM } from '../services/orm';
-import WS from '../services/ws';
+import WS from '../protocols/ws';
 import {
   checkEmail,
   EMAIL_QS,

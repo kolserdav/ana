@@ -1,6 +1,7 @@
 import cluster, { Worker } from 'cluster';
 import EventEmitter from 'events';
-import { Message, ProcessMessage, SendProcessMessageArgs } from '../types';
+import { ProcessMessage } from '../types';
+import { MessageType } from '../types/interfaces';
 
 class Service extends EventEmitter {
   private readonly workerNotFound = 'Worker not found in Service';
@@ -16,8 +17,9 @@ class Service extends EventEmitter {
     this.worker = _worker;
   }
 
-  protected listenMasterMessages<T extends keyof typeof ProcessMessage>(
-    cb: (data: Message<T>) => void
+  protected listenMasterMessages<T extends keyof typeof MessageType>(
+    // eslint-disable-next-line no-unused-vars
+    cb: (data: ProcessMessage<T>) => void
   ) {
     if (!process) {
       throw new Error(this.workerNotFound);
@@ -26,6 +28,7 @@ class Service extends EventEmitter {
       throw new Error(`${this.unexpectedUseProcess}: worker`);
     }
     const handler = (data: unknown) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cb(data as any);
     };
     const master = process.on('message', handler);
@@ -33,8 +36,9 @@ class Service extends EventEmitter {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  protected listenWorkerMessages<T extends keyof typeof ProcessMessage>(
-    cb: (args: Message<T>) => void
+  protected listenWorkerMessages<T extends keyof typeof MessageType>(
+    // eslint-disable-next-line no-unused-vars
+    cb: (args: ProcessMessage<T>) => void
   ) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
@@ -42,16 +46,17 @@ class Service extends EventEmitter {
     if (!cluster.isPrimary) {
       throw new Error(`${this.unexpectedUseProcess}: master`);
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handler = (data: any) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const _data: Message<any> = data as any;
+      const _data: ProcessMessage<any> = data as any;
       cb(_data);
     };
     const worker = this.worker.on('message', handler);
     return { worker, handler };
   }
 
-  protected sendMessageToWorker<T extends keyof typeof ProcessMessage>(data: Message<T>) {
+  protected sendMessageToWorker<T extends keyof typeof MessageType>(data: ProcessMessage<T>) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
     }
@@ -61,7 +66,7 @@ class Service extends EventEmitter {
     this.worker.send(data);
   }
 
-  protected sendMessageToMaster<T extends keyof typeof ProcessMessage>(data: Message<T>) {
+  protected sendMessageToMaster<T extends keyof typeof MessageType>(data: ProcessMessage<T>) {
     if (!process.send) {
       throw new Error(this.masterNotFound);
     }

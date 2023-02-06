@@ -3,16 +3,17 @@ import cluster, { Worker } from 'cluster';
 import { v4 } from 'uuid';
 import Service from './service';
 import Database from '../database';
-import {
-  ArgsProcessSubset,
-  DatabaseContext,
-  ProcessMessage,
-  SendProcessMessageArgs,
-} from '../types';
-import { checkIsFind, checkIsMany, parseHeaders, getLocale, log } from '../utils/lib';
+import { checkIsFind, checkIsMany, log } from '../utils/lib';
 import { REDIS_CACHE_TIMEOUT, REDIS_RESERVED } from '../utils/constants';
 import Redis from '../protocols/redis';
-import { Result } from '../types/interfaces';
+import {
+  MessageType,
+  DBResult,
+  SendMessageArgs,
+  DBCommandProps,
+  RequestContext,
+} from '../types/interfaces';
+import { ProcessMessage } from '../types';
 
 const prisma = new PrismaClient();
 const redis = new Redis();
@@ -30,38 +31,7 @@ export class ORM extends Service implements Database {
   }
 
   public userFindFirstW: Database['userFindFirst'] = async (args, context) => {
-    return this.runFromWorker({
-      args,
-      context,
-      model: 'user',
-      command: 'findFirst',
-    });
-  };
-
-  public userCreate: Database['userCreate'] = async (args, context) => {
-    return this.run(
-      {
-        args,
-        model: 'user',
-        command: 'create',
-      },
-      context
-    );
-  };
-
-  public userUpdate: Database['userUpdate'] = async (args, context) => {
-    return this.run(
-      {
-        args,
-        model: 'user',
-        command: 'update',
-      },
-      context
-    );
-  };
-
-  public userFindFirst: Database['userFindFirst'] = async (args, context) => {
-    return this.run(
+    return this.runFromWorker(
       {
         args,
         model: 'user',
@@ -71,40 +41,64 @@ export class ORM extends Service implements Database {
     );
   };
 
-  public pageFindManyW: Database['pageFindManyW'] = async (args, context) => {
-    return this.runFromWorker({
+  public userCreate: Database['userCreate'] = async (args) => {
+    return this.run({
       args,
-      context,
-      model: 'page',
-      command: 'findMany',
+      model: 'user',
+      command: 'create',
     });
   };
 
+  public userUpdate: Database['userUpdate'] = async (args) => {
+    return this.run({
+      args,
+      model: 'user',
+      command: 'update',
+    });
+  };
+
+  public userFindFirst: Database['userFindFirst'] = async (args) => {
+    return this.run({
+      args,
+      model: 'user',
+      command: 'findFirst',
+    });
+  };
+
+  public pageFindManyW: Database['pageFindManyW'] = async (args, context) => {
+    return this.runFromWorker(
+      {
+        args,
+        model: 'page',
+        command: 'findMany',
+      },
+      context
+    );
+  };
+
   private createServer() {
-    this.listenWorkerMessages<ProcessMessage.DB_COMMAND>(async ({ protocol, msg, context }) => {
-      if (protocol === 'orm' && msg.type === ProcessMessage.DB_COMMAND) {
+    this.listenWorkerMessages<MessageType.DB_COMMAND>(async ({ protocol, msg }) => {
+      if (protocol === 'orm' && msg.type === MessageType.DB_COMMAND) {
         const { data } = msg;
-        const result = await this.run({ ...data }, context);
-        const _msg: SendProcessMessageArgs<ProcessMessage.DB_RESULT> = { ...msg };
+        const result = await this.run({ ...data });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const _msg: ProcessMessage<MessageType.DB_RESULT>['msg'] = { ...msg } as any;
         _msg.data = result;
-        _msg.type = ProcessMessage.DB_RESULT;
-        this.sendMessageToWorker<ProcessMessage.DB_RESULT>({
+        _msg.type = MessageType.DB_RESULT;
+        this.sendMessageToWorker<MessageType.DB_RESULT>({
           protocol,
           msg: _msg,
-          context,
         });
       }
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private async run(
-    { model, command, args }: ArgsProcessSubset<ProcessMessage.DB_COMMAND>,
-    { headers }: DatabaseContext
-  ): Promise<any> {
-    const { lang } = parseHeaders(headers);
-    const locale = getLocale(lang).server;
-
+  private async run({
+    model,
+    command,
+    args,
+  }: SendMessageArgs<MessageType.DB_COMMAND>['data']): Promise<any> {
     const { skip, take, where } = args;
     let count: number | undefined;
 
@@ -115,14 +109,13 @@ export class ORM extends Service implements Database {
       log('warn', stdErrMessage, { argsStr });
       return {
         status: 'error',
-        message: locale.badRequest,
         data: checkIsMany(command),
         skip,
         code: 400,
         stdErrMessage,
         take,
         count,
-      } as Result<any>;
+      } as DBResult<any>;
     }
 
     // Get from cache
@@ -138,13 +131,12 @@ export class ORM extends Service implements Database {
         const isNotFound = result === null || result?.length === 0;
         return {
           status: isNotFound ? 'warning' : 'info',
-          message: isNotFound ? locale.notFound : locale.success,
           data: result,
           code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
           skip,
           take,
           count,
-        } as Result<any>;
+        } as DBResult<any>;
       }
     }
 
@@ -158,66 +150,57 @@ export class ORM extends Service implements Database {
       log('error', 'Database error', err);
       return {
         status: 'error',
-        message: locale.error,
         data: checkIsMany(command),
         skip,
         code: 500,
         stdErrMessage: err.message,
         take,
         count,
-      } as Result<any>;
+      } as DBResult<any>;
     }
 
     redis.client.set(argsStr, JSON.stringify(result), { EX: REDIS_CACHE_TIMEOUT });
     const isNotFound = result === null || result?.length === 0;
     return {
       status: isNotFound ? 'warning' : 'info',
-      message: isNotFound ? locale.notFound : locale.success,
       data: result,
       code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
       skip,
       take,
       count,
-    } as Result<any>;
+    } as DBResult<any>;
   }
 
-  private runFromWorker = async ({
-    args,
-    context,
-    model,
-    command,
-  }: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    args: any;
-    context: DatabaseContext;
-    model: keyof PrismaClient;
-    command: Prisma.PrismaAction;
-  }) => {
+  private runFromWorker = async (
+    { args, model, command }: DBCommandProps,
+    { lang, timeout }: RequestContext
+  ) => {
     const id = v4();
     return new Promise<any>((resolve) => {
-      const { master, handler } = this.listenMasterMessages<ProcessMessage.DB_RESULT>(
+      const { master, handler } = this.listenMasterMessages<MessageType.DB_RESULT>(
         ({ msg: { id: _id, data } }) => {
           if (id === _id) {
             if (data.status === this.errorStatus) {
-              log('warn', 'Database request failed', { args, context });
+              log('warn', 'Database request failed', { args });
             }
             master.removeListener('message', handler);
             resolve(data);
           }
         }
       );
-      this.sendMessageToMaster<ProcessMessage.DB_COMMAND>({
+      this.sendMessageToMaster<MessageType.DB_COMMAND>({
         protocol: this.protocol,
         msg: {
-          type: ProcessMessage.DB_COMMAND,
+          type: MessageType.DB_COMMAND,
           id,
+          lang,
+          timeout,
           data: {
             model,
             command,
             args,
           },
         },
-        context,
       });
     });
   };

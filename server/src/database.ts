@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { Prisma, User, PrismaPromise, Page } from '@prisma/client';
-import { DatabaseContext } from './types';
-import { Result } from './types/interfaces';
+import { RequestContext, Result } from './types/interfaces';
 
 abstract class Database {
   public abstract userFindFirst<T extends Prisma.UserFindFirstArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>,
-    context: DatabaseContext
+    context: RequestContext
   ): Promise<
     Prisma.CheckSelect<
       T,
@@ -17,7 +16,7 @@ abstract class Database {
 
   public abstract userCreate<T extends Prisma.UserCreateArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>,
-    context: DatabaseContext
+    context: RequestContext
   ): Promise<
     Prisma.CheckSelect<
       T,
@@ -28,7 +27,7 @@ abstract class Database {
 
   public abstract userUpdate<T extends Prisma.UserUpdateArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>,
-    context: DatabaseContext
+    context: RequestContext
   ): Promise<
     Prisma.CheckSelect<
       T,
@@ -39,7 +38,7 @@ abstract class Database {
 
   public abstract pageFindManyW<T extends Prisma.PageFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.PageFindManyArgs>,
-    context: DatabaseContext
+    context: RequestContext
   ): Promise<
     Prisma.CheckSelect<
       T,
