@@ -11,8 +11,8 @@ import { IS_DEV, WS_PORT } from '../utils/constants';
 import { checkCors, log } from '../utils/lib';
 import Redis from './redis';
 import { v4 } from 'uuid';
-import cluster from 'cluster';
-import QueueMaster from '../services/queueMaster';
+import cluster, { Worker } from 'cluster';
+import QueueMaster from '../controllers/queueMaster';
 import AMQP from './amqp';
 
 const redis = new Redis();
@@ -27,11 +27,11 @@ class WS {
 
   public amqpW: AMQP | undefined;
 
-  constructor() {
+  constructor(worker: Worker) {
     if (cluster.isPrimary) {
       this.connection = this.createWSServer();
       this.handleWSConnections();
-      this.amqpM = new QueueMaster({ protocol });
+      this.amqpM = new QueueMaster({ protocol, ws: this, worker });
       this.amqpM.handleQueues();
       this.amqpW = new AMQP({ queue: `worker-${protocol}` });
     }
@@ -120,12 +120,10 @@ class WS {
 
   public deleteSocket(id: string) {
     delete this.ws[id];
-    redis.deleteWS(id);
   }
 
   public setSocket({ id, ws, lang }: { id: string; ws: WebSocket; lang: LocaleValue }) {
     this.ws[id] = ws;
-    redis.setWS(id);
     this.sendMessage({
       id,
       lang,

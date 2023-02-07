@@ -2,8 +2,9 @@ import { Worker } from 'cluster';
 import AMQP from '../protocols/amqp';
 import WS from '../protocols/ws';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
-import Service from './service';
+import Service from '../services/service';
 import { Protocol } from '../types';
+import { MASTER_QUEUE } from '../utils/constants';
 
 class QueueMaster extends AMQP {
   private ws: WS | undefined;
@@ -21,7 +22,7 @@ class QueueMaster extends AMQP {
     ws: WS | undefined;
     worker: Worker | undefined;
   }) {
-    super({ queue: `master-${protocol}` });
+    super({ queue: `${MASTER_QUEUE}-${protocol}` });
     this.protocol = protocol;
     this.ws = ws;
     this.service = new Service(worker);

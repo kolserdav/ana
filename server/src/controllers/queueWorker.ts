@@ -3,6 +3,7 @@ import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { log } from '../utils/lib';
 import User from '../components/User';
 import { Protocol } from '../types';
+import { MASTER_QUEUE, WORKER_QUEUE } from '../utils/constants';
 
 const user = new User();
 
@@ -12,21 +13,17 @@ class QueueWorker extends AMQP {
   private amqp: AMQP;
 
   constructor({ protocol }: { protocol: Protocol }) {
-    super({ queue: `worker-${protocol}` });
-    this.amqp = new AMQP({ queue: `master-${protocol}` });
+    super({ queue: `${WORKER_QUEUE}-${protocol}` });
+    this.amqp = new AMQP({ queue: `${MASTER_QUEUE}-${protocol}` });
     this.protocol = protocol;
     this.handleQueues();
   }
 
-  public async testW(msg: SendMessageArgs<MessageType.TEST>) {
+  private async test(msg: SendMessageArgs<MessageType.TEST>) {
     this.amqp.sendToQueue(msg);
   }
 
-  public async test(msg: SendMessageArgs<MessageType.TEST>) {
-    this.amqp.sendToQueue(msg);
-  }
-
-  public async handleQueues() {
+  private async handleQueues() {
     await new Promise((resolve) => {
       const interval = setInterval(() => {
         if (this.checkChannel()) {
@@ -38,7 +35,7 @@ class QueueWorker extends AMQP {
     this.consumeWorker();
   }
 
-  public async consumeWorker() {
+  private async consumeWorker() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.consume(async (msg: SendMessageArgs<any>) => {
       const { type } = msg;

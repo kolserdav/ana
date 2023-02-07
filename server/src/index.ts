@@ -13,7 +13,7 @@ if (cluster.isPrimary) {
   });
 
   const worker = cluster.fork();
-  new WS();
+  new WS(worker);
   new HandleRequests({ worker });
   new ORM(worker);
 } else {

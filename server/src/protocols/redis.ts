@@ -29,7 +29,10 @@ class Redis {
     return valP;
   }
 
-  public async setWS(id: string) {
+  /**
+   * @deprecated
+   */
+  private async setWS(id: string) {
     const val = await this.client.get(REDIS_WS_NAME);
     const valP = this.parseRedisWS(val);
     if (valP.indexOf(id) === -1) {
@@ -42,7 +45,10 @@ class Redis {
     return valP;
   }
 
-  public async deleteWS(id: string) {
+  /**
+   * @deprecated
+   */
+  private async deleteWS(id: string) {
     const val = await this.client.get(REDIS_WS_NAME);
     let valP = this.parseRedisWS(val);
     const index = valP.indexOf(id);
@@ -55,7 +61,10 @@ class Redis {
     return valP;
   }
 
-  public async checkWS(id: string) {
+  /**
+   * @deprecated
+   */
+  private async checkWS(id: string) {
     const val = await this.client.get(REDIS_WS_NAME);
     const valP = this.parseRedisWS(val);
     return valP.indexOf(id) !== -1;

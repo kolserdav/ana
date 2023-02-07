@@ -95,8 +95,10 @@ class AMQP {
     return result;
   }
 
-  // eslint-disable-next-line no-unused-vars
-  public consume<T extends keyof typeof MessageType>(cb: (msg: SendMessageArgs<T>) => void) {
+  public consume<T extends keyof typeof MessageType>(
+    // eslint-disable-next-line no-unused-vars
+    cb: (msg: SendMessageArgs<T>, queue: string) => void
+  ) {
     if (!this.channel) {
       log('error', this.chanErr('consume'), { queue: this.queue });
       return;
@@ -120,7 +122,7 @@ class AMQP {
         if (msgJSON === null) {
           return;
         }
-        cb(msgJSON);
+        cb(msgJSON, this.queue);
         if (!this.channel) {
           log('error', this.chanErr('consumeCallback'), { queue: this.queue });
           return;

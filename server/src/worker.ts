@@ -1,5 +1,5 @@
 import { ORM } from './services/orm';
-import QueueWorker from './services/queueWorker';
+import QueueWorker from './controllers/queueWorker';
 import { log } from './utils/lib';
 
 process.on('uncaughtException', (err: Error) => {

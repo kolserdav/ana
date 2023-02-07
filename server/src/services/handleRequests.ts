@@ -2,9 +2,10 @@ import cluster, { Worker } from 'cluster';
 
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import Service from './service';
-import QueueMaster from '../services/queueMaster';
+import QueueMaster from '../controllers/queueMaster';
 import AMQP from '../protocols/amqp';
 import WS from '../protocols/ws';
+import { WORKER_QUEUE } from '../utils/constants';
 
 const protocol = 'request';
 
@@ -17,7 +18,7 @@ class HandleRequests extends Service {
     super(worker);
     if (cluster.isPrimary) {
       this.amqpM = new QueueMaster({ protocol, ws, worker });
-      this.amqpW = new AMQP({ queue: `worker-${protocol}` });
+      this.amqpW = new AMQP({ queue: `${WORKER_QUEUE}-${protocol}` });
       this.listenWorker();
       this.amqpM.handleQueues();
     }

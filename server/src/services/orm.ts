@@ -81,12 +81,12 @@ export class ORM extends Service implements Database {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private async run({
     model,
     command,
     args,
-  }: SendMessageArgs<MessageType.DB_COMMAND>['data']): Promise<any> {
+  }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  SendMessageArgs<MessageType.DB_COMMAND>['data']): Promise<any> {
     const { skip, take, where } = args;
     let count: number | undefined;
 
@@ -103,6 +103,7 @@ export class ORM extends Service implements Database {
         stdErrMessage,
         take,
         count,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as DBResult<any>;
     }
 
@@ -124,6 +125,7 @@ export class ORM extends Service implements Database {
           skip,
           take,
           count,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as DBResult<any>;
       }
     }
@@ -131,9 +133,12 @@ export class ORM extends Service implements Database {
     // Run command
     try {
       if (command === 'findMany') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         count = await (prisma as any)[model].count({ where });
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       result = await (prisma as any)[model][command](args);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       log('error', 'Database error', err);
       return {
@@ -144,6 +149,7 @@ export class ORM extends Service implements Database {
         stdErrMessage: err.message,
         take,
         count,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as DBResult<any>;
     }
 
@@ -156,6 +162,7 @@ export class ORM extends Service implements Database {
       skip,
       take,
       count,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as DBResult<any>;
   }
 

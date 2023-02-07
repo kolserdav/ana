@@ -6,6 +6,8 @@ import Request from '@/utils/request';
 import WS from '@/utils/ws';
 import { useEffect, useMemo, useState } from 'react';
 
+let send = false;
+
 function Test() {
   const ws = useMemo(() => new WS({ protocol: 'test' }), []);
   const [connId, setConnId] = useState<string>();
@@ -43,9 +45,10 @@ function Test() {
    * Test request
    */
   useEffect(() => {
-    if (!connId || count >= 2) {
+    if (!connId || send) {
       return;
     }
+    send = true;
     (async () => {
       const res = await req.test(connId);
       if (res?.data?.ok === 'yes') {
@@ -64,13 +67,15 @@ function Test() {
     if (!connId) {
       return;
     }
-    ws.sendMessage({
-      type: MessageType.TEST,
-      id: connId,
-      lang: getLangCookie(),
-      timeout: new Date().getTime(),
-      data: { ok: 'yes' },
-    });
+    setTimeout(() => {
+      ws.sendMessage({
+        type: MessageType.TEST,
+        id: connId,
+        lang: getLangCookie(),
+        timeout: new Date().getTime(),
+        data: { ok: 'yes' },
+      });
+    }, 100);
   }, [connId, ws]);
 
   return <div>{count}</div>;
