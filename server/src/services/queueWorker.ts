@@ -9,18 +9,21 @@ const user = new User();
 class QueueWorker extends AMQP {
   private protocol: Protocol;
 
+  private amqp: AMQP;
+
   constructor({ protocol }: { protocol: Protocol }) {
     super({ queue: `worker-${protocol}` });
+    this.amqp = new AMQP({ queue: `master-${protocol}` });
     this.protocol = protocol;
     this.handleQueues();
   }
 
   public async testW(msg: SendMessageArgs<MessageType.TEST>) {
-    this.sendToQueue(msg);
+    this.amqp.sendToQueue(msg);
   }
 
   public async test(msg: SendMessageArgs<MessageType.TEST>) {
-    this.sendToQueue(msg);
+    this.amqp.sendToQueue(msg);
   }
 
   public async handleQueues() {
@@ -39,34 +42,33 @@ class QueueWorker extends AMQP {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.consume(async (msg: SendMessageArgs<any>) => {
       const { type } = msg;
-      console.log(this.protocol, msg);
       switch (type) {
         case MessageType.GET_USER_FIND_FIRST:
-          await user.getUserFindFirst(msg, this);
+          await user.getUserFindFirst(msg, this.amqp);
           break;
         case MessageType.TEST:
           await this.test(msg);
           break;
         case MessageType.GET_USER_CREATE:
-          await user.getUserCreate(msg, this);
+          await user.getUserCreate(msg, this.amqp);
           break;
         case MessageType.GET_USER_LOGIN:
-          await user.getUserLogin(msg, this);
+          await user.getUserLogin(msg, this.amqp);
           break;
         case MessageType.GET_USER_CHECK_EMAIL:
-          await user.getUserCheckEmail(msg, this);
+          await user.getUserCheckEmail(msg, this.amqp);
           break;
         case MessageType.GET_FORGOT_PASSWORD:
-          await user.getForgotPassword(msg, this);
+          await user.getForgotPassword(msg, this.amqp);
           break;
         case MessageType.GET_CHECK_RESTORE_KEY:
-          await user.getCheckRestoreKey(msg, this);
+          await user.getCheckRestoreKey(msg, this.amqp);
           break;
         case MessageType.GET_RESTORE_PASSWORD:
-          await user.getRestorePassword(msg, this);
+          await user.getRestorePassword(msg, this.amqp);
           break;
         case MessageType.GET_CONFIRM_EMAIL:
-          await user.getConfirmEmail(msg, this);
+          await user.getConfirmEmail(msg, this.amqp);
           break;
         default:
           log('warn', 'Default case of consume queue', msg);

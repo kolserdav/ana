@@ -4,6 +4,7 @@ import { MessageType, SendMessageArgs } from '../types/interfaces';
 import Service from './service';
 import QueueMaster from '../services/queueMaster';
 import AMQP from '../protocols/amqp';
+import WS from '../protocols/ws';
 
 const protocol = 'request';
 
@@ -12,10 +13,10 @@ class HandleRequests extends Service {
 
   private amqpW: AMQP | undefined;
 
-  constructor({ worker }: { worker?: Worker }) {
+  constructor({ worker, ws }: { worker?: Worker; ws?: WS }) {
     super(worker);
     if (cluster.isPrimary) {
-      this.amqpM = new QueueMaster({ protocol });
+      this.amqpM = new QueueMaster({ protocol, ws, worker });
       this.amqpW = new AMQP({ queue: `worker-${protocol}` });
       this.listenWorker();
       this.amqpM.handleQueues();

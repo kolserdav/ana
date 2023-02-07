@@ -18,8 +18,8 @@ class QueueMaster extends AMQP {
     protocol,
   }: {
     protocol: Protocol;
-    ws?: WS | undefined;
-    worker?: Worker | undefined;
+    ws: WS | undefined;
+    worker: Worker | undefined;
   }) {
     super({ queue: `master-${protocol}` });
     this.protocol = protocol;
