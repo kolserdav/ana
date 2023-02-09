@@ -216,6 +216,7 @@ export interface Locale {
       homePage: string;
       login: string;
       logout: string;
+      personalArea: string;
     };
     confirmEmail: {
       title: string;

@@ -1,10 +1,10 @@
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
 import { ubuntu500 } from '@/fonts/ubuntu';
 import { Theme } from '@/Theme';
 import { Locale, MessageType, SendMessageArgs } from '@/types/interfaces';
 import { Pages, PAGE_LOGIN_IN_MENU } from '@/utils/constants';
 import { checkRouterPath, scrollToTop } from '@/utils/lib';
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import ChevronUpIcon from './icons/ChevronUp';
 import { useAppBar, useChangeTheme, useLogout } from './AppBar.hooks';
 import s from './AppBar.module.scss';
@@ -61,6 +61,20 @@ function AppBar({
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
+          {!checkRouterPath(router.asPath, [Pages.meEmployer, Pages.meWorker]) &&
+            user &&
+            (user.role === 'employer' || user.role === 'worker') && (
+              <Link
+                withoutHover
+                fullWidth
+                theme={theme}
+                href={user.role === 'worker' ? Pages.meWorker : Pages.meEmployer}
+              >
+                <div className={clsx(s.menu__item, s.active)}>
+                  <div style={{ color: theme.text }}>{locale.personalArea}</div>
+                </div>
+              </Link>
+            )}
           {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
             <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>

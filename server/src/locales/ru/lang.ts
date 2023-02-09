@@ -74,6 +74,7 @@ const lang: Locale = {
       homePage: 'Главная страница',
       login: 'Вход',
       logout: 'Выход',
+      personalArea: 'Личный кабинет',
     },
     confirmEmail: {
       title: 'Подтверждение почты',

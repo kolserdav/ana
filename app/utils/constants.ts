@@ -16,7 +16,7 @@ export enum Pages {
   // eslint-disable-next-line no-unused-vars
   restorePassword = '/account/restore-password',
   // eslint-disable-next-line no-unused-vars
-  meEployer = '/me/employer',
+  meEmployer = '/me/employer',
   // eslint-disable-next-line no-unused-vars
   meWorker = '/me/worker',
 }

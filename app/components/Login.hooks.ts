@@ -413,6 +413,7 @@ export const useMessages = ({
       switch (type) {
         case MessageType.SET_CONNECTION_ID:
           setConnId(id);
+          setCookie(CookieName._uuid, id);
           break;
         case MessageType.SET_USER_CREATE:
           setUserCreate(rawMessage);
