@@ -1,6 +1,7 @@
 .wrapper {
   position: fixed;
   z-index: -1;
+  opacity: 0;
   width: 100vw;
   height: 100vh;
   left: 0;
@@ -12,6 +13,7 @@
 
   &.open {
     z-index: 14;
+    opacity: 1;
   }
 
   .container {

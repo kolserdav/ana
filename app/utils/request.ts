@@ -7,6 +7,8 @@ import {
   USER_ID_HEADER,
   SendMessageArgs,
   MessageType,
+  TIMEOUT_HEADER,
+  AUTHORIZATION_HEADER,
 } from '@/types/interfaces';
 import { Page, Prisma, PrismaPromise } from '@prisma/client';
 import { SERVER } from './constants';
@@ -44,6 +46,8 @@ class Request {
         headers: {
           [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || LOCALE_DEFAULT,
           [USER_ID_HEADER]: id || getCookie(CookieName._uuid) || '',
+          [AUTHORIZATION_HEADER]: getCookie(CookieName._utoken) || '',
+          [TIMEOUT_HEADER]: new Date().getTime().toString(),
           'Content-Type': 'application/json',
         },
       })

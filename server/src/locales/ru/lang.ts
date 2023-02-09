@@ -13,6 +13,8 @@ const lang: Locale = {
     letterNotSend:
       'Учетная запись создана, но письмо подтверждения почты не отправлено из-за ошибки',
     successConfirmEmail: 'Данная почта успешно подтверждена',
+    forbidden: 'Доступ запрещен',
+    unauthorized: 'Недостаточно прав',
   },
   app: {
     login: {

@@ -17,13 +17,16 @@
   "author": "kolserdav",
   "license": "ISC",
   "dependencies": {
+    "@fastify/middie": "^8.1.0",
     "amqplib": "^0.10.3",
+    "cors": "^2.8.5",
     "fastify": "^4.12.0",
     "redis": "^4.5.1",
     "ws": "^8.12.0"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
+    "@types/cors": "^2.8.13",
     "@types/ws": "^8.5.4",
     "dotenv": "^16.0.3"
   }

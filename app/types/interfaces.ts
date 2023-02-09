@@ -39,10 +39,11 @@ export enum MessageType {
   GET_CONFIRM_EMAIL = 'GET_CONFIRM_EMAIL',
   SET_CONFIRM_EMAIL = 'SET_CONFIRM_EMAIL',
   // HTTP
+  AUTH = 'AUTH',
   GET_USER_FIND_FIRST = 'GET_USER_FIND_FIRST',
   SET_USER_FIND_FIRST = 'SET_USER_FIND_FIRST',
 }
-
+export type LocaleValue = 'ru';
 export interface RequestContext {
   lang: LocaleValue;
   timeout: number;
@@ -53,7 +54,7 @@ export interface DBCommandProps {
   command: Prisma.PrismaAction;
   args: Prisma.SelectSubset<any, any>;
 }
-
+export type Status = 'error' | 'warn' | 'info';
 export interface Result<T> {
   status: Status;
   message: string;
@@ -67,7 +68,6 @@ export interface Result<T> {
 
 export type DBResult<T> = Omit<Result<T>, 'message'>;
 
-export type Status = 'error' | 'warn' | 'info';
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
   : // Database
@@ -169,6 +169,8 @@ export interface Locale {
     linkUnaccepted: string;
     letterNotSend: string;
     successConfirmEmail: string;
+    forbidden: string;
+    unauthorized: string;
   };
   app: {
     login: {
@@ -231,12 +233,12 @@ export enum Api {
   getUserFindFirst = '/v1/user-find-first.php',
 }
 
-export type LocaleValue = 'ru';
 export type WSProtocol = 'test' | 'login' | 'confirm-email';
 export const LOCALE_DEFAULT: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';
 export const AUTHORIZATION_HEADER = 'Authorization';
+export const TIMEOUT_HEADER = 'timeout';
 
 export function checkEmail(email: string): boolean {
   return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(

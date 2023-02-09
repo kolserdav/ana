@@ -11,17 +11,20 @@ import s from './AppBar.module.scss';
 import Link from './Link';
 import Menu from './Menu';
 import Switch from './Switch';
+import l from './Link.module.scss';
 
 function AppBar({
   theme,
   withoutExpandLess,
   full,
   locale,
+  logout,
 }: {
   theme: Theme;
   locale: Locale['app']['appBar'];
   withoutExpandLess?: boolean;
   full?: boolean;
+  logout?: boolean;
 }) {
   const router = useRouter();
 
@@ -56,12 +59,19 @@ function AppBar({
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
-          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && (
+          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !logout && (
             <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.login}</div>
               </div>
             </Link>
+          )}
+          {logout && (
+            <div className={l.wrapper}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.login}</div>
+              </div>
+            </div>
           )}
         </Menu>
       </div>
@@ -82,6 +92,7 @@ function AppBar({
 AppBar.defaultProps = {
   withoutExpandLess: false,
   full: false,
+  logout: false,
 };
 
 export default AppBar;

@@ -9,6 +9,9 @@ import {
 } from './constants';
 import { JWTFull } from '../types';
 import { log } from './lib';
+import { ORM } from '../services/orm';
+
+const orm = new ORM();
 
 export function createToken(parsedToken: Omit<JWTFull, 'iat'>) {
   let token: string | null = null;
@@ -66,3 +69,23 @@ export function createPasswordHash({ password, salt }: { password: string; salt:
     PASSWORD_ALGORITHM
   ).toString();
 }
+
+export const checkToken = async (token: string) => {
+  const parsedToken = parseToken(token);
+  if (!parsedToken) {
+    return 1;
+  }
+  const { id, password } = parsedToken;
+  const user = await orm.userFindFirst({
+    where: {
+      AND: [{ id }, { password }],
+    },
+  });
+  if (user.status === 'error') {
+    return 2;
+  }
+  if (!user.data) {
+    return 1;
+  }
+  return parsedToken;
+};

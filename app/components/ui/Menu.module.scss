@@ -36,6 +36,8 @@ $container-top: calc($app-bar-height / 2 - 6px);
 
   .container {
     position: fixed;
+    z-index: -1;
+    opacity: 0;
     top: $container-top;
     width: $small-width;
     margin-block-end: 0;
@@ -58,6 +60,8 @@ $container-top: calc($app-bar-height / 2 - 6px);
     }
 
     &.open {
+      z-index: 12;
+      opacity: 1;
       left: calc(100vw - $small-width);
       transition: all $menu-transition ease-out;
 

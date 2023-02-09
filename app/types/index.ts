@@ -1,6 +1,6 @@
 import { Theme } from '@/Theme';
 import { PageField } from '@prisma/client';
-import { Locale, Status } from './interfaces';
+import { Locale, MessageType, SendMessageArgs, Status } from './interfaces';
 
 export type ThemeType = 'light' | 'dark';
 
@@ -25,6 +25,7 @@ export interface AlertProps {
 export interface AppProps {
   app: {
     theme: Theme;
+    user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
   };
 }
 

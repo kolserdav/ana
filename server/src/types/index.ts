@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
 import type { RequestGenericInterface, FastifyRequest, FastifyReply } from 'fastify';
+import type { NextHandleFunction } from '@fastify/middie';
 import { LocaleValue, MessageType, SendMessageArgs } from './interfaces';
 
 export type RequestHandler<T extends RequestGenericInterface, R> = (
   req: FastifyRequest<T>,
   res: FastifyReply
 ) => Promise<R>;
+
+export type MiddleHandler = NextHandleFunction;
 
 export type Protocol = 'request' | 'ws' | 'orm';
 
@@ -16,6 +19,7 @@ export interface ProcessMessage<T extends keyof typeof MessageType> {
 
 export interface JWTFull {
   id: string;
+  password: string;
   iat: number;
 }
 

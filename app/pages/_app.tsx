@@ -1,12 +1,15 @@
 import Alert from '@/components/ui/Alert';
 import LoaderLine from '@/components/ui/LoaderLine';
 import useApp from '@/hooks/useApp';
+import useUser from '@/hooks/useUser';
 import '@/styles/globals.scss';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { load, theme } = useApp();
+
+  const { user } = useUser();
 
   return (
     <>
@@ -15,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LoaderLine open={load} />
-      <Component {...pageProps} app={{ theme }} />
+      <Component {...pageProps} app={{ theme, user }} />
       <Alert theme={theme} />
     </>
   );

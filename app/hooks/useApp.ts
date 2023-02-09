@@ -61,15 +61,5 @@ export default function useApp() {
     };
   }, []);
 
-  /**
-   * Get user
-   */
-  useEffect(() => {
-    (async () => {
-      const user = await request.getUser();
-      console.log(user);
-    })();
-  }, []);
-
   return { load, setLoad, theme };
 }

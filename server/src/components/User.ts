@@ -211,6 +211,7 @@ class User {
 
     const token = createToken({
       id: user.data.id,
+      password: user.data.password,
     });
 
     if (!token) {
