@@ -1,4 +1,4 @@
-@import '../../styles//constants.scss';
+@import '../styles//constants.scss';
 
 $app-bar-transition: 0.2s;
 
@@ -54,7 +54,7 @@ $app-bar-transition: 0.2s;
 .menu__item {
   position: relative;
   width: 100%;
-  padding: 12px 0;
+  padding: 12px 8px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

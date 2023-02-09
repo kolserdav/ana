@@ -15,6 +15,7 @@ import { APP_URL, RESTORE_LINK_TIMEOUT_IN_HOURS } from '../utils/constants';
 import { sendEmail } from '../utils/email';
 import { getHttpCode, getLocale, log } from '../utils/lib';
 import AMQP from '../protocols/amqp';
+import { cleanUserFields } from './lib';
 
 const orm = new ORM();
 
@@ -683,11 +684,8 @@ class User {
     const user = await orm.userFindFirst(msg.data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const _msg: SendMessageArgs<MessageType.SET_USER_FIND_FIRST> = { ...msg } as any;
-    _msg.data = user.data;
-    if (_msg.data) {
-      delete _msg.data.password;
-      delete _msg.data.salt;
-    }
+    _msg.data = cleanUserFields(user.data);
+
     amqp.sendToQueue(_msg);
   }
 }

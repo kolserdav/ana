@@ -1,0 +1,27 @@
+@import '../../styles/constants';
+
+.wrapper {
+  z-index: -1;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: all 0.1s ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba($color: $color-black, $alpha: 80%);
+
+  &.open {
+    z-index: 12;
+    opacity: 1;
+    transition: all 0.1s ease-out;
+  }
+
+  &.noopacity {
+    background-color: $color-black;
+    transition: none;
+  }
+}

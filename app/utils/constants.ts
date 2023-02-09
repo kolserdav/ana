@@ -15,6 +15,10 @@ export enum Pages {
   signUp = '/account/sign-up',
   // eslint-disable-next-line no-unused-vars
   restorePassword = '/account/restore-password',
+  // eslint-disable-next-line no-unused-vars
+  meEployer = '/me/employer',
+  // eslint-disable-next-line no-unused-vars
+  meWorker = '/me/worker',
 }
 
 export const PAGE_LOGIN_IN_MENU = Pages.signIn;

@@ -1,12 +1,13 @@
 import AppBar from '@/components/AppBar';
+import useCloseAuth from '@/hooks/useCloseAuth';
 import { AppProps, PageFull } from '@/types';
 import { Locale, LocaleValue } from '@/types/interfaces';
 import { prepagePage } from '@/utils/lib';
 import Request from '@/utils/request';
 import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
-import Test from '../components/Test';
-import s from '../styles/Page.module.scss';
+import Test from '../../components/Test';
+import s from '../../styles/Page.module.scss';
 
 const request = new Request();
 
@@ -15,7 +16,12 @@ interface EmployerPageProps extends AppProps {
   page: PageFull;
 }
 
-export default function TestPage({ app: { user, theme }, localeAppBar, page }: EmployerPageProps) {
+export default function MeWorkerPage({
+  app: { user, theme, userLoad },
+  localeAppBar,
+  page,
+}: EmployerPageProps) {
+  useCloseAuth({ user, userLoad });
   return (
     <>
       <Head>
@@ -23,7 +29,7 @@ export default function TestPage({ app: { user, theme }, localeAppBar, page }: E
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar user={user} theme={theme} locale={localeAppBar} />
+      <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Test />
       </main>
@@ -39,7 +45,7 @@ export async function getStaticProps({
     where: {
       AND: [
         {
-          name: 'index',
+          name: 'meWorker',
         },
         {
           lang: locale as LocaleValue,

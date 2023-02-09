@@ -14,6 +14,7 @@ export interface IconProps {
   height?: number;
   children: string;
   color?: string;
+  animate?: React.ReactNode;
 }
 
 export interface AlertProps {
@@ -26,6 +27,7 @@ export interface AppProps {
   app: {
     theme: Theme;
     user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+    userLoad: boolean;
   };
 }
 

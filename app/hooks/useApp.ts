@@ -3,10 +3,7 @@ import storeClick, { changeClick } from '@/store/click';
 import storeLoad from '@/store/load';
 import storeScroll, { changeScroll } from '@/store/scroll';
 import { setBodyScroll } from '@/utils/lib';
-import Request from '@/utils/request';
 import { useEffect, useState } from 'react';
-
-const request = new Request();
 
 export default function useApp() {
   const [load, setLoad] = useState<boolean>(true);

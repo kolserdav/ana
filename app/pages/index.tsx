@@ -6,7 +6,7 @@ import { AppProps, PageFull } from '@/types';
 import { prepagePage } from '@/utils/lib';
 import s from '@/styles/Page.module.scss';
 import Home from '@/components/Home';
-import AppBar from '@/components/ui/AppBar';
+import AppBar from '@/components/AppBar';
 
 const request = new Request();
 
@@ -15,7 +15,7 @@ interface LoginProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
 }
 
-export default function HomePage({ page, app: { theme }, localeAppBar }: LoginProps) {
+export default function HomePage({ page, app: { theme, user }, localeAppBar }: LoginProps) {
   return (
     <>
       <Head>
@@ -23,7 +23,7 @@ export default function HomePage({ page, app: { theme }, localeAppBar }: LoginPr
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar locale={localeAppBar} theme={theme} />
+      <AppBar locale={localeAppBar} theme={theme} user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Home />
       </main>

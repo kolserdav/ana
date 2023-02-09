@@ -9,7 +9,7 @@ import Head from 'next/head';
 export default function App({ Component, pageProps }: AppProps) {
   const { load, theme } = useApp();
 
-  const { user } = useUser();
+  const { user, userLoad } = useUser();
 
   return (
     <>
@@ -18,7 +18,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LoaderLine open={load} />
-      <Component {...pageProps} app={{ theme, user }} />
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+      <Component {...pageProps} app={{ theme, user, userLoad }} />
       <Alert theme={theme} />
     </>
   );

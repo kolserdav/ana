@@ -1,36 +1,38 @@
 import { ubuntu500 } from '@/fonts/ubuntu';
 import { Theme } from '@/Theme';
-import { Locale } from '@/types/interfaces';
+import { Locale, MessageType, SendMessageArgs } from '@/types/interfaces';
 import { Pages, PAGE_LOGIN_IN_MENU } from '@/utils/constants';
 import { checkRouterPath, scrollToTop } from '@/utils/lib';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import ChevronUpIcon from '../icons/ChevronUp';
-import { useAppBar, useChangeTheme } from './AppBar.hooks';
+import ChevronUpIcon from './icons/ChevronUp';
+import { useAppBar, useChangeTheme, useLogout } from './AppBar.hooks';
 import s from './AppBar.module.scss';
-import Link from './Link';
-import Menu from './Menu';
-import Switch from './Switch';
-import l from './Link.module.scss';
+import Link from './ui/Link';
+import Menu from './ui/Menu';
+import Switch from './ui/Switch';
+import l from './ui/Link.module.scss';
 
 function AppBar({
   theme,
   withoutExpandLess,
   full,
   locale,
-  logout,
+  user,
 }: {
   theme: Theme;
   locale: Locale['app']['appBar'];
   withoutExpandLess?: boolean;
+  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
   full?: boolean;
-  logout?: boolean;
 }) {
   const router = useRouter();
 
   const { showAppBar, showExpandLess } = useAppBar();
 
   const { darkTheme, onClickChangeTheme } = useChangeTheme();
+
+  const { onClickLogout, onKeyDownLogout } = useLogout();
 
   return (
     <header>
@@ -44,7 +46,7 @@ function AppBar({
         style={{
           color: theme.text,
           backgroundColor: full ? theme.active : 'transparent',
-          boxShadow: full ? `0px 2px 8px ${theme.active}` : 'none',
+          boxShadow: full ? `0px 1px 2px ${theme.active}` : 'none',
         }}
       >
         <Menu theme={theme}>
@@ -59,17 +61,23 @@ function AppBar({
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
-          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !logout && (
+          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
             <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.login}</div>
               </div>
             </Link>
           )}
-          {logout && (
-            <div className={l.wrapper}>
+          {user && (
+            <div
+              role="button"
+              onKeyDown={onKeyDownLogout}
+              tabIndex={-1}
+              onClick={onClickLogout}
+              className={clsx(l.wrapper, l.full__width, l.without__hover)}
+            >
               <div className={clsx(s.menu__item, s.active)}>
-                <div style={{ color: theme.text }}>{locale.login}</div>
+                <div style={{ color: theme.text }}>{locale.logout}</div>
               </div>
             </div>
           )}
@@ -92,7 +100,6 @@ function AppBar({
 AppBar.defaultProps = {
   withoutExpandLess: false,
   full: false,
-  logout: false,
 };
 
 export default AppBar;

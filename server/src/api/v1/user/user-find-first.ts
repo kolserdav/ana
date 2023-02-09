@@ -11,7 +11,7 @@ const getUserFindFirst: RequestHandler<
   { Querystring: { id: string } },
   SendMessageArgs<MessageType.SET_USER_FIND_FIRST>
 > = async ({ headers }, reply) => {
-  const { lang, id, token } = parseHeaders(headers);
+  const { lang, id } = parseHeaders(headers);
   const user = handleRequests.sendToQueue<MessageType.SET_USER_FIND_FIRST>({
     type: MessageType.GET_USER_FIND_FIRST,
     id,

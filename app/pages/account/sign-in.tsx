@@ -3,10 +3,39 @@ import s from '@/styles/Page.module.scss';
 import Login from '@/components/Login';
 import { GetStaticPropsContext } from 'next';
 import { LoginProps } from '@/types';
-import AppBar from '@/components/ui/AppBar';
+import AppBar from '@/components/AppBar';
 import { getStaticPropsLogin } from '@/utils/getStaticProps';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { Pages } from '@/utils/constants';
 
-export default function HomePage({ localeLogin, page, localeAppBar, app: { theme } }: LoginProps) {
+export default function HomePage({
+  localeLogin,
+  page,
+  localeAppBar,
+  app: { theme, user },
+}: LoginProps) {
+  const router = useRouter();
+
+  /**
+   * Check is logged
+   */
+  useEffect(() => {
+    if (user) {
+      const { role } = user;
+      switch (role) {
+        case 'employer':
+          router.push(Pages.meEployer);
+          break;
+        case 'worker':
+          router.push(Pages.meWorker);
+          break;
+        default:
+          router.push(Pages.home);
+      }
+    }
+  }, [user, router]);
+
   return (
     <>
       <Head>
@@ -14,7 +43,7 @@ export default function HomePage({ localeLogin, page, localeAppBar, app: { theme
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar theme={theme} withoutExpandLess locale={localeAppBar} />
+      <AppBar theme={theme} withoutExpandLess locale={localeAppBar} user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Login theme={theme} locale={localeLogin} />
       </main>

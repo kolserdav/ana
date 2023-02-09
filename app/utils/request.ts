@@ -81,7 +81,9 @@ class Request {
     return this.send({ url: `${Api.getLocaleV1}?field=${field}`, locale, method: 'GET' });
   }
 
-  public async getUser(): Promise<SendMessageArgs<MessageType.SET_USER_FIND_FIRST>> {
+  public async getUser(): Promise<
+    SendMessageArgs<MessageType.SET_USER_FIND_FIRST> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
     return this.send({ url: Api.getUserFindFirst, method: 'GET' });
   }
 

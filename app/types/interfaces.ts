@@ -141,7 +141,7 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   T extends MessageType.GET_USER_FIND_FIRST
   ? Prisma.UserFindFirstArgs
   : T extends MessageType.SET_USER_FIND_FIRST
-  ? Partial<Pick<User, 'password' | 'salt'>> | null
+  ? Omit<User, 'password' | 'salt'> | null
   : unknown;
 
 export interface Tab {
@@ -237,7 +237,7 @@ export type WSProtocol = 'test' | 'login' | 'confirm-email';
 export const LOCALE_DEFAULT: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';
-export const AUTHORIZATION_HEADER = 'Authorization';
+export const AUTHORIZATION_HEADER = 'authorization';
 export const TIMEOUT_HEADER = 'timeout';
 
 export function checkEmail(email: string): boolean {

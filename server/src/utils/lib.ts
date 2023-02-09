@@ -68,7 +68,7 @@ export const parseHeaders = (headers: IncomingHttpHeaders) => {
   const {
     [LANGUAGE_HEADER]: lang,
     [USER_ID_HEADER]: uuid,
-    authorization,
+    [AUTHORIZATION_HEADER]: authorization,
     [TIMEOUT_HEADER]: timeout,
   } = headers;
   return {

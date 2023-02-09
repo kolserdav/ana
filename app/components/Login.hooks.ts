@@ -1,4 +1,5 @@
 import useQueryString from '@/hooks/useQueryString';
+import storeUserRenew, { changeUserRenew } from '@/store/userRenew';
 import {
   checkEmail,
   LOCALE_DEFAULT,
@@ -344,6 +345,8 @@ export const useMessages = ({
       setCookie(CookieName._utoken, token);
       setCookie(CookieName._uuid, userId);
       cleanAllFields();
+      const { userRenew } = storeUserRenew.getState();
+      storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
       log('info', locale.successLogin, { token }, !isSignUp);
     };
 
@@ -395,7 +398,7 @@ export const useMessages = ({
       }
     };
 
-    const setRestorePassword = ({ data }: SendMessageArgs<MessageType.SET_RESTORE_PASSWORD>) => {
+    const setRestorePassword = (_: SendMessageArgs<MessageType.SET_RESTORE_PASSWORD>) => {
       onClickLoginButton();
     };
 
