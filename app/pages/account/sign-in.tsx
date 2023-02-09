@@ -8,12 +8,13 @@ import { getStaticPropsLogin } from '@/utils/getStaticProps';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Pages } from '@/utils/constants';
+import LoaderFull from '@/components/ui/LoaderFull';
 
 export default function HomePage({
   localeLogin,
   page,
   localeAppBar,
-  app: { theme, user },
+  app: { theme, user, userLoad },
 }: LoginProps) {
   const router = useRouter();
 
@@ -47,6 +48,7 @@ export default function HomePage({
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Login theme={theme} locale={localeLogin} />
       </main>
+      <LoaderFull open={!userLoad} noOpacity />
     </>
   );
 }
