@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import cors from 'cors';
-import { APP_URL, FASTIFY_LOGGER, PORT } from './utils/constants';
+import { APP_URL, FASTIFY_LOGGER, HOST, PORT } from './utils/constants';
 import { log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
 import { Api } from './types/interfaces';
@@ -30,7 +30,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.use([Api.getUserFindFirst], checkTokenMiddleware);
   fastify.get(Api.getUserFindFirst, getUserFindFirst);
 
-  fastify.listen({ port: PORT }, (err, address) => {
+  fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;
     console.log('Server listenning on', address);
   });

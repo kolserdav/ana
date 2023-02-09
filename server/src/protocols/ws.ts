@@ -9,13 +9,11 @@ import {
 } from '../types/interfaces';
 import { IS_DEV, WS_PORT } from '../utils/constants';
 import { checkCors, log } from '../utils/lib';
-import Redis from './redis';
 import { v4 } from 'uuid';
 import cluster, { Worker } from 'cluster';
 import QueueMaster from '../controllers/queueMaster';
 import AMQP from './amqp';
 
-const redis = new Redis();
 const protocol = 'ws';
 
 class WS {
@@ -54,7 +52,7 @@ class WS {
             type: MessageType.SET_ERROR,
             data: {
               message: 'Cross orogin request blocked',
-              type: 'warn',
+              status: 'warn',
             },
           })
         );

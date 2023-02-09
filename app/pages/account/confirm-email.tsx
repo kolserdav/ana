@@ -1,5 +1,5 @@
 import ConfirmEmail from '@/components/ConfirmEmail';
-import AppBar from '@/components/ui/AppBar';
+import AppBar from '@/components/AppBar';
 import { AppProps, PageFull } from '@/types';
 import { Locale, LocaleValue } from '@/types/interfaces';
 import { prepagePage } from '@/utils/lib';
@@ -17,7 +17,7 @@ interface ConfirmEmailProps extends AppProps {
 }
 
 export default function ConfirmEmailPage({
-  app: { theme },
+  app: { theme, user },
   localeConfirm,
   localeAppBar,
   page,
@@ -29,7 +29,7 @@ export default function ConfirmEmailPage({
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar theme={theme} locale={localeAppBar} withoutExpandLess />
+      <AppBar theme={theme} locale={localeAppBar} withoutExpandLess user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <ConfirmEmail theme={theme} locale={localeConfirm} />
       </main>

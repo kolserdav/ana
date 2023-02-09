@@ -1,4 +1,7 @@
 node_modules
 tests/constants.json
+redis
+rabbitmq
+data
 .env
 tmp
