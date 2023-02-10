@@ -1,0 +1,5 @@
+node_modules
+dist
+tmp
+.env
+src/types/interfaces.ts

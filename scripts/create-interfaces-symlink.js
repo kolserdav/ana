@@ -1,9 +1,9 @@
 // @ts-check
-const { existsSync, symlink } = require('fs');
+const { existsSync, readlinkSync, symlink } = require('fs');
 const { resolve } = require('path');
 
-const destPath = resolve(__dirname, '../server/src/types/interfaces.ts');
-const srcPath = resolve(__dirname, '../app/types/interfaces.ts');
+const destPath = resolve(__dirname, '../packages/server/src/types/interfaces.ts');
+const srcPath = resolve(__dirname, '../packages/app/types/interfaces.ts');
 
 if (existsSync(destPath)) {
   console.info('Symlink created:', destPath);

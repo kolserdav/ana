@@ -3,5 +3,4 @@ tests/constants.json
 redis
 rabbitmq
 data
-.env
 tmp

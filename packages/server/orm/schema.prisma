@@ -1,0 +1,76 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PageName {
+  index
+  login
+  registration
+  restorePassword
+  changePassword
+  confirmEmail
+  meEmployer
+  meEmployerCreateProject
+  meWorker
+}
+
+enum PageField {
+  title
+  description
+  keywords
+  content
+}
+
+enum Lang {
+  ru
+}
+
+enum Role {
+  employer
+  worker
+  moderator
+  admin
+}
+
+model Page {
+  id    Int       @id @default(autoincrement())
+  name  PageName
+  field PageField
+  value String    @db.VarChar(1000)
+  lang  Lang
+}
+
+model User {
+  id          String        @id @default(uuid())
+  name        String        @db.VarChar(24)
+  surname     String        @db.VarChar(35)
+  email       String        @unique @db.VarChar(255)
+  confirm     Boolean       @default(false)
+  online      Boolean       @default(true)
+  role        Role
+  password    String        @db.VarChar(64)
+  salt        String        @db.VarChar(32)
+  updated     DateTime      @default(now())
+  created     DateTime      @default(now())
+  RestoreLink RestoreLink[]
+  ConfirmLink ConfirmLink[]
+}
+
+model RestoreLink {
+  id      String   @id @default(uuid())
+  userId  String
+  User    User     @relation(fields: [userId], references: [id])
+  created DateTime @default(now())
+}
+
+model ConfirmLink {
+  id      String   @id @default(uuid())
+  userId  String
+  User    User     @relation(fields: [userId], references: [id])
+  created DateTime @default(now())
+}
