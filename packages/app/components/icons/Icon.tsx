@@ -1,5 +1,5 @@
-import { IconProps } from '@/types';
-import { ICON_WIDTH_DEFAULT } from '@/utils/constants';
+import { IconProps } from '../../types';
+import { ICON_WIDTH_DEFAULT } from '../../utils/constants';
 
 function Icon({ width, height, children, color, animate }: IconProps) {
   return (

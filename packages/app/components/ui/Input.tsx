@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { Theme } from '@/Theme';
-import { LABEL_TRANSITION } from '@/utils/constants';
-import { ubuntu500 } from '@/fonts/ubuntu';
+import { Theme } from '../../Theme';
+import { LABEL_TRANSITION } from '../../utils/constants';
+import { ubuntu500 } from '../../fonts/ubuntu';
 import s from './Input.module.scss';
 
 function Input({

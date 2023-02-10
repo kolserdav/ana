@@ -1,10 +1,10 @@
-import AppBar from '@/components/AppBar';
-import { AppProps, PageFull } from '@/types';
-import { Locale, LocaleValue } from '@/types/interfaces';
-import { prepagePage } from '@/utils/lib';
-import Request from '@/utils/request';
 import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
+import AppBar from '../components/AppBar';
+import { AppProps, PageFull } from '../types';
+import { Locale, LocaleValue } from '../types/interfaces';
+import { prepagePage } from '../utils/lib';
+import Request from '../utils/request';
 import Test from '../components/Test';
 import s from '../styles/Page.module.scss';
 

@@ -1,3 +1,4 @@
+import { Page, Prisma } from '@prisma/client';
 import {
   Api,
   LOCALE_DEFAULT,
@@ -9,8 +10,7 @@ import {
   MessageType,
   TIMEOUT_HEADER,
   AUTHORIZATION_HEADER,
-} from '@/types/interfaces';
-import { Page, Prisma, PrismaPromise } from '@prisma/client';
+} from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
 import { log } from './lib';
@@ -90,11 +90,7 @@ class Request {
   public async pageFindMany<T extends Prisma.PageFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.PageFindManyArgs>
   ): Promise<
-    Prisma.CheckSelect<
-      T,
-      Result<Array<Page>>,
-      PrismaPromise<Result<Array<Prisma.PageGetPayload<T>>>>
-    >
+    Prisma.CheckSelect<T, Result<Array<Page>>, Promise<Result<Array<Prisma.PageGetPayload<T>>>>>
   > {
     return this.send({ url: Api.postPageFindManyV1, method: 'POST', body: args });
   }

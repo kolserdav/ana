@@ -1,9 +1,9 @@
-import { LoginProps } from '@/types';
-import { LocaleValue } from '@/types/interfaces';
-import { prepagePage } from '@/utils/lib';
-import Request from '@/utils/request';
-import { PageName } from '@prisma/client';
 import { GetStaticPropsContext } from 'next';
+import { PageName } from '@prisma/client';
+import { LoginProps } from '../types';
+import { LocaleValue } from '../types/interfaces';
+import { prepagePage } from './lib';
+import Request from './request';
 
 const request = new Request();
 

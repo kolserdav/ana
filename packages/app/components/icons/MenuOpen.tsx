@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { IconProps } from '@/types';
+import { IconProps } from '../../types';
 import Icon from './Icon';
 
 function MenuOpenIcon(props: Omit<IconProps, 'children'>) {

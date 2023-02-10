@@ -1,4 +1,4 @@
-import { IconProps } from '@/types';
+import { IconProps } from '../../types';
 import Icon from './Icon';
 
 function WarnIcon(props: Omit<IconProps, 'children'>) {

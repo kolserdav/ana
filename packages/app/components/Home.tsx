@@ -1,4 +1,4 @@
-import useLoad from '@/hooks/useLoad';
+import useLoad from '../hooks/useLoad';
 
 function Home() {
   const { load, setLoad } = useLoad();

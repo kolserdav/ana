@@ -1,10 +1,10 @@
-import useChangeLocation from '@/hooks/useChangeLocation';
-import useConnId from '@/hooks/useConnId';
-import useLoad from '@/hooks/useLoad';
-import useWS from '@/hooks/useWS';
-import { Theme } from '@/Theme';
-import { Locale } from '@/types/interfaces';
-import { LOAD_PAGE_DURATION, Pages, TAB_INDEX_DEFAULT } from '@/utils/constants';
+import useChangeLocation from '../hooks/useChangeLocation';
+import useConnId from '../hooks/useConnId';
+import useLoad from '../hooks/useLoad';
+import useWS from '../hooks/useWS';
+import { Theme } from '../Theme';
+import { Locale } from '../types/interfaces';
+import { LOAD_PAGE_DURATION, Pages, TAB_INDEX_DEFAULT } from '../utils/constants';
 import {
   useCheckPage,
   useEmailInput,

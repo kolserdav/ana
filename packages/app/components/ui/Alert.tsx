@@ -1,16 +1,16 @@
-import { ubuntu400 } from '@/fonts/ubuntu';
-import storeAlert from '@/store/alert';
-import { Theme } from '@/Theme';
-import { AlertProps } from '@/types';
+import clsx from 'clsx';
+import React, { createRef, useEffect, useState } from 'react';
+import { v4 } from 'uuid';
+import { ubuntu400 } from '../../fonts/ubuntu';
+import storeAlert from '../../store/alert';
+import { Theme } from '../../Theme';
+import { AlertProps } from '../../types';
 import {
   ALERT_COUNT_MAX,
   ALERT_DURATION,
   ALERT_TRANSITION,
   ALERT_TRANSITION_Y,
-} from '@/utils/constants';
-import clsx from 'clsx';
-import React, { createRef, useEffect, useState } from 'react';
-import { v4 } from 'uuid';
+} from '../../utils/constants';
 import CloseCircleIcon from '../icons/CloseCircle';
 import s from './Alert.module.scss';
 import IconButton from './IconButton';

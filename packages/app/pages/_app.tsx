@@ -1,10 +1,10 @@
-import Alert from '@/components/ui/Alert';
-import LoaderLine from '@/components/ui/LoaderLine';
-import useApp from '@/hooks/useApp';
-import useUser from '@/hooks/useUser';
-import '@/styles/globals.scss';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import Alert from '../components/ui/Alert';
+import LoaderLine from '../components/ui/LoaderLine';
+import useApp from '../hooks/useApp';
+import useUser from '../hooks/useUser';
+import '../styles/globals.scss';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { load, theme } = useApp();

@@ -1,7 +1,7 @@
-import { ubuntu500 } from '@/fonts/ubuntu';
-import { Theme } from '@/Theme';
 import clsx from 'clsx';
 import { useState } from 'react';
+import { ubuntu500 } from '../../fonts/ubuntu';
+import { Theme } from '../../Theme';
 import s from './Button.module.scss';
 
 function Button({

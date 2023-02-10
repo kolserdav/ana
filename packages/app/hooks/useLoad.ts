@@ -1,6 +1,6 @@
-import storeLoad, { changeLoad } from '@/store/load';
-import { LOAD_PAGE_DURATION } from '@/utils/constants';
 import { useEffect, useState } from 'react';
+import storeLoad, { changeLoad } from '../store/load';
+import { LOAD_PAGE_DURATION } from '../utils/constants';
 
 const useLoad = () => {
   const [load, setLoad] = useState<boolean>(true);

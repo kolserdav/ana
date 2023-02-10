@@ -1,5 +1,5 @@
-import { Theme } from '@/Theme';
 import clsx from 'clsx';
+import { Theme } from '../../Theme';
 import s from './Switch.module.scss';
 
 function Switch({

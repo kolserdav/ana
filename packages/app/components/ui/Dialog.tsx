@@ -1,8 +1,8 @@
-import storeClick from '@/store/click';
-import { Theme } from '@/Theme';
-import { checkClickBy, setBodyScroll } from '@/utils/lib';
 import clsx from 'clsx';
 import { useEffect, useRef } from 'react';
+import storeClick from '../../store/click';
+import { Theme } from '../../Theme';
+import { checkClickBy, setBodyScroll } from '../../utils/lib';
 import s from './Dialog.module.scss';
 
 function Dialog({

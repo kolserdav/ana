@@ -1,4 +1,4 @@
-import { Locale } from '@/types/interfaces';
+import { Locale } from '../types/interfaces';
 
 export const checkName = (name: string) => /^[a-zA-Zа-яА-Я]+$/.test(name);
 

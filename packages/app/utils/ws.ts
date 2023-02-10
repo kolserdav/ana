@@ -1,4 +1,4 @@
-import { LANGUAGE_HEADER, MessageType, SendMessageArgs, WSProtocol } from '@/types/interfaces';
+import { LANGUAGE_HEADER, MessageType, SendMessageArgs, WSProtocol } from '../types/interfaces';
 import { WS_ADDRESS } from './constants';
 import { getLangCookie } from './cookies';
 import { log } from './lib';

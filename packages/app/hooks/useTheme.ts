@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import storeTheme from '@/store/theme';
-import { Theme, themes } from '@/Theme';
-import { ThemeType } from '@/types';
-import { getLocalStorage, LocalStorageName } from '@/utils/localStorage';
-import { DEFAULT_THEME } from '@/utils/constants';
+import storeTheme from '../store/theme';
+import { Theme, themes } from '../Theme';
+import { ThemeType } from '../types';
+import { getLocalStorage, LocalStorageName } from '../utils/localStorage';
+import { DEFAULT_THEME } from '../utils/constants';
 
 export default function useTheme() {
   const [themeName, setThemeName] = useState<ThemeType>(DEFAULT_THEME);

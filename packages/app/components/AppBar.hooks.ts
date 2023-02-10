@@ -1,11 +1,11 @@
-import storeMenuOpen from '@/store/menuOpen';
-import storeScroll from '@/store/scroll';
-import storeTheme, { changeTheme } from '@/store/theme';
-import storeUserRenew, { changeUserRenew } from '@/store/userRenew';
-import { DEFAULT_THEME, EXPAND_LESS_SHOW_FROM } from '@/utils/constants';
-import { CookieName, setCookie } from '@/utils/cookies';
-import { getLocalStorage, LocalStorageName, setLocalStorage } from '@/utils/localStorage';
 import { useEffect, useState } from 'react';
+import storeMenuOpen from '../store/menuOpen';
+import storeScroll from '../store/scroll';
+import storeTheme, { changeTheme } from '../store/theme';
+import storeUserRenew, { changeUserRenew } from '../store/userRenew';
+import { DEFAULT_THEME, EXPAND_LESS_SHOW_FROM } from '../utils/constants';
+import { CookieName, setCookie } from '../utils/cookies';
+import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
 
 let oldY = 0;
 

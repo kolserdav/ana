@@ -1,5 +1,5 @@
-import { DEFAULT_THEME } from '@/utils/constants';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { DEFAULT_THEME } from '../utils/constants';
 import { ThemeType } from '../types';
 import { getLocalStorage, LocalStorageName } from '../utils/localStorage';
 

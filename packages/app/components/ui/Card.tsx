@@ -1,4 +1,4 @@
-import { Theme } from '@/Theme';
+import { Theme } from '../../Theme';
 import s from './Card.module.scss';
 
 function Card({ children, theme }: { children: string | React.ReactElement; theme: Theme }) {

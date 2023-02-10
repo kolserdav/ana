@@ -1,9 +1,9 @@
-import { ubuntu400, ubuntu700 } from '@/fonts/ubuntu';
-import { Theme } from '@/Theme';
-import { Tab } from '@/types/interfaces';
-import { TAB_INDEX_DEFAULT } from '@/utils/constants';
 import clsx from 'clsx';
 import { useMemo } from 'react';
+import { ubuntu400, ubuntu700 } from '../../fonts/ubuntu';
+import { Theme } from '../../Theme';
+import { Tab } from '../../types/interfaces';
+import { TAB_INDEX_DEFAULT } from '../../utils/constants';
 import s from './Tabs.module.scss';
 import Typography from './Typography';
 

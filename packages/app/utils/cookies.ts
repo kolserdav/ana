@@ -1,5 +1,5 @@
-import { LOCALE_DEFAULT, LocaleValue } from '@/types/interfaces';
 import { Cookies } from 'react-cookie';
+import { LOCALE_DEFAULT, LocaleValue } from '../types/interfaces';
 import { isTest } from './lib';
 
 const cookies = new Cookies();

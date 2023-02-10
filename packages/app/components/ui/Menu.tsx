@@ -1,10 +1,10 @@
-import storeClick from '@/store/click';
-import storeMenuOpen, { changeMenuOpen } from '@/store/menuOpen';
-import { Theme } from '@/Theme';
-import { MENU_TRANSITION } from '@/utils/constants';
-import { checkClickBy } from '@/utils/lib';
 import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import storeClick from '../../store/click';
+import storeMenuOpen, { changeMenuOpen } from '../../store/menuOpen';
+import { Theme } from '../../Theme';
+import { MENU_TRANSITION } from '../../utils/constants';
+import { checkClickBy } from '../../utils/lib';
 import MenuIcon from '../icons/Menu';
 import MenuOpenIcon from '../icons/MenuOpen';
 import s from './Menu.module.scss';

@@ -1,4 +1,4 @@
-import { IconProps } from '@/types';
+import { IconProps } from '../../types';
 import Icon from './Icon';
 
 function MenuIcon(props: Omit<IconProps, 'children'>) {

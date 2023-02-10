@@ -1,9 +1,9 @@
-import storeAlert, { changeAlert } from '@/store/alert';
-import { LogLevel } from '@/types/interfaces';
 import { format } from 'date-fns';
-import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from '@/utils/constants';
 import { Page } from '@prisma/client';
-import { PageFull } from '@/types';
+import storeAlert, { changeAlert } from '../store/alert';
+import { LogLevel } from '../types/interfaces';
+import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from './constants';
+import { PageFull } from '../types';
 
 export const isDev = () => process.env.NODE_ENV === 'development';
 

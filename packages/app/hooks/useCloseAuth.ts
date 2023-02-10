@@ -1,7 +1,7 @@
-import { MessageType, SendMessageArgs } from '@/types/interfaces';
-import { Pages } from '@/utils/constants';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { MessageType, SendMessageArgs } from '../types/interfaces';
+import { Pages } from '../utils/constants';
 
 export default function useCloseAuth({
   user,

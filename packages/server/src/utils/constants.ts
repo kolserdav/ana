@@ -1,7 +1,5 @@
 import dotenv from 'dotenv';
-import path from 'path';
-
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config();
 
 export const HOST = process.env.HOST as string;
 export const SMTP_EMAIL = process.env.SMTP_EMAIL as string;

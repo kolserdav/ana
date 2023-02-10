@@ -1,10 +1,8 @@
-import { Theme } from '@/Theme';
-import { Status } from '@/types/interfaces';
-import { Ubuntu } from '@next/font/google';
 import clsx from 'clsx';
+import { ubuntu400 } from '../../fonts/ubuntu';
+import { Theme } from '../../Theme';
+import { Status } from '../../types/interfaces';
 import s from './Typography.module.scss';
-
-const ubuntu = Ubuntu({ subsets: ['cyrillic', 'latin'], weight: '400', preload: true });
 
 function Typography({
   variant,
@@ -27,7 +25,7 @@ function Typography({
     <div
       className={clsx(
         s.wrapper,
-        ubuntu.className,
+        ubuntu400.className,
         className,
         small ? s.small : '',
         align

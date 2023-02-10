@@ -1,5 +1,5 @@
-import { AlertProps } from '@/types';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { AlertProps } from '../types';
 
 interface State {
   alert: AlertProps;

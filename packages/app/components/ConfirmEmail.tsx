@@ -1,12 +1,12 @@
-import useLoad from '@/hooks/useLoad';
-import useQueryString from '@/hooks/useQueryString';
-import useWS from '@/hooks/useWS';
-import { Theme } from '@/Theme';
-import { Locale, MessageType, SendMessageArgs, Status } from '@/types/interfaces';
-import { LOAD_PAGE_DURATION } from '@/utils/constants';
-import { getLangCookie } from '@/utils/cookies';
-import { awaitResponse } from '@/utils/lib';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import useLoad from '../hooks/useLoad';
+import useQueryString from '../hooks/useQueryString';
+import useWS from '../hooks/useWS';
+import { Theme } from '../Theme';
+import { Locale, MessageType, SendMessageArgs } from '../types/interfaces';
+import { LOAD_PAGE_DURATION } from '../utils/constants';
+import { getLangCookie } from '../utils/cookies';
+import { awaitResponse } from '../utils/lib';
 import s from './ConfirmEmail.module.scss';
 import Typography from './ui/Typography';
 
