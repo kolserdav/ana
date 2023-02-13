@@ -1,4 +1,7 @@
+export type ThemeType = 'light' | 'dark';
+
 export interface Theme {
+  type: ThemeType;
   paper: string;
   text: string;
   active: string;
@@ -19,6 +22,7 @@ export type Themes = {
 
 const colors: Themes = {
   dark: {
+    type: 'dark',
     paper: '#212121',
     text: '#cfcfcf',
     active: '#36413e',
@@ -32,6 +36,7 @@ const colors: Themes = {
     white: 'white',
   },
   light: {
+    type: 'light',
     red: 'red',
     yellow: 'orange',
     blue: '#2748ce',

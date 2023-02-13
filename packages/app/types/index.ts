@@ -2,8 +2,6 @@ import { PageField } from '@prisma/client';
 import { Theme } from '../Theme';
 import { Locale, MessageType, SendMessageArgs, Status } from './interfaces';
 
-export type ThemeType = 'light' | 'dark';
-
 export type PageFull = {
   // eslint-disable-next-line no-unused-vars
   [K in PageField]: string;

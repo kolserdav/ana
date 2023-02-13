@@ -31,7 +31,7 @@ export default function MeEmployerCreateProjectPage({
       </Head>
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <CreateProject />
+        <CreateProject theme={theme} />
       </main>
     </>
   );
