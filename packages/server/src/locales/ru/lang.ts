@@ -26,7 +26,6 @@ const lang: Locale = {
       name: 'Имя',
       surname: 'Фамилия',
       accountType: 'Зарегистрировать как',
-      formDesc: 'Поля помеченные * обязательны для заполенения',
       tabs: [
         {
           id: 0,
@@ -81,9 +80,13 @@ const lang: Locale = {
       title: 'Подтверждение почты',
       paramsNotFound: 'Не найдены необходимые параметры страницы',
     },
-  },
-  meEmployer: {
-    createProject: 'Создать новый проект',
+    me: {
+      createProject: 'Создать новый проект',
+      projectName: 'Название проекта',
+    },
+    common: {
+      formDesc: 'Поля помеченные * обязательны для заполенения',
+    },
   },
 };
 

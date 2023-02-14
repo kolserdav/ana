@@ -14,6 +14,7 @@ export default function HomePage({
   localeLogin,
   page,
   localeAppBar,
+  localeCommon,
   app: { theme, user, userLoad },
 }: LoginProps) {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function HomePage({
       </Head>
       <AppBar theme={theme} withoutExpandLess locale={localeAppBar} user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Login theme={theme} locale={localeLogin} />
+        <Login formDesc={localeCommon.formDesc} theme={theme} locale={localeLogin} />
       </main>
       <LoaderFull open={!userLoad} noOpacity />
     </>

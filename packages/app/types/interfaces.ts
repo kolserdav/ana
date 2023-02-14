@@ -184,7 +184,6 @@ export interface Locale {
       signUp: string;
       signIn: string;
       accountType: string;
-      formDesc: string;
       password: string;
       passwordRepeat: string;
       fieldProhibited: string;
@@ -223,9 +222,13 @@ export interface Locale {
       title: string;
       paramsNotFound: string;
     };
-  };
-  meEmployer: {
-    createProject: string;
+    me: {
+      createProject: string;
+      projectName: string;
+    };
+    common: {
+      formDesc: string;
+    };
   };
 }
 

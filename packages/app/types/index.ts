@@ -33,6 +33,7 @@ export interface AppProps {
 export interface LoginProps extends AppProps {
   localeLogin: Locale['app']['login'];
   localeAppBar: Locale['app']['appBar'];
+  localeCommon: Locale['app']['common'];
   page: PageFull;
 }
 

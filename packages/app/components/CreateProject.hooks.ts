@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
 
-// eslint-disable-next-line import/prefer-default-export
 export const useDescriptionInput = () => {
   const [description, setDescription] = useState('');
 
@@ -15,4 +14,17 @@ export const useDescriptionInput = () => {
   };
 
   return { description, onChangeDescription };
+};
+
+export const useTitleInput = () => {
+  const [title, setTitle] = useState<string>('');
+
+  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setTitle(value);
+  };
+
+  return { title, onChangeTitle };
 };

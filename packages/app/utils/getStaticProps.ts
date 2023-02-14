@@ -14,6 +14,7 @@ export function getStaticPropsLogin(name: PageName): (
 ) => Promise<{ props: Omit<LoginProps, 'app'> }> {
   return async ({ locale }: GetStaticPropsContext) => {
     const localeLogin = await request.getLocale({ field: 'login', locale });
+    const localeCommon = await request.getLocale({ field: 'common', locale });
     const localeAppBar = await request.getLocale({ field: 'appBar', locale });
     const page = await request.pageFindMany({
       where: {
@@ -32,6 +33,7 @@ export function getStaticPropsLogin(name: PageName): (
         localeAppBar: localeAppBar.data,
         localeLogin: localeLogin.data,
         page: prepagePage(page.data),
+        localeCommon: localeCommon.data,
       },
     };
   };

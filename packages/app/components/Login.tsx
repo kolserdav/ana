@@ -26,7 +26,15 @@ import Link from './ui/Link';
 import Tabs from './ui/Tabs';
 import Typography from './ui/Typography';
 
-function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login'] }) {
+function Login({
+  theme,
+  locale,
+  formDesc,
+}: {
+  theme: Theme;
+  locale: Locale['app']['login'];
+  formDesc: string;
+}) {
   const { ws } = useWS({ protocol: 'login' });
 
   const { setConnId, connId } = useConnId();
@@ -178,7 +186,7 @@ function Login({ theme, locale }: { theme: Theme; locale: Locale['app']['login']
         )}
         <form>
           <Typography theme={theme} small variant="p">
-            {locale.formDesc}
+            {formDesc}
           </Typography>
           {isSignUp && (
             <Input

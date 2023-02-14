@@ -13,12 +13,16 @@ const request = new Request();
 
 interface EmployerPageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
+  localeMeEmployer: Locale['app']['me'];
+  localeCommon: Locale['app']['common'];
   page: PageFull;
 }
 
 export default function MeEmployerCreateProjectPage({
   app: { user, theme, userLoad },
   localeAppBar,
+  localeMeEmployer,
+  localeCommon,
   page,
 }: EmployerPageProps) {
   useCloseAuth({ user, userLoad });
@@ -31,7 +35,7 @@ export default function MeEmployerCreateProjectPage({
       </Head>
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <CreateProject theme={theme} />
+        <CreateProject locale={localeMeEmployer} formDesc={localeCommon.formDesc} theme={theme} />
       </main>
     </>
   );
@@ -41,6 +45,8 @@ export async function getStaticProps({
   locale,
 }: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
+  const localeCommon = await request.getLocale({ field: 'common', locale });
+  const localeMeEmployer = await request.getLocale({ field: 'me', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
@@ -57,6 +63,8 @@ export async function getStaticProps({
     props: {
       page: prepagePage(page.data),
       localeAppBar: localeAppBar.data,
+      localeMeEmployer: localeMeEmployer.data,
+      localeCommon: localeCommon.data,
     },
   };
 }
