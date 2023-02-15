@@ -25,7 +25,7 @@ export default function HtmlEditor({
   const [loaded, setLoaded] = useState<boolean>(false);
   const editorRef = useRef(null);
   return (
-    <div className={clsx(s.wrapper, loaded ? s.loaded : '')}>
+    <div className={s.wrapper}>
       <Typography
         className={clsx(s.label, ubuntu500.className)}
         htmlFor={id}

@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import s from './Loader.module.scss';
-import LoaderIcon from '../icons/LoaderIcon';
 import LoadIcon from '../icons/LoadIcon';
 import { Theme } from '../../Theme';
 

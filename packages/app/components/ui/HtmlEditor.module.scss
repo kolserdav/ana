@@ -21,8 +21,4 @@
         $html-editor-body-margin * 2 + $form-item-margin-top - $input-font-size
     );
   }
-
-  &.loaded {
-    // display: block;
-  }
 }

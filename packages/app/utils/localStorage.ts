@@ -1,4 +1,4 @@
-import { ThemeType } from '../types';
+import { ThemeType } from '../Theme';
 import { log } from './lib';
 
 // eslint-disable-next-line no-shadow

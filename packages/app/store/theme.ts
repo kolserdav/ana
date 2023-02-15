@@ -1,6 +1,6 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { ThemeType } from '../Theme';
 import { DEFAULT_THEME } from '../utils/constants';
-import { ThemeType } from '../types';
 import { getLocalStorage, LocalStorageName } from '../utils/localStorage';
 
 interface State {

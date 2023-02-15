@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import storeTheme from '../store/theme';
-import { Theme, themes } from '../Theme';
-import { ThemeType } from '../types';
+import { Theme, themes, ThemeType } from '../Theme';
 import { getLocalStorage, LocalStorageName } from '../utils/localStorage';
 import { DEFAULT_THEME } from '../utils/constants';
 
@@ -13,7 +12,7 @@ export default function useTheme() {
    * Set saved theme
    */
   useEffect(() => {
-    const savedTheme = getLocalStorage(LocalStorageName.THEME);
+    const savedTheme = getLocalStorage(LocalStorageName.THEME) || DEFAULT_THEME;
     if (savedTheme && savedTheme !== DEFAULT_THEME) {
       setTheme(themes[savedTheme]);
     }
