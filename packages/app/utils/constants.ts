@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { ThemeType } from '../Theme';
 
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
@@ -24,6 +25,12 @@ export enum Pages {
   meWorker = '/me/worker',
 }
 
+const now = new Date();
+const dateFormat = 'yyyy-MM-dd';
+now.setDate(now.getDate() + 1);
+export const MIN_DATE_ACTUAL = format(now, dateFormat);
+now.setFullYear(now.getFullYear() + 1);
+export const MAX_DATE_ACTUAL = format(now, dateFormat);
 export const PAGE_LOGIN_IN_MENU = Pages.signIn;
 export const ALERT_DURATION = 3000;
 export const ALERT_COUNT_MAX: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 = 3;
@@ -55,3 +62,5 @@ export const EXPAND_LESS_SHOW_FROM = -300;
 export const MENU_TRANSITION = 300;
 // Deps global
 export const NO_SCROLL_CLASS = 'no__scroll';
+// Deps $html-editor-height
+export const HTML_EDITOR_HEIGHT = 300;

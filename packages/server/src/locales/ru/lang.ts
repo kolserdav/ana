@@ -86,6 +86,7 @@ const lang: Locale = {
       projectDescription: 'Описание проекта',
       projectDesPlaceholder:
         'Подробно опишите что нужно сделать и по каким критериям будете оценивать результат',
+      projectActualFor: 'Актуален до',
     },
     common: {
       formDesc: 'Поля помеченные * обязательны для заполенения',

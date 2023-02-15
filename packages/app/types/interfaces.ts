@@ -227,6 +227,7 @@ export interface Locale {
       projectTitle: string;
       projectDescription: string;
       projectDesPlaceholder: string;
+      projectActualFor: string;
     };
     common: {
       formDesc: string;

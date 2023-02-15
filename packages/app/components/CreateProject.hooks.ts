@@ -28,3 +28,12 @@ export const useTitleInput = () => {
 
   return { title, onChangeTitle };
 };
+
+export const useEndDateInput = () => {
+  const [endDate, setEndDate] = useState<string>('');
+
+  const onChangeEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEndDate(e.target.value);
+  };
+  return { endDate, onChangeEndDate };
+};

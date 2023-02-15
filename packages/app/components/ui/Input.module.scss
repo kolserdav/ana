@@ -25,6 +25,8 @@
   }
 
   input {
+    width: $small-width;
+
     &:focus {
       outline: none;
     }
@@ -43,13 +45,6 @@
       width: 100%;
     }
 
-    &.semi__width {
-      width: 50%;
-      @media (max-width: $mobile-width) {
-        width: 100%;
-      }
-    }
-
     &.disabled {
       opacity: 0.5;
     }
@@ -64,8 +59,8 @@
     box-shadow: none;
     padding: 0 $input-padding;
     margin-left: 0;
-    @media (max-width: $mobile-width) {
-      // margin-left: 0;
+    @media (max-width: $small-width) {
+      width: 100%;
     }
 
     &.error {

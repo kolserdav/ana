@@ -21,6 +21,8 @@ function Input({
   required,
   success,
   fullWidth,
+  min,
+  max,
 }: {
   disabled?: boolean;
   value: string;
@@ -39,6 +41,8 @@ function Input({
   title?: string;
   success?: boolean;
   fullWidth?: boolean;
+  min?: string | number;
+  max?: string | number;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -76,6 +80,8 @@ function Input({
         id={id}
         value={value}
         title={title}
+        min={min}
+        max={max}
         onChange={onChange}
         onBlur={(e) => {
           _onBlur(e);
@@ -137,6 +143,8 @@ Input.defaultProps = {
   title: undefined,
   colorActive: false,
   disabled: false,
+  min: undefined,
+  max: undefined,
 };
 
 export default Input;
