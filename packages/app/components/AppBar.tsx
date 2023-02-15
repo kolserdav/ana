@@ -49,37 +49,39 @@ function AppBar({
           boxShadow: full ? `0px 1px 2px ${theme.active}` : 'none',
         }}
       >
-        <div className={s.links}>
-          {!checkRouterPath(router.asPath, Pages.home) && (
-            <Link noWrap theme={theme} href={Pages.home} className={s.item}>
-              <div className={s.menu__item}>
-                <div style={{ color: theme.text }}>{locale.homePage}</div>
-              </div>
-            </Link>
-          )}
-          {!checkRouterPath(router.asPath, Pages.meEmployerCreateProject) &&
-            checkRouterPath(router.asPath, Pages.meEmployer) && (
-              <Link noWrap theme={theme} href={Pages.meEmployerCreateProject} className={s.item}>
+        {full && (
+          <div className={s.links}>
+            {!checkRouterPath(router.asPath, Pages.home) && (
+              <Link noWrap theme={theme} href={Pages.home} className={s.item}>
                 <div className={s.menu__item}>
-                  <div style={{ color: theme.text }}>{locale.createProject}</div>
+                  <div style={{ color: theme.text }}>{locale.homePage}</div>
                 </div>
               </Link>
             )}
-          {!checkRouterPath(router.asPath, [Pages.meEmployer, Pages.meWorker]) &&
-            user &&
-            (user.role === 'employer' || user.role === 'worker') && (
-              <Link
-                noWrap
-                theme={theme}
-                className={s.item}
-                href={user.role === 'worker' ? Pages.meWorker : Pages.meEmployer}
-              >
-                <div className={s.menu__item}>
-                  <div style={{ color: theme.text }}>{locale.personalArea}</div>
-                </div>
-              </Link>
-            )}
-        </div>
+            {!checkRouterPath(router.asPath, Pages.meEmployerCreateProject) &&
+              checkRouterPath(router.asPath, Pages.meEmployer) && (
+                <Link noWrap theme={theme} href={Pages.meEmployerCreateProject} className={s.item}>
+                  <div className={s.menu__item}>
+                    <div style={{ color: theme.text }}>{locale.createProject}</div>
+                  </div>
+                </Link>
+              )}
+            {!checkRouterPath(router.asPath, [Pages.meEmployer, Pages.meWorker]) &&
+              user &&
+              (user.role === 'employer' || user.role === 'worker') && (
+                <Link
+                  noWrap
+                  theme={theme}
+                  className={s.item}
+                  href={user.role === 'worker' ? Pages.meWorker : Pages.meEmployer}
+                >
+                  <div className={s.menu__item}>
+                    <div style={{ color: theme.text }}>{locale.personalArea}</div>
+                  </div>
+                </Link>
+              )}
+          </div>
+        )}
         <Menu theme={theme}>
           {!checkRouterPath(router.asPath, Pages.home) && (
             <Link fullWidth withoutHover theme={theme} href={Pages.home}>

@@ -82,7 +82,10 @@ const lang: Locale = {
     },
     me: {
       createProject: 'Создать новый проект',
-      projectName: 'Название проекта',
+      projectTitle: 'Название проекта',
+      projectDescription: 'Описание проекта',
+      projectDesPlaceholder:
+        'Подробно опишите что нужно сделать и по каким критериям будете оценивать результат',
     },
     common: {
       formDesc: 'Поля помеченные * обязательны для заполенения',

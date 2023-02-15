@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import { v4 } from 'uuid';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
 import { Locale } from '../types/interfaces';
@@ -9,8 +8,6 @@ import Input from './ui/Input';
 import Typography from './ui/Typography';
 
 const HtmlEditor = dynamic(() => import('./ui/HtmlEditor'), { ssr: false });
-
-const id = v4();
 
 function CreateProject({
   theme,
@@ -29,7 +26,7 @@ function CreateProject({
 
   return (
     <div className={s.wrapper}>
-      <div className={s.container}>
+      <form className={s.container}>
         <Typography theme={theme} variant="h1">
           {locale.createProject}
         </Typography>
@@ -39,14 +36,20 @@ function CreateProject({
         <Input
           type="text"
           fullWidth
-          id={id}
+          id="project-title"
           value={title}
           onChange={onChangeTitle}
-          name={`${locale.projectName}*`}
+          name={`${locale.projectTitle}*`}
           theme={theme}
         />
-        <HtmlEditor onChange={onChangeDescription} theme={theme} />
-      </div>
+        <HtmlEditor
+          placeholder={locale.projectDesPlaceholder}
+          id="description"
+          label={`${locale.projectDescription}*`}
+          onChange={onChangeDescription}
+          theme={theme}
+        />
+      </form>
     </div>
   );
 }

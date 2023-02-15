@@ -10,12 +10,14 @@ function Typography({
   theme,
   className,
   small,
+  htmlFor,
   align,
   styleName,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | string[];
   theme: Theme;
+  htmlFor?: string;
   className?: string;
   small?: boolean;
   align?: 'center' | 'right' | 'justify';
@@ -64,7 +66,7 @@ function Typography({
       ) : variant === 'h6' ? (
         <h6>{children}</h6>
       ) : variant === 'label' ? (
-        <label htmlFor="te">{children}</label>
+        <label htmlFor={htmlFor}>{children}</label>
       ) : (
         <span>{children}</span>
       )}
@@ -77,6 +79,7 @@ Typography.defaultProps = {
   small: false,
   align: 'left',
   styleName: undefined,
+  htmlFor: undefined,
 };
 
 export default Typography;

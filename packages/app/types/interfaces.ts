@@ -224,7 +224,9 @@ export interface Locale {
     };
     me: {
       createProject: string;
-      projectName: string;
+      projectTitle: string;
+      projectDescription: string;
+      projectDesPlaceholder: string;
     };
     common: {
       formDesc: string;

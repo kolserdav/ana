@@ -9,6 +9,11 @@ $tab-title-default-opacity: 0.3;
   margin-top: $form-item-margin-top;
   margin-bottom: calc($form-item-margin-top * 2);
 
+  .label {
+    margin-left: calc($input-padding + $label-padding);
+    font-size: $input-font-size;
+  }
+
   &.error {
     margin-bottom: 0;
   }

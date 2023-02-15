@@ -5,19 +5,34 @@ import { TINY_API_KEY } from '../../utils/constants';
 import { Theme } from '../../Theme';
 import s from './HtmlEditor.module.scss';
 import { HTMLEditorOnChange } from '../../types';
+import Typography from './Typography';
+import { ubuntu500 } from '../../fonts/ubuntu';
 
 export default function HtmlEditor({
   onChange,
   theme,
+  id,
+  label,
+  placeholder,
 }: {
   onChange: HTMLEditorOnChange;
+  id: string;
   theme: Theme;
+  label: string;
+  placeholder: string;
 }) {
   const [loaded, setLoaded] = useState<boolean>(false);
   const editorRef = useRef(null);
-
   return (
     <div className={clsx(s.wrapper, loaded ? s.loaded : '')}>
+      <Typography
+        className={clsx(s.label, ubuntu500.className)}
+        htmlFor={id}
+        theme={theme}
+        variant="label"
+      >
+        {label}
+      </Typography>
       <Editor
         onInit={(evt, editor) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,12 +40,16 @@ export default function HtmlEditor({
           setLoaded(true);
         }}
         onChange={onChange}
+        id={id}
         apiKey={TINY_API_KEY}
         init={{
           language: 'ru',
-          height: 500,
+          min_height: 300,
           skin: theme.type === 'dark' ? 'oxide-dark' : undefined,
           menubar: false,
+          elementpath: false,
+          placeholder,
+          branding: false,
           plugins: [
             'advlist',
             'advcode',
@@ -52,14 +71,25 @@ export default function HtmlEditor({
             'insertdatetime',
             'media',
             'table',
-            'wordcount',
             'image',
           ],
           toolbar:
-            'undo redo | casechange blocks | bold italic backcolor | ' +
+            'undo redo | casechange blocks | bold italic underline | ' +
             'alignleft aligncenter alignright alignjustify | ' +
             'bullist numlist checklist outdent indent | table image |  removeformat',
-          content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:14px; background-color: ${theme.paper}; color: ${theme.text}}`,
+          content_style: `
+            .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
+              color: ${theme.text};
+              opacity: 0.5;
+            }
+            body { 
+              font-family:Helvetica,Arial,sans-serif; font-size:14px;
+              background-color: ${theme.paper};
+              color: ${theme.text};
+              cursor: text;
+              min-height: 300px;
+            }
+            `,
         }}
       />
     </div>

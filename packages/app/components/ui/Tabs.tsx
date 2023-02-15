@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { ubuntu400, ubuntu700 } from '../../fonts/ubuntu';
+import { ubuntu400, ubuntu500, ubuntu700 } from '../../fonts/ubuntu';
 import { Theme } from '../../Theme';
 import { Tab } from '../../types/interfaces';
 import { TAB_INDEX_DEFAULT } from '../../utils/constants';
@@ -55,7 +55,7 @@ function Tabs({
 
   return (
     <div className={clsx(s.wrapper, ubuntu400.className, error ? s.error : '')}>
-      <Typography theme={theme} variant="label">
+      <Typography className={clsx(s.label, ubuntu500.className)} theme={theme} variant="label">
         {label}
       </Typography>
       <div
