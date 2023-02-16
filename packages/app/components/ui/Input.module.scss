@@ -7,6 +7,10 @@
   margin-top: $form-item-margin-top;
   flex-direction: column;
 
+  &.hidden {
+    display: none;
+  }
+
   label {
     position: absolute;
     cursor: text;
@@ -75,5 +79,9 @@
   .error {
     margin-bottom: -1px;
     font-size: small;
+  }
+
+  input[type='file'] {
+    padding: $input-padding;
   }
 }

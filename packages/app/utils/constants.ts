@@ -27,6 +27,7 @@ export enum Pages {
 
 const now = new Date();
 const dateFormat = 'yyyy-MM-dd';
+export const DATE_NOW = format(now, dateFormat);
 now.setDate(now.getDate() + 1);
 export const MIN_DATE_ACTUAL = format(now, dateFormat);
 now.setFullYear(now.getFullYear() + 1);

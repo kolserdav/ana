@@ -797,3 +797,35 @@ export const useErrorDialog = () => {
 
   return { errorDialogOpen, setErrorDialogOpen };
 };
+
+export const useRedirect = ({
+  user,
+}: {
+  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+}) => {
+  const router = useRouter();
+  const { r } = useQueryString<{ r?: string }>();
+
+  /**
+   * Check is logged
+   */
+  useEffect(() => {
+    if (user) {
+      if (r) {
+        router.push(r);
+        return;
+      }
+      const { role } = user;
+      switch (role) {
+        case 'employer':
+          router.push(Pages.meEmployer);
+          break;
+        case 'worker':
+          router.push(Pages.meWorker);
+          break;
+        default:
+          router.push(Pages.home);
+      }
+    }
+  }, [user, router, r]);
+};

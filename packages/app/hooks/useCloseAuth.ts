@@ -14,7 +14,7 @@ export default function useCloseAuth({
 
   useEffect(() => {
     if (!user && userLoad) {
-      router.push(Pages.signIn);
+      router.push(`${Pages.signIn}?r=${router.asPath}`);
     }
   }, [user, router, userLoad]);
 }

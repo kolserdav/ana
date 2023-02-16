@@ -228,6 +228,9 @@ export interface Locale {
       projectDescription: string;
       projectDesPlaceholder: string;
       projectActualFor: string;
+      projectAddFiles: string;
+      projectAddFilesDesc: string;
+      projectDragDropFiles: string;
     };
     common: {
       formDesc: string;

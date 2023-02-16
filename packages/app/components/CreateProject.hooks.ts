@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
+import { DATE_NOW } from '../utils/constants';
 
 export const useDescriptionInput = () => {
   const [description, setDescription] = useState('');
@@ -36,4 +37,67 @@ export const useEndDateInput = () => {
     setEndDate(e.target.value);
   };
   return { endDate, onChangeEndDate };
+};
+
+export const useInputFiles = () => {
+  const inputFilesRef = useRef<HTMLInputElement>(null);
+
+  const [files, setFiles] = useState<FileList[]>([]);
+  const [filesActive, setFilesActive] = useState<boolean>(false);
+
+  const saveLocalFiles = (_files: FileList) => {
+    let filesCopy = files.slice();
+    filesCopy = filesCopy.concat(_files);
+    setFiles(filesCopy);
+  };
+
+  const onChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { files: _files },
+    } = e;
+    if (!_files) {
+      return;
+    }
+    saveLocalFiles(_files);
+  };
+
+  const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const {
+      dataTransfer: { files: _files },
+    } = e;
+    if (!_files) {
+      return;
+    }
+    saveLocalFiles(_files);
+    setFilesActive(false);
+  };
+
+  const onDragOverFiles = (ev: React.DragEvent<HTMLDivElement>) => {
+    ev.preventDefault();
+    setFilesActive(true);
+  };
+
+  const onDragLeave = () => {
+    setFilesActive(false);
+  };
+
+  const onClickAddFiles = () => {
+    const { current } = inputFilesRef;
+    if (!current) {
+      return;
+    }
+    current.click();
+  };
+
+  return {
+    onChangeFiles,
+    files,
+    onDropFiles,
+    onDragOverFiles,
+    filesActive,
+    onDragLeave,
+    onClickAddFiles,
+    inputFilesRef,
+  };
 };

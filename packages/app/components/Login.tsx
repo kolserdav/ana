@@ -3,7 +3,7 @@ import useConnId from '../hooks/useConnId';
 import useLoad from '../hooks/useLoad';
 import useWS from '../hooks/useWS';
 import { Theme } from '../Theme';
-import { Locale } from '../types/interfaces';
+import { Locale, MessageType, SendMessageArgs } from '../types/interfaces';
 import { LOAD_PAGE_DURATION, Pages, TAB_INDEX_DEFAULT } from '../utils/constants';
 import {
   useCheckPage,
@@ -16,6 +16,7 @@ import {
   useButton,
   useClean,
   useErrorDialog,
+  useRedirect,
 } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
@@ -30,10 +31,12 @@ function Login({
   theme,
   locale,
   formDesc,
+  user,
 }: {
   theme: Theme;
   locale: Locale['app']['login'];
   formDesc: string;
+  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
 }) {
   const { ws } = useWS({ protocol: 'login' });
 
@@ -162,6 +165,8 @@ function Login({
     setPageError,
     onClickLoginButton,
   });
+
+  useRedirect({ user });
 
   return (
     <div className={s.wrapper}>

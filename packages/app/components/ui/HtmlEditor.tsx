@@ -44,6 +44,7 @@ export default function HtmlEditor({
           }}
           onChange={onChange}
           id={id}
+          key={theme.paper}
           apiKey={TINY_API_KEY}
           init={{
             language: 'ru',

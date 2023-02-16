@@ -142,7 +142,7 @@ function AppBar({
         <button
           type="button"
           className={clsx(s.expand__less, showExpandLess ? s.open : '')}
-          style={{ backgroundColor: theme.active }}
+          style={{ backgroundColor: theme.active, border: `1px groove ${theme.paper}` }}
           onClick={scrollToTop}
         >
           <ChevronUpIcon />

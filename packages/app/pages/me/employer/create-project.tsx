@@ -19,7 +19,7 @@ interface EmployerPageProps extends AppProps {
 }
 
 export default function MeEmployerCreateProjectPage({
-  app: { user, theme, userLoad },
+  app: { user, theme, userLoad, touchpad },
   localeAppBar,
   localeMeEmployer,
   localeCommon,
@@ -35,7 +35,12 @@ export default function MeEmployerCreateProjectPage({
       </Head>
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <CreateProject locale={localeMeEmployer} formDesc={localeCommon.formDesc} theme={theme} />
+        <CreateProject
+          touchpad={touchpad}
+          locale={localeMeEmployer}
+          formDesc={localeCommon.formDesc}
+          theme={theme}
+        />
       </main>
     </>
   );

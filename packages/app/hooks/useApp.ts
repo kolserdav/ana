@@ -7,6 +7,7 @@ import { setBodyScroll } from '../utils/lib';
 
 export default function useApp() {
   const [load, setLoad] = useState<boolean>(true);
+  const [touchpad, setTouchpad] = useState<boolean>(false);
 
   const { theme } = useTheme();
 
@@ -58,5 +59,15 @@ export default function useApp() {
     };
   }, []);
 
-  return { load, setLoad, theme };
+  useEffect(() => {
+    const touchpadHandler = () => {
+      setTouchpad(true);
+    };
+    window.addEventListener('touchstart', touchpadHandler);
+    return () => {
+      window.removeEventListener('touchstart', touchpadHandler);
+    };
+  }, []);
+
+  return { load, setLoad, theme, touchpad };
 }

@@ -1,13 +1,10 @@
 import Head from 'next/head';
 import { GetStaticPropsContext } from 'next';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import s from '../../styles/Page.module.scss';
 import Login from '../../components/Login';
 import { LoginProps } from '../../types';
 import AppBar from '../../components/AppBar';
 import { getStaticPropsLogin } from '../../utils/getStaticProps';
-import { Pages } from '../../utils/constants';
 import LoaderFull from '../../components/ui/LoaderFull';
 
 export default function HomePage({
@@ -17,27 +14,6 @@ export default function HomePage({
   localeCommon,
   app: { theme, user, userLoad },
 }: LoginProps) {
-  const router = useRouter();
-
-  /**
-   * Check is logged
-   */
-  useEffect(() => {
-    if (user) {
-      const { role } = user;
-      switch (role) {
-        case 'employer':
-          router.push(Pages.meEmployer);
-          break;
-        case 'worker':
-          router.push(Pages.meWorker);
-          break;
-        default:
-          router.push(Pages.home);
-      }
-    }
-  }, [user, router]);
-
   return (
     <>
       <Head>
@@ -47,7 +23,7 @@ export default function HomePage({
       </Head>
       <AppBar theme={theme} withoutExpandLess locale={localeAppBar} user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Login formDesc={localeCommon.formDesc} theme={theme} locale={localeLogin} />
+        <Login formDesc={localeCommon.formDesc} theme={theme} locale={localeLogin} user={user} />
       </main>
       <LoaderFull open={!userLoad} noOpacity />
     </>

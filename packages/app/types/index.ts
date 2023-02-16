@@ -27,6 +27,7 @@ export interface AppProps {
     theme: Theme;
     user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
     userLoad: boolean;
+    touchpad: boolean;
   };
 }
 

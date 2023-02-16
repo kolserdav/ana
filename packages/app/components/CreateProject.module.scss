@@ -5,9 +5,45 @@
   width: 100%;
   height: 100%;
   display: flex;
+  cursor: default;
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
+
+  .files {
+    position: relative;
+    border-radius: $html-editor-border-radius;
+    min-height: 150px;
+    padding: $label-left;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: $input-margin-bottom;
+    margin-bottom: calc($input-margin-bottom / 2);
+
+    .button__files {
+      position: absolute;
+      top: 0;
+    }
+
+    &.active {
+      cursor: copy;
+      opacity: 0.5;
+    }
+
+    .drag__desc {
+      position: absolute;
+      right: $label-left;
+      font-size: large;
+    }
+  }
+
+  .files__desc {
+    position: relative;
+    font-size: small;
+    margin-bottom: calc($input-margin-bottom / 2);
+  }
 
   .container {
     position: relative;
