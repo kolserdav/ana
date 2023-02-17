@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "prisma": {
-    "schema": "./server/orm/schema.prisma"
+    "schema": "./packages/server/orm/schema.prisma"
   },
   "scripts": {
     "build:app": "cd packages/app && npm run build",

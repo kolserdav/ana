@@ -1,5 +1,8 @@
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
+dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
+
+export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
 export const HOST = process.env.HOST as string;
 export const SMTP_EMAIL = process.env.SMTP_EMAIL as string;
@@ -18,7 +21,6 @@ export const FASTIFY_LOGGER = process.env.FASTIFY_LOGGER === 'true';
 
 export const MASTER_QUEUE = 'master';
 export const WORKER_QUEUE = 'worker';
-export const APPLICATION_JSON = 'application/json';
 export const QUEUE_MAX_SIZE = 2_000_000_000;
 export const RABBITMQ_RECONNECT_TIMEOUT = 2000;
 export const REDIS_CACHE_TIMEOUT = 2;

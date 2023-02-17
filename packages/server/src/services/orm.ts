@@ -32,6 +32,22 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public fileCreateW: Database['fileCreateW'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'file',
+      command: 'create',
+    });
+  };
+
+  public fileUpdateW: Database['fileUpdateW'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'file',
+      command: 'update',
+    });
+  };
+
   public userCreate: Database['userCreate'] = async (args) => {
     return this.run({
       args,
@@ -101,6 +117,8 @@ export class ORM extends Service implements Database {
         skip,
         code: 400,
         stdErrMessage,
+        _command: command,
+        _model: model,
         take,
         count,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -122,6 +140,8 @@ export class ORM extends Service implements Database {
           status: isNotFound ? 'warning' : 'info',
           data: result,
           code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
+          _command: command,
+          _model: model,
           skip,
           take,
           count,
@@ -147,6 +167,8 @@ export class ORM extends Service implements Database {
         skip,
         code: 500,
         stdErrMessage: err.message,
+        _command: command,
+        _model: model,
         take,
         count,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -159,6 +181,8 @@ export class ORM extends Service implements Database {
       status: isNotFound ? 'warning' : 'info',
       data: result,
       code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
+      _command: command,
+      _model: model,
       skip,
       take,
       count,
@@ -172,7 +196,8 @@ export class ORM extends Service implements Database {
     return new Promise<any>((resolve) => {
       const { master, handler } = this.listenMasterMessages<MessageType.DB_RESULT>(
         ({ msg: { id: _id, data } }) => {
-          if (id === _id) {
+          // FIXME check timeout
+          if (id === _id && command === data._command && model === data._model) {
             if (data.status === this.errorStatus) {
               log('warn', 'Database request failed', { args });
             }

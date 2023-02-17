@@ -42,6 +42,7 @@ export enum MessageType {
   AUTH = 'AUTH',
   GET_USER_FIND_FIRST = 'GET_USER_FIND_FIRST',
   SET_USER_FIND_FIRST = 'SET_USER_FIND_FIRST',
+  SET_FILE_UPLOAD = 'SET_FILE_UPLOAD',
 }
 export type LocaleValue = 'ru';
 export interface RequestContext {
@@ -61,6 +62,8 @@ export interface Result<T> {
   data: T;
   code: number;
   stdErrMessage?: string;
+  _model?: keyof PrismaClient;
+  _command?: Prisma.PrismaAction;
   skip?: number | undefined;
   take?: number | undefined;
   count?: number | undefined;
@@ -142,6 +145,8 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? Prisma.UserFindFirstArgs
   : T extends MessageType.SET_USER_FIND_FIRST
   ? Omit<User, 'password' | 'salt'> | null
+  : T extends MessageType.SET_USER_FIND_FIRST
+  ? null
   : unknown;
 
 export interface Tab {
@@ -245,6 +250,7 @@ export enum Api {
   postPageFindManyV1 = '/v1/page-get-fields.php',
   postUserCreateV1 = '/v1/user-create.php',
   getUserFindFirst = '/v1/user-find-first.php',
+  postFileUpload = '/v1/file-upload.php',
 }
 
 export type WSProtocol = 'test' | 'login' | 'confirm-email';
@@ -253,6 +259,7 @@ export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';
 export const AUTHORIZATION_HEADER = 'authorization';
 export const TIMEOUT_HEADER = 'timeout';
+export const APPLICATION_JSON = 'application/json';
 
 export function checkEmail(email: string): boolean {
   return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(

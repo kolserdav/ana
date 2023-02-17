@@ -1,6 +1,5 @@
 import { RequestHandler } from '../../types';
-import { APPLICATION_JSON } from '../../utils/constants';
-import { Locale, Result } from '../../types/interfaces';
+import { Locale, Result, APPLICATION_JSON } from '../../types/interfaces';
 import { parseHeaders, getLocale } from '../../utils/lib';
 
 const getLocaleHandler: RequestHandler<

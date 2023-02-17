@@ -1,7 +1,6 @@
 import { RequestHandler } from '../../../types';
-import { APPLICATION_JSON } from '../../../utils/constants';
 import HandleRequests from '../../../services/handleRequests';
-import { MessageType, SendMessageArgs } from '../../../types/interfaces';
+import { MessageType, SendMessageArgs, APPLICATION_JSON } from '../../../types/interfaces';
 import { parseHeaders } from '../../../utils/lib';
 
 const handleRequests = new HandleRequests({});

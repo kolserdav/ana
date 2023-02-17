@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { format } from 'date-fns';
+import fs from 'fs';
 import { IncomingHttpHeaders } from 'http';
 import ru from '../locales/ru/lang';
 import {
@@ -92,4 +93,10 @@ export const checkIsFind = (command: Prisma.PrismaAction) => /^find/.test(comman
 
 export const getHttpCode = (status: Status) => {
   return status === 'warn' ? 404 : 500;
+};
+
+export const createDir = (dirPath: string) => {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath);
+  }
 };

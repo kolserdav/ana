@@ -10,6 +10,7 @@ import {
   MessageType,
   TIMEOUT_HEADER,
   AUTHORIZATION_HEADER,
+  APPLICATION_JSON,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -24,32 +25,42 @@ class Request {
 
   // eslint-disable-next-line class-methods-use-this
   private async send({
-    body,
+    body: _body,
     url,
     id,
     locale,
     method,
+    contentType = APPLICATION_JSON,
   }: {
     url: string;
     id?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body?: any;
     locale?: string;
+    contentType?: string | null;
     method: 'GET' | 'POST' | 'UPDATE' | 'DELETE';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }): Promise<any> {
     return new Promise((resolve) => {
       log('info', 'Send request', { method, url });
+      const headers: RequestInit['headers'] = {
+        [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || LOCALE_DEFAULT,
+        [USER_ID_HEADER]: id || getCookie(CookieName._uuid) || '',
+        [AUTHORIZATION_HEADER]: getCookie(CookieName._utoken) || '',
+        [TIMEOUT_HEADER]: new Date().getTime().toString(),
+      };
+      if (contentType !== null) {
+        headers['Content-Type'] = contentType || APPLICATION_JSON;
+      }
+      const body = _body
+        ? contentType === APPLICATION_JSON
+          ? JSON.stringify(_body)
+          : _body
+        : undefined;
       fetch(`${SERVER}${url}`, {
-        body: body ? JSON.stringify(body) : undefined,
+        body,
         method,
-        headers: {
-          [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || LOCALE_DEFAULT,
-          [USER_ID_HEADER]: id || getCookie(CookieName._uuid) || '',
-          [AUTHORIZATION_HEADER]: getCookie(CookieName._utoken) || '',
-          [TIMEOUT_HEADER]: new Date().getTime().toString(),
-          'Content-Type': 'application/json',
-        },
+        headers,
       })
         .then((d) => {
           resolve(d.json());
@@ -93,6 +104,15 @@ class Request {
     Prisma.CheckSelect<T, Result<Array<Page>>, Promise<Result<Array<Prisma.PageGetPayload<T>>>>>
   > {
     return this.send({ url: Api.postPageFindManyV1, method: 'POST', body: args });
+  }
+
+  public async fileUpload(files: FormData) {
+    return this.send({
+      url: Api.postFileUpload,
+      method: 'POST',
+      body: files,
+      contentType: null,
+    });
   }
 }
 

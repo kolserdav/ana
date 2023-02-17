@@ -2,8 +2,8 @@
 const { existsSync, copyFile } = require('fs');
 const { resolve } = require('path');
 
-const srcPath = resolve(__dirname, '../packages/server/.env.example');
-const destPath = resolve(__dirname, '../packages/server/.env');
+const srcPath = resolve(__dirname, '../.env.example');
+const destPath = resolve(__dirname, '../.env');
 
 const srcPathC = resolve(__dirname, '../packages/app/.env.example');
 const destPathC = resolve(__dirname, '../packages/app/.env');

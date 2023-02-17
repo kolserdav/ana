@@ -4,3 +4,5 @@ redis
 rabbitmq
 data
 tmp
+.env
+cloud

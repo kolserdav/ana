@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
-import { DATE_NOW } from '../utils/constants';
+import Request from '../utils/request';
+
+const request = new Request();
 
 export const useDescriptionInput = () => {
   const [description, setDescription] = useState('');
@@ -45,7 +47,13 @@ export const useInputFiles = () => {
   const [files, setFiles] = useState<FileList[]>([]);
   const [filesActive, setFilesActive] = useState<boolean>(false);
 
-  const saveLocalFiles = (_files: FileList) => {
+  const saveLocalFiles = async (_files: FileList) => {
+    const formData = new FormData();
+    for (let i = 0; _files[i]; i++) {
+      formData.append(`file-${i}`, _files[i]);
+    }
+    const res = await request.fileUpload(formData);
+    console.log(res);
     let filesCopy = files.slice();
     filesCopy = filesCopy.concat(_files);
     setFiles(filesCopy);

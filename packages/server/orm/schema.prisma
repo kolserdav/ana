@@ -46,19 +46,22 @@ model Page {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  name        String        @db.VarChar(24)
-  surname     String        @db.VarChar(35)
-  email       String        @unique @db.VarChar(255)
-  confirm     Boolean       @default(false)
-  online      Boolean       @default(true)
-  role        Role
-  password    String        @db.VarChar(64)
-  salt        String        @db.VarChar(32)
-  updated     DateTime      @default(now())
-  created     DateTime      @default(now())
-  RestoreLink RestoreLink[]
-  ConfirmLink ConfirmLink[]
+  id              String        @id @default(uuid())
+  name            String        @db.VarChar(24)
+  surname         String        @db.VarChar(35)
+  email           String        @unique @db.VarChar(255)
+  confirm         Boolean       @default(false)
+  online          Boolean       @default(true)
+  role            Role
+  password        String        @db.VarChar(64)
+  salt            String        @db.VarChar(32)
+  updated         DateTime      @default(now())
+  created         DateTime      @default(now())
+  RestoreLink     RestoreLink[]
+  ConfirmLink     ConfirmLink[]
+  ProjectWorker   Project[]     @relation("Worker")
+  ProjectEmployer Project[]     @relation("Employer")
+  File            File[]
 }
 
 model RestoreLink {
@@ -73,4 +76,62 @@ model ConfirmLink {
   userId  String
   User    User     @relation(fields: [userId], references: [id])
   created DateTime @default(now())
+}
+
+model Project {
+  id          String       @id @default(uuid())
+  title       String       @db.VarChar(255)
+  description String       @db.MediumText
+  closed      Boolean      @default(false)
+  employerId  String?
+  Employer    User?        @relation("Employer", fields: [employerId], references: [id])
+  workerId    String?
+  Worker      User?        @relation("Worker", fields: [workerId], references: [id])
+  end         DateTime     @default(now())
+  File        File[]
+  updated     DateTime     @default(now())
+  created     DateTime     @default(now())
+  ProjectTag  ProjectTag[]
+}
+
+model File {
+  id        String   @id @default(uuid())
+  filename  String
+  encoding  String
+  mimetype  String
+  fieldname String
+  size      Int?
+  projectId String?
+  userId    String
+  User      User     @relation(fields: [userId], references: [id])
+  Project   Project? @relation(fields: [projectId], references: [id])
+  updated   DateTime @default(now())
+  created   DateTime @default(now())
+}
+
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String
+  updated DateTime @default(now())
+  created DateTime @default(now())
+  Tag     Tag[]
+}
+
+model ProjectTag {
+  id        Int      @id @default(autoincrement())
+  projectId String
+  Project   Project  @relation(fields: [projectId], references: [id])
+  tagId     Int
+  Tag       Tag      @relation(fields: [tagId], references: [id])
+  created   DateTime @default(now())
+}
+
+model Tag {
+  id         Int          @id @default(autoincrement())
+  name       String
+  categoryId Int
+  Category   Category     @relation(fields: [categoryId], references: [id])
+  updated    DateTime     @default(now())
+  created    DateTime     @default(now())
+  ProjectTag ProjectTag[]
 }

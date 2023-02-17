@@ -41,6 +41,7 @@ class HandleRequests extends Service {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = new Promise<SendMessageArgs<any>>((resolve) => {
       const { master, handler } = this.listenMasterMessages((_msg) => {
+        // FIXME check timeout
         if (_msg.protocol === protocol && _msg.msg.id === msg.id) {
           master.removeListener('message', handler);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,6 +1,5 @@
 import { RequestHandler } from '../../../types';
-import { APPLICATION_JSON } from '../../../utils/constants';
-import { Result } from '../../../types/interfaces';
+import { Result, APPLICATION_JSON } from '../../../types/interfaces';
 import { ORM } from '../../../services/orm';
 import { Page, Prisma } from '@prisma/client';
 
