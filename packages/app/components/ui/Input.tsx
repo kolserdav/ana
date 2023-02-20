@@ -29,6 +29,7 @@ const Input = forwardRef<
     max?: string | number;
     multiple?: boolean;
     hidden?: boolean;
+    desc?: string;
   }
 >(
   (
@@ -52,6 +53,7 @@ const Input = forwardRef<
       max,
       multiple,
       hidden,
+      desc,
     },
     ref
   ) => {
@@ -138,8 +140,9 @@ const Input = forwardRef<
         >
           {name}
         </label>
-        <span style={{ color: theme.yellow }} className={s.error}>
-          {error}
+        <span className={s.desc}>
+          <span style={{ color: theme.yellow }}>{error}</span>
+          <span style={{ color: theme.text }}>{desc}</span>
         </span>
       </div>
     );
@@ -162,6 +165,7 @@ Input.defaultProps = {
   max: undefined,
   multiple: undefined,
   hidden: undefined,
+  desc: undefined,
 };
 
 export default Input;

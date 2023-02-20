@@ -12,6 +12,7 @@ import {
   Status,
   AUTHORIZATION_HEADER,
   TIMEOUT_HEADER,
+  IMAGE_EXT,
 } from '../types/interfaces';
 import { APP_URL, IS_DEV, LOG_LEVEL } from './constants';
 
@@ -110,3 +111,6 @@ export const getFileExt = (filename: string): string => {
   }
   return fileE[0];
 };
+
+export const changeImgExt = ({ name, ext }: { name: string; ext: string }) =>
+  name.replace(new RegExp(`${ext}$`), IMAGE_EXT);

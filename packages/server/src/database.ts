@@ -33,8 +33,14 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<File | null>, Promise<Result<Prisma.FileGetPayload<T> | null>>>
   >;
 
-  public abstract fileUpdateW<T extends Prisma.FileUpdateArgs>(
+  public abstract fileUpdate<T extends Prisma.FileUpdateArgs>(
     args: Prisma.SelectSubset<T, Prisma.FileUpdateArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<File | null>, Promise<Result<Prisma.FileGetPayload<T> | null>>>
+  >;
+
+  public abstract fileDelete<T extends Prisma.FileDeleteArgs>(
+    args: Prisma.SelectSubset<T, Prisma.FileDeleteArgs>
   ): Promise<
     Prisma.CheckSelect<T, Result<File | null>, Promise<Result<Prisma.FileGetPayload<T> | null>>>
   >;

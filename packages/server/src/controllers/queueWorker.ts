@@ -4,8 +4,10 @@ import { log } from '../utils/lib';
 import User from '../components/User';
 import { Protocol } from '../types';
 import { MASTER_QUEUE, WORKER_QUEUE } from '../utils/constants';
+import File from '../components/File';
 
 const user = new User();
+const file = new File();
 
 class QueueWorker extends AMQP {
   private protocol: Protocol;
@@ -20,7 +22,8 @@ class QueueWorker extends AMQP {
   }
 
   private async test(msg: SendMessageArgs<MessageType.TEST>) {
-    this.amqp.sendToQueue(msg);
+    const _msg: Required<SendMessageArgs<MessageType.TEST>> = { ...msg } as any;
+    this.amqp.sendToQueue(_msg);
   }
 
   private async handleQueues() {
@@ -69,6 +72,9 @@ class QueueWorker extends AMQP {
           break;
         case MessageType.GET_FILE_FIND_MANY:
           await user.getFileFindMany(msg, this.amqp);
+          break;
+        case MessageType.GET_FILE_UPLOAD:
+          await file.fileChangeExt(msg, this.amqp);
           break;
         default:
           log('warn', 'Default case of consume queue', msg);

@@ -19,15 +19,18 @@
   "dependencies": {
     "@fastify/middie": "^8.1.0",
     "@fastify/multipart": "^7.4.1",
+    "@fastify/static": "^6.9.0",
     "amqplib": "^0.10.3",
     "cors": "^2.8.5",
     "fastify": "^4.13.0",
     "redis": "^4.5.1",
+    "sharp": "^0.31.3",
     "ws": "^8.12.0"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
     "@types/cors": "^2.8.13",
+    "@types/sharp": "^0.31.1",
     "@types/ws": "^8.5.4",
     "dotenv": "^16.0.3"
   }

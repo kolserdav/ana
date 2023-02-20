@@ -1,8 +1,14 @@
 import { format } from 'date-fns';
-import { Page } from '@prisma/client';
+import { File, Page } from '@prisma/client';
 import storeAlert, { changeAlert } from '../store/alert';
-import { LogLevel } from '../types/interfaces';
-import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from './constants';
+import {
+  CLOUD_PREFIX,
+  IMAGE_EXT,
+  LogLevel,
+  MessageType,
+  SendMessageArgs,
+} from '../types/interfaces';
+import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS, SERVER } from './constants';
 import { PageFull } from '../types';
 
 export const isDev = () => process.env.NODE_ENV === 'development';
@@ -105,3 +111,6 @@ export const checkRouterPath = (asPath: string, checkValue: string | string[]) =
   });
   return checkMany;
 };
+
+export const getImagePath = ({ id, userId }: File) =>
+  `${SERVER}${CLOUD_PREFIX}/${userId}/${id}${IMAGE_EXT}`;

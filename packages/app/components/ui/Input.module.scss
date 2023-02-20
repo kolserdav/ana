@@ -76,9 +76,13 @@
     }
   }
 
-  .error {
-    margin-bottom: -1px;
+  .desc {
+    margin-top: calc($input-margin-bottom * -1);
+    height: $input-margin-bottom;
     font-size: small;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   input[type='file'] {

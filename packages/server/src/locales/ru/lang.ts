@@ -15,6 +15,7 @@ const lang: Locale = {
     successConfirmEmail: 'Данная почта успешно подтверждена',
     forbidden: 'Доступ запрещен',
     unauthorized: 'Недостаточно прав',
+    someFilesNotSaved: 'Некоторые файлы не могут быть сохранены',
   },
   app: {
     login: {

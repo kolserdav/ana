@@ -1,10 +1,17 @@
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useRef } from 'react';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
 import { Locale } from '../types/interfaces';
-import { MAX_DATE_ACTUAL, MIN_DATE_ACTUAL } from '../utils/constants';
+import {
+  IMAGE_PREVIEW_WIDTH,
+  MAX_DATE_ACTUAL,
+  MIN_DATE_ACTUAL,
+  PROJECT_TITLE_MAX,
+} from '../utils/constants';
+import { getImagePath } from '../utils/lib';
 import {
   useDescriptionInput,
   useEndDateInput,
@@ -12,7 +19,9 @@ import {
   useTitleInput,
 } from './CreateProject.hooks';
 import s from './CreateProject.module.scss';
+import DeleteIcon from './icons/Delete';
 import Button from './ui/Button';
+import IconButton from './ui/IconButton';
 import Input from './ui/Input';
 import Typography from './ui/Typography';
 
@@ -66,6 +75,7 @@ function CreateProject({
           value={title}
           onChange={onChangeTitle}
           name={`${locale.projectTitle}*`}
+          desc={`${title.length}/${PROJECT_TITLE_MAX}`}
           theme={theme}
         />
         <div className={s.html__editor}>
@@ -87,14 +97,14 @@ function CreateProject({
           value={endDate}
           onChange={onChangeEndDate}
         />
-        <div
-          className={clsx(s.files, filesActive ? s.active : '')}
-          style={{ backgroundColor: theme.active }}
-          ref={filesRef}
-          onDrop={onDropFiles}
-          onDragOver={onDragOverFiles}
-          onDragLeave={onDragLeave}
-        >
+        <div className={s.files_container} style={{ backgroundColor: theme.active }}>
+          {!filesActive && (
+            <div className={s.button__files}>
+              <Button theme={theme} onClick={onClickAddFiles}>
+                {locale.projectAddFiles}
+              </Button>
+            </div>
+          )}
           <Input
             ref={inputFilesRef}
             type="file"
@@ -107,18 +117,32 @@ function CreateProject({
             name={locale.projectAddFiles}
             theme={theme}
           />
-          {!filesActive && (
-            <div className={s.button__files}>
-              <Button theme={theme} onClick={onClickAddFiles}>
-                {locale.projectAddFiles}
-              </Button>
-            </div>
-          )}
-          {files.length === 0 && !filesActive && !touchpad && (
-            <div className={s.drag__desc} style={{ color: theme.text }}>
-              {locale.projectDragDropFiles}
-            </div>
-          )}
+          <div
+            className={clsx(s.files, filesActive ? s.active : '')}
+            ref={filesRef}
+            onDrop={onDropFiles}
+            onDragOver={onDragOverFiles}
+            onDragLeave={onDragLeave}
+          >
+            {files.length === 0 && !filesActive && !touchpad && (
+              <div className={s.drag__desc} style={{ color: theme.text }}>
+                {locale.projectDragDropFiles}
+              </div>
+            )}
+            {files.map((item) => (
+              <div className={s.item} key={item.id}>
+                <Image
+                  width={IMAGE_PREVIEW_WIDTH}
+                  height={IMAGE_PREVIEW_WIDTH / (item.coeff || 1)}
+                  src={getImagePath(item)}
+                  alt=""
+                />
+                <IconButton>
+                  <DeleteIcon color={theme.text} />
+                </IconButton>
+              </div>
+            ))}
+          </div>
         </div>
         <div className={s.files__desc} style={{ color: theme.text }}>
           {locale.projectAddFilesDesc}

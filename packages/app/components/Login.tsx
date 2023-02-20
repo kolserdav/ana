@@ -85,24 +85,6 @@ function Login({
 
   const { tabActive, onClickTab, setTabsError, tabsError, setTabActive } = useTabs();
 
-  const { cleanAllFields } = useClean({
-    setEmail,
-    setEmailError,
-    setName,
-    setNameError,
-    setPassword,
-    setPasswordError,
-    setPasswordRepeat,
-    setPasswordRepeatError,
-    setSurname,
-    setSurnameError,
-    setTabActive,
-    setTabsError,
-    setEmailSuccess,
-    setPasswordRepeatSuccess,
-    setPasswordSuccess,
-  });
-
   const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
 
   const { errorDialogOpen, setErrorDialogOpen } = useErrorDialog();
@@ -141,6 +123,25 @@ function Login({
     setLoad,
     setErrorDialogOpen,
     setEmail,
+  });
+
+  const { cleanAllFields } = useClean({
+    setEmail,
+    setEmailError,
+    setName,
+    setNameError,
+    setPassword,
+    setPasswordError,
+    setPasswordRepeat,
+    setPasswordRepeatError,
+    setSurname,
+    setSurnameError,
+    setTabActive,
+    setTabsError,
+    setEmailSuccess,
+    setPasswordRepeatSuccess,
+    setPasswordSuccess,
+    setButtonError,
   });
 
   useChangeLocation(() => {
@@ -310,7 +311,12 @@ function Login({
                 : locale.loginButton}
             </Button>
             {!isSignUp && !isRestore && !isChangePass && (
-              <Link disabled={load} theme={theme} href={Pages.restorePassword}>
+              <Link
+                className={s.forgot__link}
+                disabled={load}
+                theme={theme}
+                href={Pages.restorePassword}
+              >
                 {locale.forgotPassword}
               </Link>
             )}

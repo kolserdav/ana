@@ -3,13 +3,14 @@ import cors from 'cors';
 import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT } from './utils/constants';
 import { createDir, log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
-import { Api } from './types/interfaces';
+import { Api, CLOUD_PREFIX } from './types/interfaces';
 import getLocaleHandler from './api/v1/get-locale';
 import pageFindManyHandler from './api/v1/page/find-many';
 import getUserFindFirst from './api/v1/user/user-find-first';
 import checkTokenMiddleware from './api/middlewares/checkToken';
 import fileUpload from './api/v1/file/file-upload';
 import getFileFindMany from './api/v1/file/file-find-many';
+import path from 'path';
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -30,6 +31,10 @@ process.on('unhandledRejection', (err: Error) => {
     checkTokenMiddleware
   );
   await fastify.register(import('@fastify/multipart'));
+  await fastify.register(import('@fastify/static'), {
+    root: CLOUD_PATH,
+    prefix: CLOUD_PREFIX,
+  });
 
   fastify.get(Api.testV1, getTestHandler);
   fastify.get(Api.getLocaleV1, getLocaleHandler);

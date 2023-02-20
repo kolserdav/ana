@@ -10,26 +10,40 @@
   justify-content: center;
   padding: 0.5rem;
 
+  .files_container {
+    position: relative;
+    min-height: 150px;
+    border-radius: $html-editor-border-radius;
+    margin-top: $input-margin-bottom;
+    margin-bottom: calc($input-margin-bottom / 2);
+    padding: $label-left;
+
+    .button__files {
+      position: relative;
+      display: block;
+      max-width: calc($small-width / 2);
+      margin-top: calc($label-left * -1);
+    }
+  }
+
   .files {
     position: relative;
-    border-radius: $html-editor-border-radius;
-    min-height: 150px;
-    padding: $label-left;
     display: flex;
     flex-flow: row wrap;
     align-items: center;
     justify-content: space-between;
-    margin-top: $input-margin-bottom;
-    margin-bottom: calc($input-margin-bottom / 2);
-
-    .button__files {
-      position: absolute;
-      top: 0;
-    }
 
     &.active {
       cursor: copy;
       opacity: 0.5;
+    }
+
+    &.item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
     }
 
     .drag__desc {

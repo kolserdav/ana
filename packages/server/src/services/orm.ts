@@ -40,8 +40,16 @@ export class ORM extends Service implements Database {
     });
   };
 
-  public fileUpdateW: Database['fileUpdateW'] = async (args) => {
-    return this.runFromWorker({
+  public fileUpdate: Database['fileUpdate'] = async (args) => {
+    return this.run({
+      args,
+      model: 'file',
+      command: 'update',
+    });
+  };
+
+  public fileDelete: Database['fileDelete'] = async (args) => {
+    return this.run({
       args,
       model: 'file',
       command: 'update',

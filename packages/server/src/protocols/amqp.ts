@@ -79,7 +79,7 @@ class AMQP {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async sendToQueue(msg: SendMessageArgs<any>) {
+  public async sendToQueue<T extends keyof typeof MessageType>(msg: SendMessageArgs<T>) {
     if (!this.channel) {
       log('error', this.chanErr('sendToQueue'), { queue: this.queue });
       return null;

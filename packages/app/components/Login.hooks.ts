@@ -754,8 +754,10 @@ export const useClean = ({
   setEmailSuccess,
   setPasswordRepeatSuccess,
   setPasswordSuccess,
+  setButtonError,
 }: {
   setNameError: React.Dispatch<React.SetStateAction<string>>;
+  setButtonError: React.Dispatch<React.SetStateAction<string>>;
   setTabsError: React.Dispatch<React.SetStateAction<string>>;
   setSurnameError: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
@@ -787,6 +789,7 @@ export const useClean = ({
     setEmailSuccess(false);
     setPasswordRepeatSuccess(false);
     setPasswordSuccess(false);
+    setButtonError('');
   };
 
   return { cleanAllFields };

@@ -13,6 +13,8 @@ export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
 export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
 export const EMAIL_QS = 'e';
 export const KEY_QS = 'k';
+export const CLOUD_PREFIX = '/cloud';
+export const IMAGE_EXT = '.avif';
 
 // eslint-disable-next-line no-shadow
 export enum MessageType {
@@ -42,6 +44,7 @@ export enum MessageType {
   AUTH = 'AUTH',
   GET_USER_FIND_FIRST = 'GET_USER_FIND_FIRST',
   SET_USER_FIND_FIRST = 'SET_USER_FIND_FIRST',
+  GET_FILE_UPLOAD = 'GET_FILE_UPLOAD',
   SET_FILE_UPLOAD = 'SET_FILE_UPLOAD',
   GET_FILE_FIND_MANY = 'GET_FILE_FIND_MANY',
   SET_FILE_FIND_MANY = 'SET_FILE_FIND_MANY',
@@ -147,8 +150,13 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? Prisma.UserFindFirstArgs
   : T extends MessageType.SET_USER_FIND_FIRST
   ? Omit<User, 'password' | 'salt'> | null
+  : T extends MessageType.GET_FILE_UPLOAD
+  ? {
+      filePath: string;
+      file: File;
+    }
   : T extends MessageType.SET_FILE_UPLOAD
-  ? File | null
+  ? null | File
   : T extends MessageType.GET_FILE_FIND_MANY
   ? Prisma.FileFindManyArgs
   : T extends MessageType.SET_FILE_FIND_MANY
@@ -183,6 +191,7 @@ export interface Locale {
     successConfirmEmail: string;
     forbidden: string;
     unauthorized: string;
+    someFilesNotSaved: string;
   };
   app: {
     login: {

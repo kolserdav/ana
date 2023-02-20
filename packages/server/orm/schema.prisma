@@ -101,6 +101,9 @@ model File {
   mimetype  String
   fieldname String
   ext       String   @db.VarChar(5)
+  width     Int?
+  height    Int?
+  coeff     Float?
   size      Int?
   projectId String?
   userId    String

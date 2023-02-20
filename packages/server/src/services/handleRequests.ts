@@ -44,8 +44,6 @@ class HandleRequests extends Service {
       const { master, handler } = this.listenMasterMessages((_msg) => {
         if (_msg.protocol === protocol && _msg.msg.connId === msg.connId) {
           master.removeListener('message', handler);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          _msg.msg.type = msg.type.replace(/^G/, 'S') as any;
           resolve({
             lang: msg.lang,
             timeout: msg.timeout,

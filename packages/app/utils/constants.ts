@@ -48,6 +48,8 @@ export const PASSWORD_MIN_LENGTH = 6;
 // Deps load-page-duration
 export const LOAD_PAGE_DURATION = 900;
 export const LABEL_TRANSITION = '0.2s';
+export const PROJECT_TITLE_MAX = 255;
+export const IMAGE_PREVIEW_WIDTH = 140;
 export const FONT_SUBSETS: (
   | 'cyrillic'
   | 'latin'

@@ -1,6 +1,8 @@
+import { File } from '@prisma/client';
 import { useEffect, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
-import { MessageType, SendMessageArgs } from '../types/interfaces';
+import { MessageType } from '../types/interfaces';
+import { PROJECT_TITLE_MAX } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
 
@@ -28,6 +30,9 @@ export const useTitleInput = () => {
     const {
       target: { value },
     } = e;
+    if (value.length > PROJECT_TITLE_MAX) {
+      return;
+    }
     setTitle(value);
   };
 
@@ -46,8 +51,9 @@ export const useEndDateInput = () => {
 export const useInputFiles = () => {
   const inputFilesRef = useRef<HTMLInputElement>(null);
 
-  const [files, setFiles] = useState<SendMessageArgs<MessageType.SET_FILE_UPLOAD>['data'][]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [filesActive, setFilesActive] = useState<boolean>(false);
+  const [restart, setRestart] = useState<boolean>(false);
 
   const saveLocalFiles = async (_files: FileList) => {
     const formData = new FormData();
@@ -55,13 +61,10 @@ export const useInputFiles = () => {
       formData.append(`file-${i}`, _files[i]);
     }
     const res = await request.fileUpload(formData);
-    if (!res.data) {
-      log('warn', 'File not uploaded', {}, true);
-      return;
+    if (res.type === MessageType.SET_ERROR) {
+      log(res.data.status, res.data.message, { res }, true);
     }
-    const _uploadFiles = files.slice();
-    _uploadFiles.concat(res.data);
-    setFiles(_uploadFiles);
+    setRestart(!restart);
   };
 
   const onChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +114,7 @@ export const useInputFiles = () => {
       const res = await request.getFileFindMany();
       setFiles(res.data);
     })();
-  }, []);
+  }, [restart]);
 
   return {
     onChangeFiles,

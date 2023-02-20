@@ -106,7 +106,11 @@ class Request {
     return this.send({ url: Api.postPageFindManyV1, method: 'POST', body: args });
   }
 
-  public async fileUpload(files: FormData): Promise<SendMessageArgs<MessageType.SET_FILE_UPLOAD>> {
+  public async fileUpload(
+    files: FormData
+  ): Promise<
+    SendMessageArgs<MessageType.SET_FILE_UPLOAD> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
     return this.send({
       url: Api.postFileUpload,
       method: 'POST',
