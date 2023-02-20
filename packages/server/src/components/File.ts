@@ -2,8 +2,8 @@ import fs from 'fs';
 import sharp from 'sharp';
 import AMQP from '../protocols/amqp';
 import { ORM } from '../services/orm';
-import { MessageType, SendMessageArgs } from '../types/interfaces';
-import { changeImgExt, getLocale, log } from '../utils/lib';
+import { IMAGE_EXT, MessageType, SendMessageArgs } from '../types/interfaces';
+import { changeImgExt, getCloudPath, getFilePath, getLocale, log } from '../utils/lib';
 
 const orm = new ORM();
 
@@ -62,6 +62,7 @@ class File {
         coeff: width / height,
         width,
         height,
+        ext: IMAGE_EXT,
         filename: changeImgExt({ name: file.filename, ext: file.ext }),
       },
     });
@@ -70,8 +71,52 @@ class File {
       id,
       lang,
       timeout,
+      connId,
       type: MessageType.SET_FILE_UPLOAD,
       data: update.data,
+    });
+  }
+
+  public async fileDelete(
+    { data, id, lang, timeout, connId }: SendMessageArgs<MessageType.GET_FILE_DELETE>,
+    amqp: AMQP
+  ) {
+    if (!connId) {
+      log('warn', 'Conn id not provided in fileDelete', { data });
+      return;
+    }
+    const locale = getLocale(lang).server;
+
+    const deleteR = await orm.fileDelete(data);
+    if (deleteR.status !== 'info' || !deleteR.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_FILE_DELETE,
+          message: locale.error,
+          httpCode: 502,
+        },
+      });
+      return;
+    }
+
+    const { id: fId, userId, ext } = deleteR.data;
+    const userCloud = getCloudPath(userId);
+    const filePath = getFilePath({ userCloud, id: fId, ext });
+    fs.unlinkSync(filePath);
+
+    amqp.sendToQueue({
+      id,
+      lang,
+      timeout,
+      connId,
+      type: MessageType.SET_FILE_DELETE,
+      data: null,
     });
   }
 }

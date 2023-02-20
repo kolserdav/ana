@@ -11,6 +11,7 @@ import {
   TIMEOUT_HEADER,
   AUTHORIZATION_HEADER,
   APPLICATION_JSON,
+  FileDeleteBody,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -119,10 +120,22 @@ class Request {
     });
   }
 
-  public async getFileFindMany(): Promise<SendMessageArgs<MessageType.SET_FILE_FIND_MANY>> {
+  public async fileFindMany(): Promise<SendMessageArgs<MessageType.SET_FILE_FIND_MANY>> {
     return this.send({
       url: Api.getFileFindMany,
       method: 'GET',
+    });
+  }
+
+  public async fileDelete(
+    body: FileDeleteBody
+  ): Promise<
+    SendMessageArgs<MessageType.SET_FILE_DELETE> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: Api.deleteFileDelete,
+      method: 'DELETE',
+      body,
     });
   }
 }

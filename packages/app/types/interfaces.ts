@@ -48,6 +48,8 @@ export enum MessageType {
   SET_FILE_UPLOAD = 'SET_FILE_UPLOAD',
   GET_FILE_FIND_MANY = 'GET_FILE_FIND_MANY',
   SET_FILE_FIND_MANY = 'SET_FILE_FIND_MANY',
+  GET_FILE_DELETE = 'GET_FILE_DELETE',
+  SET_FILE_DELETE = 'SET_FILE_DELETE',
 }
 export type LocaleValue = 'ru';
 export interface RequestContext {
@@ -161,6 +163,10 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? Prisma.FileFindManyArgs
   : T extends MessageType.SET_FILE_FIND_MANY
   ? File[]
+  : T extends MessageType.GET_FILE_DELETE
+  ? Prisma.FileDeleteArgs
+  : T extends MessageType.SET_FILE_DELETE
+  ? null
   : unknown;
 
 export interface Tab {
@@ -267,7 +273,12 @@ export enum Api {
   postUserCreateV1 = '/v1/user-create',
   getUserFindFirst = '/v1/user-find-first',
   postFileUpload = '/v1/file-upload',
+  deleteFileDelete = '/v1/file-delete',
   getFileFindMany = '/v1/file-find-many',
+}
+
+export interface FileDeleteBody {
+  fileId: string;
 }
 
 export type WSProtocol = 'test' | 'login' | 'confirm-email';

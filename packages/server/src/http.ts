@@ -10,7 +10,7 @@ import getUserFindFirst from './api/v1/user/user-find-first';
 import checkTokenMiddleware from './api/middlewares/checkToken';
 import fileUpload from './api/v1/file/file-upload';
 import getFileFindMany from './api/v1/file/file-find-many';
-import path from 'path';
+import fileDelete from './api/v1/file/file-delete';
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -27,7 +27,7 @@ process.on('unhandledRejection', (err: Error) => {
   await fastify.register(import('@fastify/middie'));
   await fastify.use(cors({ origin: [APP_URL] }));
   await fastify.use(
-    [Api.getUserFindFirst, Api.postFileUpload, Api.getFileFindMany],
+    [Api.getUserFindFirst, Api.postFileUpload, Api.getFileFindMany, Api.deleteFileDelete],
     checkTokenMiddleware
   );
   await fastify.register(import('@fastify/multipart'));
@@ -42,6 +42,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.get(Api.getUserFindFirst, getUserFindFirst);
   fastify.post(Api.postFileUpload, fileUpload);
   fastify.get(Api.getFileFindMany, getFileFindMany);
+  fastify.delete(Api.deleteFileDelete, fileDelete);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

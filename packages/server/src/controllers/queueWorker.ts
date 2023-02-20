@@ -76,6 +76,9 @@ class QueueWorker extends AMQP {
         case MessageType.GET_FILE_UPLOAD:
           await file.fileChangeExt(msg, this.amqp);
           break;
+        case MessageType.GET_FILE_DELETE:
+          await file.fileDelete(msg, this.amqp);
+          break;
         default:
           log('warn', 'Default case of consume queue', msg);
       }

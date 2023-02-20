@@ -57,8 +57,9 @@ function CreateProject({
     filesActive,
     inputFilesRef,
     onClickAddFiles,
+    deleteFileWrapper,
   } = useInputFiles();
-  console.log(files);
+
   return (
     <div className={s.wrapper}>
       <form className={s.container}>
@@ -137,7 +138,7 @@ function CreateProject({
                   src={getImagePath(item)}
                   alt=""
                 />
-                <IconButton>
+                <IconButton onClick={deleteFileWrapper(item.id)}>
                   <DeleteIcon color={theme.text} />
                 </IconButton>
               </div>

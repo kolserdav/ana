@@ -52,7 +52,7 @@ export class ORM extends Service implements Database {
     return this.run({
       args,
       model: 'file',
-      command: 'update',
+      command: 'delete',
     });
   };
 

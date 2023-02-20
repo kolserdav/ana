@@ -67,6 +67,14 @@ export const useInputFiles = () => {
     setRestart(!restart);
   };
 
+  const deleteFileWrapper = (fileId: string) => async () => {
+    const res = await request.fileDelete({ fileId });
+    if (res.type === MessageType.SET_ERROR) {
+      log(res.data.status, res.data.message, { res }, true);
+    }
+    setRestart(!restart);
+  };
+
   const onChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files: _files },
@@ -111,7 +119,7 @@ export const useInputFiles = () => {
    */
   useEffect(() => {
     (async () => {
-      const res = await request.getFileFindMany();
+      const res = await request.fileFindMany();
       setFiles(res.data);
     })();
   }, [restart]);
@@ -125,5 +133,6 @@ export const useInputFiles = () => {
     onDragLeave,
     onClickAddFiles,
     inputFilesRef,
+    deleteFileWrapper,
   };
 };

@@ -12,8 +12,8 @@ const getFileFindMany: RequestHandler<
 > = async ({ headers }, reply) => {
   const { lang, id, timeout } = parseHeaders(headers);
   const res = await handleRequests.sendToQueue<
-    MessageType.GET_FILE_FIND_MANY,
-    MessageType.SET_FILE_FIND_MANY
+    SendMessageArgs<MessageType.GET_FILE_FIND_MANY>,
+    SendMessageArgs<MessageType.SET_FILE_FIND_MANY>
   >({
     type: MessageType.GET_FILE_FIND_MANY,
     id,

@@ -2,10 +2,16 @@ import util from 'util';
 import { pipeline } from 'stream';
 import fs from 'fs';
 import path from 'path';
-import sharp from 'sharp';
 import { RequestHandler } from '../../../types';
 import { MessageType, SendMessageArgs, APPLICATION_JSON } from '../../../types/interfaces';
-import { changeImgExt, createDir, getFileExt, getLocale, parseHeaders } from '../../../utils/lib';
+import {
+  createDir,
+  getCloudPath,
+  getFileExt,
+  getFilePath,
+  getLocale,
+  parseHeaders,
+} from '../../../utils/lib';
 import { CLOUD_PATH } from '../../../utils/constants';
 import { ORM } from '../../../services/orm';
 import HandleRequests from '../../../services/handleRequests';
@@ -17,14 +23,14 @@ const pump = util.promisify(pipeline);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fileUpload: RequestHandler<
-  any,
+  never,
   SendMessageArgs<MessageType.SET_FILE_UPLOAD | MessageType.SET_ERROR>
 > = async (req, reply) => {
   const { headers } = req;
   const { lang, id, timeout } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const files = await req.files();
+  const files = req.files();
   const res = [];
   for await (const data of files) {
     if (!data) {
@@ -70,15 +76,15 @@ const fileUpload: RequestHandler<
       };
     }
 
-    const userCloud = path.resolve(CLOUD_PATH, id);
+    const userCloud = getCloudPath(id);
     createDir(userCloud);
-    const fileName = path.resolve(userCloud, `${create.data.id}${create.data.ext}`);
+    const fileName = getFilePath({ userCloud, id: create.data.id, ext: create.data.ext });
     const filePath = path.resolve(userCloud, fileName);
     await pump(file, fs.createWriteStream(filePath));
 
     const update = handleRequests.sendToQueue<
-      MessageType.GET_FILE_UPLOAD,
-      MessageType.SET_FILE_UPLOAD | MessageType.SET_ERROR
+      SendMessageArgs<MessageType.GET_FILE_UPLOAD>,
+      SendMessageArgs<MessageType.SET_FILE_UPLOAD> | SendMessageArgs<MessageType.SET_ERROR>
     >({
       id,
       type: MessageType.GET_FILE_UPLOAD,
@@ -122,7 +128,7 @@ const fileUpload: RequestHandler<
     lang,
     timeout: parseInt(timeout, 10),
     data: null,
-  } as SendMessageArgs<MessageType.SET_FILE_UPLOAD>;
+  };
 };
 
 export default fileUpload;

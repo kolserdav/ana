@@ -35,15 +35,17 @@ class HandleRequests extends Service {
     });
   }
 
-  public sendToQueue<K extends keyof typeof MessageType, T extends keyof typeof MessageType>(
-    msg: SendMessageArgs<K>
-  ): Promise<SendMessageArgs<T>> {
+  public sendToQueue<
+    K extends SendMessageArgs<keyof typeof MessageType>,
+    T extends SendMessageArgs<keyof typeof MessageType>
+  >(msg: K): Promise<T> {
     const connId = v4();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = new Promise<SendMessageArgs<any>>((resolve) => {
+    const res = new Promise<any>((resolve) => {
       const { master, handler } = this.listenMasterMessages((_msg) => {
         if (_msg.protocol === protocol && _msg.msg.connId === msg.connId) {
           master.removeListener('message', handler);
+          // ALERT contract
           resolve({
             lang: msg.lang,
             timeout: msg.timeout,
@@ -53,7 +55,7 @@ class HandleRequests extends Service {
       });
     });
     msg.connId = connId;
-    this.sendMessageToMaster<K>({ protocol, msg });
+    this.sendMessageToMaster<keyof typeof MessageType>({ protocol, msg });
     return res;
   }
 }

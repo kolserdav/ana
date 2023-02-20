@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { format } from 'date-fns';
 import fs from 'fs';
 import { IncomingHttpHeaders } from 'http';
+import path from 'path';
 import ru from '../locales/ru/lang';
 import {
   Locale,
@@ -14,7 +15,7 @@ import {
   TIMEOUT_HEADER,
   IMAGE_EXT,
 } from '../types/interfaces';
-import { APP_URL, IS_DEV, LOG_LEVEL } from './constants';
+import { APP_URL, CLOUD_PATH, IS_DEV, LOG_LEVEL } from './constants';
 
 // eslint-disable-next-line no-unused-vars
 enum LogLevel {
@@ -114,3 +115,15 @@ export const getFileExt = (filename: string): string => {
 
 export const changeImgExt = ({ name, ext }: { name: string; ext: string }) =>
   name.replace(new RegExp(`${ext}$`), IMAGE_EXT);
+
+export const getFilePath = ({
+  userCloud,
+  id,
+  ext,
+}: {
+  userCloud: string;
+  id: string;
+  ext: string;
+}) => path.resolve(userCloud, `${id}${ext}`);
+
+export const getCloudPath = (id: string) => path.resolve(CLOUD_PATH, id);
