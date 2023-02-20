@@ -11,7 +11,7 @@ const getTestHandler: RequestHandler<any, SendMessageArgs<MessageType.TEST>> = a
   reply
 ) => {
   const { lang, id } = parseHeaders(headers);
-  const res = await handleRequests.sendToQueue<MessageType.TEST>({
+  const res = await handleRequests.sendToQueue<MessageType.TEST, MessageType.TEST>({
     type: MessageType.TEST,
     id,
     lang,

@@ -67,6 +67,9 @@ class QueueWorker extends AMQP {
         case MessageType.GET_CONFIRM_EMAIL:
           await user.getConfirmEmail(msg, this.amqp);
           break;
+        case MessageType.GET_FILE_FIND_MANY:
+          await user.getFileFindMany(msg, this.amqp);
+          break;
         default:
           log('warn', 'Default case of consume queue', msg);
       }

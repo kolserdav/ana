@@ -6,6 +6,7 @@ import QueueMaster from '../controllers/queueMaster';
 import AMQP from '../protocols/amqp';
 import WS from '../protocols/ws';
 import { WORKER_QUEUE } from '../utils/constants';
+import { v4 } from 'uuid';
 
 const protocol = 'request';
 
@@ -34,15 +35,14 @@ class HandleRequests extends Service {
     });
   }
 
-  public sendToQueue<
-    T extends keyof typeof MessageType,
-    K extends keyof typeof MessageType = keyof typeof MessageType
-  >(msg: SendMessageArgs<K>): Promise<SendMessageArgs<T>> {
+  public sendToQueue<K extends keyof typeof MessageType, T extends keyof typeof MessageType>(
+    msg: SendMessageArgs<K>
+  ): Promise<SendMessageArgs<T>> {
+    const connId = v4();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = new Promise<SendMessageArgs<any>>((resolve) => {
       const { master, handler } = this.listenMasterMessages((_msg) => {
-        // FIXME check timeout
-        if (_msg.protocol === protocol && _msg.msg.id === msg.id) {
+        if (_msg.protocol === protocol && _msg.msg.connId === msg.connId) {
           master.removeListener('message', handler);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           _msg.msg.type = msg.type.replace(/^G/, 'S') as any;
@@ -54,6 +54,7 @@ class HandleRequests extends Service {
         }
       });
     });
+    msg.connId = connId;
     this.sendMessageToMaster<K>({ protocol, msg });
     return res;
   }

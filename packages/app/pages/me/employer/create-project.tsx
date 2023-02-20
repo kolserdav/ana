@@ -64,7 +64,7 @@ export async function getStaticProps({
       ],
     },
   });
-  console.log(page);
+
   return {
     props: {
       page: prepagePage(page.data),

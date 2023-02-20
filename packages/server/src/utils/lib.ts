@@ -100,3 +100,13 @@ export const createDir = (dirPath: string) => {
     fs.mkdirSync(dirPath);
   }
 };
+
+export const getFileExt = (filename: string): string => {
+  const fileE = filename.match(/\.[a-zA-Z0-9]{1,4}$/);
+  if (!fileE) {
+    return '';
+  } else if (!fileE[0]) {
+    return '';
+  }
+  return fileE[0];
+};

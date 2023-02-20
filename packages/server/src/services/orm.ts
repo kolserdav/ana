@@ -72,6 +72,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public fileFindMany: Database['fileFindMany'] = async (args) => {
+    return this.run({
+      args,
+      model: 'file',
+      command: 'findMany',
+    });
+  };
+
   public pageFindManyW: Database['pageFindManyW'] = async (args) => {
     return this.runFromWorker({
       args,
@@ -196,8 +204,7 @@ export class ORM extends Service implements Database {
     return new Promise<any>((resolve) => {
       const { master, handler } = this.listenMasterMessages<MessageType.DB_RESULT>(
         ({ msg: { id: _id, data } }) => {
-          // FIXME check timeout
-          if (id === _id && command === data._command && model === data._model) {
+          if (id === _id) {
             if (data.status === this.errorStatus) {
               log('warn', 'Database request failed', { args });
             }

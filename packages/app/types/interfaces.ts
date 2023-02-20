@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { Prisma, PrismaClient, Role, User } from '@prisma/client';
+import { Prisma, PrismaClient, Role, User, File } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum LogLevel {
@@ -43,6 +43,8 @@ export enum MessageType {
   GET_USER_FIND_FIRST = 'GET_USER_FIND_FIRST',
   SET_USER_FIND_FIRST = 'SET_USER_FIND_FIRST',
   SET_FILE_UPLOAD = 'SET_FILE_UPLOAD',
+  GET_FILE_FIND_MANY = 'GET_FILE_FIND_MANY',
+  SET_FILE_FIND_MANY = 'SET_FILE_FIND_MANY',
 }
 export type LocaleValue = 'ru';
 export interface RequestContext {
@@ -145,8 +147,12 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? Prisma.UserFindFirstArgs
   : T extends MessageType.SET_USER_FIND_FIRST
   ? Omit<User, 'password' | 'salt'> | null
-  : T extends MessageType.SET_USER_FIND_FIRST
-  ? null
+  : T extends MessageType.SET_FILE_UPLOAD
+  ? File | null
+  : T extends MessageType.GET_FILE_FIND_MANY
+  ? Prisma.FileFindManyArgs
+  : T extends MessageType.SET_FILE_FIND_MANY
+  ? File[]
   : unknown;
 
 export interface Tab {
@@ -160,6 +166,7 @@ export interface SendMessageArgs<T extends keyof typeof MessageType> extends Req
   type: T;
   id: string;
   data: ArgsSubset<T>;
+  connId?: string;
 }
 
 export interface Locale {
@@ -245,12 +252,13 @@ export interface Locale {
 
 // eslint-disable-next-line no-shadow
 export enum Api {
-  testV1 = '/v1/test.php',
-  getLocaleV1 = '/v1/get-locale.php',
-  postPageFindManyV1 = '/v1/page-get-fields.php',
-  postUserCreateV1 = '/v1/user-create.php',
-  getUserFindFirst = '/v1/user-find-first.php',
-  postFileUpload = '/v1/file-upload.php',
+  testV1 = '/v1/test',
+  getLocaleV1 = '/v1/get-locale',
+  postPageFindManyV1 = '/v1/page-get-fields',
+  postUserCreateV1 = '/v1/user-create',
+  getUserFindFirst = '/v1/user-find-first',
+  postFileUpload = '/v1/file-upload',
+  getFileFindMany = '/v1/file-find-many',
 }
 
 export type WSProtocol = 'test' | 'login' | 'confirm-email';

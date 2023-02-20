@@ -688,6 +688,14 @@ class User {
 
     amqp.sendToQueue(_msg);
   }
+
+  public async getFileFindMany(msg: SendMessageArgs<MessageType.GET_FILE_FIND_MANY>, amqp: AMQP) {
+    const files = await orm.fileFindMany(msg.data);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const _msg: SendMessageArgs<MessageType.SET_FILE_FIND_MANY> = { ...msg } as any;
+    _msg.data = files.data;
+    amqp.sendToQueue(_msg);
+  }
 }
 
 export default User;

@@ -38,6 +38,12 @@ abstract class Database {
   ): Promise<
     Prisma.CheckSelect<T, Result<File | null>, Promise<Result<Prisma.FileGetPayload<T> | null>>>
   >;
+
+  public abstract fileFindMany<T extends Prisma.FileFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.FileFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Array<File>>, Promise<Result<Array<Prisma.FileGetPayload<T>>>>>
+  >;
 }
 
 export default Database;

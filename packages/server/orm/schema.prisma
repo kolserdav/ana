@@ -100,6 +100,7 @@ model File {
   encoding  String
   mimetype  String
   fieldname String
+  ext       String   @db.VarChar(5)
   size      Int?
   projectId String?
   userId    String

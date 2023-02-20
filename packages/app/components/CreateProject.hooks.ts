@@ -1,5 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
+import { MessageType, SendMessageArgs } from '../types/interfaces';
+import { log } from '../utils/lib';
 import Request from '../utils/request';
 
 const request = new Request();
@@ -44,7 +46,7 @@ export const useEndDateInput = () => {
 export const useInputFiles = () => {
   const inputFilesRef = useRef<HTMLInputElement>(null);
 
-  const [files, setFiles] = useState<FileList[]>([]);
+  const [files, setFiles] = useState<SendMessageArgs<MessageType.SET_FILE_UPLOAD>['data'][]>([]);
   const [filesActive, setFilesActive] = useState<boolean>(false);
 
   const saveLocalFiles = async (_files: FileList) => {
@@ -53,10 +55,13 @@ export const useInputFiles = () => {
       formData.append(`file-${i}`, _files[i]);
     }
     const res = await request.fileUpload(formData);
-    console.log(res);
-    let filesCopy = files.slice();
-    filesCopy = filesCopy.concat(_files);
-    setFiles(filesCopy);
+    if (!res.data) {
+      log('warn', 'File not uploaded', {}, true);
+      return;
+    }
+    const _uploadFiles = files.slice();
+    _uploadFiles.concat(res.data);
+    setFiles(_uploadFiles);
   };
 
   const onChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +102,16 @@ export const useInputFiles = () => {
     }
     current.click();
   };
+
+  /**
+   * Get upload files
+   */
+  useEffect(() => {
+    (async () => {
+      const res = await request.getFileFindMany();
+      setFiles(res.data);
+    })();
+  }, []);
 
   return {
     onChangeFiles,

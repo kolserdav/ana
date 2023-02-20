@@ -106,12 +106,19 @@ class Request {
     return this.send({ url: Api.postPageFindManyV1, method: 'POST', body: args });
   }
 
-  public async fileUpload(files: FormData) {
+  public async fileUpload(files: FormData): Promise<SendMessageArgs<MessageType.SET_FILE_UPLOAD>> {
     return this.send({
       url: Api.postFileUpload,
       method: 'POST',
       body: files,
       contentType: null,
+    });
+  }
+
+  public async getFileFindMany(): Promise<SendMessageArgs<MessageType.SET_FILE_FIND_MANY>> {
+    return this.send({
+      url: Api.getFileFindMany,
+      method: 'GET',
     });
   }
 }

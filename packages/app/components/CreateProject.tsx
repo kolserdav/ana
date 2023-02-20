@@ -49,7 +49,7 @@ function CreateProject({
     inputFilesRef,
     onClickAddFiles,
   } = useInputFiles();
-
+  console.log(files);
   return (
     <div className={s.wrapper}>
       <form className={s.container}>
