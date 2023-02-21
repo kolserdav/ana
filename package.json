@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "prisma": {
-    "schema": "./packages/server/orm/schema.prisma"
+    "schema": "./packages/server/orm/schema.prisma",
+    "seed": "node scripts/insert-categories.js"
   },
   "scripts": {
     "build:app": "cd packages/app && npm run build",
@@ -13,12 +14,13 @@
     "install:server": "cd packages/server && npm i",
     "install:app": "cd packages/app && npm i",
     "migrate:dev": "npm run format && npm run generate && prisma migrate dev --preview-feature",
-    "migrate": "npm run generate && prisma migrate deploy --preview-feature",
+    "migrate": "npm run generate && prisma migrate deploy --preview-feature && npm run seed",
     "migrate:reset": "prisma migrate reset --preview-feature",
     "migrate:status": "prisma migrate status --preview-feature",
     "studio": "prisma studio",
     "generate": "prisma generate",
     "format": "prisma format",
+    "seed": "prisma db seed",
     "postinstall": "npm run install:server && npm run install:app && npm run scripts",
     "dev:server": "cd packages/server && npm run dev",
     "dev:app": "cd packages/app && npm run dev",
@@ -59,6 +61,7 @@
     "@prisma/client": "^4.10.1",
     "@tinymce/tinymce-react": "^4.3.0",
     "date-fns": "^2.29.3",
+    "dotenv": "^16.0.3",
     "draft-js": "^0.11.7",
     "html-to-text": "^9.0.3",
     "jsonwebtoken": "^9.0.0",

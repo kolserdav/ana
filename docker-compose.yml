@@ -32,7 +32,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - ./data:/var/lib/mysql
+      - ./db:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: portfolio_pma

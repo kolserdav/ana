@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -81,7 +81,7 @@ model ConfirmLink {
 model Project {
   id          String       @id @default(uuid())
   title       String       @db.VarChar(255)
-  description String       @db.MediumText
+  description String       @db.Text
   closed      Boolean      @default(false)
   employerId  String?
   Employer    User?        @relation("Employer", fields: [employerId], references: [id])

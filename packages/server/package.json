@@ -31,7 +31,6 @@
     "@types/amqplib": "^0.10.1",
     "@types/cors": "^2.8.13",
     "@types/sharp": "^0.31.1",
-    "@types/ws": "^8.5.4",
-    "dotenv": "^16.0.3"
+    "@types/ws": "^8.5.4"
   }
 }

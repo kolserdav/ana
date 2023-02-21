@@ -2,7 +2,7 @@ node_modules
 tests/constants.json
 redis
 rabbitmq
-data
+db
 tmp
 .env
 cloud
