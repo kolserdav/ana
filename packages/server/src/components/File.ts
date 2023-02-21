@@ -139,6 +139,10 @@ class File {
     const filePreviewPath = getFilePath({ userCloud, id: fId, ext, postfix: IMAGE_PREV_POSTFIX });
     fs.unlinkSync(filePath);
     fs.unlinkSync(filePreviewPath);
+    const dir = fs.readdirSync(userCloud);
+    if (dir.length === 0) {
+      fs.rmdirSync(userCloud);
+    }
 
     amqp.sendToQueue({
       id,

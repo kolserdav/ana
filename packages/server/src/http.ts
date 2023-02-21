@@ -1,9 +1,11 @@
 import Fastify from 'fastify';
 import cors from 'cors';
+import serveStatic from 'serve-static';
+import { PrismaClient } from '@prisma/client';
 import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT } from './utils/constants';
 import { createDir, log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
-import { Api, CLOUD_PREFIX } from './types/interfaces';
+import { Api, CLOUD_PREFIX, FileDeleteBody } from './types/interfaces';
 import getLocaleHandler from './api/v1/get-locale';
 import pageFindManyHandler from './api/v1/page/find-many';
 import getUserFindFirst from './api/v1/user/user-find-first';
@@ -11,6 +13,9 @@ import checkTokenMiddleware from './api/middlewares/checkToken';
 import fileUpload from './api/v1/file/file-upload';
 import getFileFindMany from './api/v1/file/file-find-many';
 import fileDelete from './api/v1/file/file-delete';
+import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
+
+const prisma = new PrismaClient();
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -24,17 +29,23 @@ process.on('unhandledRejection', (err: Error) => {
     logger: FASTIFY_LOGGER,
   });
 
-  await fastify.register(import('@fastify/middie'));
+  await fastify.register(import('@fastify/middie'), { hook: 'preHandler' });
   await fastify.use(cors({ origin: [APP_URL] }));
   await fastify.use(
     [Api.getUserFindFirst, Api.postFileUpload, Api.getFileFindMany, Api.deleteFileDelete],
     checkTokenMiddleware
   );
+  await fastify.use(
+    [Api.deleteFileDelete],
+    checkAccessMiddlewareWrapper(prisma, {
+      model: 'File',
+      bodyField: 'userId',
+      key: 'FileScalarFieldEnum',
+      fieldId: 'fileId' as keyof FileDeleteBody,
+    })
+  );
   await fastify.register(import('@fastify/multipart'));
-  await fastify.register(import('@fastify/static'), {
-    root: CLOUD_PATH,
-    prefix: CLOUD_PREFIX,
-  });
+  fastify.use([CLOUD_PREFIX], serveStatic(CLOUD_PATH));
 
   fastify.get(Api.testV1, getTestHandler);
   fastify.get(Api.getLocaleV1, getLocaleHandler);
