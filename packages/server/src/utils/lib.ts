@@ -113,17 +113,26 @@ export const getFileExt = (filename: string): string => {
   return fileE[0];
 };
 
-export const changeImgExt = ({ name, ext }: { name: string; ext: string }) =>
-  name.replace(new RegExp(`${ext}$`), IMAGE_EXT);
+export const changeImgExt = ({
+  name,
+  ext,
+  postfix = '',
+}: {
+  name: string;
+  ext: string;
+  postfix?: string;
+}) => name.replace(new RegExp(`${ext}$`), `${postfix}${IMAGE_EXT}`);
 
 export const getFilePath = ({
   userCloud,
   id,
   ext,
+  postfix = '',
 }: {
   userCloud: string;
   id: string;
   ext: string;
-}) => path.resolve(userCloud, `${id}${ext}`);
+  postfix?: string;
+}) => path.resolve(userCloud, `${id}${postfix}${ext}`);
 
 export const getCloudPath = (id: string) => path.resolve(CLOUD_PATH, id);

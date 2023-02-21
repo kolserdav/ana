@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { useRef } from 'react';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
@@ -22,6 +21,7 @@ import s from './CreateProject.module.scss';
 import DeleteIcon from './icons/Delete';
 import Button from './ui/Button';
 import IconButton from './ui/IconButton';
+import Image from './ui/Image';
 import Input from './ui/Input';
 import Typography from './ui/Typography';
 
@@ -133,8 +133,10 @@ function CreateProject({
             {files.map((item) => (
               <div className={s.item} key={item.id}>
                 <Image
-                  width={IMAGE_PREVIEW_WIDTH}
-                  height={IMAGE_PREVIEW_WIDTH / (item.coeff || 1)}
+                  width={item.width || 0}
+                  height={item.height || 0}
+                  preWidth={IMAGE_PREVIEW_WIDTH / 2}
+                  preHeight={IMAGE_PREVIEW_WIDTH / 2 / (item.coeff || 1)}
                   src={getImagePath(item)}
                   alt=""
                 />

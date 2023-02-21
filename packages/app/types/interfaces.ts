@@ -15,6 +15,7 @@ export const EMAIL_QS = 'e';
 export const KEY_QS = 'k';
 export const CLOUD_PREFIX = '/cloud';
 export const IMAGE_EXT = '.avif';
+export const IMAGE_PREV_POSTFIX = '-preview';
 
 // eslint-disable-next-line no-shadow
 export enum MessageType {
@@ -288,6 +289,7 @@ export const USER_ID_HEADER = 'uuid';
 export const AUTHORIZATION_HEADER = 'authorization';
 export const TIMEOUT_HEADER = 'timeout';
 export const APPLICATION_JSON = 'application/json';
+export const PREVIEW_IMAGE_WIDTH = 320;
 
 export function checkEmail(email: string): boolean {
   return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(

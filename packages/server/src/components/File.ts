@@ -2,7 +2,13 @@ import fs from 'fs';
 import sharp from 'sharp';
 import AMQP from '../protocols/amqp';
 import { ORM } from '../services/orm';
-import { IMAGE_EXT, MessageType, SendMessageArgs } from '../types/interfaces';
+import {
+  IMAGE_EXT,
+  IMAGE_PREV_POSTFIX,
+  MessageType,
+  PREVIEW_IMAGE_WIDTH,
+  SendMessageArgs,
+} from '../types/interfaces';
 import { changeImgExt, getCloudPath, getFilePath, getLocale, log } from '../utils/lib';
 
 const orm = new ORM();
@@ -26,6 +32,7 @@ class File {
 
     const stats = fs.statSync(filePath);
     const buffer = await sharp(filePath).avif().toBuffer();
+    const bufferPreview = await sharp(filePath).avif().resize(PREVIEW_IMAGE_WIDTH).toBuffer();
     const { width, height } = await sharp(buffer).metadata();
     fs.unlinkSync(filePath);
 
@@ -51,7 +58,28 @@ class File {
       return;
     }
 
-    fs.writeFileSync(changeImgExt({ name: filePath, ext: file.ext }), buffer);
+    fs.writeFileSync(
+      changeImgExt({
+        name: filePath,
+        ext: file.ext,
+      }),
+      buffer
+    );
+    if (width > PREVIEW_IMAGE_WIDTH) {
+      fs.writeFileSync(
+        changeImgExt({ name: filePath, ext: file.ext, postfix: IMAGE_PREV_POSTFIX }),
+        bufferPreview
+      );
+    } else {
+      fs.writeFileSync(
+        changeImgExt({
+          name: filePath,
+          ext: file.ext,
+          postfix: IMAGE_PREV_POSTFIX,
+        }),
+        buffer
+      );
+    }
 
     const update = await orm.fileUpdate({
       where: {
@@ -108,7 +136,9 @@ class File {
     const { id: fId, userId, ext } = deleteR.data;
     const userCloud = getCloudPath(userId);
     const filePath = getFilePath({ userCloud, id: fId, ext });
+    const filePreviewPath = getFilePath({ userCloud, id: fId, ext, postfix: IMAGE_PREV_POSTFIX });
     fs.unlinkSync(filePath);
+    fs.unlinkSync(filePreviewPath);
 
     amqp.sendToQueue({
       id,

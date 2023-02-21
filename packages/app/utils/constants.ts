@@ -45,6 +45,7 @@ export const SURNAME_MAX_LENGTH = 35;
 export const DEFAULT_THEME: ThemeType = 'dark';
 export const TAB_INDEX_DEFAULT = -1;
 export const PASSWORD_MIN_LENGTH = 6;
+
 // Deps load-page-duration
 export const LOAD_PAGE_DURATION = 900;
 export const LABEL_TRANSITION = '0.2s';

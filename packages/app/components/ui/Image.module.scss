@@ -1,0 +1,50 @@
+$image-back-color: rgba(
+  $color: #000,
+  $alpha: 80%,
+);
+$image-transition: 0.1s;
+
+.wrapper {
+  position: relative;
+  cursor: pointer;
+  transition: all $image-transition ease-in;
+  overflow: auto;
+
+  .close {
+    display: none;
+  }
+
+  &.full {
+    position: fixed;
+    display: block;
+    cursor: zoom-in;
+    z-index: 13;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: $image-back-color;
+    transition: all $image-transition ease-out;
+
+    img {
+      position: relative;
+      display: block;
+      margin: auto;
+    }
+
+    &.zoom__out {
+      cursor: zoom-out;
+    }
+
+    .close {
+      position: fixed;
+      display: block;
+      top: 1rem;
+      right: 1rem;
+      background-color: $image-back-color;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}
