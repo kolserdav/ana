@@ -23,9 +23,7 @@ export const MASTER_QUEUE = 'master';
 export const WORKER_QUEUE = 'worker';
 export const QUEUE_MAX_SIZE = 2_000_000_000;
 export const RABBITMQ_RECONNECT_TIMEOUT = 2000;
-export const REDIS_CACHE_TIMEOUT = 2;
-export const REDIS_WS_NAME = 'ws';
-export const REDIS_RESERVED = [REDIS_WS_NAME];
+
 export const PASSWORD_SALT_LENGTH = 16;
 export const PASWWORD_HASH_LENGTH = 64;
 export const PASSWORD_ITERATIONS = 1000;

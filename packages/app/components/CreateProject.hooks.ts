@@ -1,9 +1,9 @@
 import { File } from '@prisma/client';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
-import { MessageType } from '../types/interfaces';
+import { MessageType, REDIS_CACHE_TIMEOUT } from '../types/interfaces';
 import { PROJECT_TITLE_MAX } from '../utils/constants';
-import { log } from '../utils/lib';
+import { log, waitForTimeout } from '../utils/lib';
 import Request from '../utils/request';
 
 const request = new Request();
@@ -48,7 +48,12 @@ export const useEndDateInput = () => {
   return { endDate, onChangeEndDate };
 };
 
-export const useInputFiles = () => {
+let lastFindMany = new Date().getTime();
+export const useInputFiles = ({
+  setLoad,
+}: {
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const inputFilesRef = useRef<HTMLInputElement>(null);
 
   const [files, setFiles] = useState<File[]>([]);
@@ -56,6 +61,7 @@ export const useInputFiles = () => {
   const [restart, setRestart] = useState<boolean>(false);
 
   const saveLocalFiles = async (_files: FileList) => {
+    setLoad(true);
     const formData = new FormData();
     for (let i = 0; _files[i]; i++) {
       formData.append(`file-${i}`, _files[i]);
@@ -65,6 +71,7 @@ export const useInputFiles = () => {
       log(res.data.status, res.data.message, { res }, true);
     }
     setRestart(!restart);
+    setLoad(false);
   };
 
   const deleteFileWrapper = (fileId: string) => async () => {
@@ -119,10 +126,17 @@ export const useInputFiles = () => {
    */
   useEffect(() => {
     (async () => {
+      setLoad(true);
+      const diff = new Date().getTime() - lastFindMany;
+      if (diff < REDIS_CACHE_TIMEOUT) {
+        await waitForTimeout(REDIS_CACHE_TIMEOUT - diff);
+      }
       const res = await request.fileFindMany();
+      lastFindMany = new Date().getTime();
       setFiles(res.data);
+      setLoad(false);
     })();
-  }, [restart]);
+  }, [restart, setLoad]);
 
   return {
     onChangeFiles,

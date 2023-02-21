@@ -4,9 +4,14 @@ import { v4 } from 'uuid';
 import Service from './service';
 import Database from '../database';
 import { checkIsFind, checkIsMany, log } from '../utils/lib';
-import { REDIS_CACHE_TIMEOUT, REDIS_RESERVED } from '../utils/constants';
 import Redis from '../protocols/redis';
-import { MessageType, DBResult, SendMessageArgs, DBCommandProps } from '../types/interfaces';
+import {
+  MessageType,
+  DBResult,
+  SendMessageArgs,
+  DBCommandProps,
+  REDIS_CACHE_TIMEOUT,
+} from '../types/interfaces';
 import { ProcessMessage } from '../types';
 
 const prisma = new PrismaClient();
@@ -124,29 +129,12 @@ export class ORM extends Service implements Database {
 
     // Check args
     const argsStr = JSON.stringify(args);
-    if (REDIS_RESERVED.indexOf(argsStr) !== -1) {
-      const stdErrMessage = 'Trying to write to a Redis reserved field in a database';
-      log('warn', stdErrMessage, { argsStr });
-      return {
-        status: 'error',
-        data: checkIsMany(command),
-        skip,
-        code: 400,
-        stdErrMessage,
-        _command: command,
-        _model: model,
-        take,
-        count,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as DBResult<any>;
-    }
-
     // Get from cache
     const oldValue = await redis.client.get(argsStr);
     let result;
     if (oldValue) {
       try {
-        result = JSON.parse(oldValue);
+        result = JSON.parse(oldValue as string);
       } catch (err) {
         log('error', 'Error parsing Redis value in Database', err);
       }
@@ -191,7 +179,7 @@ export class ORM extends Service implements Database {
       } as DBResult<any>;
     }
 
-    redis.client.set(argsStr, JSON.stringify(result), { EX: REDIS_CACHE_TIMEOUT });
+    redis.client.set(argsStr, JSON.stringify(result), { EX: REDIS_CACHE_TIMEOUT / 1000 });
     const isNotFound = result === null || result?.length === 0;
     return {
       status: isNotFound ? 'warning' : 'info',

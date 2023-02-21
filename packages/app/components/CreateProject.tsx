@@ -40,7 +40,7 @@ function CreateProject({
 }) {
   const filesRef = useRef<HTMLDivElement>(null);
 
-  const { load } = useLoad();
+  const { load, setLoad } = useLoad();
 
   const { description, onChangeDescription } = useDescriptionInput();
 
@@ -58,7 +58,7 @@ function CreateProject({
     inputFilesRef,
     onClickAddFiles,
     deleteFileWrapper,
-  } = useInputFiles();
+  } = useInputFiles({ setLoad });
 
   return (
     <div className={s.wrapper}>
