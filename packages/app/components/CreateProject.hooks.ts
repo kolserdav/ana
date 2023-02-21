@@ -1,7 +1,7 @@
 import { File } from '@prisma/client';
 import React, { useEffect, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
-import { MessageType, REDIS_CACHE_TIMEOUT } from '../types/interfaces';
+import { MessageType } from '../types/interfaces';
 import { PROJECT_TITLE_MAX } from '../utils/constants';
 import { log, waitForTimeout } from '../utils/lib';
 import Request from '../utils/request';
@@ -127,10 +127,6 @@ export const useInputFiles = ({
   useEffect(() => {
     (async () => {
       setLoad(true);
-      const diff = new Date().getTime() - lastFindMany;
-      if (diff < REDIS_CACHE_TIMEOUT) {
-        await waitForTimeout(REDIS_CACHE_TIMEOUT - diff);
-      }
       const res = await request.fileFindMany();
       lastFindMany = new Date().getTime();
       setFiles(res.data);

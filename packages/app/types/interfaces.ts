@@ -288,7 +288,6 @@ export const USER_ID_HEADER = 'uuid';
 export const AUTHORIZATION_HEADER = 'authorization';
 export const TIMEOUT_HEADER = 'timeout';
 export const APPLICATION_JSON = 'application/json';
-export const REDIS_CACHE_TIMEOUT = 2000;
 
 export function checkEmail(email: string): boolean {
   return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(

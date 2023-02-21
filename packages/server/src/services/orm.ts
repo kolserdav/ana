@@ -4,18 +4,10 @@ import { v4 } from 'uuid';
 import Service from './service';
 import Database from '../database';
 import { checkIsFind, checkIsMany, log } from '../utils/lib';
-import Redis from '../protocols/redis';
-import {
-  MessageType,
-  DBResult,
-  SendMessageArgs,
-  DBCommandProps,
-  REDIS_CACHE_TIMEOUT,
-} from '../types/interfaces';
+import { MessageType, DBResult, SendMessageArgs, DBCommandProps } from '../types/interfaces';
 import { ProcessMessage } from '../types';
 
 const prisma = new PrismaClient();
-const redis = new Redis();
 
 export class ORM extends Service implements Database {
   private readonly protocol = 'orm';
@@ -127,33 +119,7 @@ export class ORM extends Service implements Database {
     const { skip, take, where } = args;
     let count: number | undefined;
 
-    // Check args
-    const argsStr = JSON.stringify(args);
-    // Get from cache
-    const oldValue = await redis.client.get(argsStr);
     let result;
-    if (oldValue) {
-      try {
-        result = JSON.parse(oldValue as string);
-      } catch (err) {
-        log('error', 'Error parsing Redis value in Database', err);
-      }
-      if (result !== undefined) {
-        const isNotFound = result === null || result?.length === 0;
-        return {
-          status: isNotFound ? 'warning' : 'info',
-          data: result,
-          code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
-          _command: command,
-          _model: model,
-          skip,
-          take,
-          count,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as DBResult<any>;
-      }
-    }
-
     // Run command
     try {
       if (command === 'findMany') {
@@ -179,7 +145,6 @@ export class ORM extends Service implements Database {
       } as DBResult<any>;
     }
 
-    redis.client.set(argsStr, JSON.stringify(result), { EX: REDIS_CACHE_TIMEOUT / 1000 });
     const isNotFound = result === null || result?.length === 0;
     return {
       status: isNotFound ? 'warning' : 'info',
