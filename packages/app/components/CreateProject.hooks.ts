@@ -48,7 +48,6 @@ export const useEndDateInput = () => {
   return { endDate, onChangeEndDate };
 };
 
-let lastFindMany = new Date().getTime();
 export const useInputFiles = ({
   setLoad,
 }: {
@@ -128,7 +127,6 @@ export const useInputFiles = ({
     (async () => {
       setLoad(true);
       const res = await request.fileFindMany();
-      lastFindMany = new Date().getTime();
       setFiles(res.data);
       setLoad(false);
     })();

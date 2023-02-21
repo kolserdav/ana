@@ -101,7 +101,7 @@ function CreateProject({
         <div className={s.files_container} style={{ backgroundColor: theme.active }}>
           {!filesActive && (
             <div className={s.button__files}>
-              <Button theme={theme} onClick={onClickAddFiles}>
+              <Button theme={theme} disabled={load} onClick={onClickAddFiles}>
                 {locale.projectAddFiles}
               </Button>
             </div>
@@ -138,7 +138,7 @@ function CreateProject({
                   preWidth={IMAGE_PREVIEW_WIDTH / 2}
                   preHeight={IMAGE_PREVIEW_WIDTH / 2 / (item.coeff || 1)}
                   src={getImagePath(item)}
-                  alt=""
+                  alt={item.filename}
                 />
                 <IconButton onClick={deleteFileWrapper(item.id)}>
                   <DeleteIcon color={theme.text} />

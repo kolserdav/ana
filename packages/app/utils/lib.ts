@@ -114,3 +114,17 @@ export const checkRouterPath = (asPath: string, checkValue: string | string[]) =
 
 export const getImagePath = ({ id, userId }: File) =>
   `${SERVER}${CLOUD_PREFIX}/${userId}/${id}${IMAGE_EXT}`;
+
+export const getWindowDimensions = () => {
+  const res = {
+    width: 0,
+    height: 0,
+  };
+  if (typeof window !== 'undefined') {
+    const { innerWidth, innerHeight } = window;
+    res.width = innerWidth;
+    res.height = innerHeight;
+  }
+
+  return res;
+};

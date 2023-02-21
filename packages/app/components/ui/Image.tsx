@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import NextImage, { ImageLoader } from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { IMAGE_EXT, IMAGE_PREV_POSTFIX, PREVIEW_IMAGE_WIDTH } from '../../types/interfaces';
-import { setBodyScroll } from '../../utils/lib';
+import { getWindowDimensions, setBodyScroll } from '../../utils/lib';
 import CloseIcon from '../icons/Close';
 import IconButton from './IconButton';
 import s from './Image.module.scss';
@@ -39,11 +39,12 @@ function Image({
   const [height, setHeight] = useState<number>(preHeight);
   const [zoomIn, setZoomIn] = useState<boolean>(false);
   const [full, setFull] = useState<boolean>(false);
+  const [fill, setFill] = useState<boolean>(false);
 
   const imageOnClick = () => {
     if (!full) {
       setFull(true);
-    } else {
+    } else if (fill) {
       setZoomIn(!zoomIn);
     }
   };
@@ -51,6 +52,7 @@ function Image({
   const onCloseImageClick = () => {
     setFull(false);
     setZoomIn(false);
+    setFill(false);
   };
 
   const onKeyImageDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -80,7 +82,17 @@ function Image({
     }
   }, [full, _width, _height, preHeight, preWidth]);
 
-  console.log(zoomIn);
+  /**
+   * Set fill
+   */
+  useEffect(() => {
+    if (full) {
+      const { width: w, height: h } = getWindowDimensions();
+      setFill(width >= w || height >= h);
+    }
+  }, [width, height, full]);
+
+  console.log({ width, height });
   // FIXME zoom in with small images
 
   return (
@@ -89,16 +101,21 @@ function Image({
       role="button"
       tabIndex={-1}
       onKeyDown={onKeyImageDown}
-      className={clsx(s.wrapper, full ? s.full : '', zoomIn ? s.zoom__out : '')}
+      className={clsx(
+        s.wrapper,
+        full ? s.full : '',
+        zoomIn ? s.zoom__out : '',
+        !fill ? s.default : ''
+      )}
       onClick={imageOnClick}
     >
       {/** strong first child */}
       <NextImage
         blurDataURL={getSrcPreview(src)}
         loader={imageLoader}
-        fill={full && !zoomIn}
-        width={full && !zoomIn ? undefined : width}
-        height={full && !zoomIn ? undefined : height}
+        fill={full && !zoomIn && fill}
+        width={full && !zoomIn && fill ? undefined : width}
+        height={full && !zoomIn && fill ? undefined : height}
         style={{ objectFit: zoomIn ? undefined : 'contain' }}
         src={src}
         alt={alt}

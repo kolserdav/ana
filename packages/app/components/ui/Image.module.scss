@@ -16,8 +16,9 @@ $image-transition: 0.1s;
 
   &.full {
     position: fixed;
-    display: block;
     cursor: zoom-in;
+    display: flex;
+    align-items: center;
     z-index: 13;
     width: 100vw;
     height: 100vh;
@@ -30,6 +31,11 @@ $image-transition: 0.1s;
       position: relative;
       display: block;
       margin: auto;
+      padding: initial;
+    }
+
+    &.default {
+      cursor: default;
     }
 
     &.zoom__out {
