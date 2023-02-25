@@ -318,3 +318,5 @@ export const parseQueryString = (query: string): Record<string, string> => {
   });
   return res;
 };
+
+export const isImage = (mimetype: string) => /^image\//.test(mimetype);

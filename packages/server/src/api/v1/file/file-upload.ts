@@ -3,7 +3,7 @@ import { pipeline } from 'stream';
 import fs from 'fs';
 import path from 'path';
 import { RequestHandler } from '../../../types';
-import { MessageType, SendMessageArgs, APPLICATION_JSON } from '../../../types/interfaces';
+import { MessageType, SendMessageArgs, APPLICATION_JSON, isImage } from '../../../types/interfaces';
 import {
   createDir,
   getCloudPath,
@@ -12,7 +12,6 @@ import {
   getLocale,
   parseHeaders,
 } from '../../../utils/lib';
-import { CLOUD_PATH } from '../../../utils/constants';
 import { ORM } from '../../../services/orm';
 import HandleRequests from '../../../services/handleRequests';
 
@@ -82,21 +81,23 @@ const fileUpload: RequestHandler<
     const filePath = path.resolve(userCloud, fileName);
     await pump(file, fs.createWriteStream(filePath));
 
-    const update = handleRequests.sendToQueue<
-      SendMessageArgs<MessageType.GET_FILE_UPLOAD>,
-      SendMessageArgs<MessageType.SET_FILE_UPLOAD> | SendMessageArgs<MessageType.SET_ERROR>
-    >({
-      id,
-      type: MessageType.GET_FILE_UPLOAD,
-      lang,
-      timeout: parseInt(timeout, 10),
-      data: {
-        file: create.data,
-        filePath,
-      },
-    });
+    if (isImage(mimetype)) {
+      const update = handleRequests.sendToQueue<
+        SendMessageArgs<MessageType.GET_FILE_UPLOAD>,
+        SendMessageArgs<MessageType.SET_FILE_UPLOAD> | SendMessageArgs<MessageType.SET_ERROR>
+      >({
+        id,
+        type: MessageType.GET_FILE_UPLOAD,
+        lang,
+        timeout: parseInt(timeout, 10),
+        data: {
+          file: create.data,
+          filePath,
+        },
+      });
 
-    res.push(update);
+      res.push(update);
+    }
   }
 
   let withError = false;
