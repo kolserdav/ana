@@ -1,0 +1,33 @@
+@font-face {
+  font-family: 'Ubuntu Regular';
+  src: url('/fonts/ubuntu/Ubuntu-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Ubuntu Bold';
+  src: url('/fonts/ubuntu/Ubuntu-Bold.ttf') format('truetype');
+}
+
+.ubuntu300 {
+  font-family: 'Ubuntu Regular', sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.ubuntu400 {
+  font-family: 'Ubuntu Regular', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ubuntu500 {
+  font-family: 'Ubuntu Regular', sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.ubuntu700 {
+  font-family: 'Ubuntu Regular', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}

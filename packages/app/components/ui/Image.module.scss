@@ -2,12 +2,12 @@ $image-back-color: rgba(
   $color: #000,
   $alpha: 80%,
 );
-$image-transition: 0.1s;
+$image-transition: 0.2s;
 
 .wrapper {
   position: relative;
   cursor: pointer;
-  transition: all $image-transition ease-in;
+  transition: background-color $image-transition ease-in;
   overflow: auto;
 
   .close {
@@ -25,7 +25,7 @@ $image-transition: 0.1s;
     top: 0;
     left: 0;
     background-color: $image-back-color;
-    transition: all $image-transition ease-out;
+    transition: background-color $image-transition ease-out;
 
     img {
       position: relative;

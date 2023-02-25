@@ -12,6 +12,7 @@ import {
 } from '../utils/constants';
 import { getImagePath } from '../utils/lib';
 import {
+  useBeforeUnload,
   useDescriptionInput,
   useEndDateInput,
   useInputFiles,
@@ -19,26 +20,32 @@ import {
 } from './CreateProject.hooks';
 import s from './CreateProject.module.scss';
 import DeleteIcon from './icons/Delete';
+import HelpIcon from './icons/Help';
 import Button from './ui/Button';
 import IconButton from './ui/IconButton';
 import Image from './ui/Image';
 import Input from './ui/Input';
+import Tooltip from './ui/Tooltip';
 import Typography from './ui/Typography';
 
-const HtmlEditor = dynamic(() => import('./ui/HtmlEditor'), { ssr: false });
+const HtmlEditor = dynamic(() => import('./ui/HtmlEditor'));
 
 function CreateProject({
   theme,
   locale,
   formDesc,
   touchpad,
+  showHelp,
 }: {
   theme: Theme;
   locale: Locale['app']['me'];
   formDesc: string;
   touchpad: boolean;
+  showHelp: string;
 }) {
   const filesRef = useRef<HTMLDivElement>(null);
+
+  const helpDateRef = useRef<HTMLButtonElement>(null);
 
   const { load, setLoad } = useLoad();
 
@@ -58,7 +65,9 @@ function CreateProject({
     inputFilesRef,
     onClickAddFiles,
     deleteFileWrapper,
-  } = useInputFiles({ setLoad });
+  } = useInputFiles({ setLoad, load });
+
+  useBeforeUnload({ files, title, description, endDate });
 
   return (
     <div className={s.wrapper}>
@@ -81,6 +90,7 @@ function CreateProject({
         />
         <div className={s.html__editor}>
           <HtmlEditor
+            value={description}
             placeholder={locale.projectDesPlaceholder}
             id="description"
             label={`${locale.projectDescription}*`}
@@ -88,16 +98,24 @@ function CreateProject({
             theme={theme}
           />
         </div>
-        <Input
-          theme={theme}
-          id="actual-for"
-          type="date"
-          min={MIN_DATE_ACTUAL}
-          max={MAX_DATE_ACTUAL}
-          name={`${locale.projectActualFor}*`}
-          value={endDate}
-          onChange={onChangeEndDate}
-        />
+        <div className={s.date}>
+          <Input
+            theme={theme}
+            id="actual-for"
+            type="date"
+            min={MIN_DATE_ACTUAL}
+            max={MAX_DATE_ACTUAL}
+            name={`${locale.projectActualFor}*`}
+            value={endDate}
+            onChange={onChangeEndDate}
+          />
+          <IconButton ref={helpDateRef} title={showHelp}>
+            <HelpIcon color={theme.blue} />
+          </IconButton>
+          <Tooltip current={helpDateRef.current} theme={theme}>
+            {locale.projectDateTooltip}
+          </Tooltip>
+        </div>
         <div className={s.files_container} style={{ backgroundColor: theme.active }}>
           {!filesActive && (
             <div className={s.button__files}>
@@ -119,7 +137,7 @@ function CreateProject({
             theme={theme}
           />
           <div
-            className={clsx(s.files, filesActive ? s.active : '')}
+            className={clsx(s.files, filesActive ? s.active : '', load ? s.disabled : '')}
             ref={filesRef}
             onDrop={onDropFiles}
             onDragOver={onDragOverFiles}

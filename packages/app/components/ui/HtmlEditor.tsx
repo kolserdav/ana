@@ -14,11 +14,13 @@ export default function HtmlEditor({
   theme,
   id,
   label,
+  value,
   placeholder,
 }: {
   onChange: HTMLEditorOnChange;
   id: string;
   theme: Theme;
+  value: string;
   label: string;
   placeholder: string;
 }) {
@@ -46,6 +48,7 @@ export default function HtmlEditor({
           id={id}
           key={theme.paper}
           apiKey={TINY_API_KEY}
+          initialValue={value}
           init={{
             language: 'ru',
             min_height: HTML_EDITOR_HEIGHT,

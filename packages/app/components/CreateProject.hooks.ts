@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
 import { MessageType } from '../types/interfaces';
 import { PROJECT_TITLE_MAX } from '../utils/constants';
-import { log, waitForTimeout } from '../utils/lib';
+import { log } from '../utils/lib';
 import Request from '../utils/request';
 
 const request = new Request();
@@ -50,8 +50,10 @@ export const useEndDateInput = () => {
 
 export const useInputFiles = ({
   setLoad,
+  load,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  load: boolean;
 }) => {
   const inputFilesRef = useRef<HTMLInputElement>(null);
 
@@ -92,6 +94,9 @@ export const useInputFiles = ({
   };
 
   const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
+    if (load) {
+      return;
+    }
     e.preventDefault();
     const {
       dataTransfer: { files: _files },
@@ -109,7 +114,9 @@ export const useInputFiles = ({
   };
 
   const onDragLeave = () => {
-    setFilesActive(false);
+    if (!load) {
+      setFilesActive(false);
+    }
   };
 
   const onClickAddFiles = () => {
@@ -143,4 +150,38 @@ export const useInputFiles = ({
     inputFilesRef,
     deleteFileWrapper,
   };
+};
+
+export const useBeforeUnload = ({
+  files,
+  title,
+  description,
+  endDate,
+}: {
+  files: File[];
+  title: string;
+  description: string;
+  endDate: string;
+}) => {
+  /**
+   * Clen files if project not created
+   */
+  useEffect(() => {
+    const beforeUnloadHandler = async (ev: Event) => {
+      if (files.length === 0 && !title && !description && !endDate) {
+        return;
+      }
+      ev.preventDefault();
+      for (let i = 0; files[i]; i++) {
+        const file = files[i];
+        request.fileDelete({
+          fileId: file.id,
+        });
+      }
+    };
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, [files, title, description, endDate]);
 };

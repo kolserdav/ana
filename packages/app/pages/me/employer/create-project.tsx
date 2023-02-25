@@ -36,6 +36,7 @@ export default function MeEmployerCreateProjectPage({
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <CreateProject
+          showHelp={localeCommon.showHelp}
           touchpad={touchpad}
           locale={localeMeEmployer}
           formDesc={localeCommon.formDesc}

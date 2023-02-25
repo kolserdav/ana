@@ -199,6 +199,7 @@ export interface Locale {
     forbidden: string;
     unauthorized: string;
     someFilesNotSaved: string;
+    notImplement: string;
   };
   app: {
     login: {
@@ -259,9 +260,11 @@ export interface Locale {
       projectAddFiles: string;
       projectAddFilesDesc: string;
       projectDragDropFiles: string;
+      projectDateTooltip: string;
     };
     common: {
       formDesc: string;
+      showHelp: string;
     };
   };
 }

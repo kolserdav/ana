@@ -1,0 +1,23 @@
+.wrapper {
+  position: fixed;
+  width: 0;
+  height: 0;
+  z-index: -1;
+  border-radius: 2px;
+  padding: 0.29rem;
+  opacity: 0;
+  transition: opacity 0.5s ease-out, z-index 0.5s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: small;
+  overflow: auto;
+  text-align: center;
+  word-wrap: normal;
+
+  &.open {
+    z-index: 14;
+    transition: opacity 0.1s ease-in, z-index 0.1s ease-in;
+    opacity: 1;
+  }
+}

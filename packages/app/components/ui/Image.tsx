@@ -41,18 +41,23 @@ function Image({
   const [full, setFull] = useState<boolean>(false);
   const [fill, setFill] = useState<boolean>(false);
 
-  const imageOnClick = () => {
+  const imageOnClick = (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!full) {
       setFull(true);
     } else if (fill) {
-      setZoomIn(!zoomIn);
+      if (e) {
+        const { nodeName } = e.target as HTMLElement;
+        const _nodeName = nodeName.toLowerCase();
+        if (_nodeName !== 'path' && _nodeName !== 'svg' && _nodeName !== 'button') {
+          setZoomIn(!zoomIn);
+        }
+      }
     }
   };
 
   const onCloseImageClick = () => {
     setFull(false);
     setZoomIn(false);
-    setFill(false);
   };
 
   const onKeyImageDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -91,9 +96,6 @@ function Image({
       setFill(width >= w || height >= h);
     }
   }, [width, height, full]);
-
-  console.log({ width, height });
-  // FIXME zoom in with small images
 
   return (
     <div
