@@ -32,7 +32,36 @@ class File {
     const locale = getLocale(lang).server;
 
     const stats = fs.statSync(filePath);
-    const buffer = await sharp(filePath).avif().toBuffer();
+    let error = false;
+    const buffer = await sharp(filePath)
+      .avif()
+      .toBuffer()
+      .catch((e) => {
+        log('error', 'Error sharp work', e);
+        error = true;
+      });
+    if (error || !buffer) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_FILE_UPLOAD,
+          message: locale.unacceptedImage,
+          httpCode: 400,
+        },
+      });
+      await orm.fileDelete({
+        where: {
+          id: file.id,
+        },
+      });
+      fs.unlinkSync(filePath);
+      return;
+    }
     const bufferPreview = await sharp(filePath).avif().resize(PREVIEW_IMAGE_WIDTH).toBuffer();
     const { width, height } = await sharp(buffer).metadata();
     fs.unlinkSync(filePath);

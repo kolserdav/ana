@@ -18,7 +18,7 @@ import {
   useInputFiles,
   useTitleInput,
 } from './CreateProject.hooks';
-import { getAcceptedFiles, getColor, getFileIconPath } from './CreateProject.lib';
+import { getAcceptedFiles, getFileIconPath } from './CreateProject.lib';
 import s from './CreateProject.module.scss';
 import DeleteIcon from './icons/Delete';
 import HelpIcon from './icons/Help';
@@ -37,12 +37,16 @@ function CreateProject({
   formDesc,
   touchpad,
   showHelp,
+  somethingWentWrong,
+  maxFileSize,
 }: {
   theme: Theme;
   locale: Locale['app']['me'];
   formDesc: string;
   touchpad: boolean;
   showHelp: string;
+  somethingWentWrong: string;
+  maxFileSize: string;
 }) {
   const filesRef = useRef<HTMLDivElement>(null);
 
@@ -66,7 +70,8 @@ function CreateProject({
     inputFilesRef,
     onClickAddFiles,
     deleteFileWrapper,
-  } = useInputFiles({ setLoad, load });
+    filesLoad,
+  } = useInputFiles({ load, somethingWentWrong, maxFileSize });
 
   useBeforeUnload({ files, title, description, endDate });
 
@@ -122,7 +127,7 @@ function CreateProject({
         <div className={s.files_container} style={{ backgroundColor: theme.active }}>
           {!filesActive && (
             <div className={s.button__files}>
-              <Button theme={theme} disabled={load} onClick={onClickAddFiles}>
+              <Button theme={theme} disabled={load || filesLoad} onClick={onClickAddFiles}>
                 {locale.projectAddFiles}
               </Button>
             </div>
@@ -141,12 +146,17 @@ function CreateProject({
             theme={theme}
           />
           <div
-            className={clsx(s.files, filesActive ? s.active : '', load ? s.disabled : '')}
+            className={clsx(
+              s.files,
+              filesActive ? s.active : '',
+              load || filesLoad ? s.disabled : ''
+            )}
             ref={filesRef}
             onDrop={onDropFiles}
             onDragOver={onDragOverFiles}
             onDragLeave={onDragLeave}
           >
+            {filesLoad && <div className={s.loader} />}
             {files.length === 0 && !filesActive && !touchpad && (
               <div className={s.drag__desc} style={{ color: theme.text }}>
                 {locale.projectDragDropFiles}

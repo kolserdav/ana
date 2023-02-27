@@ -8,7 +8,7 @@ export enum LogLevel {
   warn = 1,
   error = 2,
 }
-
+export type LocaleValue = 'ru';
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
 export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
 export const EMAIL_QS = 'e';
@@ -16,6 +16,16 @@ export const KEY_QS = 'k';
 export const CLOUD_PREFIX = '/cloud';
 export const IMAGE_EXT = '.avif';
 export const IMAGE_PREV_POSTFIX = '-preview';
+export type WSProtocol = 'test' | 'login' | 'confirm-email';
+export const LOCALE_DEFAULT: LocaleValue = 'ru';
+export const LANGUAGE_HEADER = 'lang';
+export const USER_ID_HEADER = 'uuid';
+export const AUTHORIZATION_HEADER = 'authorization';
+export const TIMEOUT_HEADER = 'timeout';
+export const APPLICATION_JSON = 'application/json';
+export const PREVIEW_IMAGE_WIDTH = 320;
+export const IMAGE_EXTS = '.avif, .jpg, .jpeg, .gif, .png, .webp';
+export const MAX_BODY_MB = 5;
 
 // eslint-disable-next-line no-shadow
 export enum MessageType {
@@ -52,7 +62,7 @@ export enum MessageType {
   GET_FILE_DELETE = 'GET_FILE_DELETE',
   SET_FILE_DELETE = 'SET_FILE_DELETE',
 }
-export type LocaleValue = 'ru';
+
 export interface RequestContext {
   lang: LocaleValue;
   timeout: number;
@@ -200,6 +210,8 @@ export interface Locale {
     unauthorized: string;
     someFilesNotSaved: string;
     notImplement: string;
+    unacceptedImage: string;
+    maxFileSize: string;
   };
   app: {
     login: {
@@ -265,6 +277,8 @@ export interface Locale {
     common: {
       formDesc: string;
       showHelp: string;
+      somethingWentWrong: string;
+      maxFileSize: string;
     };
   };
 }
@@ -284,16 +298,6 @@ export enum Api {
 export interface FileDeleteBody {
   fileId: string;
 }
-
-export type WSProtocol = 'test' | 'login' | 'confirm-email';
-export const LOCALE_DEFAULT: LocaleValue = 'ru';
-export const LANGUAGE_HEADER = 'lang';
-export const USER_ID_HEADER = 'uuid';
-export const AUTHORIZATION_HEADER = 'authorization';
-export const TIMEOUT_HEADER = 'timeout';
-export const APPLICATION_JSON = 'application/json';
-export const PREVIEW_IMAGE_WIDTH = 320;
-export const IMAGE_EXTS = '.avif, .jpg, .jpeg, .gif, .png, .webp';
 
 export function checkEmail(email: string): boolean {
   return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
@@ -332,3 +336,5 @@ export const getFileExt = (filename: string): string => {
   }
   return fileE[0];
 };
+
+export const getMaxBodySize = () => 1024 * 1024 * MAX_BODY_MB;

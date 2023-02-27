@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT } from './utils/constants';
 import { createDir, log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
-import { Api, CLOUD_PREFIX, FileDeleteBody } from './types/interfaces';
+import { Api, CLOUD_PREFIX, FileDeleteBody, getMaxBodySize } from './types/interfaces';
 import getLocaleHandler from './api/v1/get-locale';
 import pageFindManyHandler from './api/v1/page/find-many';
 import getUserFindFirst from './api/v1/user/user-find-first';
@@ -44,7 +44,11 @@ process.on('unhandledRejection', (err: Error) => {
       fieldId: 'fileId' as keyof FileDeleteBody,
     })
   );
-  await fastify.register(import('@fastify/multipart'));
+  await fastify.register(import('@fastify/multipart'), {
+    limits: {
+      fileSize: getMaxBodySize(),
+    },
+  });
   fastify.use([CLOUD_PREFIX], serveStatic(CLOUD_PATH));
 
   fastify.get(Api.testV1, getTestHandler);
@@ -57,7 +61,7 @@ process.on('unhandledRejection', (err: Error) => {
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;
-    console.log('Server listenning on', address);
+    log('info', 'Server listenning on', address, true);
     createDir(CLOUD_PATH);
   });
 })();

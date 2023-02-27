@@ -36,6 +36,8 @@ export default function MeEmployerCreateProjectPage({
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <CreateProject
+          maxFileSize={localeCommon.maxFileSize}
+          somethingWentWrong={localeCommon.somethingWentWrong}
           showHelp={localeCommon.showHelp}
           touchpad={touchpad}
           locale={localeMeEmployer}

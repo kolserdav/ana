@@ -24,7 +24,8 @@
     "noImplicitOverride": true,
     "allowUnusedLabels": true,
     "allowUnreachableCode": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "exclude": ["dist", "node_modules"]
 }

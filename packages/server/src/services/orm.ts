@@ -53,6 +53,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public fileDeleteW: Database['fileDelete'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'file',
+      command: 'delete',
+    });
+  };
+
   public userCreate: Database['userCreate'] = async (args) => {
     return this.run({
       args,

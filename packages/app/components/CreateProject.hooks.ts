@@ -1,7 +1,7 @@
 import { File } from '@prisma/client';
 import React, { useEffect, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
-import { MessageType } from '../types/interfaces';
+import { getMaxBodySize, MessageType } from '../types/interfaces';
 import { PROJECT_TITLE_MAX } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
@@ -49,30 +49,43 @@ export const useEndDateInput = () => {
 };
 
 export const useInputFiles = ({
-  setLoad,
+  somethingWentWrong,
+  maxFileSize,
   load,
 }: {
-  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   load: boolean;
+  somethingWentWrong: string;
+  maxFileSize: string;
 }) => {
   const inputFilesRef = useRef<HTMLInputElement>(null);
 
+  const [filesLoad, setFilesLoad] = useState<boolean>(false);
   const [files, setFiles] = useState<File[]>([]);
   const [filesActive, setFilesActive] = useState<boolean>(false);
   const [restart, setRestart] = useState<boolean>(false);
 
   const saveLocalFiles = async (_files: FileList) => {
-    setLoad(true);
+    setFilesLoad(true);
     const formData = new FormData();
     for (let i = 0; _files[i]; i++) {
+      const { size, name } = _files[i];
+      if (size > getMaxBodySize()) {
+        setTimeout(() => {
+          log('warn', `${maxFileSize}: ${name}`, { size }, true);
+        }, 200 * i);
+        // eslint-disable-next-line no-continue
+        continue;
+      }
       formData.append(`file-${i}`, _files[i]);
     }
     const res = await request.fileUpload(formData);
     if (res.type === MessageType.SET_ERROR) {
       log(res.data.status, res.data.message, { res }, true);
+    } else if (!res.type) {
+      log('error', somethingWentWrong, { res }, true);
     }
     setRestart(!restart);
-    setLoad(false);
+    setFilesLoad(false);
   };
 
   const deleteFileWrapper = (fileId: string) => async () => {
@@ -94,7 +107,7 @@ export const useInputFiles = ({
   };
 
   const onDropFiles = (e: React.DragEvent<HTMLDivElement>) => {
-    if (load) {
+    if (load || filesLoad) {
       return;
     }
     e.preventDefault();
@@ -114,7 +127,7 @@ export const useInputFiles = ({
   };
 
   const onDragLeave = () => {
-    if (!load) {
+    if (!load || !filesLoad) {
       setFilesActive(false);
     }
   };
@@ -132,12 +145,12 @@ export const useInputFiles = ({
    */
   useEffect(() => {
     (async () => {
-      setLoad(true);
+      setFilesLoad(true);
       const res = await request.fileFindMany();
       setFiles(res.data);
-      setLoad(false);
+      setFilesLoad(false);
     })();
-  }, [restart, setLoad]);
+  }, [restart]);
 
   return {
     onChangeFiles,
@@ -149,6 +162,7 @@ export const useInputFiles = ({
     onClickAddFiles,
     inputFilesRef,
     deleteFileWrapper,
+    filesLoad,
   };
 };
 

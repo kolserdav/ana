@@ -17,6 +17,8 @@ const lang: Locale = {
     unauthorized: 'Недостаточно прав',
     someFilesNotSaved: 'Некоторые файлы не могут быть сохранены',
     notImplement: 'Устаревшая версия запроса',
+    unacceptedImage: 'Неподдерживаемый формат изображения',
+    maxFileSize: 'Превышен допустимый размер загружаемого файла',
   },
   app: {
     login: {
@@ -99,6 +101,8 @@ const lang: Locale = {
     common: {
       formDesc: 'Поля помеченные * обязательны для заполенения',
       showHelp: 'Показать справку',
+      somethingWentWrong: 'Что-то пошло не так',
+      maxFileSize: 'Файл слишком большой',
     },
   },
 };
