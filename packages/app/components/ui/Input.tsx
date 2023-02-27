@@ -30,10 +30,12 @@ const Input = forwardRef<
     multiple?: boolean;
     hidden?: boolean;
     desc?: string;
+    accept?: string;
   }
 >(
   (
     {
+      accept,
       className,
       error,
       disabled,
@@ -91,6 +93,7 @@ const Input = forwardRef<
           disabled={disabled}
           placeholder=" "
           id={id}
+          accept={accept}
           multiple={multiple}
           value={value}
           title={title}
@@ -166,6 +169,7 @@ Input.defaultProps = {
   multiple: undefined,
   hidden: undefined,
   desc: undefined,
+  accept: undefined,
 };
 
 export default Input;

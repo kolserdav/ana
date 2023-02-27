@@ -2,3 +2,5 @@ node_modules
 dist
 tmp
 src/types/interfaces.ts
+data/*
+!data/.gitkeep

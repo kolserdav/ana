@@ -106,8 +106,8 @@ export const checkRouterPath = (asPath: string, checkValue: string | string[]) =
   return checkMany;
 };
 
-export const getImagePath = ({ id, userId }: File) =>
-  `${SERVER}${CLOUD_PREFIX}/${userId}/${id}${IMAGE_EXT}`;
+export const getFilePath = ({ id, userId, ext }: File) =>
+  `${SERVER}${CLOUD_PREFIX}/${userId}/${id}${ext}`;
 
 export const getWindowDimensions = () => {
   const res = {

@@ -1,16 +1,16 @@
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
-import { Locale } from '../types/interfaces';
+import { isImage, Locale } from '../types/interfaces';
 import {
   IMAGE_PREVIEW_WIDTH,
   MAX_DATE_ACTUAL,
   MIN_DATE_ACTUAL,
   PROJECT_TITLE_MAX,
 } from '../utils/constants';
-import { getImagePath } from '../utils/lib';
+import { getFilePath } from '../utils/lib';
 import {
   useBeforeUnload,
   useDescriptionInput,
@@ -18,6 +18,7 @@ import {
   useInputFiles,
   useTitleInput,
 } from './CreateProject.hooks';
+import { getAcceptedFiles, getColor, getFileIconPath } from './CreateProject.lib';
 import s from './CreateProject.module.scss';
 import DeleteIcon from './icons/Delete';
 import HelpIcon from './icons/Help';
@@ -68,6 +69,8 @@ function CreateProject({
   } = useInputFiles({ setLoad, load });
 
   useBeforeUnload({ files, title, description, endDate });
+
+  const accept = useMemo(() => getAcceptedFiles(), []);
 
   return (
     <div className={s.wrapper}>
@@ -130,6 +133,7 @@ function CreateProject({
             id="project-file"
             value=""
             hidden
+            accept={accept}
             multiple
             max={2}
             onChange={onChangeFiles}
@@ -151,11 +155,13 @@ function CreateProject({
             {files.map((item) => (
               <div className={s.item} key={item.id}>
                 <Image
+                  link={!isImage(item.mimetype) ? getFilePath(item) : undefined}
+                  className="files__image"
                   width={item.width || 0}
                   height={item.height || 0}
                   preWidth={IMAGE_PREVIEW_WIDTH / 2}
                   preHeight={IMAGE_PREVIEW_WIDTH / 2 / (item.coeff || 1)}
-                  src={getImagePath(item)}
+                  src={isImage(item.mimetype) ? getFilePath(item) : getFileIconPath(item)}
                   alt={item.filename}
                 />
                 <IconButton onClick={deleteFileWrapper(item.id)}>
@@ -164,6 +170,9 @@ function CreateProject({
               </div>
             ))}
           </div>
+        </div>
+        <div className={s.files__accept} style={{ color: theme.text }}>
+          {accept}
         </div>
         <div className={s.files__desc} style={{ color: theme.text }}>
           {locale.projectAddFilesDesc}

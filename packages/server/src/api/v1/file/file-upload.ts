@@ -3,15 +3,14 @@ import { pipeline } from 'stream';
 import fs from 'fs';
 import path from 'path';
 import { RequestHandler } from '../../../types';
-import { MessageType, SendMessageArgs, APPLICATION_JSON, isImage } from '../../../types/interfaces';
 import {
-  createDir,
-  getCloudPath,
+  MessageType,
+  SendMessageArgs,
+  APPLICATION_JSON,
+  isImage,
   getFileExt,
-  getFilePath,
-  getLocale,
-  parseHeaders,
-} from '../../../utils/lib';
+} from '../../../types/interfaces';
+import { createDir, getCloudPath, getFilePath, getLocale, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
 import HandleRequests from '../../../services/handleRequests';
 

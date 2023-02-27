@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import NextImage, { ImageLoader } from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { IMAGE_EXT, IMAGE_PREV_POSTFIX, PREVIEW_IMAGE_WIDTH } from '../../types/interfaces';
 import { getWindowDimensions, setBodyScroll } from '../../utils/lib';
@@ -25,6 +26,9 @@ function Image({
   src,
   preHeight,
   preWidth,
+  className,
+  style,
+  link,
 }: {
   width: number;
   height: number;
@@ -32,7 +36,11 @@ function Image({
   preHeight: number;
   alt: string;
   src: string;
+  className?: string;
+  style?: React.CSSProperties;
+  link?: string;
 }) {
+  const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [width, setWidth] = useState<number>(preWidth);
@@ -42,6 +50,10 @@ function Image({
   const [fill, setFill] = useState<boolean>(false);
 
   const imageOnClick = (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (link) {
+      window.open(link);
+      return;
+    }
     if (!full) {
       setFull(true);
     } else if (fill) {
@@ -97,6 +109,9 @@ function Image({
     }
   }, [width, height, full]);
 
+  const _style = { ...style };
+  _style.objectFit = zoomIn ? undefined : 'contain';
+
   return (
     <div
       ref={wrapperRef}
@@ -113,12 +128,13 @@ function Image({
     >
       {/** strong first child */}
       <NextImage
+        className={className}
         blurDataURL={getSrcPreview(src)}
         loader={imageLoader}
         fill={full && !zoomIn && fill}
         width={full && !zoomIn && fill ? undefined : width}
         height={full && !zoomIn && fill ? undefined : height}
-        style={{ objectFit: zoomIn ? undefined : 'contain' }}
+        style={_style}
         src={src}
         alt={alt}
       />
@@ -128,5 +144,11 @@ function Image({
     </div>
   );
 }
+
+Image.defaultProps = {
+  className: undefined,
+  style: undefined,
+  link: undefined,
+};
 
 export default Image;

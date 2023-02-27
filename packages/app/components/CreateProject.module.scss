@@ -76,6 +76,13 @@
     margin-bottom: calc($input-margin-bottom / 2);
   }
 
+  .files__accept {
+    position: relative;
+    font-size: x-small;
+    margin-top: calc($input-margin-bottom / 2 * -1);
+    text-align: right;
+  }
+
   .container {
     position: relative;
     width: 100%;

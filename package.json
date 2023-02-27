@@ -26,9 +26,10 @@
     "dev:app": "cd packages/app && npm run dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:app\"",
     "scripts:create-interfaces-symlink": "node scripts/create-interfaces-symlink.js",
+    "scripts:create-files-symlink": "node scripts/create-files-symlink.js",
     "scripts:copy-test-constants": "node scripts/copy-test-constants.js",
     "scripts:copy-env": "node scripts/copy-env.js",
-    "scripts": "npm run scripts:create-interfaces-symlink && npm run scripts:copy-test-constants && npm run scripts:copy-env",
+    "scripts": "npm run scripts:create-interfaces-symlink && npm run scripts:create-files-symlink && npm run scripts:copy-test-constants && npm run scripts:copy-env",
     "test": "node --test tests/**/*.test.js"
   },
   "keywords": [],

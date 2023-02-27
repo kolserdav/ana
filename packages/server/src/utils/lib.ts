@@ -103,16 +103,6 @@ export const createDir = (dirPath: string) => {
   }
 };
 
-export const getFileExt = (filename: string): string => {
-  const fileE = filename.match(/\.[a-zA-Z0-9]{1,4}$/);
-  if (!fileE) {
-    return '';
-  } else if (!fileE[0]) {
-    return '';
-  }
-  return fileE[0];
-};
-
 export const changeImgExt = ({
   name,
   ext,

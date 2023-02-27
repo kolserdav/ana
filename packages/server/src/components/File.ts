@@ -5,6 +5,7 @@ import { ORM } from '../services/orm';
 import {
   IMAGE_EXT,
   IMAGE_PREV_POSTFIX,
+  isImage,
   MessageType,
   PREVIEW_IMAGE_WIDTH,
   SendMessageArgs,
@@ -133,12 +134,14 @@ class File {
       return;
     }
 
-    const { id: fId, userId, ext } = deleteR.data;
+    const { id: fId, userId, ext, mimetype } = deleteR.data;
     const userCloud = getCloudPath(userId);
     const filePath = getFilePath({ userCloud, id: fId, ext });
     const filePreviewPath = getFilePath({ userCloud, id: fId, ext, postfix: IMAGE_PREV_POSTFIX });
     fs.unlinkSync(filePath);
-    fs.unlinkSync(filePreviewPath);
+    if (isImage(mimetype)) {
+      fs.unlinkSync(filePreviewPath);
+    }
     const dir = fs.readdirSync(userCloud);
     if (dir.length === 0) {
       fs.rmdirSync(userCloud);

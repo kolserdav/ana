@@ -31,3 +31,9 @@ a {
     background: black;
   }
 }
+
+img {
+  &.files__image {
+    filter: drop-shadow(-2px 0 2px gray);
+  }
+}

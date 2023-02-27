@@ -293,6 +293,7 @@ export const AUTHORIZATION_HEADER = 'authorization';
 export const TIMEOUT_HEADER = 'timeout';
 export const APPLICATION_JSON = 'application/json';
 export const PREVIEW_IMAGE_WIDTH = 320;
+export const IMAGE_EXTS = '.avif, .jpg, .jpeg, .gif, .png, .webp';
 
 export function checkEmail(email: string): boolean {
   return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
@@ -320,3 +321,14 @@ export const parseQueryString = (query: string): Record<string, string> => {
 };
 
 export const isImage = (mimetype: string) => /^image\//.test(mimetype);
+
+export const getFileExt = (filename: string): string => {
+  const fileE = filename.match(/\.[a-zA-Z0-9]{1,4}$/);
+  if (!fileE) {
+    return '';
+  }
+  if (!fileE[0]) {
+    return '';
+  }
+  return fileE[0];
+};

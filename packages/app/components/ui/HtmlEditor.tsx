@@ -66,7 +66,6 @@ export default function HtmlEditor({
               'export',
               'lists',
               'link',
-              'image',
               'charmap',
               'preview',
               'anchor',
@@ -78,12 +77,11 @@ export default function HtmlEditor({
               'insertdatetime',
               'media',
               'table',
-              'image',
             ],
             toolbar:
               'undo redo | casechange blocks | bold italic underline | ' +
               'alignleft aligncenter alignright alignjustify | ' +
-              'bullist numlist checklist outdent indent | table image |  removeformat',
+              'bullist numlist checklist outdent indent | table |  removeformat',
             content_style: `
             .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
               color: ${theme.text};
