@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import NextImage, { ImageLoader } from 'next/image';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { IMAGE_EXT, IMAGE_PREV_POSTFIX, PREVIEW_IMAGE_WIDTH } from '../../types/interfaces';
 import { getWindowDimensions, setBodyScroll } from '../../utils/lib';
@@ -40,7 +39,6 @@ function Image({
   style?: React.CSSProperties;
   link?: string;
 }) {
-  const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [width, setWidth] = useState<number>(preWidth);
@@ -129,8 +127,8 @@ function Image({
       {/** strong first child */}
       <NextImage
         className={className}
-        blurDataURL={getSrcPreview(src)}
-        loader={imageLoader}
+        blurDataURL={link !== undefined ? undefined : getSrcPreview(src)}
+        loader={link !== undefined ? undefined : imageLoader}
         fill={full && !zoomIn && fill}
         width={full && !zoomIn && fill ? undefined : width}
         height={full && !zoomIn && fill ? undefined : height}

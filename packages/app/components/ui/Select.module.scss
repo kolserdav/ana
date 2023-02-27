@@ -1,0 +1,29 @@
+@import '../../styles/constants';
+
+.wrapper {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  width: $small-width;
+
+  label {
+    position: absolute;
+    display: inline-block;
+    margin-left: $label-left;
+    font-size: $input-font-size;
+    top: calc(($label-shift + $label-top) * -1);
+  }
+
+  select {
+    height: $input-height;
+    padding-left: $input-padding;
+    border-radius: $input-border-radius;
+    appearance: none;
+  }
+
+  option {
+    cursor: pointer;
+    line-height: 3;
+  }
+}

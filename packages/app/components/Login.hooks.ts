@@ -316,9 +316,11 @@ export const useMessages = ({
   email,
   password,
   setButtonError,
+  setPasswordError,
 }: {
   setConnId: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
+  setPasswordError: React.Dispatch<React.SetStateAction<string>>;
   setEmailSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setButtonError: React.Dispatch<React.SetStateAction<string>>;
@@ -357,6 +359,9 @@ export const useMessages = ({
       await awaitResponse(timeout);
       switch (type) {
         case MessageType.GET_USER_LOGIN:
+          if (httpCode === 401) {
+            setPasswordError(message);
+          }
           setButtonError(message);
           break;
         case MessageType.GET_CHECK_RESTORE_KEY:

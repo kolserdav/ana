@@ -61,6 +61,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public categoryFindManyW: Database['categoryFindManyW'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'category',
+      command: 'findMany',
+    });
+  };
+
   public userCreate: Database['userCreate'] = async (args) => {
     return this.run({
       args,

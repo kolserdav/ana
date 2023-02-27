@@ -5,6 +5,8 @@ import WS from './protocols/ws';
 import { ORM } from './services/orm';
 
 if (cluster.isPrimary) {
+  process.setMaxListeners(0);
+
   process.on('uncaughtException', (err: Error) => {
     log('error', '[MASTER] uncaughtException', err);
   });

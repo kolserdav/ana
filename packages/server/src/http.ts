@@ -14,6 +14,7 @@ import fileUpload from './api/v1/file/file-upload';
 import getFileFindMany from './api/v1/file/file-find-many';
 import fileDelete from './api/v1/file/file-delete';
 import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
+import categoryFindMany from './api/v1/category/category-find-many';
 
 const prisma = new PrismaClient();
 
@@ -58,6 +59,8 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.postFileUpload, fileUpload);
   fastify.get(Api.getFileFindMany, getFileFindMany);
   fastify.delete(Api.deleteFileDelete, fileDelete);
+  // Open
+  fastify.get(Api.categoryFindMany, categoryFindMany);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

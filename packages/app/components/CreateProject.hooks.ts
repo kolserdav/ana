@@ -1,7 +1,7 @@
 import { File } from '@prisma/client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
-import { getMaxBodySize, MessageType } from '../types/interfaces';
+import { getMaxBodySize, MessageType, SendMessageArgs } from '../types/interfaces';
 import { PROJECT_TITLE_MAX } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
@@ -147,6 +147,9 @@ export const useInputFiles = ({
     (async () => {
       setFilesLoad(true);
       const res = await request.fileFindMany();
+      if (res.type === MessageType.SET_ERROR) {
+        return;
+      }
       setFiles(res.data);
       setFilesLoad(false);
     })();
@@ -171,18 +174,20 @@ export const useBeforeUnload = ({
   title,
   description,
   endDate,
+  filesLoad,
 }: {
   files: File[];
   title: string;
   description: string;
   endDate: string;
+  filesLoad: boolean;
 }) => {
   /**
    * Clen files if project not created
    */
   useEffect(() => {
     const beforeUnloadHandler = async (ev: Event) => {
-      if (files.length === 0 && !title && !description && !endDate) {
+      if (files.length === 0 && !filesLoad && !title && !description && !endDate) {
         return;
       }
       ev.preventDefault();
@@ -197,5 +202,40 @@ export const useBeforeUnload = ({
     return () => {
       window.removeEventListener('beforeunload', beforeUnloadHandler);
     };
-  }, [files, title, description, endDate]);
+  }, [files, title, description, endDate, filesLoad]);
+};
+
+export const useSelectCategory = () => {
+  const [categories, setCategories] = useState<
+    SendMessageArgs<MessageType.SET_CATEGORY_FIND_MANY>['data']
+  >([]);
+  const [activeCategory, setActiveCategory] = useState<number>(0);
+
+  /**
+   * Set categories
+   */
+  useEffect(() => {
+    (async () => {
+      const categs = await request.categoryFindMany();
+      if (categs.type === MessageType.SET_ERROR) {
+        log('error', categs.data.message, { categs }, true);
+        return;
+      }
+      setCategories(categs.data);
+    })();
+  }, []);
+
+  const onChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setActiveCategory(parseInt(value, 10));
+  };
+
+  const category = useMemo(
+    () => categories.find((item) => item.id === activeCategory),
+    [categories, activeCategory]
+  );
+
+  return { categories, activeCategory, onChangeCategory, category };
 };

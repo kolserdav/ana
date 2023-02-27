@@ -135,4 +135,38 @@ $files-height: 150px;
         $html-editor-body-margin * 2 + $form-item-margin-top * 2
     );
   }
+
+  .categs {
+    position: relative;
+    margin: calc($input-margin-bottom * 2) 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    .select {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .tags {
+      position: relative;
+      display: flex;
+      flex-flow: row wrap;
+
+      .item {
+        padding: 0.2rem;
+        margin: 0.3rem;
+        border-radius: 0.1rem;
+        cursor: pointer;
+        font-size: smaller;
+        display: flex;
+        flex-direction: row;
+      }
+    }
+
+    @media (max-width: $mobile-width) {
+      flex-direction: column;
+    }
+  }
 }

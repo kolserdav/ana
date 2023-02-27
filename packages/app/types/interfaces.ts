@@ -1,6 +1,19 @@
 /* eslint-disable no-unused-vars */
 
-import { Prisma, PrismaClient, Role, User, File } from '@prisma/client';
+import { Prisma, PrismaClient, Role, User, File, Category, Tag } from '@prisma/client';
+
+// eslint-disable-next-line no-shadow
+export enum Api {
+  testV1 = '/v1/test',
+  getLocaleV1 = '/v1/get-locale',
+  postPageFindManyV1 = '/v1/page-get-fields',
+  postUserCreateV1 = '/v1/user-create',
+  getUserFindFirst = '/v1/user-find-first',
+  postFileUpload = '/v1/file-upload',
+  deleteFileDelete = '/v1/file-delete',
+  getFileFindMany = '/v1/file-find-many',
+  categoryFindMany = '/v1/category-find-many',
+}
 
 // eslint-disable-next-line no-shadow
 export enum LogLevel {
@@ -61,6 +74,7 @@ export enum MessageType {
   SET_FILE_FIND_MANY = 'SET_FILE_FIND_MANY',
   GET_FILE_DELETE = 'GET_FILE_DELETE',
   SET_FILE_DELETE = 'SET_FILE_DELETE',
+  SET_CATEGORY_FIND_MANY = 'SET_CATEGORY_FIND_MANY',
 }
 
 export interface RequestContext {
@@ -178,6 +192,8 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? Prisma.FileDeleteArgs
   : T extends MessageType.SET_FILE_DELETE
   ? null
+  : T extends MessageType.SET_CATEGORY_FIND_MANY
+  ? (Category & { Tag: Tag[] })[]
   : unknown;
 
 export interface Tab {
@@ -273,6 +289,10 @@ export interface Locale {
       projectAddFilesDesc: string;
       projectDragDropFiles: string;
       projectDateTooltip: string;
+      withoutCategory: string;
+      maxFileSizeIs: string;
+      categoryHelp: string;
+      categoryLabel: string;
     };
     common: {
       formDesc: string;
@@ -281,18 +301,6 @@ export interface Locale {
       maxFileSize: string;
     };
   };
-}
-
-// eslint-disable-next-line no-shadow
-export enum Api {
-  testV1 = '/v1/test',
-  getLocaleV1 = '/v1/get-locale',
-  postPageFindManyV1 = '/v1/page-get-fields',
-  postUserCreateV1 = '/v1/user-create',
-  getUserFindFirst = '/v1/user-find-first',
-  postFileUpload = '/v1/file-upload',
-  deleteFileDelete = '/v1/file-delete',
-  getFileFindMany = '/v1/file-find-many',
 }
 
 export interface FileDeleteBody {

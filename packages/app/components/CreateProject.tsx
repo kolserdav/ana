@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { useMemo, useRef } from 'react';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
-import { isImage, Locale } from '../types/interfaces';
+import { isImage, Locale, MAX_BODY_MB } from '../types/interfaces';
 import {
   IMAGE_PREVIEW_WIDTH,
   MAX_DATE_ACTUAL,
@@ -16,16 +16,19 @@ import {
   useDescriptionInput,
   useEndDateInput,
   useInputFiles,
+  useSelectCategory,
   useTitleInput,
 } from './CreateProject.hooks';
 import { getAcceptedFiles, getFileIconPath } from './CreateProject.lib';
 import s from './CreateProject.module.scss';
 import DeleteIcon from './icons/Delete';
 import HelpIcon from './icons/Help';
+import PlusIcon from './icons/Plus';
 import Button from './ui/Button';
 import IconButton from './ui/IconButton';
 import Image from './ui/Image';
 import Input from './ui/Input';
+import Select from './ui/Select';
 import Tooltip from './ui/Tooltip';
 import Typography from './ui/Typography';
 
@@ -51,6 +54,7 @@ function CreateProject({
   const filesRef = useRef<HTMLDivElement>(null);
 
   const helpDateRef = useRef<HTMLButtonElement>(null);
+  const helpCategRef = useRef<HTMLButtonElement>(null);
 
   const { load, setLoad } = useLoad();
 
@@ -73,9 +77,11 @@ function CreateProject({
     filesLoad,
   } = useInputFiles({ load, somethingWentWrong, maxFileSize });
 
-  useBeforeUnload({ files, title, description, endDate });
+  useBeforeUnload({ files, title, description, endDate, filesLoad });
 
   const accept = useMemo(() => getAcceptedFiles(), []);
+
+  const { categories, activeCategory, onChangeCategory, category } = useSelectCategory();
 
   return (
     <div className={s.wrapper}>
@@ -140,7 +146,6 @@ function CreateProject({
             hidden
             accept={accept}
             multiple
-            max={2}
             onChange={onChangeFiles}
             name={locale.projectAddFiles}
             theme={theme}
@@ -185,7 +190,42 @@ function CreateProject({
           {accept}
         </div>
         <div className={s.files__desc} style={{ color: theme.text }}>
-          {locale.projectAddFilesDesc}
+          {locale.projectAddFilesDesc}. {locale.maxFileSizeIs}: {MAX_BODY_MB}M
+        </div>
+        <div className={s.categs}>
+          <div className={s.select}>
+            <Select
+              aria-label={locale.categoryLabel}
+              id="select-categ"
+              theme={theme}
+              onChange={onChangeCategory}
+              value={activeCategory}
+            >
+              <option value={0}>{locale.withoutCategory}</option>
+              {categories.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </Select>
+            <IconButton ref={helpCategRef} title={showHelp}>
+              <HelpIcon color={theme.blue} />
+            </IconButton>
+            <Tooltip current={helpCategRef.current} theme={theme}>
+              {locale.categoryHelp}
+            </Tooltip>
+          </div>
+          <div className={s.tags}>
+            {category?.Tag.map((item) => (
+              <div
+                key={item.id}
+                className={s.item}
+                style={{ backgroundColor: theme.cyan, color: theme.black }}
+              >
+                + {item.name}
+              </div>
+            ))}
+          </div>
         </div>
       </form>
     </div>

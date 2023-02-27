@@ -165,6 +165,7 @@ function Login({
     setButtonError,
     setPageError,
     onClickLoginButton,
+    setPasswordError,
   });
 
   useRedirect({ user });

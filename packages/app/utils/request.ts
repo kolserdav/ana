@@ -120,7 +120,9 @@ class Request {
     });
   }
 
-  public async fileFindMany(): Promise<SendMessageArgs<MessageType.SET_FILE_FIND_MANY>> {
+  public async fileFindMany(): Promise<
+    SendMessageArgs<MessageType.SET_FILE_FIND_MANY> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
     return this.send({
       url: Api.getFileFindMany,
       method: 'GET',
@@ -136,6 +138,15 @@ class Request {
       url: Api.deleteFileDelete,
       method: 'DELETE',
       body,
+    });
+  }
+
+  public async categoryFindMany(): Promise<
+    SendMessageArgs<MessageType.SET_CATEGORY_FIND_MANY> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: Api.categoryFindMany,
+      method: 'GET',
     });
   }
 }
