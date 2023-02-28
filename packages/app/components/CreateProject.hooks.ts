@@ -6,7 +6,7 @@ import { getMaxBodySize, Locale, MessageType, SendMessageArgs } from '../types/i
 import { ALERT_DURATION, Pages, PROJECT_TITLE_MAX, SELECTED_TAG_MAX } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
-import { removeFilesFromInput } from './CreateProject.lib';
+import { removeFilesFromInput, changeLinks } from './CreateProject.lib';
 
 const request = new Request();
 
@@ -362,7 +362,7 @@ export const useButtonCreate = ({
     setLoad(true);
     const res = await request.projectCreate({
       title,
-      description,
+      description: changeLinks(description),
       files: files.map((item) => item.id),
       subcategories: selectedSubcats,
       endDate,

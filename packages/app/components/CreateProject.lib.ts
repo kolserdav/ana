@@ -1,7 +1,7 @@
 import { File } from '@prisma/client';
 import filesMime from '../data/files.json';
 import { getFileExt, IMAGE_EXTS } from '../types/interfaces';
-import { PUBLIC_ICONS_FILES } from '../utils/constants';
+import { LINK_REGEX, LINK_REGEX_HTTP, PUBLIC_ICONS_FILES } from '../utils/constants';
 
 export const getFileIconPath = (file: File) => {
   let src = PUBLIC_ICONS_FILES;
@@ -45,4 +45,17 @@ export const removeFilesFromInput = (input: HTMLInputElement) => {
 
   // eslint-disable-next-line no-param-reassign
   input.files = dt.files;
+};
+
+export const changeLinks = (text: string) => {
+  const createLink = (link: string) => `<a href="${link}" target="_blank">${link}</a>`;
+  let res = `${text}`;
+  const links = text.match(LINK_REGEX);
+  if (!links) {
+    return res;
+  }
+  links.forEach((item) => {
+    res = res.replace(item, createLink(item));
+  });
+  return res;
 };

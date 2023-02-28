@@ -19,6 +19,8 @@ const lang: Locale = {
     notImplement: 'Устаревшая версия запроса',
     unacceptedImage: 'Неподдерживаемый формат изображения',
     maxFileSize: 'Превышен допустимый размер загружаемого файла',
+    projectCreateButFilesNotSaved: 'Проект создан. Но некоторые файлы не могли быть приклеплены',
+    sendToSupport: 'Обратитесь в техподдержку',
   },
   app: {
     login: {

@@ -69,16 +69,13 @@ class Project {
     let filesRes;
     let files: string[] = [];
     if (_files.length !== 0) {
-      const AND: Prisma.FileWhereInput['AND'] = _files.map((item) => ({ id: item }));
-      AND.push({
+      const OR: Prisma.FileWhereInput['OR'] = _files.map((item) => ({ id: item }));
+      OR.push({
         userId: id,
-      });
-      AND.push({
-        projectId: null,
       });
       filesRes = await orm.fileFindMany({
         where: {
-          AND,
+          AND: [{ OR }, { projectId: null }, { userId: user.data.id }],
         },
       });
       if (filesRes.status === 'error') {
@@ -100,7 +97,7 @@ class Project {
 
       const errFiles: string[] = [];
       filesRes.data.forEach((item) => {
-        const filePath = path.resolve(CLOUD_PATH, id, item.id, item.ext);
+        const filePath = path.resolve(CLOUD_PATH, id, `${item.id}${item.ext}`);
         if (!existsSync(filePath)) {
           errFiles.push(item.id);
         }
@@ -151,16 +148,41 @@ class Project {
       });
       return;
     }
-    /* TODO
-    const filesU = await orm.fileUpdateMany({
-      where: {
-        AND: files.map((item) => ({id: item}),
-      },
-      data: {
-        projectId: res.data.id
+
+    if (files.length !== 0) {
+      let error = false;
+      for (let i = 0; files[i]; i++) {
+        const item = files[i] as string;
+        const filesU = await orm.fileUpdate({
+          where: {
+            id: item,
+          },
+          data: {
+            projectId: res.data.id,
+          },
+        });
+        if (filesU.status === 'error') {
+          error = true;
+        }
       }
-    });
-*/
+      if (error || files.length !== _files.length) {
+        amqp.sendToQueue({
+          type: MessageType.SET_ERROR,
+          id,
+          lang,
+          timeout,
+          connId,
+          data: {
+            status: 'info',
+            type: MessageType.GET_PROJECT_CREATE,
+            message: `${locale.projectCreateButFilesNotSaved}: ${locale.sendToSupport}`,
+            httpCode: 202,
+          },
+        });
+        return;
+      }
+    }
+
     amqp.sendToQueue({
       type: MessageType.SET_PROJECT_CREATE,
       id,

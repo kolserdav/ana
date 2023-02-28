@@ -49,6 +49,10 @@ export const TAB_INDEX_DEFAULT = -1;
 export const PASSWORD_MIN_LENGTH = 6;
 export const PUBLIC_ICONS_FILES = '/icons/files/';
 export const SELECTED_TAG_MAX = 2;
+export const LINK_REGEX =
+  /(https?:\/\/)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
+export const LINK_REGEX_HTTP =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
 
 // Deps load-page-duration
 export const LOAD_PAGE_DURATION = 900;

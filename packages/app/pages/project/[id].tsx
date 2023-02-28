@@ -1,4 +1,4 @@
-import { GetStaticPropsContext } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import AppBar from '../../components/AppBar';
 import { AppProps, PageFull } from '../../types';
@@ -23,7 +23,7 @@ export default function TestPage({ app: { user, theme }, localeAppBar, page }: E
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar user={user} theme={theme} locale={localeAppBar} />
+      <AppBar user={user} theme={theme} full locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Test />
       </main>
@@ -31,9 +31,9 @@ export default function TestPage({ app: { user, theme }, localeAppBar, page }: E
   );
 }
 
-export async function getStaticProps({
+export async function getServerSideProps({
   locale,
-}: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
+}: GetServerSidePropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const page = await request.pageFindMany({
     where: {

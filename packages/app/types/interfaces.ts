@@ -256,6 +256,8 @@ export interface Locale {
     notImplement: string;
     unacceptedImage: string;
     maxFileSize: string;
+    projectCreateButFilesNotSaved: string;
+    sendToSupport: string;
   };
   app: {
     login: {

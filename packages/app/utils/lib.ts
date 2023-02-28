@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { File, Page } from '@prisma/client';
 import storeAlert, { changeAlert } from '../store/alert';
-import { CLOUD_PREFIX, IMAGE_EXT, LogLevel } from '../types/interfaces';
+import { CLOUD_PREFIX, LogLevel } from '../types/interfaces';
 import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS, SERVER } from './constants';
 import { PageFull } from '../types';
 
