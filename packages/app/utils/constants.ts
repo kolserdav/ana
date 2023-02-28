@@ -23,6 +23,8 @@ export enum Pages {
   meEmployerCreateProject = '/me/employer/create-project',
   // eslint-disable-next-line no-unused-vars
   meWorker = '/me/worker',
+  // eslint-disable-next-line no-unused-vars
+  project = '/project',
 }
 
 const now = new Date();

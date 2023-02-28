@@ -15,6 +15,7 @@ import getFileFindMany from './api/v1/file/file-find-many';
 import fileDelete from './api/v1/file/file-delete';
 import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
 import categoryFindMany from './api/v1/category/category-find-many';
+import projectCreate from './api/v1/project/project-create';
 
 const prisma = new PrismaClient();
 
@@ -33,7 +34,13 @@ process.on('unhandledRejection', (err: Error) => {
   await fastify.register(import('@fastify/middie'), { hook: 'preHandler' });
   await fastify.use(cors({ origin: [APP_URL] }));
   await fastify.use(
-    [Api.getUserFindFirst, Api.postFileUpload, Api.getFileFindMany, Api.deleteFileDelete],
+    [
+      Api.getUserFindFirst,
+      Api.postFileUpload,
+      Api.getFileFindMany,
+      Api.deleteFileDelete,
+      Api.projectCreate,
+    ],
     checkTokenMiddleware
   );
   await fastify.use(
@@ -59,6 +66,8 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.postFileUpload, fileUpload);
   fastify.get(Api.getFileFindMany, getFileFindMany);
   fastify.delete(Api.deleteFileDelete, fileDelete);
+  // Project
+  fastify.post(Api.projectCreate, projectCreate);
   // Open
   fastify.get(Api.categoryFindMany, categoryFindMany);
 

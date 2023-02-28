@@ -79,19 +79,22 @@ model ConfirmLink {
 }
 
 model Project {
-  id          String       @id @default(uuid())
-  title       String       @db.VarChar(255)
-  description String       @db.Text
-  closed      Boolean      @default(false)
-  employerId  String?
-  Employer    User?        @relation("Employer", fields: [employerId], references: [id])
-  workerId    String?
-  Worker      User?        @relation("Worker", fields: [workerId], references: [id])
-  end         DateTime     @default(now())
-  File        File[]
-  updated     DateTime     @default(now())
-  created     DateTime     @default(now())
-  ProjectTag  ProjectTag[]
+  id                 String               @id @default(uuid())
+  title              String               @db.VarChar(255)
+  description        String               @db.Text
+  closed             Boolean              @default(false)
+  employerId         String?
+  Employer           User?                @relation("Employer", fields: [employerId], references: [id])
+  workerId           String?
+  Worker             User?                @relation("Worker", fields: [workerId], references: [id])
+  end                DateTime
+  File               File[]
+  start              DateTime?
+  acceptEmployer     DateTime?
+  acceptWorker       DateTime?
+  updated            DateTime             @default(now())
+  created            DateTime             @default(now())
+  ProjectSubcategory ProjectSubcategory[]
 }
 
 model File {
@@ -121,21 +124,21 @@ model Category {
   Subcategory Subcategory[]
 }
 
-model ProjectTag {
-  id          Int         @id @default(autoincrement())
-  projectId   String
-  Project     Project     @relation(fields: [projectId], references: [id])
-  tagId       Int
-  Subcategory Subcategory @relation(fields: [tagId], references: [id])
-  created     DateTime    @default(now())
+model ProjectSubcategory {
+  id            Int         @id @default(autoincrement())
+  projectId     String
+  Project       Project     @relation(fields: [projectId], references: [id])
+  subcategoryId Int
+  Subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  created       DateTime    @default(now())
 }
 
 model Subcategory {
-  id         Int          @id @default(autoincrement())
-  name       String
-  categoryId Int
-  Category   Category     @relation(fields: [categoryId], references: [id])
-  updated    DateTime     @default(now())
-  created    DateTime     @default(now())
-  ProjectTag ProjectTag[]
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  categoryId         Int
+  Category           Category             @relation(fields: [categoryId], references: [id])
+  updated            DateTime             @default(now())
+  created            DateTime             @default(now())
+  ProjectSubcategory ProjectSubcategory[]
 }

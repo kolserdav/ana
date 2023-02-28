@@ -12,6 +12,7 @@ import {
   AUTHORIZATION_HEADER,
   APPLICATION_JSON,
   FileDeleteBody,
+  ProjectCreateBody,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -147,6 +148,18 @@ class Request {
     return this.send({
       url: Api.categoryFindMany,
       method: 'GET',
+    });
+  }
+
+  public async projectCreate(
+    body: ProjectCreateBody
+  ): Promise<
+    SendMessageArgs<MessageType.SET_PROJECT_CREATE> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: Api.projectCreate,
+      method: 'POST',
+      body,
     });
   }
 }

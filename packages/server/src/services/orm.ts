@@ -101,11 +101,27 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public fileUpdateMany: Database['fileUpdateMany'] = async (args) => {
+    return this.run({
+      args,
+      model: 'file',
+      command: 'updateMany',
+    });
+  };
+
   public pageFindManyW: Database['pageFindManyW'] = async (args) => {
     return this.runFromWorker({
       args,
       model: 'page',
       command: 'findMany',
+    });
+  };
+
+  public projectCreate: Database['projectCreate'] = async (args) => {
+    return this.run({
+      args,
+      model: 'project',
+      command: 'create',
     });
   };
 

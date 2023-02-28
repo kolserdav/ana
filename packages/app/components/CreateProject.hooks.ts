@@ -1,10 +1,12 @@
 import { File } from '@prisma/client';
+import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
-import { getMaxBodySize, MessageType, SendMessageArgs } from '../types/interfaces';
-import { PROJECT_TITLE_MAX, SELECTED_TAG_MAX } from '../utils/constants';
+import { getMaxBodySize, Locale, MessageType, SendMessageArgs } from '../types/interfaces';
+import { ALERT_DURATION, Pages, PROJECT_TITLE_MAX, SELECTED_TAG_MAX } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
+import { removeFilesFromInput } from './CreateProject.lib';
 
 const request = new Request();
 
@@ -19,7 +21,13 @@ export const useDescriptionInput = () => {
     }
   };
 
-  return { description, onChangeDescription, descriptionError, setDescriptionError };
+  return {
+    description,
+    onChangeDescription,
+    descriptionError,
+    setDescriptionError,
+    setDescription,
+  };
 };
 
 export const useTitleInput = () => {
@@ -39,20 +47,20 @@ export const useTitleInput = () => {
     setTitle(value);
   };
 
-  return { title, onChangeTitle, titleError, setTitleError };
+  return { title, onChangeTitle, titleError, setTitleError, setTitle };
 };
 
 export const useEndDateInput = () => {
   const [endDate, setEndDate] = useState<string>('');
-  const [dateError, setDateError] = useState<string>('');
+  const [endDateError, setEndDateError] = useState<string>('');
 
   const onChangeEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(e.target.value);
-    if (dateError) {
-      setDateError('');
+    if (endDateError) {
+      setEndDateError('');
     }
   };
-  return { endDate, onChangeEndDate, dateError, setDateError };
+  return { endDate, onChangeEndDate, endDateError, setEndDateError, setEndDate };
 };
 
 export const useInputFiles = ({
@@ -173,6 +181,7 @@ export const useInputFiles = ({
     inputFilesRef,
     deleteFileWrapper,
     filesLoad,
+    setFiles,
   };
 };
 
@@ -229,9 +238,9 @@ export const useSelectCategory = () => {
     SendMessageArgs<MessageType.SET_CATEGORY_FIND_MANY>['data']
   >([]);
   const [activeCategory, setActiveCategory] = useState<number>(0);
-  const [selectedSubCats, setSelectedSubCats] = useState<number[]>([]);
+  const [selectedSubcats, setSelectedSubcats] = useState<number[]>([]);
 
-  const cheepDisabled = selectedSubCats.length >= SELECTED_TAG_MAX;
+  const cheepDisabled = selectedSubcats.length >= SELECTED_TAG_MAX;
 
   /**
    * Set categories
@@ -252,7 +261,7 @@ export const useSelectCategory = () => {
       target: { value },
     } = e;
     setActiveCategory(parseInt(value, 10));
-    setSelectedSubCats([]);
+    setSelectedSubcats([]);
   };
 
   const category = useMemo(
@@ -263,7 +272,7 @@ export const useSelectCategory = () => {
   const onClickTagWrapper =
     (id: number, del = false) =>
     () => {
-      const sels = selectedSubCats.slice();
+      const sels = selectedSubcats.slice();
       if (del) {
         const index = sels.indexOf(id);
         if (index === -1) {
@@ -271,7 +280,7 @@ export const useSelectCategory = () => {
           return;
         }
         sels.splice(index, 1);
-        setSelectedSubCats(sels);
+        setSelectedSubcats(sels);
         return;
       }
       if (sels.indexOf(id) !== -1) {
@@ -279,7 +288,7 @@ export const useSelectCategory = () => {
         return;
       }
       sels.push(id);
-      setSelectedSubCats(sels);
+      setSelectedSubcats(sels);
     };
 
   return {
@@ -288,8 +297,10 @@ export const useSelectCategory = () => {
     onChangeCategory,
     category,
     onClickTagWrapper,
-    selectedSubCats,
+    selectedSubcats,
     cheepDisabled,
+    setSelectedSubcats,
+    setActiveCategory,
   };
 };
 
@@ -299,11 +310,14 @@ export const useButtonCreate = ({
   endDate,
   description,
   files,
-  setDateError,
+  setEndDateError,
   setDescriptionError,
   setTitleError,
   fieldMustBeNotEmpty,
   eliminateRemarks,
+  selectedSubcats,
+  locale,
+  cleanAllFields,
 }: {
   title: string;
   description: string;
@@ -312,13 +326,19 @@ export const useButtonCreate = ({
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setTitleError: React.Dispatch<React.SetStateAction<string>>;
   setDescriptionError: React.Dispatch<React.SetStateAction<string>>;
-  setDateError: React.Dispatch<React.SetStateAction<string>>;
+  setEndDateError: React.Dispatch<React.SetStateAction<string>>;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
+  selectedSubcats: number[];
+  cleanAllFields: () => void;
+  locale: Locale['app']['me'];
 }) => {
+  const router = useRouter();
+
   const [buttonError, setButtonError] = useState<string>('');
+
   // eslint-disable-next-line no-unused-vars
-  const onClickButtonCreate = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onClickButtonCreate = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     let error = false;
     if (!title) {
       setTitleError(fieldMustBeNotEmpty);
@@ -329,7 +349,7 @@ export const useButtonCreate = ({
       error = true;
     }
     if (!endDate) {
-      setDateError(fieldMustBeNotEmpty);
+      setEndDateError(fieldMustBeNotEmpty);
       error = true;
     }
     if (error) {
@@ -339,7 +359,69 @@ export const useButtonCreate = ({
     if (buttonError) {
       setButtonError('');
     }
+    setLoad(true);
+    const res = await request.projectCreate({
+      title,
+      description,
+      files: files.map((item) => item.id),
+      subcategories: selectedSubcats,
+      endDate,
+    });
+    if (res.type === MessageType.SET_ERROR) {
+      setLoad(false);
+      log(res.data.status, res.data.message, { res }, true);
+      return;
+    }
+    log('info', locale.projectCreated, { res }, true);
+    cleanAllFields();
+    setTimeout(() => {
+      setLoad(false);
+      router.push(`${Pages.project}/${res.data.id}`);
+    }, ALERT_DURATION);
   };
 
   return { onClickButtonCreate, buttonError };
+};
+
+export const useCleanForm = ({
+  setTitleError,
+  setTitle,
+  setDescription,
+  setDescriptionError,
+  setEndDate,
+  setFiles,
+  setSelectedSubcats,
+  setEndDateError,
+  setActiveCategory,
+  filesRef,
+}: {
+  setTitleError: React.Dispatch<React.SetStateAction<string>>;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setDescription: React.Dispatch<React.SetStateAction<string>>;
+  setDescriptionError: React.Dispatch<React.SetStateAction<string>>;
+  setEndDate: React.Dispatch<React.SetStateAction<string>>;
+  setEndDateError: React.Dispatch<React.SetStateAction<string>>;
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  setSelectedSubcats: React.Dispatch<React.SetStateAction<number[]>>;
+  setActiveCategory: React.Dispatch<React.SetStateAction<number>>;
+  filesRef: React.RefObject<HTMLDivElement>;
+}) => {
+  const cleanAllFields = () => {
+    const { current } = filesRef;
+    const input = current?.querySelector('input');
+    if (input) {
+      removeFilesFromInput(input);
+    }
+    setTitleError('');
+    setTitle('');
+    setDescription('');
+    setDescriptionError('');
+    setEndDate('');
+    setFiles([]);
+    setSelectedSubcats([]);
+    setEndDateError('');
+    setActiveCategory(0);
+  };
+
+  return { cleanAllFields };
 };

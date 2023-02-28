@@ -15,6 +15,7 @@ import { getFilePath } from '../utils/lib';
 import {
   useBeforeUnload,
   useButtonCreate,
+  useCleanForm,
   useDescriptionInput,
   useEndDateInput,
   useInputFiles,
@@ -64,12 +65,17 @@ function CreateProject({
 
   const { load, setLoad } = useLoad();
 
-  const { description, onChangeDescription, descriptionError, setDescriptionError } =
-    useDescriptionInput();
+  const {
+    description,
+    onChangeDescription,
+    descriptionError,
+    setDescriptionError,
+    setDescription,
+  } = useDescriptionInput();
 
-  const { onChangeTitle, title, titleError, setTitleError } = useTitleInput();
+  const { onChangeTitle, title, titleError, setTitleError, setTitle } = useTitleInput();
 
-  const { endDate, onChangeEndDate, dateError, setDateError } = useEndDateInput();
+  const { endDate, onChangeEndDate, endDateError, setEndDateError, setEndDate } = useEndDateInput();
 
   const {
     onChangeFiles,
@@ -82,6 +88,7 @@ function CreateProject({
     onClickAddFiles,
     deleteFileWrapper,
     filesLoad,
+    setFiles,
   } = useInputFiles({ load, somethingWentWrong, maxFileSize });
 
   const accept = useMemo(() => getAcceptedFiles(), []);
@@ -92,8 +99,10 @@ function CreateProject({
     onChangeCategory,
     category,
     onClickTagWrapper,
-    selectedSubCats,
+    selectedSubcats,
     cheepDisabled,
+    setSelectedSubcats,
+    setActiveCategory,
   } = useSelectCategory();
 
   useBeforeUnload({
@@ -103,18 +112,31 @@ function CreateProject({
     endDate,
     filesLoad,
     categorySelected: category !== undefined,
-    selectedLength: selectedSubCats.length,
+    selectedLength: selectedSubcats.length,
   });
 
   const subCats = useMemo(
-    () => category?.Subcategory.filter((item) => selectedSubCats.indexOf(item.id) === -1) || [],
-    [category, selectedSubCats]
+    () => category?.Subcategory.filter((item) => selectedSubcats.indexOf(item.id) === -1) || [],
+    [category, selectedSubcats]
   );
 
   const selSubCats = useMemo(
-    () => category?.Subcategory.filter((item) => selectedSubCats.indexOf(item.id) !== -1) || [],
-    [category, selectedSubCats]
+    () => category?.Subcategory.filter((item) => selectedSubcats.indexOf(item.id) !== -1) || [],
+    [category, selectedSubcats]
   );
+
+  const { cleanAllFields } = useCleanForm({
+    setDescription,
+    setDescriptionError,
+    setEndDate,
+    setFiles,
+    setSelectedSubcats,
+    setTitle,
+    setTitleError,
+    setEndDateError,
+    setActiveCategory,
+    filesRef,
+  });
 
   const { onClickButtonCreate, buttonError } = useButtonCreate({
     title,
@@ -123,10 +145,13 @@ function CreateProject({
     setLoad,
     files,
     setTitleError,
-    setDateError,
+    setEndDateError,
     setDescriptionError,
     fieldMustBeNotEmpty,
     eliminateRemarks,
+    selectedSubcats,
+    locale,
+    cleanAllFields,
   });
 
   return (
@@ -173,7 +198,7 @@ function CreateProject({
             name={`${locale.projectActualFor}*`}
             value={endDate}
             onChange={onChangeEndDate}
-            error={dateError}
+            error={endDateError}
           />
           <IconButton ref={helpDateRef} title={showHelp}>
             <HelpIcon color={theme.blue} />

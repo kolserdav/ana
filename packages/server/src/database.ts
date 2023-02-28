@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Prisma, User, Page, File, Category } from '@prisma/client';
+import { Prisma, User, Page, File, Category, Project } from '@prisma/client';
 import { Result } from './types/interfaces';
 
 abstract class Database {
@@ -51,6 +51,12 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<Array<File>>, Promise<Result<Array<Prisma.FileGetPayload<T>>>>>
   >;
 
+  public abstract fileUpdateMany<T extends Prisma.FileUpdateManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.FileUpdateManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Array<File>>, Promise<Result<Array<Prisma.BatchPayload>>>>
+  >;
+
   public abstract categoryFindManyW<T extends Prisma.CategoryFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.CategoryFindManyArgs>
   ): Promise<
@@ -58,6 +64,16 @@ abstract class Database {
       T,
       Result<Array<Category>>,
       Promise<Result<Array<Prisma.CategoryGetPayload<T>>>>
+    >
+  >;
+
+  public abstract projectCreate<T extends Prisma.ProjectCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.ProjectCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Project | null>,
+      Promise<Result<Prisma.ProjectGetPayload<T> | null>>
     >
   >;
 }

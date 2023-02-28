@@ -63,31 +63,11 @@ function HtmlEditor({
             elementpath: false,
             placeholder,
             branding: false,
-            plugins: [
-              'advlist',
-              'advcode',
-              'advtable',
-              'autolink',
-              'checklist',
-              'export',
-              'lists',
-              'link',
-              'charmap',
-              'preview',
-              'anchor',
-              'searchreplace',
-              'visualblocks',
-              'powerpaste',
-              'fullscreen',
-              'formatpainter',
-              'insertdatetime',
-              'media',
-              'table',
-            ],
+            plugins: [],
             toolbar:
               'undo redo | casechange blocks | bold italic underline | ' +
               'alignleft aligncenter alignright alignjustify | ' +
-              'bullist numlist checklist outdent indent | table |  removeformat',
+              'bullist numlist checklist outdent indent |  removeformat',
             content_style: `
             .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
               color: ${theme.text};

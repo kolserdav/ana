@@ -31,3 +31,18 @@ export const getColor = (mimetype: string) => {
   }
   return file.color;
 };
+
+export const removeFilesFromInput = (input: HTMLInputElement) => {
+  const dt = new DataTransfer();
+  const { files } = input;
+  if (!files) {
+    return;
+  }
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    dt.items.add(file);
+  }
+
+  // eslint-disable-next-line no-param-reassign
+  input.files = dt.files;
+};

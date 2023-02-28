@@ -115,6 +115,18 @@ export interface Result<T> {
 
 export type DBResult<T> = Omit<Result<T>, 'message'>;
 
+export interface ProjectCreateBody {
+  title: string;
+  description: string;
+  endDate: string;
+  files: string[];
+  subcategories: number[];
+}
+
+export interface FileDeleteBody {
+  fileId: string;
+}
+
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
   : // Database
@@ -207,9 +219,9 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   : T extends MessageType.SET_CATEGORY_FIND_MANY
   ? (Category & { Subcategory: Subcategory[] })[]
   : T extends MessageType.GET_PROJECT_CREATE
-  ? Prisma.ProjectCreateArgs
+  ? ProjectCreateBody
   : T extends MessageType.SET_PROJECT_CREATE
-  ? Project | null
+  ? Project
   : unknown;
 
 export interface Tab {
@@ -308,6 +320,7 @@ export interface Locale {
       categoryHelp: string;
       categoryLabel: string;
       buttonCreate: string;
+      projectCreated: string;
     };
     common: {
       formDesc: string;
@@ -318,10 +331,6 @@ export interface Locale {
       eliminateRemarks: string;
     };
   };
-}
-
-export interface FileDeleteBody {
-  fileId: string;
 }
 
 export function checkEmail(email: string): boolean {

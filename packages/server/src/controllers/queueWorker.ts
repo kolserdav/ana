@@ -5,9 +5,11 @@ import User from '../components/User';
 import { Protocol } from '../types';
 import { MASTER_QUEUE, WORKER_QUEUE } from '../utils/constants';
 import File from '../components/File';
+import Project from '../components/Project';
 
 const user = new User();
 const file = new File();
+const project = new Project();
 
 class QueueWorker extends AMQP {
   private protocol: Protocol;
@@ -78,6 +80,9 @@ class QueueWorker extends AMQP {
           break;
         case MessageType.GET_FILE_DELETE:
           await file.fileDelete(msg, this.amqp);
+          break;
+        case MessageType.GET_PROJECT_CREATE:
+          await project.create(msg, this.amqp);
           break;
         default:
           log('warn', 'Default case of consume queue', msg);
