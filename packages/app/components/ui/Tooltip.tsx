@@ -61,10 +61,10 @@ function Tooltip({
         cols = 10;
         rows = 5;
       } else if (length >= 110 && length < 130) {
-        cols = 11;
+        cols = 10;
         rows = 6;
       } else if (length >= 130 && length < 150) {
-        cols = 12;
+        cols = 11;
         rows = 7;
       } else {
         cols = 12;

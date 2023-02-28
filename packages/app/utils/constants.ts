@@ -46,6 +46,7 @@ export const DEFAULT_THEME: ThemeType = 'dark';
 export const TAB_INDEX_DEFAULT = -1;
 export const PASSWORD_MIN_LENGTH = 6;
 export const PUBLIC_ICONS_FILES = '/icons/files/';
+export const SELECTED_TAG_MAX = 2;
 
 // Deps load-page-duration
 export const LOAD_PAGE_DURATION = 900;

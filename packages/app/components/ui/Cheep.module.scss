@@ -1,0 +1,31 @@
+$cheap-text-margin: 1rem;
+
+.wrapper {
+  padding: 0.3rem;
+  margin: 0.3rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-size: smaller;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  &.disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  .symbol {
+    font-size: large;
+    margin: 0 $cheap-text-margin;
+  }
+
+  .text {
+    margin-right: $cheap-text-margin;
+
+    &.del {
+      margin-left: $cheap-text-margin;
+    }
+  }
+}

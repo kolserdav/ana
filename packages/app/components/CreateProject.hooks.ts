@@ -2,7 +2,7 @@ import { File } from '@prisma/client';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HTMLEditorOnChange } from '../types';
 import { getMaxBodySize, MessageType, SendMessageArgs } from '../types/interfaces';
-import { PROJECT_TITLE_MAX } from '../utils/constants';
+import { PROJECT_TITLE_MAX, SELECTED_TAG_MAX } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
 
@@ -175,19 +175,31 @@ export const useBeforeUnload = ({
   description,
   endDate,
   filesLoad,
+  selectedLength,
+  categorySelected,
 }: {
   files: File[];
   title: string;
   description: string;
   endDate: string;
   filesLoad: boolean;
+  selectedLength: number;
+  categorySelected: boolean;
 }) => {
   /**
    * Clen files if project not created
    */
   useEffect(() => {
     const beforeUnloadHandler = async (ev: Event) => {
-      if (files.length === 0 && !filesLoad && !title && !description && !endDate) {
+      if (
+        files.length === 0 &&
+        !filesLoad &&
+        !title &&
+        !description &&
+        !endDate &&
+        !categorySelected &&
+        selectedLength === 0
+      ) {
         return;
       }
       ev.preventDefault();
@@ -202,7 +214,7 @@ export const useBeforeUnload = ({
     return () => {
       window.removeEventListener('beforeunload', beforeUnloadHandler);
     };
-  }, [files, title, description, endDate, filesLoad]);
+  }, [files, title, description, endDate, filesLoad, categorySelected, selectedLength]);
 };
 
 export const useSelectCategory = () => {
@@ -210,6 +222,9 @@ export const useSelectCategory = () => {
     SendMessageArgs<MessageType.SET_CATEGORY_FIND_MANY>['data']
   >([]);
   const [activeCategory, setActiveCategory] = useState<number>(0);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+
+  const cheepDisabled = selectedTags.length >= SELECTED_TAG_MAX;
 
   /**
    * Set categories
@@ -230,6 +245,7 @@ export const useSelectCategory = () => {
       target: { value },
     } = e;
     setActiveCategory(parseInt(value, 10));
+    setSelectedTags([]);
   };
 
   const category = useMemo(
@@ -237,5 +253,35 @@ export const useSelectCategory = () => {
     [categories, activeCategory]
   );
 
-  return { categories, activeCategory, onChangeCategory, category };
+  const onClickTagWrapper =
+    (id: number, del = false) =>
+    () => {
+      const sels = selectedTags.slice();
+      if (del) {
+        const index = sels.indexOf(id);
+        if (index === -1) {
+          log('warn', 'Deleted tag is missing', { sels, id });
+          return;
+        }
+        sels.splice(index, 1);
+        setSelectedTags(sels);
+        return;
+      }
+      if (sels.indexOf(id) !== -1) {
+        log('warn', 'Duplicate tag', { id, sels });
+        return;
+      }
+      sels.push(id);
+      setSelectedTags(sels);
+    };
+
+  return {
+    categories,
+    activeCategory,
+    onChangeCategory,
+    category,
+    onClickTagWrapper,
+    selectedTags,
+    cheepDisabled,
+  };
 };

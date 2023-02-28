@@ -380,16 +380,18 @@ export const useMessages = ({
     };
 
     const setUserCreate = ({ id, lang }: SendMessageArgs<MessageType.SET_USER_CREATE>) => {
-      ws.sendMessage({
-        id,
-        type: MessageType.GET_USER_LOGIN,
-        lang,
-        timeout: new Date().getTime(),
-        data: {
-          email,
-          password,
-        },
-      });
+      setTimeout(() => {
+        ws.sendMessage({
+          id,
+          type: MessageType.GET_USER_LOGIN,
+          lang,
+          timeout: new Date().getTime(),
+          data: {
+            email,
+            password,
+          },
+        });
+      }, 1000);
       log('info', locale.successRegistration, '', true);
     };
 
@@ -461,6 +463,7 @@ export const useMessages = ({
     setEmailError,
     setEmailSuccess,
     onClickLoginButton,
+    setPasswordError,
   ]);
 };
 

@@ -9,6 +9,7 @@ import {
   MAX_DATE_ACTUAL,
   MIN_DATE_ACTUAL,
   PROJECT_TITLE_MAX,
+  SELECTED_TAG_MAX,
 } from '../utils/constants';
 import { getFilePath } from '../utils/lib';
 import {
@@ -23,8 +24,8 @@ import { getAcceptedFiles, getFileIconPath } from './CreateProject.lib';
 import s from './CreateProject.module.scss';
 import DeleteIcon from './icons/Delete';
 import HelpIcon from './icons/Help';
-import PlusIcon from './icons/Plus';
 import Button from './ui/Button';
+import Cheep from './ui/Cheep';
 import IconButton from './ui/IconButton';
 import Image from './ui/Image';
 import Input from './ui/Input';
@@ -77,11 +78,37 @@ function CreateProject({
     filesLoad,
   } = useInputFiles({ load, somethingWentWrong, maxFileSize });
 
-  useBeforeUnload({ files, title, description, endDate, filesLoad });
-
   const accept = useMemo(() => getAcceptedFiles(), []);
 
-  const { categories, activeCategory, onChangeCategory, category } = useSelectCategory();
+  const {
+    categories,
+    activeCategory,
+    onChangeCategory,
+    category,
+    onClickTagWrapper,
+    selectedTags,
+    cheepDisabled,
+  } = useSelectCategory();
+
+  useBeforeUnload({
+    files,
+    title,
+    description,
+    endDate,
+    filesLoad,
+    categorySelected: category !== undefined,
+    selectedLength: selectedTags.length,
+  });
+
+  const tags = useMemo(
+    () => category?.Tag.filter((item) => selectedTags.indexOf(item.id) === -1) || [],
+    [category, selectedTags]
+  );
+
+  const selTags = useMemo(
+    () => category?.Tag.filter((item) => selectedTags.indexOf(item.id) !== -1) || [],
+    [category, selectedTags]
+  );
 
   return (
     <div className={s.wrapper}>
@@ -193,37 +220,48 @@ function CreateProject({
           {locale.projectAddFilesDesc}. {locale.maxFileSizeIs}: {MAX_BODY_MB}M
         </div>
         <div className={s.categs}>
-          <div className={s.select}>
-            <Select
-              aria-label={locale.categoryLabel}
-              id="select-categ"
-              theme={theme}
-              onChange={onChangeCategory}
-              value={activeCategory}
-            >
-              <option value={0}>{locale.withoutCategory}</option>
-              {categories.map((item) => (
-                <option key={item.id} value={item.id}>
+          <div className={s.categ}>
+            <div className={s.select}>
+              <Select
+                aria-label={locale.categoryLabel}
+                id="select-categ"
+                theme={theme}
+                onChange={onChangeCategory}
+                value={activeCategory}
+              >
+                <option value={0}>{locale.withoutCategory}</option>
+                {categories.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </Select>
+              <IconButton ref={helpCategRef} title={showHelp}>
+                <HelpIcon color={theme.blue} />
+              </IconButton>
+              <Tooltip current={helpCategRef.current} theme={theme}>
+                {`${locale.categoryHelp} ${SELECTED_TAG_MAX}`}
+              </Tooltip>
+            </div>
+            <div className={s.selected__tags}>
+              {selTags.map((item) => (
+                <Cheep onClick={onClickTagWrapper(item.id, true)} key={item.id} theme={theme}>
                   {item.name}
-                </option>
+                </Cheep>
               ))}
-            </Select>
-            <IconButton ref={helpCategRef} title={showHelp}>
-              <HelpIcon color={theme.blue} />
-            </IconButton>
-            <Tooltip current={helpCategRef.current} theme={theme}>
-              {locale.categoryHelp}
-            </Tooltip>
+            </div>
           </div>
           <div className={s.tags}>
-            {category?.Tag.map((item) => (
-              <div
+            {tags.map((item) => (
+              <Cheep
+                onClick={onClickTagWrapper(item.id)}
+                disabled={cheepDisabled}
+                add
                 key={item.id}
-                className={s.item}
-                style={{ backgroundColor: theme.cyan, color: theme.black }}
+                theme={theme}
               >
-                + {item.name}
-              </div>
+                {item.name}
+              </Cheep>
             ))}
           </div>
         </div>

@@ -143,6 +143,19 @@ $files-height: 150px;
     flex-direction: row;
     align-items: flex-start;
 
+    .categ {
+      display: flex;
+      flex-direction: column;
+
+      .selected__tags {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: $small-width;
+        margin-top: 1rem;
+      }
+    }
+
     .select {
       display: flex;
       flex-direction: row;
@@ -153,16 +166,6 @@ $files-height: 150px;
       position: relative;
       display: flex;
       flex-flow: row wrap;
-
-      .item {
-        padding: 0.2rem;
-        margin: 0.3rem;
-        border-radius: 0.1rem;
-        cursor: pointer;
-        font-size: smaller;
-        display: flex;
-        flex-direction: row;
-      }
     }
 
     @media (max-width: $mobile-width) {

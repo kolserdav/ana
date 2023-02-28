@@ -9,32 +9,27 @@ const prisma = new PrismaClient();
 
 (async () => {
   for (let i = 0; categs[i]; i++) {
-    const { id: _id, name } = categs[i];
-    const id = parseInt(_id, 10);
+    const { name } = categs[i];
     const check = await prisma.category.findFirst({
       where: {
-        id,
+        name,
       },
     });
     if (check) {
       continue;
     }
-    await prisma.category.create({
+    const category = await prisma.category.create({
       data: {
-        id,
         name,
       },
     });
-  }
 
-  for (let i = 0; tags[i]; i++) {
-    const { groupId, childs } = tags[i];
+    const { childs } = tags[i];
     for (let n = 0; childs[n]; n++) {
-      const { id: _id, name } = childs[n];
-      const id = parseInt(_id, 10);
+      const { name } = childs[n];
       const check = await prisma.tag.findFirst({
         where: {
-          id,
+          name,
         },
       });
       if (check) {
@@ -42,12 +37,12 @@ const prisma = new PrismaClient();
       }
       await prisma.tag.create({
         data: {
-          id,
-          categoryId: parseInt(groupId, 10),
+          categoryId: category.id,
           name,
         },
       });
     }
   }
+
   console.log('Data from', __filename, 'are insert');
 })();
