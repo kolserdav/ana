@@ -6,3 +6,4 @@ db
 tmp
 .env
 cloud
+database
