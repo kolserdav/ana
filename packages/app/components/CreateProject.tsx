@@ -14,6 +14,7 @@ import {
 import { getFilePath } from '../utils/lib';
 import {
   useBeforeUnload,
+  useButtonCreate,
   useDescriptionInput,
   useEndDateInput,
   useInputFiles,
@@ -43,6 +44,8 @@ function CreateProject({
   showHelp,
   somethingWentWrong,
   maxFileSize,
+  fieldMustBeNotEmpty,
+  eliminateRemarks,
 }: {
   theme: Theme;
   locale: Locale['app']['me'];
@@ -51,6 +54,8 @@ function CreateProject({
   showHelp: string;
   somethingWentWrong: string;
   maxFileSize: string;
+  fieldMustBeNotEmpty: string;
+  eliminateRemarks: string;
 }) {
   const filesRef = useRef<HTMLDivElement>(null);
 
@@ -59,11 +64,12 @@ function CreateProject({
 
   const { load, setLoad } = useLoad();
 
-  const { description, onChangeDescription } = useDescriptionInput();
+  const { description, onChangeDescription, descriptionError, setDescriptionError } =
+    useDescriptionInput();
 
-  const { onChangeTitle, title } = useTitleInput();
+  const { onChangeTitle, title, titleError, setTitleError } = useTitleInput();
 
-  const { endDate, onChangeEndDate } = useEndDateInput();
+  const { endDate, onChangeEndDate, dateError, setDateError } = useEndDateInput();
 
   const {
     onChangeFiles,
@@ -86,7 +92,7 @@ function CreateProject({
     onChangeCategory,
     category,
     onClickTagWrapper,
-    selectedTags,
+    selectedSubCats,
     cheepDisabled,
   } = useSelectCategory();
 
@@ -97,18 +103,31 @@ function CreateProject({
     endDate,
     filesLoad,
     categorySelected: category !== undefined,
-    selectedLength: selectedTags.length,
+    selectedLength: selectedSubCats.length,
   });
 
-  const tags = useMemo(
-    () => category?.Tag.filter((item) => selectedTags.indexOf(item.id) === -1) || [],
-    [category, selectedTags]
+  const subCats = useMemo(
+    () => category?.Subcategory.filter((item) => selectedSubCats.indexOf(item.id) === -1) || [],
+    [category, selectedSubCats]
   );
 
-  const selTags = useMemo(
-    () => category?.Tag.filter((item) => selectedTags.indexOf(item.id) !== -1) || [],
-    [category, selectedTags]
+  const selSubCats = useMemo(
+    () => category?.Subcategory.filter((item) => selectedSubCats.indexOf(item.id) !== -1) || [],
+    [category, selectedSubCats]
   );
+
+  const { onClickButtonCreate, buttonError } = useButtonCreate({
+    title,
+    description,
+    endDate,
+    setLoad,
+    files,
+    setTitleError,
+    setDateError,
+    setDescriptionError,
+    fieldMustBeNotEmpty,
+    eliminateRemarks,
+  });
 
   return (
     <div className={s.wrapper}>
@@ -124,23 +143,28 @@ function CreateProject({
           fullWidth
           id="project-title"
           value={title}
+          disabled={load}
           onChange={onChangeTitle}
           name={`${locale.projectTitle}*`}
           desc={`${title.length}/${PROJECT_TITLE_MAX}`}
           theme={theme}
+          error={titleError}
         />
         <div className={s.html__editor}>
           <HtmlEditor
+            disabled={load}
             value={description}
             placeholder={locale.projectDesPlaceholder}
             id="description"
             label={`${locale.projectDescription}*`}
-            onChange={onChangeDescription}
+            onEditorChange={onChangeDescription}
             theme={theme}
+            error={descriptionError}
           />
         </div>
         <div className={s.date}>
           <Input
+            disabled={load}
             theme={theme}
             id="actual-for"
             type="date"
@@ -149,6 +173,7 @@ function CreateProject({
             name={`${locale.projectActualFor}*`}
             value={endDate}
             onChange={onChangeEndDate}
+            error={dateError}
           />
           <IconButton ref={helpDateRef} title={showHelp}>
             <HelpIcon color={theme.blue} />
@@ -223,6 +248,7 @@ function CreateProject({
           <div className={s.categ}>
             <div className={s.select}>
               <Select
+                disabled={load}
                 aria-label={locale.categoryLabel}
                 id="select-categ"
                 theme={theme}
@@ -243,16 +269,16 @@ function CreateProject({
                 {`${locale.categoryHelp} ${SELECTED_TAG_MAX}`}
               </Tooltip>
             </div>
-            <div className={s.selected__tags}>
-              {selTags.map((item) => (
+            <div className={s.selected__sub_cats}>
+              {selSubCats.map((item) => (
                 <Cheep onClick={onClickTagWrapper(item.id, true)} key={item.id} theme={theme}>
                   {item.name}
                 </Cheep>
               ))}
             </div>
           </div>
-          <div className={s.tags}>
-            {tags.map((item) => (
+          <div className={s.sub_cats}>
+            {subCats.map((item) => (
               <Cheep
                 onClick={onClickTagWrapper(item.id)}
                 disabled={cheepDisabled}
@@ -264,6 +290,16 @@ function CreateProject({
               </Cheep>
             ))}
           </div>
+        </div>
+        <div className={s.actions}>
+          <Button
+            error={buttonError}
+            theme={theme}
+            disabled={load || filesLoad}
+            onClick={onClickButtonCreate}
+          >
+            {locale.buttonCreate}
+          </Button>
         </div>
       </form>
     </div>

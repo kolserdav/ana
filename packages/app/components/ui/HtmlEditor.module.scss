@@ -9,6 +9,15 @@
   justify-content: center;
   flex-direction: column;
 
+  .error {
+    position: relative;
+    font-size: $input-font-size;
+  }
+
+  .disabled {
+    opacity: 0.5;
+  }
+
   .label {
     margin-left: $label-left;
     font-size: $input-font-size;

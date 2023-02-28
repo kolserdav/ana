@@ -114,23 +114,23 @@ model File {
 }
 
 model Category {
-  id      Int      @id @default(autoincrement())
-  name    String
-  updated DateTime @default(now())
-  created DateTime @default(now())
-  Tag     Tag[]
+  id          Int           @id @default(autoincrement())
+  name        String
+  updated     DateTime      @default(now())
+  created     DateTime      @default(now())
+  Subcategory Subcategory[]
 }
 
 model ProjectTag {
-  id        Int      @id @default(autoincrement())
-  projectId String
-  Project   Project  @relation(fields: [projectId], references: [id])
-  tagId     Int
-  Tag       Tag      @relation(fields: [tagId], references: [id])
-  created   DateTime @default(now())
+  id          Int         @id @default(autoincrement())
+  projectId   String
+  Project     Project     @relation(fields: [projectId], references: [id])
+  tagId       Int
+  Subcategory Subcategory @relation(fields: [tagId], references: [id])
+  created     DateTime    @default(now())
 }
 
-model Tag {
+model Subcategory {
   id         Int          @id @default(autoincrement())
   name       String
   categoryId Int

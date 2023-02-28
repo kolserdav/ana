@@ -2,6 +2,10 @@
   position: relative;
   padding: 1px;
 
+  &.disabled {
+    opacity: 0.5;
+  }
+
   &.center {
     text-align: center;
   }

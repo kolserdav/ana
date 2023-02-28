@@ -36,6 +36,8 @@ export default function MeEmployerCreateProjectPage({
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <CreateProject
+          eliminateRemarks={localeCommon.eliminateRemarks}
+          fieldMustBeNotEmpty={localeCommon.fieldMustBeNotEmpty}
           maxFileSize={localeCommon.maxFileSize}
           somethingWentWrong={localeCommon.somethingWentWrong}
           showHelp={localeCommon.showHelp}

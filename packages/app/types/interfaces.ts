@@ -1,6 +1,15 @@
 /* eslint-disable no-unused-vars */
 
-import { Prisma, PrismaClient, Role, User, File, Category, Tag } from '@prisma/client';
+import {
+  Prisma,
+  PrismaClient,
+  Role,
+  User,
+  File,
+  Category,
+  Subcategory,
+  Project,
+} from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum Api {
@@ -13,6 +22,7 @@ export enum Api {
   deleteFileDelete = '/v1/file-delete',
   getFileFindMany = '/v1/file-find-many',
   categoryFindMany = '/v1/category-find-many',
+  projectCreate = '/v1/project-create',
 }
 
 // eslint-disable-next-line no-shadow
@@ -75,6 +85,8 @@ export enum MessageType {
   GET_FILE_DELETE = 'GET_FILE_DELETE',
   SET_FILE_DELETE = 'SET_FILE_DELETE',
   SET_CATEGORY_FIND_MANY = 'SET_CATEGORY_FIND_MANY',
+  GET_PROJECT_CREATE = 'GET_PROJECT_CREATE',
+  SET_PROJECT_CREATE = 'SET_PROJECT_CREATE',
 }
 
 export interface RequestContext {
@@ -193,7 +205,11 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   : T extends MessageType.SET_FILE_DELETE
   ? null
   : T extends MessageType.SET_CATEGORY_FIND_MANY
-  ? (Category & { Tag: Tag[] })[]
+  ? (Category & { Subcategory: Subcategory[] })[]
+  : T extends MessageType.GET_PROJECT_CREATE
+  ? Prisma.ProjectCreateArgs
+  : T extends MessageType.SET_PROJECT_CREATE
+  ? Project | null
   : unknown;
 
 export interface Tab {
@@ -244,7 +260,6 @@ export interface Locale {
       password: string;
       passwordRepeat: string;
       fieldProhibited: string;
-      fieldMustBeNotEmpty: string;
       passwordsDoNotMatch: string;
       passwordMinLengthIs: string;
       passwordMustContain: string;
@@ -252,7 +267,6 @@ export interface Locale {
       letter: string;
       emailIsUnacceptable: string;
       neededSelect: string;
-      eliminateRemarks: string;
       emailIsRegistered: string;
       emailIsNotRegistered: string;
       successLogin: string;
@@ -293,12 +307,15 @@ export interface Locale {
       maxFileSizeIs: string;
       categoryHelp: string;
       categoryLabel: string;
+      buttonCreate: string;
     };
     common: {
       formDesc: string;
       showHelp: string;
       somethingWentWrong: string;
       maxFileSize: string;
+      fieldMustBeNotEmpty: string;
+      eliminateRemarks: string;
     };
   };
 }

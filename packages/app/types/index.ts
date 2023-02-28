@@ -38,14 +38,4 @@ export interface LoginProps extends AppProps {
   page: PageFull;
 }
 
-export type HTMLEditorOnChange = (e: {
-  readonly type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly target: any;
-  readonly isDefaultPrevented: () => boolean;
-  readonly preventDefault: () => void;
-  readonly isPropagationStopped: () => boolean;
-  readonly stopPropagation: () => void;
-  readonly isImmediatePropagationStopped: () => boolean;
-  readonly stopImmediatePropagation: () => void;
-}) => void;
+export type HTMLEditorOnChange = (e: string) => void;

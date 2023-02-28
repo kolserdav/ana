@@ -23,7 +23,14 @@ export default function HomePage({
       </Head>
       <AppBar theme={theme} withoutExpandLess locale={localeAppBar} user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Login formDesc={localeCommon.formDesc} theme={theme} locale={localeLogin} user={user} />
+        <Login
+          eliminateRemarks={localeCommon.eliminateRemarks}
+          fieldMustBeNotEmpty={localeCommon.fieldMustBeNotEmpty}
+          formDesc={localeCommon.formDesc}
+          theme={theme}
+          locale={localeLogin}
+          user={user}
+        />
       </main>
       <LoaderFull open={!userLoad} noOpacity />
     </>

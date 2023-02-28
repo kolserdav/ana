@@ -20,6 +20,10 @@
     padding-left: $input-padding;
     border-radius: $input-border-radius;
     appearance: none;
+
+    &:disabled {
+      opacity: 0.5;
+    }
   }
 
   option {

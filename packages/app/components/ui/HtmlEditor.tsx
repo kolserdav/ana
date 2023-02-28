@@ -9,34 +9,39 @@ import Typography from './Typography';
 import { ubuntu500 } from '../../fonts/ubuntu';
 import Loader from './Loader';
 
-export default function HtmlEditor({
-  onChange,
+function HtmlEditor({
+  onEditorChange,
   theme,
   id,
   label,
   value,
   placeholder,
+  disabled,
+  error,
 }: {
-  onChange: HTMLEditorOnChange;
+  onEditorChange: HTMLEditorOnChange;
   id: string;
   theme: Theme;
   value: string;
   label: string;
   placeholder: string;
+  disabled?: boolean;
+  error?: string;
 }) {
   const [loaded, setLoaded] = useState<boolean>(false);
   const editorRef = useRef(null);
   return (
-    <div className={s.wrapper}>
+    <div className={clsx(s.wrapper, ubuntu500.className, disabled ? s.disabled : '')}>
       <Typography
-        className={clsx(s.label, ubuntu500.className)}
+        className={s.label}
         htmlFor={id}
         theme={theme}
         variant="label"
+        disabled={disabled}
       >
         {label}
       </Typography>
-      <div className={s.container}>
+      <div className={s.container} style={error ? { border: `1px groove ${theme.red}` } : {}}>
         <Loader theme={theme} open={!loaded} iconHeight={24} noOpacity iconWidth={24} />
         <Editor
           onInit={(evt, editor) => {
@@ -44,11 +49,12 @@ export default function HtmlEditor({
             editorRef.current = editor as any;
             setLoaded(true);
           }}
-          onChange={onChange}
+          onEditorChange={onEditorChange}
           id={id}
+          disabled={disabled}
           key={theme.paper}
           apiKey={TINY_API_KEY}
-          initialValue={value}
+          value={value}
           init={{
             language: 'ru',
             min_height: HTML_EDITOR_HEIGHT,
@@ -98,6 +104,16 @@ export default function HtmlEditor({
           }}
         />
       </div>
+      <div style={{ color: theme.yellow }} className={s.error}>
+        {error}
+      </div>
     </div>
   );
 }
+
+HtmlEditor.defaultProps = {
+  disabled: false,
+  error: '',
+};
+
+export default HtmlEditor;

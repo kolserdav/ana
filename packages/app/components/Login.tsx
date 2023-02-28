@@ -32,11 +32,15 @@ function Login({
   locale,
   formDesc,
   user,
+  fieldMustBeNotEmpty,
+  eliminateRemarks,
 }: {
   theme: Theme;
   locale: Locale['app']['login'];
   formDesc: string;
   user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+  fieldMustBeNotEmpty: string;
+  eliminateRemarks: string;
 }) {
   const { ws } = useWS({ protocol: 'login' });
 
@@ -123,6 +127,8 @@ function Login({
     setLoad,
     setErrorDialogOpen,
     setEmail,
+    fieldMustBeNotEmpty,
+    eliminateRemarks,
   });
 
   const { cleanAllFields } = useClean({

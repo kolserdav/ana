@@ -147,7 +147,7 @@ $files-height: 150px;
       display: flex;
       flex-direction: column;
 
-      .selected__tags {
+      .selected__sub_cats {
         position: relative;
         display: flex;
         flex-direction: column;
@@ -162,7 +162,7 @@ $files-height: 150px;
       align-items: flex-start;
     }
 
-    .tags {
+    .sub_cats {
       position: relative;
       display: flex;
       flex-flow: row wrap;
@@ -171,5 +171,11 @@ $files-height: 150px;
     @media (max-width: $mobile-width) {
       flex-direction: column;
     }
+  }
+
+  .actions {
+    position: relative;
+    display: flex;
+    justify-content: center;
   }
 }

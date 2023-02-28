@@ -14,7 +14,7 @@ const categoryFindMany: RequestHandler<
 
   const categories = await orm.categoryFindManyW({
     include: {
-      Tag: true,
+      Subcategory: true,
     },
   });
   if (categories.status !== 'info') {

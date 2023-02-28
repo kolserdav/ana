@@ -13,6 +13,7 @@ function Typography({
   htmlFor,
   align,
   styleName,
+  disabled,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | string[];
@@ -22,6 +23,7 @@ function Typography({
   small?: boolean;
   align?: 'center' | 'right' | 'justify';
   styleName?: Status;
+  disabled?: boolean;
 }) {
   return (
     <div
@@ -38,7 +40,8 @@ function Typography({
             : align === 'justify'
             ? s.justify
             : ''
-          : ''
+          : '',
+        disabled ? s.disabled : ''
       )}
       style={{
         color:
@@ -80,6 +83,7 @@ Typography.defaultProps = {
   align: 'left',
   styleName: undefined,
   htmlFor: undefined,
+  disabled: false,
 };
 
 export default Typography;

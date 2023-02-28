@@ -10,24 +10,23 @@ const prisma = new PrismaClient();
 (async () => {
   for (let i = 0; categs[i]; i++) {
     const { name } = categs[i];
-    const check = await prisma.category.findFirst({
+    let category = await prisma.category.findFirst({
       where: {
         name,
       },
     });
-    if (check) {
-      continue;
+    if (!category) {
+      category = await prisma.category.create({
+        data: {
+          name,
+        },
+      });
     }
-    const category = await prisma.category.create({
-      data: {
-        name,
-      },
-    });
 
     const { childs } = tags[i];
     for (let n = 0; childs[n]; n++) {
       const { name } = childs[n];
-      const check = await prisma.tag.findFirst({
+      const check = await prisma.subcategory.findFirst({
         where: {
           name,
         },
@@ -35,7 +34,7 @@ const prisma = new PrismaClient();
       if (check) {
         continue;
       }
-      await prisma.tag.create({
+      await prisma.subcategory.create({
         data: {
           categoryId: category.id,
           name,

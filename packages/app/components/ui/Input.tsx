@@ -143,7 +143,7 @@ const Input = forwardRef<
         >
           {name}
         </label>
-        <span className={s.desc}>
+        <span className={clsx(s.desc, disabled ? s.disabled : '')}>
           <span style={{ color: theme.yellow }}>{error}</span>
           <span style={{ color: theme.text }}>{desc}</span>
         </span>

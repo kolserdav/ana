@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Prisma, User, Page, File, Category, Tag } from '@prisma/client';
+import { Prisma, User, Page, File, Category } from '@prisma/client';
 import { Result } from './types/interfaces';
 
 abstract class Database {

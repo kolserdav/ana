@@ -10,21 +10,21 @@ const request = new Request();
 
 export const useDescriptionInput = () => {
   const [description, setDescription] = useState('');
+  const [descriptionError, setDescriptionError] = useState<string>('');
 
   const onChangeDescription: HTMLEditorOnChange = (e) => {
-    const _e: {
-      readonly level: {
-        readonly content: string;
-      };
-    } = e as any;
-    setDescription(_e.level.content);
+    setDescription(e);
+    if (e && descriptionError) {
+      setDescriptionError('');
+    }
   };
 
-  return { description, onChangeDescription };
+  return { description, onChangeDescription, descriptionError, setDescriptionError };
 };
 
 export const useTitleInput = () => {
   const [title, setTitle] = useState<string>('');
+  const [titleError, setTitleError] = useState<string>('');
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -33,19 +33,26 @@ export const useTitleInput = () => {
     if (value.length > PROJECT_TITLE_MAX) {
       return;
     }
+    if (value.length !== 0 && titleError) {
+      setTitleError('');
+    }
     setTitle(value);
   };
 
-  return { title, onChangeTitle };
+  return { title, onChangeTitle, titleError, setTitleError };
 };
 
 export const useEndDateInput = () => {
   const [endDate, setEndDate] = useState<string>('');
+  const [dateError, setDateError] = useState<string>('');
 
   const onChangeEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(e.target.value);
+    if (dateError) {
+      setDateError('');
+    }
   };
-  return { endDate, onChangeEndDate };
+  return { endDate, onChangeEndDate, dateError, setDateError };
 };
 
 export const useInputFiles = ({
@@ -222,9 +229,9 @@ export const useSelectCategory = () => {
     SendMessageArgs<MessageType.SET_CATEGORY_FIND_MANY>['data']
   >([]);
   const [activeCategory, setActiveCategory] = useState<number>(0);
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [selectedSubCats, setSelectedSubCats] = useState<number[]>([]);
 
-  const cheepDisabled = selectedTags.length >= SELECTED_TAG_MAX;
+  const cheepDisabled = selectedSubCats.length >= SELECTED_TAG_MAX;
 
   /**
    * Set categories
@@ -245,7 +252,7 @@ export const useSelectCategory = () => {
       target: { value },
     } = e;
     setActiveCategory(parseInt(value, 10));
-    setSelectedTags([]);
+    setSelectedSubCats([]);
   };
 
   const category = useMemo(
@@ -256,7 +263,7 @@ export const useSelectCategory = () => {
   const onClickTagWrapper =
     (id: number, del = false) =>
     () => {
-      const sels = selectedTags.slice();
+      const sels = selectedSubCats.slice();
       if (del) {
         const index = sels.indexOf(id);
         if (index === -1) {
@@ -264,7 +271,7 @@ export const useSelectCategory = () => {
           return;
         }
         sels.splice(index, 1);
-        setSelectedTags(sels);
+        setSelectedSubCats(sels);
         return;
       }
       if (sels.indexOf(id) !== -1) {
@@ -272,7 +279,7 @@ export const useSelectCategory = () => {
         return;
       }
       sels.push(id);
-      setSelectedTags(sels);
+      setSelectedSubCats(sels);
     };
 
   return {
@@ -281,7 +288,58 @@ export const useSelectCategory = () => {
     onChangeCategory,
     category,
     onClickTagWrapper,
-    selectedTags,
+    selectedSubCats,
     cheepDisabled,
   };
+};
+
+export const useButtonCreate = ({
+  setLoad,
+  title,
+  endDate,
+  description,
+  files,
+  setDateError,
+  setDescriptionError,
+  setTitleError,
+  fieldMustBeNotEmpty,
+  eliminateRemarks,
+}: {
+  title: string;
+  description: string;
+  endDate: string;
+  files: File[];
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  setTitleError: React.Dispatch<React.SetStateAction<string>>;
+  setDescriptionError: React.Dispatch<React.SetStateAction<string>>;
+  setDateError: React.Dispatch<React.SetStateAction<string>>;
+  fieldMustBeNotEmpty: string;
+  eliminateRemarks: string;
+}) => {
+  const [buttonError, setButtonError] = useState<string>('');
+  // eslint-disable-next-line no-unused-vars
+  const onClickButtonCreate = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    let error = false;
+    if (!title) {
+      setTitleError(fieldMustBeNotEmpty);
+      error = true;
+    }
+    if (!description) {
+      setDescriptionError(fieldMustBeNotEmpty);
+      error = true;
+    }
+    if (!endDate) {
+      setDateError(fieldMustBeNotEmpty);
+      error = true;
+    }
+    if (error) {
+      setButtonError(eliminateRemarks);
+      return;
+    }
+    if (buttonError) {
+      setButtonError('');
+    }
+  };
+
+  return { onClickButtonCreate, buttonError };
 };

@@ -491,6 +491,8 @@ export const useButton = ({
   tabSelected,
   tabActive,
   setEmail,
+  fieldMustBeNotEmpty,
+  eliminateRemarks,
   ws,
 }: {
   connId: string;
@@ -516,6 +518,8 @@ export const useButton = ({
   setErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   tabSelected: boolean;
   tabActive: number;
+  fieldMustBeNotEmpty: string;
+  eliminateRemarks: string;
   ws: WS;
 }) => {
   const [buttonError, setButtonError] = useState<string>('');
@@ -533,10 +537,10 @@ export const useButton = ({
     if (!email || emailError) {
       error = true;
       if (!email) {
-        setEmailError(locale.fieldMustBeNotEmpty);
+        setEmailError(fieldMustBeNotEmpty);
       }
     }
-    setButtonError(error ? locale.eliminateRemarks : '');
+    setButtonError(error ? eliminateRemarks : '');
     return error;
   };
 
@@ -545,16 +549,16 @@ export const useButton = ({
     if (!email || emailError) {
       error = true;
       if (!email) {
-        setEmailError(locale.fieldMustBeNotEmpty);
+        setEmailError(fieldMustBeNotEmpty);
       }
     }
     if (!password || passwordError) {
       error = true;
       if (!password) {
-        setPasswordError(locale.fieldMustBeNotEmpty);
+        setPasswordError(fieldMustBeNotEmpty);
       }
     }
-    setButtonError(error ? locale.eliminateRemarks : '');
+    setButtonError(error ? eliminateRemarks : '');
     return error;
   };
 
@@ -563,12 +567,12 @@ export const useButton = ({
     if (!password || passwordError) {
       error = true;
       if (!password) {
-        setPasswordError(locale.fieldMustBeNotEmpty);
+        setPasswordError(fieldMustBeNotEmpty);
       }
     }
     if (!passwordRepeat || passwordRepeatError) {
       if (!passwordRepeat) {
-        setPasswordRepeatError(locale.fieldMustBeNotEmpty);
+        setPasswordRepeatError(fieldMustBeNotEmpty);
       }
       error = true;
     }
@@ -576,7 +580,7 @@ export const useButton = ({
       setPageError(locale.wrongParameters);
       error = true;
     }
-    setButtonError(error ? locale.eliminateRemarks : '');
+    setButtonError(error ? eliminateRemarks : '');
     return error;
   };
 
@@ -588,31 +592,31 @@ export const useButton = ({
     }
     if (!name || nameError) {
       if (!name) {
-        setNameError(locale.fieldMustBeNotEmpty);
+        setNameError(fieldMustBeNotEmpty);
       }
       error = true;
     }
     if (!surname || surnameError) {
       if (!surname) {
-        setSurnameError(locale.fieldMustBeNotEmpty);
+        setSurnameError(fieldMustBeNotEmpty);
       }
       error = true;
     }
     if (!email || emailError) {
       error = true;
       if (!email) {
-        setEmailError(locale.fieldMustBeNotEmpty);
+        setEmailError(fieldMustBeNotEmpty);
       }
     }
     if (!password || passwordError) {
       if (!password) {
-        setPasswordError(locale.fieldMustBeNotEmpty);
+        setPasswordError(fieldMustBeNotEmpty);
       }
       error = true;
     }
     if (!passwordRepeat || passwordRepeatError) {
       if (!passwordRepeat) {
-        setPasswordRepeatError(locale.fieldMustBeNotEmpty);
+        setPasswordRepeatError(fieldMustBeNotEmpty);
       }
       error = true;
     }
@@ -620,7 +624,7 @@ export const useButton = ({
       setPasswordRepeatError(locale.passwordsDoNotMatch);
       error = true;
     }
-    setButtonError(error ? locale.eliminateRemarks : '');
+    setButtonError(error ? eliminateRemarks : '');
     return error;
   };
 
