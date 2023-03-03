@@ -117,6 +117,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public projectFindMany: Database['projectFindMany'] = async (args) => {
+    return this.run({
+      args,
+      model: 'project',
+      command: 'findMany',
+    });
+  };
+
   private createServer() {
     this.listenWorkerMessages<MessageType.DB_COMMAND>(async ({ protocol, msg }) => {
       if (protocol === 'orm' && msg.type === MessageType.DB_COMMAND) {
@@ -191,7 +199,7 @@ export class ORM extends Service implements Database {
         ({ msg: { id: _id, data } }) => {
           if (id === _id) {
             if (data.status === this.errorStatus) {
-              log('warn', 'Database request failed', { args });
+              log('error', 'Database request failed', { args });
             }
             master.removeListener('message', handler);
             resolve(data);

@@ -20,11 +20,13 @@ export enum Pages {
   // eslint-disable-next-line no-unused-vars
   meEmployer = '/me/employer',
   // eslint-disable-next-line no-unused-vars
-  meEmployerCreateProject = '/me/employer/create-project',
+  createProject = '/create-project',
   // eslint-disable-next-line no-unused-vars
   meWorker = '/me/worker',
   // eslint-disable-next-line no-unused-vars
   project = '/project',
+  // eslint-disable-next-line no-unused-vars
+  projects = '/projects',
 }
 
 const now = new Date();

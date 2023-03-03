@@ -12,6 +12,7 @@ import Link from './ui/Link';
 import Menu from './ui/Menu';
 import Switch from './ui/Switch';
 import l from './ui/Link.module.scss';
+import useIsEmployer from '../hooks/useIsEmployer';
 
 function AppBar({
   theme,
@@ -33,6 +34,11 @@ function AppBar({
   const { darkTheme, onClickChangeTheme } = useChangeTheme();
 
   const { onClickLogout, onKeyDownLogout } = useLogout();
+
+  const createProject =
+    user?.role === 'employer'
+      ? `${Pages.meEmployer}${Pages.createProject}`
+      : `${Pages.meWorker}${Pages.createProject}`;
 
   return (
     <header>
@@ -58,9 +64,9 @@ function AppBar({
                 </div>
               </Link>
             )}
-            {!checkRouterPath(router.asPath, Pages.meEmployerCreateProject) &&
+            {!checkRouterPath(router.asPath, Pages.createProject) &&
               checkRouterPath(router.asPath, Pages.meEmployer) && (
-                <Link noWrap theme={theme} href={Pages.meEmployerCreateProject} className={s.item}>
+                <Link noWrap theme={theme} href={Pages.createProject} className={s.item}>
                   <div className={s.menu__item}>
                     <div style={{ color: theme.text }}>{locale.createProject}</div>
                   </div>
@@ -90,9 +96,9 @@ function AppBar({
               </div>
             </Link>
           )}
-          {!checkRouterPath(router.asPath, Pages.meEmployerCreateProject) &&
+          {!checkRouterPath(router.asPath, Pages.createProject) &&
             checkRouterPath(router.asPath, Pages.meEmployer) && (
-              <Link fullWidth withoutHover theme={theme} href={Pages.meEmployerCreateProject}>
+              <Link fullWidth withoutHover theme={theme} href={Pages.createProject}>
                 <div className={clsx(s.menu__item, s.active)}>
                   <div style={{ color: theme.text }}>{locale.createProject}</div>
                 </div>

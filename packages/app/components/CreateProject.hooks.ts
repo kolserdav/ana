@@ -318,6 +318,7 @@ export const useButtonCreate = ({
   selectedSubcats,
   locale,
   cleanAllFields,
+  meEmployer,
 }: {
   title: string;
   description: string;
@@ -331,7 +332,8 @@ export const useButtonCreate = ({
   eliminateRemarks: string;
   selectedSubcats: number[];
   cleanAllFields: () => void;
-  locale: Locale['app']['me'];
+  locale: Locale['app']['createProject'];
+  meEmployer: boolean;
 }) => {
   const router = useRouter();
 
@@ -376,7 +378,9 @@ export const useButtonCreate = ({
     cleanAllFields();
     setTimeout(() => {
       setLoad(false);
-      router.push(`${Pages.project}/${res.data.id}`);
+      router.push(
+        `${meEmployer ? Pages.meEmployer : Pages.meWorker}${Pages.project}/${res.data.id}`
+      );
     }, ALERT_DURATION);
   };
 

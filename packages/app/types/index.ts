@@ -39,3 +39,16 @@ export interface LoginProps extends AppProps {
 }
 
 export type HTMLEditorOnChange = (e: string) => void;
+
+export interface MePageProps extends AppProps {
+  localeAppBar: Locale['app']['appBar'];
+  page: PageFull;
+  localeMe: Locale['app']['me'];
+}
+
+export interface CreateProjectPageProps extends AppProps {
+  localeAppBar: Locale['app']['appBar'];
+  localeCreateProject: Locale['app']['createProject'];
+  localeCommon: Locale['app']['common'];
+  page: PageFull;
+}
