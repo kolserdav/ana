@@ -85,6 +85,10 @@ const lang: Locale = {
       paramsNotFound: 'Не найдены необходимые параметры страницы',
     },
     me: {
+      myProjects: 'Мои проекты',
+      projectsIsMissing: 'В настоящее время проекты отсутствуют',
+    },
+    createProject: {
       createProject: 'Создать новый проект',
       projectTitle: 'Название проекта',
       projectDescription: 'Описание проекта',

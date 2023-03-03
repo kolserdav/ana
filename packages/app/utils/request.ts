@@ -162,6 +162,15 @@ class Request {
       body,
     });
   }
+
+  public async projectFindMany(): Promise<
+    SendMessageArgs<MessageType.SET_PROJECT_FIND_MANY> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: Api.projectFindMany,
+      method: 'GET',
+    });
+  }
 }
 
 export default Request;

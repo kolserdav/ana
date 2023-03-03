@@ -23,6 +23,7 @@ export enum Api {
   getFileFindMany = '/v1/file-find-many',
   categoryFindMany = '/v1/category-find-many',
   projectCreate = '/v1/project-create',
+  projectFindMany = '/v1/project-find-many',
 }
 
 // eslint-disable-next-line no-shadow
@@ -87,6 +88,8 @@ export enum MessageType {
   SET_CATEGORY_FIND_MANY = 'SET_CATEGORY_FIND_MANY',
   GET_PROJECT_CREATE = 'GET_PROJECT_CREATE',
   SET_PROJECT_CREATE = 'SET_PROJECT_CREATE',
+  GET_PROJECT_FIND_MANY = 'GET_PROJECT_FIND_MANY',
+  SET_PROJECT_FIND_MANY = 'SET_PROJECT_FIND_MANY',
 }
 
 export interface RequestContext {
@@ -108,6 +111,13 @@ export interface Result<T> {
   stdErrMessage?: string;
   _model?: keyof PrismaClient;
   _command?: Prisma.PrismaAction;
+  skip?: number | undefined;
+  take?: number | undefined;
+  count?: number | undefined;
+}
+
+export interface ManyResult<T> {
+  items: T[];
   skip?: number | undefined;
   take?: number | undefined;
   count?: number | undefined;
@@ -222,6 +232,10 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? ProjectCreateBody
   : T extends MessageType.SET_PROJECT_CREATE
   ? Project
+  : T extends MessageType.GET_PROJECT_FIND_MANY
+  ? null
+  : T extends MessageType.SET_PROJECT_FIND_MANY
+  ? ManyResult<Project>
   : unknown;
 
 export interface Tab {
@@ -308,6 +322,10 @@ export interface Locale {
       paramsNotFound: string;
     };
     me: {
+      myProjects: string;
+      projectsIsMissing: string;
+    };
+    createProject: {
       createProject: string;
       projectTitle: string;
       projectDescription: string;

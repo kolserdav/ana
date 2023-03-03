@@ -10,7 +10,7 @@ const getTestHandler: RequestHandler<any, SendMessageArgs<MessageType.TEST>> = a
   { headers },
   reply
 ) => {
-  const { lang, id } = parseHeaders(headers);
+  const { lang, id, timeout } = parseHeaders(headers);
   const res = await handleRequests.sendToQueue<
     SendMessageArgs<MessageType.TEST>,
     SendMessageArgs<MessageType.TEST>
@@ -18,7 +18,7 @@ const getTestHandler: RequestHandler<any, SendMessageArgs<MessageType.TEST>> = a
     type: MessageType.TEST,
     id,
     lang,
-    timeout: new Date().getTime(),
+    timeout: parseInt(timeout, 10),
     data: {
       ok: 'yes',
     },

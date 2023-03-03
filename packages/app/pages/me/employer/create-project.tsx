@@ -3,29 +3,25 @@ import Head from 'next/head';
 import AppBar from '../../../components/AppBar';
 import CreateProject from '../../../components/CreateProject';
 import useCloseAuth from '../../../hooks/useCloseAuth';
-import { AppProps, PageFull } from '../../../types';
-import { Locale, LocaleValue } from '../../../types/interfaces';
-import { prepagePage } from '../../../utils/lib';
-import Request from '../../../utils/request';
+import { CreateProjectPageProps } from '../../../types';
 import s from '../../../styles/Page.module.scss';
+import useIsEmployer from '../../../hooks/useIsEmployer';
+import useCloseRole from '../../../hooks/useCloseRole';
+import { getStaticPropsCreateProject } from '../../../utils/getStaticProps';
 
-const request = new Request();
-
-interface EmployerPageProps extends AppProps {
-  localeAppBar: Locale['app']['appBar'];
-  localeMeEmployer: Locale['app']['me'];
-  localeCommon: Locale['app']['common'];
-  page: PageFull;
-}
-
-export default function MeEmployerCreateProjectPage({
+export default function CreateProjectPage({
   app: { user, theme, userLoad, touchpad },
   localeAppBar,
-  localeMeEmployer,
+  localeCreateProject,
   localeCommon,
   page,
-}: EmployerPageProps) {
+}: CreateProjectPageProps) {
   useCloseAuth({ user, userLoad });
+
+  const isEmployer = useIsEmployer();
+
+  useCloseRole({ user, isEmployer });
+
   return (
     <>
       <Head>
@@ -36,13 +32,14 @@ export default function MeEmployerCreateProjectPage({
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <CreateProject
+          user={user}
           eliminateRemarks={localeCommon.eliminateRemarks}
           fieldMustBeNotEmpty={localeCommon.fieldMustBeNotEmpty}
           maxFileSize={localeCommon.maxFileSize}
           somethingWentWrong={localeCommon.somethingWentWrong}
           showHelp={localeCommon.showHelp}
           touchpad={touchpad}
-          locale={localeMeEmployer}
+          locale={localeCreateProject}
           formDesc={localeCommon.formDesc}
           theme={theme}
         />
@@ -51,31 +48,8 @@ export default function MeEmployerCreateProjectPage({
   );
 }
 
-export async function getStaticProps({
-  locale,
-}: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
-  const localeAppBar = await request.getLocale({ field: 'appBar', locale });
-  const localeCommon = await request.getLocale({ field: 'common', locale });
-  const localeMeEmployer = await request.getLocale({ field: 'me', locale });
-  const page = await request.pageFindMany({
-    where: {
-      AND: [
-        {
-          name: 'meEmployerCreateProject',
-        },
-        {
-          lang: locale as LocaleValue,
-        },
-      ],
-    },
-  });
-
-  return {
-    props: {
-      page: prepagePage(page.data),
-      localeAppBar: localeAppBar.data,
-      localeMeEmployer: localeMeEmployer.data,
-      localeCommon: localeCommon.data,
-    },
-  };
+export async function getStaticProps(
+  args: GetStaticPropsContext
+): Promise<{ props: Omit<CreateProjectPageProps, 'app'> }> {
+  return getStaticPropsCreateProject('meEmployerCreateProject')(args);
 }

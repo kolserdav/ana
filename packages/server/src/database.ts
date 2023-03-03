@@ -70,6 +70,16 @@ abstract class Database {
       Promise<Result<Prisma.ProjectGetPayload<T> | null>>
     >
   >;
+
+  public abstract projectFindMany<T extends Prisma.ProjectFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.ProjectFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<Project>>,
+      Promise<Result<Array<Prisma.ProjectGetPayload<T>>>>
+    >
+  >;
 }
 
 export default Database;

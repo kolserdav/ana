@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { useMemo, useRef } from 'react';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
-import { isImage, Locale, MAX_BODY_MB } from '../types/interfaces';
+import { isImage, Locale, MAX_BODY_MB, MessageType, SendMessageArgs } from '../types/interfaces';
 import {
   IMAGE_PREVIEW_WIDTH,
   MAX_DATE_ACTUAL,
@@ -47,9 +47,10 @@ function CreateProject({
   maxFileSize,
   fieldMustBeNotEmpty,
   eliminateRemarks,
+  user,
 }: {
   theme: Theme;
-  locale: Locale['app']['me'];
+  locale: Locale['app']['createProject'];
   formDesc: string;
   touchpad: boolean;
   showHelp: string;
@@ -57,6 +58,7 @@ function CreateProject({
   maxFileSize: string;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
+  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
 }) {
   const filesRef = useRef<HTMLDivElement>(null);
 
@@ -152,6 +154,7 @@ function CreateProject({
     selectedSubcats,
     locale,
     cleanAllFields,
+    meEmployer: user?.role === 'employer',
   });
 
   return (

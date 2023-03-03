@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import NextLink from 'next/link';
 import React from 'react';
+import { ubuntu700 } from '../../fonts/ubuntu';
 import { Theme } from '../../Theme';
 import s from './Link.module.scss';
 
@@ -13,6 +14,7 @@ interface LinkProps {
   className?: string;
   fullWidth?: boolean;
   noWrap?: boolean;
+  style?: React.CSSProperties;
 }
 
 function Link({
@@ -24,6 +26,7 @@ function Link({
   href,
   fullWidth,
   noWrap,
+  style,
 }: LinkProps) {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
@@ -36,13 +39,14 @@ function Link({
         href={href}
         className={clsx(
           s.wrapper,
+          ubuntu700.className,
           withoutHover ? s.without__hover : '',
           className,
           fullWidth ? s.full__width : '',
           noWrap ? s.no__wrap : ''
         )}
       >
-        <span style={{ color: theme.blue }}>{children}</span>
+        <span style={style || { color: theme.blue }}>{children}</span>
       </NextLink>
     )
   );
@@ -54,6 +58,7 @@ Link.defaultProps = {
   className: '',
   fullWidth: false,
   noWrap: false,
+  style: undefined,
 };
 
 export default Link;

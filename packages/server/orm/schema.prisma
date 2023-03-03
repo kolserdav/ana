@@ -17,6 +17,9 @@ enum PageName {
   meEmployer
   meEmployerCreateProject
   meWorker
+  meWorkerCreateProject
+  meEmployerProjects
+  meWorkerProjects
 }
 
 enum PageField {

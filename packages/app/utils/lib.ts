@@ -122,3 +122,5 @@ export const getWindowDimensions = () => {
 
   return res;
 };
+
+export const cleanPath = (asPath: string) => asPath.replace(/(\?|#)?.*$/, '');

@@ -192,6 +192,82 @@ class Project {
       data: res.data,
     });
   }
+
+  public async findMany(
+    { id, connId, lang, timeout }: SendMessageArgs<MessageType.GET_PROJECT_FIND_MANY>,
+    amqp: AMQP
+  ) {
+    if (!connId) {
+      log('warn', 'Conn id not provided in projectFindMany', { connId });
+      return;
+    }
+
+    const locale = getLocale(lang).server;
+
+    const user = await orm.userFindFirst({
+      where: {
+        id,
+      },
+    });
+    if (user.status !== 'info' || !user.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: user.status,
+          type: MessageType.GET_PROJECT_CREATE,
+          message: locale.error,
+          httpCode: user.code,
+        },
+      });
+      return;
+    }
+
+    const projects = await orm.projectFindMany({
+      where:
+        user.data.role === 'employer'
+          ? {
+              employerId: id,
+            }
+          : {
+              workerId: id,
+            },
+    });
+
+    if (projects.status === 'error') {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_PROJECT_CREATE,
+          message: locale.error,
+          httpCode: 500,
+        },
+      });
+      return;
+    }
+
+    amqp.sendToQueue({
+      type: MessageType.SET_PROJECT_FIND_MANY,
+      id,
+      lang,
+      timeout,
+      connId,
+      data: {
+        skip: projects.skip,
+        take: projects.take,
+        count: projects.count,
+        items: projects.data,
+      },
+    });
+  }
 }
 
 export default Project;
