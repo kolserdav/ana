@@ -1,5 +1,7 @@
 @import '../styles/constants';
 
+$my-padding: 1rem;
+
 .wrapper {
   position: relative;
   width: 100%;
@@ -39,6 +41,18 @@
     min-height: inherit;
     width: 100%;
     height: 100%;
+    padding: $my-padding;
     max-width: $container-max-width;
+
+    .project__link {
+      position: relative;
+      margin: 1rem;
+      display: flex;
+      flex-direction: column;
+
+      .meta {
+        position: relative;
+      }
+    }
   }
 }

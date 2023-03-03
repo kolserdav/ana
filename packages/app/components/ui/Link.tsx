@@ -45,6 +45,9 @@ function Link({
           fullWidth ? s.full__width : '',
           noWrap ? s.no__wrap : ''
         )}
+        style={{
+          textDecorationColor: theme.text,
+        }}
       >
         <span style={style || { color: theme.blue }}>{children}</span>
       </NextLink>

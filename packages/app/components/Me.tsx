@@ -34,7 +34,7 @@ function Me({
 
   const isProjects = router.asPath.indexOf(Pages.projects) !== -1;
 
-  useLoadProjects({ isProjects });
+  const { projects } = useLoadProjects({ isProjects });
 
   return (
     <div className={s.wrapper}>
@@ -49,7 +49,17 @@ function Me({
         </Link>
       </div>
       <div className={s.container} style={{ border: `1px solid ${theme.active}` }}>
-        Me
+        {projects.items.map((item) => (
+          <div key={item.id} className={s.project_link}>
+            <Link
+              theme={theme}
+              href={`${isEmployer ? Pages.meEmployer : Pages.meWorker}${Pages.project}/${item.id}`}
+            >
+              {item.title}
+            </Link>
+            <div className={s.meta}>{new Date(item.created).toDateString()}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
