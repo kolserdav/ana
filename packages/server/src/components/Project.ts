@@ -233,9 +233,12 @@ class Project {
             id: data.id,
           },
           {
-            OR: [{ employerId: id }, { workerId: id }],
+            OR: [{ employerId: id }, { workerId: id }, { employerId: null }, { workerId: null }],
           },
         ],
+      },
+      include: {
+        File: true,
       },
     });
 
@@ -308,6 +311,13 @@ class Project {
           : {
               workerId: id,
             },
+      include: {
+        File: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
 
     if (projects.status === 'error') {
@@ -339,6 +349,153 @@ class Project {
         count: projects.count,
         items: projects.data,
       },
+    });
+  }
+
+  public async giveProject(
+    { id, connId, lang, timeout, data }: SendMessageArgs<MessageType.GET_GIVE_PROJECT>,
+    amqp: AMQP
+  ) {
+    if (!connId) {
+      log('warn', 'Conn id not provided in projectGiveProject', { connId });
+      return;
+    }
+
+    const locale = getLocale(lang).server;
+
+    const user = await orm.userFindFirst({
+      where: {
+        id,
+      },
+    });
+    if (user.status !== 'info' || !user.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: user.status,
+          type: MessageType.GET_GIVE_PROJECT,
+          message: locale.error,
+          httpCode: user.code,
+        },
+      });
+      return;
+    }
+
+    const project = await orm.projectFindFirst({
+      where: {
+        id: data.id,
+      },
+    });
+    if (project.status !== 'info' || !project.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_GIVE_PROJECT,
+          message: locale.error,
+          httpCode: project.code,
+        },
+      });
+      return;
+    }
+
+    if (project.data.employerId !== null && project.data.workerId !== null) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'warn',
+          type: MessageType.GET_GIVE_PROJECT,
+          message: locale.forbidden,
+          httpCode: 403,
+        },
+      });
+      return;
+    }
+
+    if (project.data.employerId === null && user.data.role !== 'employer') {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'warn',
+          type: MessageType.GET_GIVE_PROJECT,
+          message: locale.unauthorized,
+          httpCode: 401,
+        },
+      });
+      return;
+    }
+
+    if (project.data.workerId === null && user.data.role !== 'worker') {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'warn',
+          type: MessageType.GET_GIVE_PROJECT,
+          message: locale.unauthorized,
+          httpCode: 401,
+        },
+      });
+      return;
+    }
+
+    const prUp = await orm.projectUpdate({
+      where: {
+        id: data.id,
+      },
+      data: {
+        employerId: project.data.employerId === null ? id : project.data.employerId,
+        workerId: project.data.workerId === null ? id : project.data.workerId,
+        updated: new Date(),
+      },
+      include: {
+        File: true,
+      },
+    });
+
+    if (prUp.status !== 'info' || !prUp.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_GIVE_PROJECT,
+          message: locale.error,
+          httpCode: prUp.code,
+        },
+      });
+      return;
+    }
+
+    amqp.sendToQueue({
+      type: MessageType.SET_GIVE_PROJECT,
+      id,
+      lang,
+      timeout,
+      connId,
+      data: prUp.data,
     });
   }
 }

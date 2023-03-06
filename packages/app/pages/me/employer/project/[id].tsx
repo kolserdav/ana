@@ -17,11 +17,13 @@ const request = new Request();
 
 interface ProjectPageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
+  localeProjectStatus: Locale['app']['projectStatus'];
 }
 
 export default function ProjectPage({
   app: { user, theme, userLoad },
   localeAppBar,
+  localeProjectStatus,
 }: ProjectPageProps) {
   useCloseAuth({ user, userLoad });
 
@@ -56,7 +58,14 @@ export default function ProjectPage({
       </Head>
       <AppBar user={user} theme={theme} full locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        {project && <Project project={project} />}
+        {project && (
+          <Project
+            projectStatus={localeProjectStatus}
+            user={user}
+            theme={theme}
+            project={project}
+          />
+        )}
       </main>
     </>
   );
@@ -66,9 +75,11 @@ export async function getServerSideProps({
   locale,
 }: GetServerSidePropsContext): Promise<{ props: Omit<ProjectPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
+  const localeProjectStatus = await request.getLocale({ field: 'projectStatus', locale });
   return {
     props: {
       localeAppBar: localeAppBar.data,
+      localeProjectStatus: localeProjectStatus.data,
     },
   };
 }

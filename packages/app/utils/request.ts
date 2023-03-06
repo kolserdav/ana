@@ -13,6 +13,8 @@ import {
   APPLICATION_JSON,
   FileDeleteBody,
   ProjectCreateBody,
+  ProjectGiveBody,
+  ProjectFindFirstQuery,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -40,7 +42,7 @@ class Request {
     body?: any;
     locale?: string;
     contentType?: string | null;
-    method: 'GET' | 'POST' | 'UPDATE' | 'DELETE';
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }): Promise<any> {
     return new Promise((resolve) => {
@@ -174,14 +176,24 @@ class Request {
 
   public async projectFindFirst({
     id,
-  }: {
-    id: string;
-  }): Promise<
+  }: ProjectFindFirstQuery): Promise<
     SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST> | SendMessageArgs<MessageType.SET_ERROR>
   > {
     return this.send({
       url: `${Api.projectFindFirst}?id=${id}`,
       method: 'GET',
+    });
+  }
+
+  public async projectGive(
+    body: ProjectGiveBody
+  ): Promise<
+    SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: Api.projectGive,
+      method: 'PUT',
+      body,
     });
   }
 }

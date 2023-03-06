@@ -117,6 +117,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public projectUpdate: Database['projectUpdate'] = async (args) => {
+    return this.run({
+      args,
+      model: 'project',
+      command: 'update',
+    });
+  };
+
   public projectFindFirst: Database['projectFindFirst'] = async (args) => {
     return this.run({
       args,
@@ -181,13 +189,12 @@ export class ORM extends Service implements Database {
         _model: model,
         take,
         count,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as DBResult<any>;
+      };
     }
 
     const isNotFound = result === null || result?.length === 0;
     return {
-      status: isNotFound ? 'warning' : 'info',
+      status: isNotFound ? 'warn' : 'info',
       data: result,
       code: isNotFound ? 404 : checkIsFind(command) ? 200 : 201,
       _command: command,
@@ -195,8 +202,7 @@ export class ORM extends Service implements Database {
       skip,
       take,
       count,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as DBResult<any>;
+    };
   }
 
   private runFromWorker = async ({ args, model, command }: DBCommandProps) => {

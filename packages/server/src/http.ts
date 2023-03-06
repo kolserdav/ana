@@ -18,6 +18,7 @@ import categoryFindMany from './api/v1/category/category-find-many';
 import projectCreate from './api/v1/project/project-create';
 import projectFindMany from './api/v1/project/project-find-many';
 import projectFindFirst from './api/v1/project/project-find-first';
+import projectGive from './api/v1/project/project-give';
 
 const prisma = new PrismaClient();
 
@@ -43,6 +44,8 @@ process.on('unhandledRejection', (err: Error) => {
       Api.deleteFileDelete,
       Api.projectCreate,
       Api.projectFindMany,
+      Api.projectFindFirst,
+      Api.projectGive,
     ],
     checkTokenMiddleware
   );
@@ -73,6 +76,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.projectCreate, projectCreate);
   fastify.get(Api.projectFindMany, projectFindMany);
   fastify.get(Api.projectFindFirst, projectFindFirst);
+  fastify.put(Api.projectGive, projectGive);
   // Open
   fastify.get(Api.categoryFindMany, categoryFindMany);
 

@@ -81,6 +81,9 @@ function Me({
                 >
                   {status}
                 </div>
+                <div className={s.files}>
+                  {locale.files}: {item.File.length}
+                </div>
               </div>
             </div>
           );

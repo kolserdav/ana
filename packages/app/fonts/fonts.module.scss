@@ -8,8 +8,19 @@
   src: url('/fonts/ubuntu/Ubuntu-Bold.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'Ubuntu Italic';
+  src: url('/fonts/ubuntu/Ubuntu-Italic.ttf') format('truetype');
+}
+
 .ubuntu300 {
   font-family: 'Ubuntu Regular', sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.ubuntu_italic300 {
+  font-family: 'Ubuntu Italic', sans-serif;
   font-weight: 300;
   font-style: normal;
 }

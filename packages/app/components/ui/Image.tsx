@@ -109,6 +109,8 @@ function Image({
 
   const _style = { ...style };
   _style.objectFit = zoomIn ? undefined : 'contain';
+  _style.width = 'auto';
+  _style.height = 'auto';
 
   return (
     <div

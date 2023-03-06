@@ -71,6 +71,16 @@ abstract class Database {
     >
   >;
 
+  public abstract projectUpdate<T extends Prisma.ProjectUpdateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.ProjectUpdateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Project | null>,
+      Promise<Result<Prisma.ProjectGetPayload<T> | null>>
+    >
+  >;
+
   public abstract projectFindMany<T extends Prisma.ProjectFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.ProjectFindManyArgs>
   ): Promise<

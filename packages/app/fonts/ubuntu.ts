@@ -4,6 +4,10 @@ export const ubuntu300 = {
   className: s.ubuntu300,
 };
 
+export const ubuntuItalic300 = {
+  className: s.ubuntu_italic300,
+};
+
 export const ubuntu400 = {
   className: s.ubuntu400,
 };

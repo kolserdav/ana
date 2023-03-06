@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import NextLink from 'next/link';
 import React from 'react';
-import { ubuntu700 } from '../../fonts/ubuntu';
+import { ubuntu500 } from '../../fonts/ubuntu';
 import { Theme } from '../../Theme';
 import s from './Link.module.scss';
 
@@ -39,7 +39,7 @@ function Link({
         href={href}
         className={clsx(
           s.wrapper,
-          ubuntu700.className,
+          ubuntu500.className,
           withoutHover ? s.without__hover : '',
           className,
           fullWidth ? s.full__width : '',

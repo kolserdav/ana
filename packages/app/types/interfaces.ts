@@ -25,6 +25,7 @@ export enum Api {
   projectCreate = '/v1/project-create',
   projectFindMany = '/v1/project-find-many',
   projectFindFirst = '/v1/project-find-first',
+  projectGive = '/v1/project-give',
 }
 
 // eslint-disable-next-line no-shadow
@@ -93,6 +94,8 @@ export enum MessageType {
   SET_PROJECT_FIND_MANY = 'SET_PROJECT_FIND_MANY',
   GET_PROJECT_FIND_FIRST = 'GET_PROJECT_FIND_FIRST',
   SET_PROJECT_FIND_FIRST = 'SET_PROJECT_FIND_FIRST',
+  GET_GIVE_PROJECT = 'GET_GIVE_PROJECT',
+  SET_GIVE_PROJECT = 'SET_GIVE_PROJECT',
 }
 
 export interface RequestContext {
@@ -140,9 +143,15 @@ export interface ProjectFindFirstQuery {
   id: string;
 }
 
+export interface ProjectGiveBody {
+  id: string;
+}
+
 export interface FileDeleteBody {
   fileId: string;
 }
+
+export type ProjectFull = Project & { File: File[] };
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
@@ -217,7 +226,7 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   T extends MessageType.GET_USER_FIND_FIRST
   ? Prisma.UserFindFirstArgs
   : T extends MessageType.SET_USER_FIND_FIRST
-  ? Omit<User, 'password' | 'salt'> | null
+  ? Omit<User, 'password' | 'salt'>
   : T extends MessageType.GET_FILE_UPLOAD
   ? {
       filePath: string;
@@ -242,11 +251,15 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   : T extends MessageType.GET_PROJECT_FIND_MANY
   ? null
   : T extends MessageType.SET_PROJECT_FIND_MANY
-  ? ManyResult<Project>
+  ? ManyResult<Project & { File: { id: string }[] }>
   : T extends MessageType.GET_PROJECT_FIND_FIRST
   ? ProjectFindFirstQuery
   : T extends MessageType.SET_PROJECT_FIND_FIRST
-  ? Project
+  ? ProjectFull
+  : T extends MessageType.GET_GIVE_PROJECT
+  ? ProjectGiveBody
+  : T extends MessageType.SET_GIVE_PROJECT
+  ? ProjectFull
   : unknown;
 
 export interface Tab {
@@ -335,6 +348,7 @@ export interface Locale {
     me: {
       myProjects: string;
       projectsIsMissing: string;
+      files: string;
     };
     createProject: {
       createProject: string;

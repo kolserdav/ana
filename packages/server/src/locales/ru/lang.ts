@@ -87,6 +87,7 @@ const lang: Locale = {
     me: {
       myProjects: 'Мои проекты',
       projectsIsMissing: 'В настоящее время проекты отсутствуют',
+      files: 'Файлов',
     },
     createProject: {
       createProject: 'Создать новый проект',
