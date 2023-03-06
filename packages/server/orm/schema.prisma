@@ -91,6 +91,7 @@ model Project {
   workerId           String?
   Worker             User?                @relation("Worker", fields: [workerId], references: [id])
   end                DateTime
+  stop               DateTime?
   File               File[]
   start              DateTime?
   acceptEmployer     DateTime?

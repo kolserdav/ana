@@ -1,35 +1,62 @@
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import AppBar from '../../../../components/AppBar';
-import { AppProps, PageFull } from '../../../../types';
-import { Locale, LocaleValue } from '../../../../types/interfaces';
-import { prepagePage } from '../../../../utils/lib';
+import { AppProps } from '../../../../types';
+import { Locale, MessageType, SendMessageArgs } from '../../../../types/interfaces';
 import Request from '../../../../utils/request';
-import Test from '../../../../components/Test';
 import s from '../../../../styles/Page.module.scss';
+import { log } from '../../../../utils/lib';
+import Project from '../../../../components/Project';
+import useCloseAuth from '../../../../hooks/useCloseAuth';
+import useIsEmployer from '../../../../hooks/useIsEmployer';
+import useCloseRole from '../../../../hooks/useCloseRole';
 
 const request = new Request();
 
-interface EmployerPageProps extends AppProps {
+interface ProjectPageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
-  page: PageFull;
 }
 
 export default function ProjectPage({
-  app: { user, theme },
+  app: { user, theme, userLoad },
   localeAppBar,
-  page,
-}: EmployerPageProps) {
+}: ProjectPageProps) {
+  useCloseAuth({ user, userLoad });
+
+  const isEmployer = useIsEmployer();
+
+  useCloseRole({ user, isEmployer });
+  const { query } = useRouter();
+
+  const [project, setProject] =
+    useState<SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST>['data']>();
+
+  const id = typeof query.id === 'string' ? query.id : '';
+
+  /**
+   * Set project
+   */
+  useEffect(() => {
+    (async () => {
+      const _project = await request.projectFindFirst({ id });
+      if (_project.type === MessageType.SET_ERROR) {
+        log(_project.data.status, _project.data.message, { _project }, true);
+        return;
+      }
+      setProject(_project.data);
+    })();
+  }, [id]);
+
   return (
     <>
       <Head>
-        <title>{page.title}</title>
-        <meta name="description" content={page.description} />
-        <meta name="keywords" content={page.keywords} />
+        <title>{project?.title}</title>
       </Head>
       <AppBar user={user} theme={theme} full locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Test />
+        {project && <Project project={project} />}
       </main>
     </>
   );
@@ -37,23 +64,10 @@ export default function ProjectPage({
 
 export async function getServerSideProps({
   locale,
-}: GetServerSidePropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
+}: GetServerSidePropsContext): Promise<{ props: Omit<ProjectPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
-  const page = await request.pageFindMany({
-    where: {
-      AND: [
-        {
-          name: 'index',
-        },
-        {
-          lang: locale as LocaleValue,
-        },
-      ],
-    },
-  });
   return {
     props: {
-      page: prepagePage(page.data),
       localeAppBar: localeAppBar.data,
     },
   };

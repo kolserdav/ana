@@ -24,6 +24,7 @@ export enum Api {
   categoryFindMany = '/v1/category-find-many',
   projectCreate = '/v1/project-create',
   projectFindMany = '/v1/project-find-many',
+  projectFindFirst = '/v1/project-find-first',
 }
 
 // eslint-disable-next-line no-shadow
@@ -90,6 +91,8 @@ export enum MessageType {
   SET_PROJECT_CREATE = 'SET_PROJECT_CREATE',
   GET_PROJECT_FIND_MANY = 'GET_PROJECT_FIND_MANY',
   SET_PROJECT_FIND_MANY = 'SET_PROJECT_FIND_MANY',
+  GET_PROJECT_FIND_FIRST = 'GET_PROJECT_FIND_FIRST',
+  SET_PROJECT_FIND_FIRST = 'SET_PROJECT_FIND_FIRST',
 }
 
 export interface RequestContext {
@@ -131,6 +134,10 @@ export interface ProjectCreateBody {
   endDate: string;
   files: string[];
   subcategories: number[];
+}
+
+export interface ProjectFindFirstQuery {
+  id: string;
 }
 
 export interface FileDeleteBody {
@@ -236,6 +243,10 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? null
   : T extends MessageType.SET_PROJECT_FIND_MANY
   ? ManyResult<Project>
+  : T extends MessageType.GET_PROJECT_FIND_FIRST
+  ? ProjectFindFirstQuery
+  : T extends MessageType.SET_PROJECT_FIND_FIRST
+  ? Project
   : unknown;
 
 export interface Tab {
@@ -349,6 +360,13 @@ export interface Locale {
       maxFileSize: string;
       fieldMustBeNotEmpty: string;
       eliminateRemarks: string;
+    };
+    projectStatus: {
+      waitEmployer: string;
+      waitWorker: string;
+      agreementOfConditions: string;
+      inWork: string;
+      finished: string;
     };
   };
 }

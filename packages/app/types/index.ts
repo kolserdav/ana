@@ -44,6 +44,7 @@ export interface MePageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
   page: PageFull;
   localeMe: Locale['app']['me'];
+  localeProjectStatus: Locale['app']['projectStatus'];
 }
 
 export interface CreateProjectPageProps extends AppProps {

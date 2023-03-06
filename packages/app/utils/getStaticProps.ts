@@ -44,6 +44,7 @@ export function getStaticPropsMe(name: PageName) {
   }: GetStaticPropsContext): Promise<{ props: Omit<MePageProps, 'app'> }> => {
     const localeAppBar = await request.getLocale({ field: 'appBar', locale });
     const localeMe = await request.getLocale({ field: 'me', locale });
+    const localeProjectStatus = await request.getLocale({ field: 'projectStatus', locale });
     const page = await request.pageFindMany({
       where: {
         AND: [
@@ -61,6 +62,7 @@ export function getStaticPropsMe(name: PageName) {
         page: prepagePage(page.data),
         localeAppBar: localeAppBar.data,
         localeMe: localeMe.data,
+        localeProjectStatus: localeProjectStatus.data,
       },
     };
   };

@@ -117,6 +117,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public projectFindFirst: Database['projectFindFirst'] = async (args) => {
+    return this.run({
+      args,
+      model: 'project',
+      command: 'findFirst',
+    });
+  };
+
   public projectFindMany: Database['projectFindMany'] = async (args) => {
     return this.run({
       args,

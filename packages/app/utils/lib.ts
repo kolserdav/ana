@@ -1,4 +1,5 @@
-import { format } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { File, Page } from '@prisma/client';
 import storeAlert, { changeAlert } from '../store/alert';
 import { CLOUD_PREFIX, LogLevel } from '../types/interfaces';
@@ -124,3 +125,6 @@ export const getWindowDimensions = () => {
 };
 
 export const cleanPath = (asPath: string) => asPath.replace(/(\?|#)?.*$/, '');
+
+export const getFormatDistance = (dateFrom: Date) =>
+  formatDistance(dateFrom, new Date(), { addSuffix: true, locale: ru });

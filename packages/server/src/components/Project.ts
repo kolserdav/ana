@@ -193,6 +193,79 @@ class Project {
     });
   }
 
+  public async findFirst(
+    { id, connId, lang, timeout, data }: SendMessageArgs<MessageType.GET_PROJECT_FIND_FIRST>,
+    amqp: AMQP
+  ) {
+    if (!connId) {
+      log('warn', 'Conn id not provided in projectFindFirst', { connId });
+      return;
+    }
+
+    const locale = getLocale(lang).server;
+
+    const user = await orm.userFindFirst({
+      where: {
+        id,
+      },
+    });
+    if (user.status !== 'info' || !user.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: user.status,
+          type: MessageType.GET_PROJECT_FIND_FIRST,
+          message: locale.error,
+          httpCode: user.code,
+        },
+      });
+      return;
+    }
+
+    const project = await orm.projectFindFirst({
+      where: {
+        AND: [
+          {
+            id: data.id,
+          },
+          {
+            OR: [{ employerId: id }, { workerId: id }],
+          },
+        ],
+      },
+    });
+
+    if (project.status !== 'info' || !project.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: project.status,
+          type: MessageType.GET_PROJECT_FIND_FIRST,
+          message: project.status === 'error' ? locale.error : locale.notFound,
+          httpCode: project.code,
+        },
+      });
+      return;
+    }
+
+    amqp.sendToQueue({
+      type: MessageType.SET_PROJECT_FIND_FIRST,
+      id,
+      lang,
+      timeout,
+      connId,
+      data: project.data,
+    });
+  }
+
   public async findMany(
     { id, connId, lang, timeout }: SendMessageArgs<MessageType.GET_PROJECT_FIND_MANY>,
     amqp: AMQP
@@ -218,7 +291,7 @@ class Project {
         connId,
         data: {
           status: user.status,
-          type: MessageType.GET_PROJECT_CREATE,
+          type: MessageType.GET_PROJECT_FIND_MANY,
           message: locale.error,
           httpCode: user.code,
         },
@@ -246,7 +319,7 @@ class Project {
         connId,
         data: {
           status: 'error',
-          type: MessageType.GET_PROJECT_CREATE,
+          type: MessageType.GET_PROJECT_FIND_MANY,
           message: locale.error,
           httpCode: 500,
         },

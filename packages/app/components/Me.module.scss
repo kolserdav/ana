@@ -44,14 +44,25 @@ $my-padding: 1rem;
     padding: $my-padding;
     max-width: $container-max-width;
 
-    .project__link {
+    .project_link {
       position: relative;
       margin: 1rem;
-      display: flex;
-      flex-direction: column;
 
       .meta {
         position: relative;
+        display: flex;
+        flex-direction: row;
+
+        .status {
+          position: relative;
+          display: block;
+          margin: 0 1rem;
+        }
+
+        .date {
+          position: relative;
+          display: block;
+        }
       }
     }
   }

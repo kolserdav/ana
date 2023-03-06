@@ -14,6 +14,7 @@ export default function MeEmployerPage({
   localeAppBar,
   page,
   localeMe,
+  localeProjectStatus,
 }: MePageProps) {
   useCloseAuth({ user, userLoad });
 
@@ -31,6 +32,7 @@ export default function MeEmployerPage({
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Me
+          localeProjectStatus={localeProjectStatus}
           isEmployer={isEmployer}
           locale={localeMe}
           theme={theme}

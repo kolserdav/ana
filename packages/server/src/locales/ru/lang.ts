@@ -117,6 +117,13 @@ const lang: Locale = {
       fieldMustBeNotEmpty: 'Поле не должно быть пустым',
       eliminateRemarks: 'Устраните замечания в форме',
     },
+    projectStatus: {
+      finished: 'Закончен',
+      inWork: 'В работе',
+      waitEmployer: 'Ожидает заказчика',
+      waitWorker: 'Ожидает исполнителя',
+      agreementOfConditions: 'Согласование условий',
+    },
   },
 };
 

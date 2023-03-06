@@ -171,6 +171,19 @@ class Request {
       method: 'GET',
     });
   }
+
+  public async projectFindFirst({
+    id,
+  }: {
+    id: string;
+  }): Promise<
+    SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: `${Api.projectFindFirst}?id=${id}`,
+      method: 'GET',
+    });
+  }
 }
 
 export default Request;

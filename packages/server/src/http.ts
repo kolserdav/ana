@@ -17,6 +17,7 @@ import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
 import categoryFindMany from './api/v1/category/category-find-many';
 import projectCreate from './api/v1/project/project-create';
 import projectFindMany from './api/v1/project/project-find-many';
+import projectFindFirst from './api/v1/project/project-find-first';
 
 const prisma = new PrismaClient();
 
@@ -71,6 +72,7 @@ process.on('unhandledRejection', (err: Error) => {
   // Project
   fastify.post(Api.projectCreate, projectCreate);
   fastify.get(Api.projectFindMany, projectFindMany);
+  fastify.get(Api.projectFindFirst, projectFindFirst);
   // Open
   fastify.get(Api.categoryFindMany, categoryFindMany);
 
