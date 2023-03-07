@@ -49,23 +49,24 @@ model Page {
 }
 
 model User {
-  id              String         @id @default(uuid())
-  name            String         @db.VarChar(24)
-  surname         String         @db.VarChar(35)
-  email           String         @unique @db.VarChar(255)
-  confirm         Boolean        @default(false)
-  online          Boolean        @default(true)
+  id              String           @id @default(uuid())
+  name            String           @db.VarChar(24)
+  surname         String           @db.VarChar(35)
+  email           String           @unique @db.VarChar(255)
+  confirm         Boolean          @default(false)
+  online          Boolean          @default(true)
   role            Role
-  password        String         @db.VarChar(64)
-  salt            String         @db.VarChar(32)
-  updated         DateTime       @default(now())
-  created         DateTime       @default(now())
+  password        String           @db.VarChar(64)
+  salt            String           @db.VarChar(32)
+  updated         DateTime         @default(now())
+  created         DateTime         @default(now())
   RestoreLink     RestoreLink[]
   ConfirmLink     ConfirmLink[]
-  ProjectWorker   Project[]      @relation("Worker")
-  ProjectEmployer Project[]      @relation("Employer")
+  ProjectWorker   Project[]        @relation("Worker")
+  ProjectEmployer Project[]        @relation("Employer")
   File            File[]
   ProjectEvent    ProjectEvent[]
+  ProjectMessage  ProjectMessage[]
 }
 
 model RestoreLink {
@@ -101,6 +102,7 @@ model Project {
   created            DateTime             @default(now())
   ProjectSubcategory ProjectSubcategory[]
   ProjectEvent       ProjectEvent[]
+  ProjectMessage     ProjectMessage[]
 }
 
 enum EventName {
@@ -112,7 +114,7 @@ enum EventName {
 }
 
 model ProjectEvent {
-  id          Int           @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   projectId String
   Project   Project   @relation(fields: [projectId], references: [id])
   sideId    String
@@ -121,23 +123,36 @@ model ProjectEvent {
   created   DateTime  @default(now())
 }
 
-model File {
-  id        String   @id @default(uuid())
-  filename  String
-  encoding  String
-  mimetype  String
-  fieldname String
-  ext       String   @db.VarChar(5)
-  width     Int?
-  height    Int?
-  coeff     Float?
-  size      Int?
-  projectId String?
+model ProjectMessage {
+  id        Int      @id @default(autoincrement())
+  projectId String
+  Project   Project  @relation(fields: [projectId], references: [id])
+  content   String   @db.Text
+  fileId    String
+  File      File     @relation(fields: [fileId], references: [id])
   userId    String
   User      User     @relation(fields: [userId], references: [id])
-  Project   Project? @relation(fields: [projectId], references: [id])
-  updated   DateTime @default(now())
   created   DateTime @default(now())
+}
+
+model File {
+  id             String           @id @default(uuid())
+  filename       String
+  encoding       String
+  mimetype       String
+  fieldname      String
+  ext            String           @db.VarChar(5)
+  width          Int?
+  height         Int?
+  coeff          Float?
+  size           Int?
+  projectId      String?
+  userId         String
+  User           User             @relation(fields: [userId], references: [id])
+  Project        Project?         @relation(fields: [projectId], references: [id])
+  updated        DateTime         @default(now())
+  created        DateTime         @default(now())
+  ProjectMessage ProjectMessage[]
 }
 
 model Category {

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
+import { TEXTAREA_MAX_ROWS, TEXTAREA_ROWS_DEFAULT } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
+import { gettextAreaRows } from './Project.lib';
 
 const request = new Request();
 
@@ -36,4 +38,24 @@ export const useGiveProject = ({
   }, [_project, user]);
 
   return { project };
+};
+
+export const useTextArea = () => {
+  const [text, setText] = useState<string>('');
+  const [rows, setRows] = useState<number>(TEXTAREA_ROWS_DEFAULT);
+
+  const inputText = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const {
+      target: { value },
+    }: { target: HTMLTextAreaElement } = e as any;
+    const _rows = gettextAreaRows(value);
+    if (_rows > TEXTAREA_MAX_ROWS) {
+      setRows(TEXTAREA_MAX_ROWS);
+    } else {
+      setRows(_rows);
+    }
+    setText(value);
+  };
+
+  return { inputText, text, rows };
 };

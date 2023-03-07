@@ -6,11 +6,14 @@ import { isImage, Locale, MessageType, SendMessageArgs } from '../types/interfac
 import { IMAGE_PREVIEW_WIDTH } from '../utils/constants';
 import { getFilePath, getFormatDistance } from '../utils/lib';
 import { getFileIconPath } from './CreateProject.lib';
+import SendIcon from './icons/Send';
 import { getProjectStatus } from './Me.lib';
-import { useGiveProject } from './Project.hooks';
+import { useGiveProject, useTextArea } from './Project.hooks';
 import s from './Project.module.scss';
 import Hr from './ui/Hr';
+import IconButton from './ui/IconButton';
 import Image from './ui/Image';
+import Textarea from './ui/Textarea';
 import Typography from './ui/Typography';
 
 function Project({
@@ -31,6 +34,8 @@ function Project({
   const { project: __project } = useGiveProject({ project: _project, user });
 
   const project = __project || _project;
+
+  const { inputText, rows, text } = useTextArea();
 
   return (
     <div className={s.wrapper}>
@@ -74,6 +79,14 @@ function Project({
           ))}
         </div>
         <Hr theme={theme} />
+        <form>
+          <Textarea theme={theme} onInput={inputText} value={text} rows={rows} />
+          <div className={s.send__button}>
+            <IconButton>
+              <SendIcon color={theme.text} />
+            </IconButton>
+          </div>
+        </form>
       </div>
     </div>
   );

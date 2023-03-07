@@ -13,8 +13,21 @@
     display: flex;
     width: 100%;
     height: 100%;
+    margin: $container-margin;
     flex-direction: column;
     max-width: $container-max-width;
+
+    form {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: center;
+
+      .send__button {
+        margin-left: 1rem;
+      }
+    }
 
     .status__container {
       position: relative;
