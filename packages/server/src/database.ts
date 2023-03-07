@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Prisma, User, Page, File, Category, Project } from '@prisma/client';
+import { Prisma, User, Page, File, Category, Project, ProjectMessage } from '@prisma/client';
 import { Result } from './types/interfaces';
 
 abstract class Database {
@@ -98,6 +98,26 @@ abstract class Database {
       T,
       Result<Project | null>,
       Promise<Result<Prisma.ProjectGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract projectMessageCreate<T extends Prisma.ProjectMessageCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.ProjectMessageCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<ProjectMessage | null>,
+      Promise<Result<Prisma.ProjectMessageGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract projectMessageFindMany<T extends Prisma.ProjectMessageFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.ProjectMessageFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<ProjectMessage>>,
+      Promise<Result<Array<Prisma.ProjectMessageGetPayload<T>>>>
     >
   >;
 }

@@ -15,6 +15,8 @@ import {
   ProjectCreateBody,
   ProjectGiveBody,
   ProjectFindFirstQuery,
+  ProjectPostMessageBody,
+  ProjectMessageFindManyQuery,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -72,12 +74,17 @@ class Request {
         .catch((err) => {
           log('error', 'Request error', err);
           resolve({
-            status: 'error',
-            message: 'Internet error',
-            code: 503,
-            data: null,
+            type: MessageType.SET_ERROR,
+            id,
+            lang: 'ru',
+            timeout: new Date().getTime(),
+            data: {
+              message: 'Internet error',
+              httpCode: 503,
+              status: 'error',
+            },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as Result<any>);
+          } as SendMessageArgs<MessageType.SET_ERROR>);
         });
     });
   }
@@ -194,6 +201,30 @@ class Request {
       url: Api.projectGive,
       method: 'PUT',
       body,
+    });
+  }
+
+  public async postProjectMessage(
+    body: ProjectPostMessageBody
+  ): Promise<
+    SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE> | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: Api.postProjectMessage,
+      method: 'POST',
+      body,
+    });
+  }
+
+  public async projectMessageFindMany({
+    projectId,
+  }: ProjectMessageFindManyQuery): Promise<
+    | SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>
+    | SendMessageArgs<MessageType.SET_ERROR>
+  > {
+    return this.send({
+      url: `${Api.projectMessageFindMany}?projectId=${projectId}`,
+      method: 'GET',
     });
   }
 }

@@ -509,6 +509,232 @@ class Project {
       data: prUp.data,
     });
   }
+
+  public async postMessage(
+    {
+      id,
+      connId,
+      lang,
+      timeout,
+      data: { content, projectId },
+    }: SendMessageArgs<MessageType.GET_POST_PROJECT_MESSAGE>,
+    amqp: AMQP
+  ) {
+    if (!connId) {
+      log('warn', 'Conn id not provided in projectPostMessage', { connId });
+      return;
+    }
+    const locale = getLocale(lang).server;
+
+    const user = await orm.userFindFirst({
+      where: {
+        id,
+      },
+    });
+    if (user.status !== 'info' || !user.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: user.status,
+          type: MessageType.GET_POST_PROJECT_MESSAGE,
+          message: locale.error,
+          httpCode: user.code,
+        },
+      });
+      return;
+    }
+
+    const project = await orm.projectFindFirst({
+      where: {
+        id: projectId,
+      },
+    });
+    if (project.status !== 'info' || !project.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_POST_PROJECT_MESSAGE,
+          message: locale.error,
+          httpCode: project.code,
+        },
+      });
+      return;
+    }
+
+    if (user.data.id !== project.data.workerId && user.data.id !== project.data.employerId) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'warn',
+          type: MessageType.GET_POST_PROJECT_MESSAGE,
+          message: locale.unauthorized,
+          httpCode: 401,
+        },
+      });
+      return;
+    }
+
+    const projectMess = await orm.projectMessageCreate({
+      data: {
+        projectId,
+        content,
+        userId: id,
+      },
+    });
+
+    if (projectMess.status !== 'info' || !projectMess.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_POST_PROJECT_MESSAGE,
+          message: locale.error,
+          httpCode: projectMess.code,
+        },
+      });
+      return;
+    }
+
+    amqp.sendToQueue({
+      type: MessageType.SET_POST_PROJECT_MESSAGE,
+      id,
+      lang,
+      timeout,
+      connId,
+      data: projectMess.data,
+    });
+  }
+
+  public async messageFindMany(
+    {
+      id,
+      connId,
+      lang,
+      timeout,
+      data: { projectId },
+    }: SendMessageArgs<MessageType.GET_PROJECT_MESSAGE_FIND_MANY>,
+    amqp: AMQP
+  ) {
+    if (!connId) {
+      log('warn', 'Conn id not provided in projectMessageFindMany', { connId });
+      return;
+    }
+    const locale = getLocale(lang).server;
+
+    const user = await orm.userFindFirst({
+      where: {
+        id,
+      },
+    });
+    if (user.status !== 'info' || !user.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: user.status,
+          type: MessageType.GET_PROJECT_MESSAGE_FIND_MANY,
+          message: locale.error,
+          httpCode: user.code,
+        },
+      });
+      return;
+    }
+
+    const project = await orm.projectFindFirst({
+      where: {
+        id: projectId,
+      },
+    });
+    if (project.status !== 'info' || !project.data) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_PROJECT_MESSAGE_FIND_MANY,
+          message: locale.error,
+          httpCode: project.code,
+        },
+      });
+      return;
+    }
+
+    if (project.data.employerId !== user.data.id && project.data.workerId !== user.data.id) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'warn',
+          type: MessageType.GET_PROJECT_MESSAGE_FIND_MANY,
+          message: locale.unauthorized,
+          httpCode: 401,
+        },
+      });
+      return;
+    }
+
+    const projectMess = await orm.projectMessageFindMany({
+      where: {
+        projectId,
+      },
+    });
+    if (projectMess.status !== 'info') {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'error',
+          type: MessageType.GET_PROJECT_MESSAGE_FIND_MANY,
+          message: locale.error,
+          httpCode: projectMess.code,
+        },
+      });
+      return;
+    }
+
+    amqp.sendToQueue({
+      type: MessageType.SET_PROJECT_MESSAGE_FIND_MANY,
+      id,
+      lang,
+      timeout,
+      connId,
+      data: {
+        skip: projectMess.skip,
+        take: projectMess.take,
+        count: projectMess.count,
+        items: projectMess.data,
+      },
+    });
+  }
 }
 
 export default Project;

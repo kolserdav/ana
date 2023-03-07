@@ -5,10 +5,16 @@ import { Theme } from '../Theme';
 import { isImage, Locale, MessageType, SendMessageArgs } from '../types/interfaces';
 import { IMAGE_PREVIEW_WIDTH } from '../utils/constants';
 import { getFilePath, getFormatDistance } from '../utils/lib';
+import { useButtonCreate } from './CreateProject.hooks';
 import { getFileIconPath } from './CreateProject.lib';
 import SendIcon from './icons/Send';
 import { getProjectStatus } from './Me.lib';
-import { useGiveProject, useTextArea } from './Project.hooks';
+import {
+  useButtonMessages,
+  useGiveProject,
+  useProjectMessages,
+  useTextArea,
+} from './Project.hooks';
 import s from './Project.module.scss';
 import Hr from './ui/Hr';
 import IconButton from './ui/IconButton';
@@ -27,7 +33,7 @@ function Project({
   user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
   projectStatus: Locale['app']['projectStatus'];
 }) {
-  const { load } = useLoad();
+  const { load, setLoad } = useLoad();
 
   const { status, color } = getProjectStatus({ locale: projectStatus, theme, project: _project });
 
@@ -35,7 +41,19 @@ function Project({
 
   const project = __project || _project;
 
-  const { inputText, rows, text } = useTextArea();
+  const { inputText, rows, text, setText } = useTextArea();
+
+  const { onClickPostMessageButton } = useButtonMessages({
+    load,
+    setLoad,
+    setText,
+    text,
+    projectId: project.id,
+  });
+
+  const { messages } = useProjectMessages({ projectId: project.id });
+
+  console.log(messages);
 
   return (
     <div className={s.wrapper}>
@@ -80,9 +98,9 @@ function Project({
         </div>
         <Hr theme={theme} />
         <form>
-          <Textarea theme={theme} onInput={inputText} value={text} rows={rows} />
+          <Textarea disabled={load} theme={theme} onInput={inputText} value={text} rows={rows} />
           <div className={s.send__button}>
-            <IconButton>
+            <IconButton onClick={onClickPostMessageButton} disabled={load}>
               <SendIcon color={theme.text} />
             </IconButton>
           </div>

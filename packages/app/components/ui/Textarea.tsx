@@ -20,7 +20,10 @@ function Textarea(
   return (
     <div className={s.wrapper}>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <textarea style={{ background: theme.paper, color: theme.text }} {...props} />
+      <textarea
+        style={{ background: theme.paper, color: theme.text, borderColor: theme.text }}
+        {...props}
+      />
     </div>
   );
 }

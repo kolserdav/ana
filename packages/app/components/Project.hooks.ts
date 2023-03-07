@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { TEXTAREA_MAX_ROWS, TEXTAREA_ROWS_DEFAULT } from '../utils/constants';
 import { log } from '../utils/lib';
@@ -57,5 +57,56 @@ export const useTextArea = () => {
     setText(value);
   };
 
-  return { inputText, text, rows };
+  return { inputText, text, rows, setText };
+};
+
+export const useButtonMessages = ({
+  text,
+  setText,
+  setLoad,
+  projectId,
+  load,
+}: {
+  projectId: string;
+  text: string;
+  setText: React.Dispatch<React.SetStateAction<string>>;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  load: boolean;
+}) => {
+  const onClickPostMessageButton = async () => {
+    if (load) {
+      return;
+    }
+    setLoad(true);
+    const postRes = await request.postProjectMessage({ projectId, content: text });
+    setLoad(false);
+    if (postRes.type === MessageType.SET_ERROR) {
+      log(postRes.data.status, postRes.data.message, { postRes }, true);
+      return;
+    }
+    setText('');
+  };
+
+  return { onClickPostMessageButton };
+};
+
+export const useProjectMessages = ({ projectId }: { projectId: string }) => {
+  const [messages, setMessages] = useState<
+    SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>['data']
+  >({ items: [] });
+  /**
+   * Get post messages
+   */
+  useEffect(() => {
+    (async () => {
+      const _messages = await request.projectMessageFindMany({ projectId });
+      if (_messages.type === MessageType.SET_ERROR) {
+        log(_messages.data.status, _messages.data.message, { _messages }, true);
+        return;
+      }
+      setMessages(_messages.data);
+    })();
+  }, [projectId]);
+
+  return { messages };
 };

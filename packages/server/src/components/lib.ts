@@ -3,7 +3,7 @@ import { MessageType, SendMessageArgs } from '../types/interfaces';
 
 export function cleanUserFields(
   user: User | null
-): SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] {
+): SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] | null {
   if (!user) {
     return user;
   }

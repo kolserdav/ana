@@ -681,6 +681,10 @@ class User {
   }
 
   public async getUserFindFirst(msg: SendMessageArgs<MessageType.GET_USER_FIND_FIRST>, amqp: AMQP) {
+    if (!msg.connId) {
+      log('warn', 'connection id is missing in getUserFindFirst', { msg });
+      return;
+    }
     const user = await orm.userFindFirst(msg.data);
     const locale = getLocale(msg.lang).server;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -690,6 +694,7 @@ class User {
         id: msg.id,
         type: MessageType.SET_ERROR,
         lang: msg.lang,
+        connId: msg.connId,
         timeout: msg.timeout,
         data: {
           status: user.status,
@@ -700,8 +705,25 @@ class User {
       });
       return;
     }
-    _msg.data = cleanUserFields(user.data);
-
+    const cleanData = cleanUserFields(user.data);
+    if (cleanData === null) {
+      amqp.sendToQueue({
+        id: msg.id,
+        type: MessageType.SET_ERROR,
+        lang: msg.lang,
+        timeout: msg.timeout,
+        connId: msg.connId,
+        data: {
+          status: user.status,
+          type: MessageType.GET_USER_FIND_FIRST,
+          message: user.status === 'error' ? locale.error : locale.notFound,
+          httpCode: getHttpCode(user.status),
+        },
+      });
+      return;
+    }
+    _msg.data = cleanData;
+    _msg.connId = msg.connId;
     amqp.sendToQueue(_msg);
   }
 

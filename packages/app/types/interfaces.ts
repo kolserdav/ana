@@ -10,6 +10,7 @@ import {
   Subcategory,
   Project,
   ProjectEvent,
+  ProjectMessage,
 } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
@@ -27,6 +28,8 @@ export enum Api {
   projectFindMany = '/v1/project-find-many',
   projectFindFirst = '/v1/project-find-first',
   projectGive = '/v1/project-give',
+  postProjectMessage = '/v1/post-project-message',
+  projectMessageFindMany = '/v1/project-messsage-find-many',
 }
 
 // eslint-disable-next-line no-shadow
@@ -97,6 +100,10 @@ export enum MessageType {
   SET_PROJECT_FIND_FIRST = 'SET_PROJECT_FIND_FIRST',
   GET_GIVE_PROJECT = 'GET_GIVE_PROJECT',
   SET_GIVE_PROJECT = 'SET_GIVE_PROJECT',
+  GET_POST_PROJECT_MESSAGE = 'GET_POST_PROJECT_MESSAGE',
+  SET_POST_PROJECT_MESSAGE = 'SET_POST_PROJECT_MESSAGE',
+  GET_PROJECT_MESSAGE_FIND_MANY = 'GET_PROJECT_MESSAGE_FIND_MANY',
+  SET_PROJECT_MESSAGE_FIND_MANY = 'SET_PROJECT_MESSAGE_FIND_MANY',
 }
 
 export interface RequestContext {
@@ -144,8 +151,17 @@ export interface ProjectFindFirstQuery {
   id: string;
 }
 
+export interface ProjectPostMessageBody {
+  projectId: string;
+  content: string;
+}
+
 export interface ProjectGiveBody {
   id: string;
+}
+
+export interface ProjectMessageFindManyQuery {
+  projectId: string;
 }
 
 export interface FileDeleteBody {
@@ -261,6 +277,14 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? ProjectGiveBody
   : T extends MessageType.SET_GIVE_PROJECT
   ? ProjectFull
+  : T extends MessageType.GET_POST_PROJECT_MESSAGE
+  ? ProjectPostMessageBody
+  : T extends MessageType.SET_POST_PROJECT_MESSAGE
+  ? ProjectMessage
+  : T extends MessageType.GET_PROJECT_MESSAGE_FIND_MANY
+  ? ProjectMessageFindManyQuery
+  : T extends MessageType.SET_PROJECT_MESSAGE_FIND_MANY
+  ? ManyResult<ProjectMessage>
   : unknown;
 
 export interface Tab {

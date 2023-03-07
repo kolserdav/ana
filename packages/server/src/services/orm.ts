@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 import Service from './service';
 import Database from '../database';
 import { checkIsFind, checkIsMany, log } from '../utils/lib';
-import { MessageType, DBResult, SendMessageArgs, DBCommandProps } from '../types/interfaces';
+import { MessageType, SendMessageArgs, DBCommandProps } from '../types/interfaces';
 import { ProcessMessage } from '../types';
 
 const prisma = new PrismaClient();
@@ -114,6 +114,22 @@ export class ORM extends Service implements Database {
       args,
       model: 'project',
       command: 'create',
+    });
+  };
+
+  public projectMessageCreate: Database['projectMessageCreate'] = async (args) => {
+    return this.run({
+      args,
+      model: 'projectMessage',
+      command: 'create',
+    });
+  };
+
+  public projectMessageFindMany: Database['projectMessageFindMany'] = async (args) => {
+    return this.run({
+      args,
+      model: 'projectMessage',
+      command: 'findMany',
     });
   };
 

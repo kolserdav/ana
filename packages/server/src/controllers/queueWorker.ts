@@ -93,6 +93,12 @@ class QueueWorker extends AMQP {
         case MessageType.GET_GIVE_PROJECT:
           await project.giveProject(msg, this.amqp);
           break;
+        case MessageType.GET_POST_PROJECT_MESSAGE:
+          await project.postMessage(msg, this.amqp);
+          break;
+        case MessageType.GET_PROJECT_MESSAGE_FIND_MANY:
+          await project.messageFindMany(msg, this.amqp);
+          break;
         default:
           log('warn', 'Default case of consume queue', msg);
       }

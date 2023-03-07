@@ -14,8 +14,8 @@ function LoaderIcon(props: Omit<IconProps, 'children'>) {
         <animateTransform
           attributeName="transform"
           type="rotate"
-          from={`0 ${width} ${height}`}
-          to={`360 ${width} ${height}`}
+          from={`0 ${width / 4} ${height / 4}`}
+          to={`360 ${width / 4} ${height / 4}`}
           dur="1600ms"
           repeatCount="indefinite"
         />

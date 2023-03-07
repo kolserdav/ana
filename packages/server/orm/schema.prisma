@@ -128,8 +128,8 @@ model ProjectMessage {
   projectId String
   Project   Project  @relation(fields: [projectId], references: [id])
   content   String   @db.Text
-  fileId    String
-  File      File     @relation(fields: [fileId], references: [id])
+  fileId    String?
+  File      File?    @relation(fields: [fileId], references: [id])
   userId    String
   User      User     @relation(fields: [userId], references: [id])
   created   DateTime @default(now())
