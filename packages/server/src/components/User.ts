@@ -682,8 +682,24 @@ class User {
 
   public async getUserFindFirst(msg: SendMessageArgs<MessageType.GET_USER_FIND_FIRST>, amqp: AMQP) {
     const user = await orm.userFindFirst(msg.data);
+    const locale = getLocale(msg.lang).server;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const _msg: SendMessageArgs<MessageType.SET_USER_FIND_FIRST> = { ...msg } as any;
+    if (user.data === null) {
+      amqp.sendToQueue({
+        id: msg.id,
+        type: MessageType.SET_ERROR,
+        lang: msg.lang,
+        timeout: msg.timeout,
+        data: {
+          status: user.status,
+          type: MessageType.GET_USER_FIND_FIRST,
+          message: user.status === 'error' ? locale.error : locale.notFound,
+          httpCode: getHttpCode(user.status),
+        },
+      });
+      return;
+    }
     _msg.data = cleanUserFields(user.data);
 
     amqp.sendToQueue(_msg);

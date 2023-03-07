@@ -239,6 +239,7 @@ class Project {
       },
       include: {
         File: true,
+        ProjectEvent: true,
       },
     });
 
@@ -311,6 +312,9 @@ class Project {
           : {
               workerId: id,
             },
+      orderBy: {
+        updated: 'desc',
+      },
       include: {
         File: {
           select: {
@@ -466,9 +470,16 @@ class Project {
         employerId: project.data.employerId === null ? id : project.data.employerId,
         workerId: project.data.workerId === null ? id : project.data.workerId,
         updated: new Date(),
+        ProjectEvent: {
+          create: {
+            sideId: id,
+            event: 'acceptSide',
+          },
+        },
       },
       include: {
         File: true,
+        ProjectEvent: true,
       },
     });
 

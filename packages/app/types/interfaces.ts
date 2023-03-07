@@ -9,6 +9,7 @@ import {
   Category,
   Subcategory,
   Project,
+  ProjectEvent,
 } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
@@ -151,7 +152,7 @@ export interface FileDeleteBody {
   fileId: string;
 }
 
-export type ProjectFull = Project & { File: File[] };
+export type ProjectFull = Project & { File: File[]; ProjectEvent: ProjectEvent[] };
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
@@ -273,6 +274,9 @@ export interface SendMessageArgs<T extends keyof typeof MessageType> extends Req
   type: T;
   id: string;
   data: ArgsSubset<T>;
+  /**
+   * Required in http request handler
+   */
   connId?: string;
 }
 

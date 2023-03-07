@@ -43,9 +43,8 @@ class HandleRequests extends Service {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = new Promise<any>((resolve) => {
       const { master, handler } = this.listenMasterMessages((_msg) => {
-        if (_msg.protocol === protocol && _msg.msg.connId === msg.connId) {
+        if (_msg.msg.connId === msg.connId) {
           master.removeListener('message', handler);
-          // ALERT contract
           resolve({
             lang: msg.lang,
             timeout: msg.timeout,

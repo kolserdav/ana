@@ -49,22 +49,23 @@ model Page {
 }
 
 model User {
-  id              String        @id @default(uuid())
-  name            String        @db.VarChar(24)
-  surname         String        @db.VarChar(35)
-  email           String        @unique @db.VarChar(255)
-  confirm         Boolean       @default(false)
-  online          Boolean       @default(true)
+  id              String         @id @default(uuid())
+  name            String         @db.VarChar(24)
+  surname         String         @db.VarChar(35)
+  email           String         @unique @db.VarChar(255)
+  confirm         Boolean        @default(false)
+  online          Boolean        @default(true)
   role            Role
-  password        String        @db.VarChar(64)
-  salt            String        @db.VarChar(32)
-  updated         DateTime      @default(now())
-  created         DateTime      @default(now())
+  password        String         @db.VarChar(64)
+  salt            String         @db.VarChar(32)
+  updated         DateTime       @default(now())
+  created         DateTime       @default(now())
   RestoreLink     RestoreLink[]
   ConfirmLink     ConfirmLink[]
-  ProjectWorker   Project[]     @relation("Worker")
-  ProjectEmployer Project[]     @relation("Employer")
+  ProjectWorker   Project[]      @relation("Worker")
+  ProjectEmployer Project[]      @relation("Employer")
   File            File[]
+  ProjectEvent    ProjectEvent[]
 }
 
 model RestoreLink {
@@ -99,6 +100,25 @@ model Project {
   updated            DateTime             @default(now())
   created            DateTime             @default(now())
   ProjectSubcategory ProjectSubcategory[]
+  ProjectEvent       ProjectEvent[]
+}
+
+enum EventName {
+  giveSide
+  acceptSide
+  startProject
+  stopProject
+  openDispute
+}
+
+model ProjectEvent {
+  id          Int           @id @default(autoincrement())
+  projectId String
+  Project   Project   @relation(fields: [projectId], references: [id])
+  sideId    String
+  event     EventName
+  User      User      @relation(fields: [sideId], references: [id])
+  created   DateTime  @default(now())
 }
 
 model File {
