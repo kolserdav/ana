@@ -46,7 +46,7 @@ export const KEY_QS = 'k';
 export const CLOUD_PREFIX = '/cloud';
 export const IMAGE_EXT = '.avif';
 export const IMAGE_PREV_POSTFIX = '-preview';
-export type WSProtocol = 'test' | 'login' | 'confirm-email';
+export type WSProtocol = 'test' | 'login' | 'confirm-email' | 'app';
 export const LOCALE_DEFAULT: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';
@@ -66,6 +66,7 @@ export enum MessageType {
   DB_RESULT = 'DB_RESULT',
   // WebSocket
   SET_CONNECTION_ID = 'SET_CONNECTION_ID',
+  GET_CONNECTION_ID = 'GET_CONNECTION_ID',
   SET_ERROR = 'SET_ERROR',
   GET_USER_CREATE = 'GET_USER_CREATE',
   SET_USER_CREATE = 'SET_USER_CREATE',
@@ -179,7 +180,9 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? DBResult<any>
   : // WebSocket
   T extends MessageType.SET_CONNECTION_ID
-  ? null
+  ? null | string
+  : T extends MessageType.GET_CONNECTION_ID
+  ? { newId: string }
   : T extends MessageType.GET_USER_CREATE
   ? Omit<Prisma.UserCreateArgs['data'], 'salt'>
   : T extends MessageType.SET_USER_CREATE

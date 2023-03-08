@@ -9,9 +9,8 @@ import '../styles/globals.scss';
 import { ERUDA } from '../utils/constants';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { load, theme, touchpad } = useApp();
-
   const { user, userLoad } = useUser();
+  const { load, theme, touchpad } = useApp({ user });
 
   return (
     <>

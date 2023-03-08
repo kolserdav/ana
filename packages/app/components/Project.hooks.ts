@@ -66,12 +66,18 @@ export const useButtonMessages = ({
   setLoad,
   projectId,
   load,
+  messages,
+  setMessages,
 }: {
   projectId: string;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   load: boolean;
+  messages: SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>['data'];
+  setMessages: React.Dispatch<
+    React.SetStateAction<SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>['data']>
+  >;
 }) => {
   const onClickPostMessageButton = async () => {
     if (load) {
@@ -84,6 +90,9 @@ export const useButtonMessages = ({
       log(postRes.data.status, postRes.data.message, { postRes }, true);
       return;
     }
+    const _mess = { ...messages };
+    _mess.items.push(postRes.data);
+    setMessages(_mess);
     setText('');
   };
 
@@ -108,5 +117,5 @@ export const useProjectMessages = ({ projectId }: { projectId: string }) => {
     })();
   }, [projectId]);
 
-  return { messages };
+  return { messages, setMessages };
 };

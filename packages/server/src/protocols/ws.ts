@@ -74,7 +74,12 @@ class WS {
 
       ws.on('message', async (msg) => {
         const rawMessage = this.parseMessage(msg);
-        this.amqpW?.sendToQueue(rawMessage);
+        const { type } = rawMessage;
+        if (type === MessageType.GET_CONNECTION_ID) {
+          this.changeSocketId(rawMessage);
+        } else {
+          this.amqpW?.sendToQueue(rawMessage);
+        }
       });
 
       ws.on('close', () => {
@@ -128,6 +133,27 @@ class WS {
       timeout: new Date().getTime(),
       type: MessageType.SET_CONNECTION_ID,
       data: null,
+    });
+  }
+
+  public changeSocketId({
+    id,
+    data: { newId },
+    lang,
+    timeout,
+  }: SendMessageArgs<MessageType.GET_CONNECTION_ID>) {
+    const ws = this.ws[id];
+    if (typeof ws === 'undefined') {
+      return;
+    }
+    this.ws[newId] = ws;
+    this.deleteSocket(id);
+    this.sendMessage({
+      id: newId,
+      lang,
+      timeout,
+      type: MessageType.SET_CONNECTION_ID,
+      data: newId,
     });
   }
 

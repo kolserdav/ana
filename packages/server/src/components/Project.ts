@@ -704,7 +704,7 @@ class Project {
         projectId,
       },
     });
-    if (projectMess.status !== 'info') {
+    if (projectMess.status === 'error') {
       amqp.sendToQueue({
         type: MessageType.SET_ERROR,
         id,

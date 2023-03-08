@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ubuntuItalic300 } from '../fonts/ubuntu';
+import { ubuntu400, ubuntuItalic300 } from '../fonts/ubuntu';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
 import { isImage, Locale, MessageType, SendMessageArgs } from '../types/interfaces';
@@ -43,17 +43,17 @@ function Project({
 
   const { inputText, rows, text, setText } = useTextArea();
 
+  const { messages, setMessages } = useProjectMessages({ projectId: project.id });
+
   const { onClickPostMessageButton } = useButtonMessages({
     load,
     setLoad,
     setText,
     text,
     projectId: project.id,
+    setMessages,
+    messages,
   });
-
-  const { messages } = useProjectMessages({ projectId: project.id });
-
-  console.log(messages);
 
   return (
     <div className={s.wrapper}>
@@ -97,6 +97,18 @@ function Project({
           ))}
         </div>
         <Hr theme={theme} />
+        {messages.items.map((item) => (
+          <div
+            style={{ color: theme.text }}
+            key={item.id}
+            className={clsx(s.message, item.userId === user.id ? s.me : '')}
+          >
+            <div className={clsx(s.date, ubuntuItalic300.className)}>
+              {getFormatDistance(new Date(item.created))}
+            </div>
+            <div className={clsx(s.content, ubuntu400.className)}>{item.content}</div>
+          </div>
+        ))}
         <form>
           <Textarea disabled={load} theme={theme} onInput={inputText} value={text} rows={rows} />
           <div className={s.send__button}>
