@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   db:
-    container_name: pg_container
+    container_name: pg
     image: postgres
     restart: always
     environment: # depends on .env
@@ -18,7 +18,7 @@ services:
         max-file: '5'
       driver: json-file
   pgadmin:
-    container_name: pgadmin4_container
+    container_name: pgadmin4
     image: dpage/pgadmin4
     restart: always
     environment: # depends on .env
