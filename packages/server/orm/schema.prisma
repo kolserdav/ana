@@ -111,6 +111,7 @@ enum EventName {
   startProject
   stopProject
   openDispute
+  adminMessage
 }
 
 model ProjectEvent {
@@ -119,6 +120,7 @@ model ProjectEvent {
   Project   Project   @relation(fields: [projectId], references: [id])
   sideId    String
   event     EventName
+  content   String?
   User      User      @relation(fields: [sideId], references: [id])
   created   DateTime  @default(now())
 }

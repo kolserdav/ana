@@ -70,9 +70,12 @@
       .item {
         position: relative;
         margin: 1rem;
+        display: flex;
+        flex-direction: column;
 
         .file__name {
           position: absolute;
+          bottom: -1rem;
           display: inline-block;
           word-wrap: break-word;
           white-space: pre;

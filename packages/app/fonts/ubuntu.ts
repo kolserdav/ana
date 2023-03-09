@@ -12,6 +12,10 @@ export const ubuntu400 = {
   className: s.ubuntu400,
 };
 
+export const ubuntuBold400 = {
+  className: s.ubuntu_bold400,
+};
+
 export const ubuntu500 = {
   className: s.ubuntu500,
 };

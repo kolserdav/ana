@@ -170,7 +170,14 @@ export interface FileDeleteBody {
   fileId: string;
 }
 
-export type ProjectFull = Project & { File: File[]; ProjectEvent: ProjectEvent[] };
+export type FullUserName = { name: string; surname: string };
+
+export type ProjectFull = Project & {
+  File: File[];
+  ProjectEvent: ProjectEvent[];
+  Employer: FullUserName | null;
+  Worker: FullUserName | null;
+};
 export type ProjectMessageFull = ProjectMessage & { File: File | null };
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST

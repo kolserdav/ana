@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { useMemo, useRef } from 'react';
-import { ubuntu400, ubuntuItalic300 } from '../fonts/ubuntu';
+import { useMemo } from 'react';
+import { ubuntu400, ubuntuBold400, ubuntuItalic300 } from '../fonts/ubuntu';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
 import { isImage, Locale, MessageType, SendMessageArgs } from '../types/interfaces';
@@ -38,17 +38,19 @@ function Project({
   theme: Theme;
   somethingWentWrong: string;
   maxFileSize: string;
-  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] | null;
   projectStatus: Locale['app']['projectStatus'];
   projectAddFiles: string;
 }) {
-  const { load, setLoad } = useLoad();
+  const isEmployer = user?.role === 'employer';
 
-  const { status, color } = getProjectStatus({ locale: projectStatus, theme, project: _project });
+  const { load, setLoad } = useLoad();
 
   const { project: __project } = useGiveProject({ project: _project, user });
 
   const project = __project || _project;
+
+  const { status, color } = getProjectStatus({ locale: projectStatus, theme, project });
 
   const { inputText, rows, text, setText } = useTextArea();
 
@@ -60,8 +62,9 @@ function Project({
     somethingWentWrong,
   });
 
-  const { messages, setMessages, addNewMessage } = useProjectMessages({
-    projectId: project.id,
+  const { messages, addNewMessage } = useProjectMessages({
+    project,
+    user,
     files,
     setFiles,
     setLoad,
@@ -74,8 +77,6 @@ function Project({
     setText,
     text,
     projectId: project.id,
-    setMessages,
-    messages,
     addNewMessage,
   });
 
@@ -125,8 +126,15 @@ function Project({
           <div
             style={{ color: theme.text }}
             key={item.id}
-            className={clsx(s.message, item.userId === user.id ? s.me : '')}
+            className={clsx(s.message, item.userId === user?.id ? s.me : '')}
           >
+            <div className={clsx(s.name, ubuntuBold400.className)}>
+              {item.userId !== user?.id
+                ? isEmployer
+                  ? project.Worker?.name
+                  : project.Employer?.name
+                : undefined}
+            </div>
             <div className={clsx(s.date, ubuntuItalic300.className)}>
               {getFormatDistance(new Date(item.created))}
             </div>

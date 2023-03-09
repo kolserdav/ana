@@ -10,13 +10,15 @@ import { gettextAreaRows } from './Project.lib';
 
 const request = new Request();
 
+let projectGived = false;
+
 // eslint-disable-next-line import/prefer-default-export
 export const useGiveProject = ({
   project: _project,
   user,
 }: {
   project: SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST>['data'];
-  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] | null;
 }) => {
   const [project, setProject] =
     useState<SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST>['data']>();
@@ -24,12 +26,19 @@ export const useGiveProject = ({
    * Give project
    */
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     if (_project.employerId && _project.workerId) {
       return;
     }
     if (_project.employerId === user.id || _project.workerId === user.id) {
       return;
     }
+    if (projectGived) {
+      return;
+    }
+    projectGived = true;
     (async () => {
       const proj = await request.projectGive({ id: _project.id });
       if (proj.type === MessageType.SET_ERROR) {
@@ -69,8 +78,6 @@ export const useButtonMessages = ({
   setLoad,
   projectId,
   load,
-  messages,
-  setMessages,
   addNewMessage,
 }: {
   projectId: string;
@@ -78,10 +85,6 @@ export const useButtonMessages = ({
   setText: React.Dispatch<React.SetStateAction<string>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   load: boolean;
-  messages: SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>['data'];
-  setMessages: React.Dispatch<
-    React.SetStateAction<SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>['data']>
-  >;
   // eslint-disable-next-line no-unused-vars
   addNewMessage: (message: SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE>['data']) => void;
 }) => {
@@ -120,13 +123,15 @@ export const useButtonMessages = ({
 };
 
 export const useProjectMessages = ({
-  projectId,
+  project,
   files,
+  user,
   setFiles,
   setLoad,
   inputFilesRef,
 }: {
-  projectId: string;
+  project: SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST>['data'];
+  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] | null;
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
@@ -149,15 +154,21 @@ export const useProjectMessages = ({
    * Get post messages
    */
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+    if (project.employerId !== user.id && project.workerId !== user.id) {
+      return;
+    }
     (async () => {
-      const _messages = await request.projectMessageFindMany({ projectId });
+      const _messages = await request.projectMessageFindMany({ projectId: project.id });
       if (_messages.type === MessageType.SET_ERROR) {
         log(_messages.data.status, _messages.data.message, { _messages }, true);
         return;
       }
       setMessages(_messages.data);
     })();
-  }, [projectId]);
+  }, [project, user]);
 
   /**
    * Send message file
@@ -169,7 +180,7 @@ export const useProjectMessages = ({
         setLoad(true);
         // eslint-disable-next-line no-await-in-loop
         const postRes = await request.postProjectMessage({
-          projectId,
+          projectId: project.id,
           content: file.filename,
           fileId: file.id,
         });
@@ -189,7 +200,7 @@ export const useProjectMessages = ({
         removeFilesFromInput(current);
       }
     })();
-  }, [files, setLoad, addNewMessage, projectId, setFiles, inputFilesRef]);
+  }, [files, setLoad, addNewMessage, setFiles, inputFilesRef, project]);
 
-  return { messages, setMessages, addNewMessage };
+  return { messages, addNewMessage };
 };

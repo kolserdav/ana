@@ -9,6 +9,7 @@ $image-transition: 0.2s;
   cursor: pointer;
   transition: background-color $image-transition ease-in;
   overflow: auto;
+  display: inline-block;
 
   .close {
     display: none;
@@ -29,7 +30,7 @@ $image-transition: 0.2s;
 
     img {
       position: relative;
-      display: block;
+      display: inline-block;
       margin: auto;
       padding: initial;
     }

@@ -248,6 +248,18 @@ class Project {
             },
           },
         },
+        Employer: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
+        Worker: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
         ProjectEvent: true,
       },
     });
@@ -398,6 +410,23 @@ class Project {
       return;
     }
 
+    if (!data.id) {
+      amqp.sendToQueue({
+        type: MessageType.SET_ERROR,
+        id,
+        lang,
+        timeout,
+        connId,
+        data: {
+          status: 'warn',
+          type: MessageType.GET_GIVE_PROJECT,
+          message: locale.badRequest,
+          httpCode: 400,
+        },
+      });
+      return;
+    }
+
     const project = await orm.projectFindFirst({
       where: {
         id: data.id,
@@ -487,7 +516,27 @@ class Project {
         },
       },
       include: {
-        File: true,
+        File: {
+          where: {
+            ProjectMessage: {
+              every: {
+                fileId: null,
+              },
+            },
+          },
+        },
+        Employer: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
+        Worker: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
         ProjectEvent: true,
       },
     });
