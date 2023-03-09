@@ -5,6 +5,10 @@ import { MessageType, SendMessageArgs } from '../types/interfaces';
 import Service from '../services/service';
 import { Protocol } from '../types';
 import { MASTER_QUEUE } from '../utils/constants';
+import { log } from '../utils/lib';
+import Project from '../components/Project';
+
+const project = new Project();
 
 class QueueMaster extends AMQP {
   private ws: WS | undefined;
@@ -29,17 +33,6 @@ class QueueMaster extends AMQP {
     this.handleQueues();
   }
 
-  public async testW(msg: SendMessageArgs<MessageType.TEST>) {
-    this.service.sendMessageToWorker({
-      protocol: this.protocol,
-      msg,
-    });
-  }
-
-  public async test(msg: SendMessageArgs<MessageType.TEST>) {
-    this.ws?.sendMessage(msg);
-  }
-
   public async handleQueues() {
     await new Promise((resolve) => {
       const interval = setInterval(() => {
@@ -55,17 +48,32 @@ class QueueMaster extends AMQP {
   public async consumeMaster() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.consume(async (msg: SendMessageArgs<any>) => {
-      if (!this.ws) {
+      if (this.protocol === 'request') {
         if (!this.service.worker) {
           return;
         }
+
+        if (this.ws) {
+          const { type } = msg;
+          switch (type) {
+            case MessageType.SET_POST_PROJECT_MESSAGE:
+              project.sendWSNotification(msg, this.ws);
+              break;
+            default:
+          }
+        }
+
         this.service.sendMessageToWorker({
           protocol: this.protocol,
           msg,
         });
         return;
       }
-      this.ws.sendMessage(msg);
+      if (this.ws) {
+        this.ws.sendMessage(msg);
+      } else {
+        log('error', 'WS is missing in consumeMaster', { err: new Error(), msg });
+      }
     });
   }
 }

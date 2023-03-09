@@ -34,6 +34,7 @@
 
       .content {
         position: relative;
+        margin: 0.5rem 0;
       }
     }
 
@@ -44,6 +45,11 @@
       flex-direction: row;
       justify-content: center;
       margin-top: 2rem;
+
+      .attach_icon {
+        position: absolute;
+        right: 50px;
+      }
 
       .send__button {
         margin-left: 1rem;

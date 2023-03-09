@@ -1,12 +1,14 @@
 import clsx from 'clsx';
+import { useMemo, useRef } from 'react';
 import { ubuntu400, ubuntuItalic300 } from '../fonts/ubuntu';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
 import { isImage, Locale, MessageType, SendMessageArgs } from '../types/interfaces';
 import { IMAGE_PREVIEW_WIDTH } from '../utils/constants';
 import { getFilePath, getFormatDistance } from '../utils/lib';
-import { useButtonCreate } from './CreateProject.hooks';
-import { getFileIconPath } from './CreateProject.lib';
+import { useInputFiles } from './CreateProject.hooks';
+import { getAcceptedFiles, getFileIconPath } from './CreateProject.lib';
+import AttachIcon from './icons/Attach';
 import SendIcon from './icons/Send';
 import { getProjectStatus } from './Me.lib';
 import {
@@ -19,6 +21,7 @@ import s from './Project.module.scss';
 import Hr from './ui/Hr';
 import IconButton from './ui/IconButton';
 import Image from './ui/Image';
+import Input from './ui/Input';
 import Textarea from './ui/Textarea';
 import Typography from './ui/Typography';
 
@@ -27,11 +30,17 @@ function Project({
   theme,
   user,
   projectStatus,
+  projectAddFiles,
+  maxFileSize,
+  somethingWentWrong,
 }: {
   project: SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST>['data'];
   theme: Theme;
+  somethingWentWrong: string;
+  maxFileSize: string;
   user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
   projectStatus: Locale['app']['projectStatus'];
+  projectAddFiles: string;
 }) {
   const { load, setLoad } = useLoad();
 
@@ -43,7 +52,21 @@ function Project({
 
   const { inputText, rows, text, setText } = useTextArea();
 
-  const { messages, setMessages } = useProjectMessages({ projectId: project.id });
+  const accept = useMemo(() => getAcceptedFiles(), []);
+
+  const { onChangeFiles, onClickAddFiles, inputFilesRef, setFiles, files } = useInputFiles({
+    load,
+    maxFileSize,
+    somethingWentWrong,
+  });
+
+  const { messages, setMessages, addNewMessage } = useProjectMessages({
+    projectId: project.id,
+    files,
+    setFiles,
+    setLoad,
+    inputFilesRef,
+  });
 
   const { onClickPostMessageButton } = useButtonMessages({
     load,
@@ -53,6 +76,7 @@ function Project({
     projectId: project.id,
     setMessages,
     messages,
+    addNewMessage,
   });
 
   return (
@@ -107,10 +131,41 @@ function Project({
               {getFormatDistance(new Date(item.created))}
             </div>
             <div className={clsx(s.content, ubuntu400.className)}>{item.content}</div>
+            {item.File && (
+              <Image
+                link={!isImage(item.File.mimetype) ? getFilePath(item.File) : undefined}
+                className="files__image"
+                width={item.File.width || 0}
+                height={item.File.height || 0}
+                preWidth={IMAGE_PREVIEW_WIDTH / 2}
+                preHeight={IMAGE_PREVIEW_WIDTH / 2 / (item.File.coeff || 1)}
+                src={
+                  isImage(item.File.mimetype) ? getFilePath(item.File) : getFileIconPath(item.File)
+                }
+                alt={item.File.filename}
+              />
+            )}
           </div>
         ))}
         <form>
+          <Input
+            ref={inputFilesRef}
+            type="file"
+            id="project-file"
+            value=""
+            hidden
+            accept={accept}
+            multiple
+            onChange={onChangeFiles}
+            name={projectAddFiles}
+            theme={theme}
+          />
           <Textarea disabled={load} theme={theme} onInput={inputText} value={text} rows={rows} />
+          <div className={s.attach_icon}>
+            <IconButton onClick={onClickAddFiles}>
+              <AttachIcon color={theme.text} />
+            </IconButton>
+          </div>
           <div className={s.send__button}>
             <IconButton onClick={onClickPostMessageButton} disabled={load}>
               <SendIcon color={theme.text} />

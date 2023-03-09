@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { File } from '@prisma/client';
+import React, { useEffect, useMemo, useState } from 'react';
+import storeProjectMessage from '../store/projectMessage';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { TEXTAREA_MAX_ROWS, TEXTAREA_ROWS_DEFAULT } from '../utils/constants';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
+import { removeFilesFromInput } from './CreateProject.lib';
 import { gettextAreaRows } from './Project.lib';
 
 const request = new Request();
@@ -68,6 +71,7 @@ export const useButtonMessages = ({
   load,
   messages,
   setMessages,
+  addNewMessage,
 }: {
   projectId: string;
   text: string;
@@ -78,6 +82,8 @@ export const useButtonMessages = ({
   setMessages: React.Dispatch<
     React.SetStateAction<SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>['data']>
   >;
+  // eslint-disable-next-line no-unused-vars
+  addNewMessage: (message: SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE>['data']) => void;
 }) => {
   const onClickPostMessageButton = async () => {
     if (load) {
@@ -90,19 +96,55 @@ export const useButtonMessages = ({
       log(postRes.data.status, postRes.data.message, { postRes }, true);
       return;
     }
-    const _mess = { ...messages };
-    _mess.items.push(postRes.data);
-    setMessages(_mess);
+    addNewMessage(postRes.data);
     setText('');
   };
+
+  /**
+   * Listen store project message
+   */
+  useEffect(() => {
+    const cleanSubs = storeProjectMessage.subscribe(() => {
+      const { projectMessage } = storeProjectMessage.getState();
+      if (!projectMessage) {
+        return;
+      }
+      addNewMessage(projectMessage.data);
+    });
+    return () => {
+      cleanSubs();
+    };
+  }, [addNewMessage]);
 
   return { onClickPostMessageButton };
 };
 
-export const useProjectMessages = ({ projectId }: { projectId: string }) => {
+export const useProjectMessages = ({
+  projectId,
+  files,
+  setFiles,
+  setLoad,
+  inputFilesRef,
+}: {
+  projectId: string;
+  files: File[];
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  inputFilesRef: React.RefObject<HTMLInputElement>;
+}) => {
   const [messages, setMessages] = useState<
     SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>['data']
   >({ items: [] });
+
+  const addNewMessage = useMemo(
+    () => (message: SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE>['data']) => {
+      const _mess = { ...messages };
+      _mess.items.push(message);
+      setMessages(_mess);
+    },
+    [messages, setMessages]
+  );
+
   /**
    * Get post messages
    */
@@ -117,5 +159,37 @@ export const useProjectMessages = ({ projectId }: { projectId: string }) => {
     })();
   }, [projectId]);
 
-  return { messages, setMessages };
+  /**
+   * Send message file
+   */
+  useEffect(() => {
+    (async () => {
+      for (let i = 0; files[i]; i++) {
+        const file = files[i];
+        setLoad(true);
+        // eslint-disable-next-line no-await-in-loop
+        const postRes = await request.postProjectMessage({
+          projectId,
+          content: file.filename,
+          fileId: file.id,
+        });
+        setLoad(false);
+        if (postRes.type === MessageType.SET_ERROR) {
+          log(postRes.data.status, postRes.data.message, { postRes }, true);
+          return;
+        }
+        addNewMessage(postRes.data);
+      }
+      if (files.length !== 0) {
+        setFiles([]);
+        const { current } = inputFilesRef;
+        if (!current) {
+          return;
+        }
+        removeFilesFromInput(current);
+      }
+    })();
+  }, [files, setLoad, addNewMessage, projectId, setFiles, inputFilesRef]);
+
+  return { messages, setMessages, addNewMessage };
 };

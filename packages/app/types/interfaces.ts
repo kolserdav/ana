@@ -155,6 +155,7 @@ export interface ProjectFindFirstQuery {
 export interface ProjectPostMessageBody {
   projectId: string;
   content: string;
+  fileId?: string;
 }
 
 export interface ProjectGiveBody {
@@ -170,6 +171,7 @@ export interface FileDeleteBody {
 }
 
 export type ProjectFull = Project & { File: File[]; ProjectEvent: ProjectEvent[] };
+export type ProjectMessageFull = ProjectMessage & { File: File | null };
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
@@ -253,7 +255,7 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
       file: File;
     }
   : T extends MessageType.SET_FILE_UPLOAD
-  ? null | File
+  ? null
   : T extends MessageType.GET_FILE_FIND_MANY
   ? Prisma.FileFindManyArgs
   : T extends MessageType.SET_FILE_FIND_MANY
@@ -283,11 +285,11 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   : T extends MessageType.GET_POST_PROJECT_MESSAGE
   ? ProjectPostMessageBody
   : T extends MessageType.SET_POST_PROJECT_MESSAGE
-  ? ProjectMessage
+  ? ProjectMessageFull
   : T extends MessageType.GET_PROJECT_MESSAGE_FIND_MANY
   ? ProjectMessageFindManyQuery
   : T extends MessageType.SET_PROJECT_MESSAGE_FIND_MANY
-  ? ManyResult<ProjectMessage>
+  ? ManyResult<ProjectMessageFull>
   : unknown;
 
 export interface Tab {
@@ -387,7 +389,6 @@ export interface Locale {
       projectDescription: string;
       projectDesPlaceholder: string;
       projectActualFor: string;
-      projectAddFiles: string;
       projectAddFilesDesc: string;
       projectDragDropFiles: string;
       projectDateTooltip: string;
@@ -405,6 +406,7 @@ export interface Locale {
       maxFileSize: string;
       fieldMustBeNotEmpty: string;
       eliminateRemarks: string;
+      projectAddFiles: string;
     };
     projectStatus: {
       waitEmployer: string;

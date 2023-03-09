@@ -7,6 +7,11 @@ import { log, setBodyScroll } from '../utils/lib';
 import useWS from './useWS';
 import { LOCALE_DEFAULT, MessageType, SendMessageArgs } from '../types/interfaces';
 import { CookieName, getCookie } from '../utils/cookies';
+import storeProjectMessage, { changeProjectMessage } from '../store/projectMessage';
+
+const setProjectMessage = (data: SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE>) => {
+  storeProjectMessage.dispatch(changeProjectMessage({ projectMessage: data }));
+};
 
 export default function useApp({
   user,
@@ -60,6 +65,9 @@ export default function useApp({
       switch (type) {
         case MessageType.SET_CONNECTION_ID:
           setConnectionId(rawMessage);
+          break;
+        case MessageType.SET_POST_PROJECT_MESSAGE:
+          setProjectMessage(rawMessage);
           break;
         default:
           log('warn', 'Default case WS message on app', { rawMessage });

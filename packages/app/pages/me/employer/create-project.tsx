@@ -32,6 +32,7 @@ export default function CreateProjectPage({
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <CreateProject
+          projectAddFiles={localeCommon.projectAddFiles}
           user={user}
           eliminateRemarks={localeCommon.eliminateRemarks}
           fieldMustBeNotEmpty={localeCommon.fieldMustBeNotEmpty}

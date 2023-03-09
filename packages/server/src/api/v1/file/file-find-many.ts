@@ -28,6 +28,13 @@ const getFileFindMany: RequestHandler<
           {
             projectId: null,
           },
+          {
+            ProjectMessage: {
+              every: {
+                fileId: null,
+              },
+            },
+          },
         ],
       },
     },

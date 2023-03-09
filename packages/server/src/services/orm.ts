@@ -101,6 +101,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public fileFindFirst: Database['fileFindFirst'] = async (args) => {
+    return this.run({
+      args,
+      model: 'file',
+      command: 'findFirst',
+    });
+  };
+
   public pageFindManyW: Database['pageFindManyW'] = async (args) => {
     return this.runFromWorker({
       args,

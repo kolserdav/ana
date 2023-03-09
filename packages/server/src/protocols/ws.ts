@@ -45,7 +45,7 @@ class WS {
     };
     this.connection?.on('connection', (ws, { headers, url }) => {
       // const protocol = req.headers['sec-websocket-protocol'];
-      const id = getConnectionId();
+      let id = getConnectionId();
       if (!checkCors(headers)) {
         ws.send(
           JSON.stringify({
@@ -76,7 +76,7 @@ class WS {
         const rawMessage = this.parseMessage(msg);
         const { type } = rawMessage;
         if (type === MessageType.GET_CONNECTION_ID) {
-          this.changeSocketId(rawMessage);
+          id = this.changeSocketId(rawMessage);
         } else {
           this.amqpW?.sendToQueue(rawMessage);
         }
@@ -86,6 +86,10 @@ class WS {
         this.deleteSocket(id);
       });
     });
+  }
+
+  public checkWS(id: string) {
+    return typeof this.ws[id] !== 'undefined';
   }
 
   public sendMessage<T extends keyof typeof MessageType>(msg: SendMessageArgs<T>) {
@@ -144,7 +148,7 @@ class WS {
   }: SendMessageArgs<MessageType.GET_CONNECTION_ID>) {
     const ws = this.ws[id];
     if (typeof ws === 'undefined') {
-      return;
+      return id;
     }
     this.ws[newId] = ws;
     this.deleteSocket(id);
@@ -155,6 +159,7 @@ class WS {
       type: MessageType.SET_CONNECTION_ID,
       data: newId,
     });
+    return newId;
   }
 
   public parseMessage(message: WebSocket.RawData) {

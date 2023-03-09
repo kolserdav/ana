@@ -96,7 +96,6 @@ const lang: Locale = {
       projectDesPlaceholder:
         'Подробно опишите что нужно сделать и по каким критериям будете оценивать результат',
       projectActualFor: 'Актуален до',
-      projectAddFiles: 'Прикрепить файлы',
       projectAddFilesDesc:
         'Загрузите файлы с дополнительной информацией о проекте. В дальнейшем вы сможете добавить и другие файлы',
       projectDragDropFiles: 'Или перетяните файлы в эту область',
@@ -117,6 +116,7 @@ const lang: Locale = {
       maxFileSize: 'Файл слишком большой',
       fieldMustBeNotEmpty: 'Поле не должно быть пустым',
       eliminateRemarks: 'Устраните замечания в форме',
+      projectAddFiles: 'Прикрепить файлы',
     },
     projectStatus: {
       finished: 'Закончен',

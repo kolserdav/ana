@@ -47,6 +47,7 @@ function CreateProject({
   maxFileSize,
   fieldMustBeNotEmpty,
   eliminateRemarks,
+  projectAddFiles,
   user,
 }: {
   theme: Theme;
@@ -58,6 +59,7 @@ function CreateProject({
   maxFileSize: string;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
+  projectAddFiles: string;
   user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
 }) {
   const filesRef = useRef<HTMLDivElement>(null);
@@ -214,7 +216,7 @@ function CreateProject({
           {!filesActive && (
             <div className={s.button__files}>
               <Button theme={theme} disabled={load || filesLoad} onClick={onClickAddFiles}>
-                {locale.projectAddFiles}
+                {projectAddFiles}
               </Button>
             </div>
           )}
@@ -227,7 +229,7 @@ function CreateProject({
             accept={accept}
             multiple
             onChange={onChangeFiles}
-            name={locale.projectAddFiles}
+            name={projectAddFiles}
             theme={theme}
           />
           <div
@@ -248,7 +250,7 @@ function CreateProject({
               </div>
             )}
             {files.map((item) => (
-              <div className={s.item} key={item.id}>
+              <div className={s.item} key={item.id} title={item.filename}>
                 <Image
                   link={!isImage(item.mimetype) ? getFilePath(item) : undefined}
                   className="files__image"

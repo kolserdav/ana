@@ -65,8 +65,9 @@ function AppBar({
               </Link>
             )}
             {!checkRouterPath(router.asPath, Pages.createProject) &&
-              checkRouterPath(router.asPath, Pages.meEmployer) && (
-                <Link noWrap theme={theme} href={Pages.createProject} className={s.item}>
+              (checkRouterPath(router.asPath, Pages.meEmployer) ||
+                checkRouterPath(router.asPath, Pages.meWorker)) && (
+                <Link noWrap theme={theme} href={createProject} className={s.item}>
                   <div className={s.menu__item}>
                     <div style={{ color: theme.text }}>{locale.createProject}</div>
                   </div>

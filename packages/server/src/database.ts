@@ -51,6 +51,12 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<Array<File>>, Promise<Result<Array<Prisma.FileGetPayload<T>>>>>
   >;
 
+  public abstract fileFindFirst<T extends Prisma.FileFindFirstArgs>(
+    args: Prisma.SelectSubset<T, Prisma.FileFindFirstArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<File | null>, Promise<Result<Prisma.FileGetPayload<T> | null>>>
+  >;
+
   public abstract categoryFindManyW<T extends Prisma.CategoryFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.CategoryFindManyArgs>
   ): Promise<

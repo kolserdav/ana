@@ -15,8 +15,8 @@ if (cluster.isPrimary) {
   });
 
   const worker = cluster.fork();
-  new WS(worker);
-  new HandleRequests({ worker });
+  const ws = new WS(worker);
+  new HandleRequests({ worker, ws });
   new ORM(worker);
 } else {
   import('./http');

@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { existsSync } from 'fs';
 import path from 'path';
 import AMQP from '../protocols/amqp';
+import WS from '../protocols/ws';
 import { ORM } from '../services/orm';
 import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { CLOUD_PATH } from '../utils/constants';
@@ -238,7 +239,15 @@ class Project {
         ],
       },
       include: {
-        File: true,
+        File: {
+          where: {
+            ProjectMessage: {
+              every: {
+                fileId: null,
+              },
+            },
+          },
+        },
         ProjectEvent: true,
       },
     });
@@ -516,7 +525,7 @@ class Project {
       connId,
       lang,
       timeout,
-      data: { content, projectId },
+      data: { content, projectId, fileId },
     }: SendMessageArgs<MessageType.GET_POST_PROJECT_MESSAGE>,
     amqp: AMQP
   ) {
@@ -587,11 +596,42 @@ class Project {
       return;
     }
 
+    if (fileId) {
+      const file = await orm.fileUpdate({
+        where: {
+          id: fileId,
+        },
+        data: {
+          projectId,
+        },
+      });
+      if (file.status !== 'info') {
+        amqp.sendToQueue({
+          type: MessageType.SET_ERROR,
+          id,
+          lang,
+          timeout,
+          connId,
+          data: {
+            status: 'error',
+            type: MessageType.GET_POST_PROJECT_MESSAGE,
+            message: locale.error,
+            httpCode: file.code,
+          },
+        });
+        return;
+      }
+    }
+
     const projectMess = await orm.projectMessageCreate({
       data: {
         projectId,
         content,
         userId: id,
+        fileId: fileId || null,
+      },
+      include: {
+        File: true,
       },
     });
 
@@ -703,6 +743,9 @@ class Project {
       where: {
         projectId,
       },
+      include: {
+        File: true,
+      },
     });
     if (projectMess.status === 'error') {
       amqp.sendToQueue({
@@ -734,6 +777,36 @@ class Project {
         items: projectMess.data,
       },
     });
+  }
+
+  public async sendWSNotification(
+    { data, id, timeout, type, lang }: SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE>,
+    ws: WS
+  ) {
+    const { projectId } = data;
+    const project = await orm.projectFindFirst({
+      where: {
+        id: projectId,
+      },
+    });
+    if (project.status !== 'info' || !project.data) {
+      return;
+    }
+
+    const target = id === project.data.employerId ? project.data.workerId : project.data.employerId;
+    if (!target) {
+      return;
+    }
+
+    if (ws.checkWS(target)) {
+      ws.sendMessage({
+        type,
+        timeout,
+        lang,
+        data,
+        id: target,
+      });
+    }
   }
 }
 
