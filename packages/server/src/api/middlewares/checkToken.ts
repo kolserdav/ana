@@ -17,10 +17,6 @@ const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
       getErrorResult({
         message: locale.error,
         code: 500,
-        status: 'error',
-        lang,
-        timeout,
-        id,
       })
     );
   }
@@ -30,10 +26,6 @@ const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
       getErrorResult({
         message: locale.forbidden,
         code: 403,
-        status: 'warn',
-        lang,
-        timeout,
-        id,
       })
     );
   }

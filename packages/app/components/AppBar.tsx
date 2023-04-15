@@ -68,14 +68,6 @@ function AppBar({
               </div>
             </Link>
           )}
-          {!checkRouterPath(router.asPath, Pages.createProject) &&
-            checkRouterPath(router.asPath, Pages.meEmployer) && (
-              <Link fullWidth withoutHover theme={theme} href={Pages.createProject}>
-                <div className={clsx(s.menu__item, s.active)}>
-                  <div style={{ color: theme.text }}>{locale.createProject}</div>
-                </div>
-              </Link>
-            )}
           <div className={clsx(s.menu__item)}>
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />

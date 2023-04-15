@@ -22,7 +22,8 @@ const checkAccessMiddlewareWrapper: <
   (prisma, { bodyField, queryField, model, fieldId }) =>
   async (req, res, next) => {
     const { headers, method, body, query } = req;
-    const { lang, id, timeout } = parseHeaders(headers);
+    const { lang, id } = parseHeaders(headers);
+
     const locale = getLocale(lang).server;
     const targetId = bodyField ? body[fieldId] : query[fieldId];
     if (!targetId) {
@@ -32,10 +33,6 @@ const checkAccessMiddlewareWrapper: <
         getErrorResult({
           message: locale.notImplement,
           code: 501,
-          status: 'error',
-          lang,
-          timeout,
-          id,
         })
       );
     }
@@ -63,10 +60,6 @@ const checkAccessMiddlewareWrapper: <
         getErrorResult({
           message: locale.error,
           code: 500,
-          status: 'error',
-          lang,
-          timeout,
-          id,
         })
       );
     }
@@ -76,10 +69,6 @@ const checkAccessMiddlewareWrapper: <
         getErrorResult({
           message: locale.unauthorized,
           code: 401,
-          status: 'warn',
-          lang,
-          timeout,
-          id,
         })
       );
     }

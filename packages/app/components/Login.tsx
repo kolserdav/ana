@@ -2,14 +2,12 @@ import useChangeLocation from '../hooks/useChangeLocation';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { LOAD_PAGE_DURATION, Pages, TAB_INDEX_DEFAULT } from '../utils/constants';
+import { LOAD_PAGE_DURATION, Pages } from '../utils/constants';
 import {
   useCheckPage,
   useEmailInput,
   useNameInput,
   usePasswordInput,
-  useTabs,
-  useSurnameInput,
   useButton,
   useClean,
   useErrorDialog,
@@ -21,7 +19,6 @@ import Card from './ui/Card';
 import Dialog from './ui/Dialog';
 import Input from './ui/Input';
 import Link from './ui/Link';
-import Tabs from './ui/Tabs';
 import Typography from './ui/Typography';
 
 function Login({
@@ -46,9 +43,6 @@ function Login({
   const { name, nameError, onChangeName, onBlurName, setNameError, setName } = useNameInput({
     locale,
   });
-
-  const { surname, surnameError, onChangeSurname, onBlurSurname, setSurnameError, setSurname } =
-    useSurnameInput({ locale });
 
   const {
     email,
@@ -80,10 +74,6 @@ function Login({
     setPasswordSuccess,
   } = usePasswordInput({ locale, isSignUp: isSignUp || isChangePass });
 
-  const { tabActive, onClickTab, setTabsError, tabsError, setTabActive } = useTabs();
-
-  const tabSelected = tabActive !== TAB_INDEX_DEFAULT && isSignUp;
-
   const { errorDialogOpen, setErrorDialogOpen } = useErrorDialog();
 
   const {
@@ -98,9 +88,6 @@ function Login({
     needClean,
   } = useButton({
     name,
-    nameError,
-    surname,
-    surnameError,
     email,
     emailError,
     password,
@@ -108,15 +95,11 @@ function Login({
     passwordRepeat,
     passwordRepeatError,
     locale,
-    setNameError,
-    setTabsError,
-    setSurnameError,
     setEmailError,
     setPasswordError,
     setPasswordRepeatError,
     setLoad,
     setErrorDialogOpen,
-    tabSelected,
     setEmail,
     fieldMustBeNotEmpty,
     eliminateRemarks,
@@ -132,10 +115,6 @@ function Login({
     setPasswordError,
     setPasswordRepeat,
     setPasswordRepeatError,
-    setSurname,
-    setSurnameError,
-    setTabActive,
-    setTabsError,
     setEmailSuccess,
     setPasswordRepeatSuccess,
     setPasswordSuccess,
@@ -188,22 +167,7 @@ function Login({
               required
               error={nameError}
               disabled={load}
-              name={`${locale.name}*`}
-              fullWidth
-            />
-          )}
-          {isSignUp && (
-            <Input
-              theme={theme}
-              onChange={onChangeSurname}
-              onBlur={onBlurSurname}
-              value={surname}
-              id="surname"
-              type="text"
-              required
-              error={surnameError}
-              disabled={load}
-              name={`${locale.surname}*`}
+              name={locale.name}
               fullWidth
             />
           )}
@@ -222,18 +186,6 @@ function Login({
               disabled={load}
               name={`${locale.email}*`}
               fullWidth
-            />
-          )}
-          {isSignUp && (
-            <Tabs
-              label={`${locale.accountType}*`}
-              theme={theme}
-              active={tabActive}
-              disabled={load}
-              tabs={locale.tabs}
-              onClick={onClickTab}
-              tabDefault={locale.tabDefault}
-              error={tabsError}
             />
           )}
           {!isRestore && (

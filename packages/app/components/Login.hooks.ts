@@ -10,14 +10,7 @@ import {
   KEY_QS,
   UserCleanResult,
 } from '../types/interfaces';
-import {
-  EMAIL_MAX_LENGTH,
-  NAME_MAX_LENGTH,
-  Pages,
-  PASSWORD_MIN_LENGTH,
-  SURNAME_MAX_LENGTH,
-  TAB_INDEX_DEFAULT,
-} from '../utils/constants';
+import { EMAIL_MAX_LENGTH, NAME_MAX_LENGTH, Pages, PASSWORD_MIN_LENGTH } from '../utils/constants';
 import { CookieName, setCookie } from '../utils/cookies';
 import { checkRouterPath, log } from '../utils/lib';
 import { checkName, checkPasswordError } from './Login.lib';
@@ -44,7 +37,7 @@ export const useEmailInput = ({
     if (value.length < EMAIL_MAX_LENGTH) {
       const check = checkEmail(value);
       if (check) {
-        const checkRes = await request.checkEmail({ email });
+        const checkRes = await request.checkEmail({ email: value });
         if (isSignUp && checkRes.data) {
           setEmailError(locale.emailIsRegistered);
           setEmailSuccess(false);
@@ -116,41 +109,6 @@ export const useNameInput = ({ locale }: { locale: Locale['app']['login'] }) => 
     name,
     nameError,
     setNameError,
-  };
-};
-
-export const useSurnameInput = ({ locale }: { locale: Locale['app']['login'] }) => {
-  const [surnameError, setSurnameError] = useState<string>('');
-  const [surname, setSurname] = useState<string>('');
-
-  const onChangeSurname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = e;
-    if (value.length < SURNAME_MAX_LENGTH) {
-      setSurname(value);
-      if (surnameError && checkName(value)) {
-        setSurnameError('');
-      }
-    }
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const onBlurSurname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (surname) {
-      setSurnameError(!checkName(surname) ? locale.fieldProhibited : '');
-    } else {
-      setSurnameError('');
-    }
-  };
-
-  return {
-    onChangeSurname,
-    onBlurSurname,
-    setSurname,
-    surname,
-    surnameError,
-    setSurnameError,
   };
 };
 
@@ -279,18 +237,6 @@ export const usePasswordInput = ({
   };
 };
 
-export const useTabs = () => {
-  const [tabActive, setTabActive] = useState<number>(TAB_INDEX_DEFAULT);
-  const [tabsError, setTabsError] = useState<string>('');
-
-  const onClickTab = (id: number) => {
-    setTabsError('');
-    setTabActive(id);
-  };
-
-  return { tabActive, onClickTab, tabsError, setTabsError, setTabActive };
-};
-
 export const useCheckPage = () => {
   const router = useRouter();
 
@@ -303,9 +249,6 @@ export const useCheckPage = () => {
 
 export const useButton = ({
   name,
-  nameError,
-  surname,
-  surnameError,
   email,
   emailError,
   password,
@@ -313,24 +256,17 @@ export const useButton = ({
   passwordRepeat,
   passwordRepeatError,
   locale,
-  setNameError,
-  setTabsError,
-  setSurnameError,
   setEmailError,
   setPasswordError,
   setPasswordRepeatError,
   setLoad,
   setErrorDialogOpen,
-  tabSelected,
   setEmail,
   fieldMustBeNotEmpty,
   eliminateRemarks,
   isSignUp,
 }: {
   name: string;
-  nameError: string;
-  surname: string;
-  surnameError: string;
   email: string;
   emailError: string;
   password: string;
@@ -338,17 +274,13 @@ export const useButton = ({
   passwordRepeat: string;
   passwordRepeatError: string;
   locale: Locale['app']['login'];
-  setNameError: React.Dispatch<React.SetStateAction<string>>;
-  setTabsError: React.Dispatch<React.SetStateAction<string>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setSurnameError: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSignUp: boolean;
-  tabSelected: boolean;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
 }) => {
@@ -412,22 +344,6 @@ export const useButton = ({
 
   const checkRegisterFields = () => {
     let error = false;
-    if (!tabSelected) {
-      error = true;
-      setTabsError(locale.neededSelect);
-    }
-    if (!name || nameError) {
-      if (!name) {
-        setNameError(fieldMustBeNotEmpty);
-      }
-      error = true;
-    }
-    if (!surname || surnameError) {
-      if (!surname) {
-        setSurnameError(fieldMustBeNotEmpty);
-      }
-      error = true;
-    }
     if (!email || emailError) {
       error = true;
       if (!email) {
@@ -464,6 +380,7 @@ export const useButton = ({
     }
     setLoad(true);
     const user = await request.userLogin({ email, password });
+    setLoad(false);
     if (user.status !== 'info' || !user.data) {
       if (user.code === 401) {
         setPasswordError(user.message);
@@ -473,13 +390,15 @@ export const useButton = ({
     }
     setCookie(CookieName._utoken, user.data.token);
     setCookie(CookieName._uuid, user.data.userId);
+
+    const { userRenew } = storeUserRenew.getState();
+    storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
+    log('info', locale.successLogin, { token: user.data.token }, !isSignUp);
+
     setNeedClean(true);
     setTimeout(() => {
       setNeedClean(false);
     }, 1000);
-    const { userRenew } = storeUserRenew.getState();
-    storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
-    log('info', locale.successLogin, { token: user.data.token }, !isSignUp);
   };
 
   const onClickRestoreButton = async () => {
@@ -531,7 +450,7 @@ export const useButton = ({
     const createRes = await request.userCreate({ name, password, email });
     setLoad(false);
     if (createRes.status !== 'info' || !createRes.data) {
-      log('info', createRes.message, '', true);
+      log(createRes.status, createRes.message, '', true);
       return;
     }
     log('info', locale.successRegistration, '', true);
@@ -583,10 +502,6 @@ export const useClean = ({
   setPasswordError,
   setPasswordRepeat,
   setPasswordRepeatError,
-  setSurname,
-  setSurnameError,
-  setTabActive,
-  setTabsError,
   setEmailSuccess,
   setPasswordRepeatSuccess,
   setPasswordSuccess,
@@ -595,14 +510,10 @@ export const useClean = ({
 }: {
   setNameError: React.Dispatch<React.SetStateAction<string>>;
   setButtonError: React.Dispatch<React.SetStateAction<string>>;
-  setTabsError: React.Dispatch<React.SetStateAction<string>>;
-  setSurnameError: React.Dispatch<React.SetStateAction<string>>;
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
   setName: React.Dispatch<React.SetStateAction<string>>;
-  setTabActive: React.Dispatch<React.SetStateAction<number>>;
-  setSurname: React.Dispatch<React.SetStateAction<string>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   setPasswordRepeat: React.Dispatch<React.SetStateAction<string>>;
@@ -621,10 +532,6 @@ export const useClean = ({
       setPasswordError('');
       setPasswordRepeat('');
       setPasswordRepeatError('');
-      setSurname('');
-      setSurnameError('');
-      setTabActive(TAB_INDEX_DEFAULT);
-      setTabsError('');
       setEmailSuccess(false);
       setPasswordRepeatSuccess(false);
       setPasswordSuccess(false);
@@ -643,10 +550,6 @@ export const useClean = ({
       setPasswordRepeatError,
       setPasswordRepeatSuccess,
       setPasswordSuccess,
-      setSurname,
-      setSurnameError,
-      setTabActive,
-      setTabsError,
     ]
   );
 

@@ -20,6 +20,7 @@ const checkEmailHandler: RequestHandler<
   const { email } = query;
 
   const locale = getLocale(lang).server;
+
   if (!checkEmail(email)) {
     reply.type(APPLICATION_JSON).code(400);
     return {

@@ -11,7 +11,7 @@ const userFindFirst: RequestHandler<
   { Querystring: { id: string } },
   Result<UserCleanResult | null>
 > = async ({ headers }, reply) => {
-  const { lang, id, timeout } = parseHeaders(headers);
+  const { lang, id } = parseHeaders(headers);
   const user = await orm.userFindFirst({ where: { id } });
   const locale = getLocale(lang).server;
 
@@ -36,9 +36,9 @@ const userFindFirst: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(200);
   return {
-    status: 'error',
+    status: 'info',
     data: cleanData,
-    message: '',
+    message: locale.success,
   };
 };
 

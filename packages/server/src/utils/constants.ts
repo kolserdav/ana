@@ -14,15 +14,9 @@ export const AMQP_ADDRESS = process.env.AMQP_ADDRESS as string;
 export const APP_URL = process.env.APP_URL as string;
 export const JSONWEBTOKEN_KEY = process.env.JSONWEBTOKEN_KEY as string;
 export const PORT = parseInt(process.env.PORT as string, 10);
-export const WS_PORT = parseInt(process.env.WS_PORT as string, 10);
 export const LOG_LEVEL = parseInt(process.env.LOG_LEVEL as string, 10);
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const FASTIFY_LOGGER = process.env.FASTIFY_LOGGER === 'true';
-
-export const MASTER_QUEUE = 'master';
-export const WORKER_QUEUE = 'worker';
-export const QUEUE_MAX_SIZE = 2_000_000_000;
-export const RABBITMQ_RECONNECT_TIMEOUT = 2000;
 
 export const PASSWORD_SALT_LENGTH = 16;
 export const PASWWORD_HASH_LENGTH = 64;

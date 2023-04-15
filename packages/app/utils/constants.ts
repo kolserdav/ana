@@ -4,7 +4,6 @@ import { ThemeType } from '../Theme';
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const LOG_LEVEL = parseInt(process.env.NEXT_PUBLIC_LOG_LEVEL as string, 10);
-export const WS_ADDRESS = process.env.NEXT_PUBLIC_WS_ADDRESS as string;
 export const ERUDA = (process.env.NEXT_PUBLIC_ERUDA as string) === 'true';
 export const TINY_API_KEY = process.env.NEXT_PUBLIC_TINY_KEY as string;
 // eslint-disable-next-line no-shadow
@@ -17,16 +16,6 @@ export enum Pages {
   signUp = '/account/sign-up',
   // eslint-disable-next-line no-unused-vars
   restorePassword = '/account/restore-password',
-  // eslint-disable-next-line no-unused-vars
-  meEmployer = '/me/employer',
-  // eslint-disable-next-line no-unused-vars
-  createProject = '/create-project',
-  // eslint-disable-next-line no-unused-vars
-  meWorker = '/me/worker',
-  // eslint-disable-next-line no-unused-vars
-  project = '/project',
-  // eslint-disable-next-line no-unused-vars
-  projects = '/projects',
 }
 
 const now = new Date();
