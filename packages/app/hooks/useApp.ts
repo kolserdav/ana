@@ -1,79 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useTheme from './useTheme';
 import storeClick, { changeClick } from '../store/click';
 import storeLoad from '../store/load';
 import storeScroll, { changeScroll } from '../store/scroll';
-import { log, setBodyScroll } from '../utils/lib';
-import useWS from './useWS';
-import { LOCALE_DEFAULT, MessageType, SendMessageArgs } from '../types/interfaces';
-import { CookieName, getCookie } from '../utils/cookies';
-import storeProjectMessage, { changeProjectMessage } from '../store/projectMessage';
+import { setBodyScroll } from '../utils/lib';
+import { UserCleanResult } from '../types/interfaces';
 
-const setProjectMessage = (data: SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE>) => {
-  storeProjectMessage.dispatch(changeProjectMessage({ projectMessage: data }));
-};
-
-export default function useApp({
-  user,
-}: {
-  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] | null;
-}) {
+export default function useApp({ user }: { user: UserCleanResult | null }) {
   const [load, setLoad] = useState<boolean>(true);
   const [touchpad, setTouchpad] = useState<boolean>(false);
 
   const { theme } = useTheme();
-
-  const { ws } = useWS({ protocol: 'app' });
-
-  const setConnectionId = useMemo(
-    () =>
-      ({ id, data }: SendMessageArgs<MessageType.SET_CONNECTION_ID>) => {
-        if (!user) {
-          return;
-        }
-        if (data) {
-          // START app
-          return;
-        }
-        ws.sendMessage({
-          id,
-          type: MessageType.GET_CONNECTION_ID,
-          lang: getCookie(CookieName.lang) || LOCALE_DEFAULT,
-          timeout: new Date().getTime(),
-          data: {
-            newId: user.id,
-          },
-        });
-      },
-    [user, ws]
-  );
-
-  /**
-   * Handle ws messages
-   */
-  useEffect(() => {
-    if (!ws.connection || !user) {
-      return;
-    }
-    ws.connection.onmessage = (e) => {
-      const rawMessage = ws.parseMessage(e.data);
-      if (!rawMessage) {
-        log('warn', 'Skip handle message', { rawMessage });
-        return;
-      }
-      const { type } = rawMessage;
-      switch (type) {
-        case MessageType.SET_CONNECTION_ID:
-          setConnectionId(rawMessage);
-          break;
-        case MessageType.SET_POST_PROJECT_MESSAGE:
-          setProjectMessage(rawMessage);
-          break;
-        default:
-          log('warn', 'Default case WS message on app', { rawMessage });
-      }
-    };
-  }, [ws, user, setConnectionId]);
 
   /**
    * Scroll handler

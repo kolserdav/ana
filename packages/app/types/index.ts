@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { PageField } from '@prisma/client';
 import { Theme } from '../Theme';
-import { Locale, MessageType, SendMessageArgs, Status } from './interfaces';
+import { Locale, Status, UserCleanResult } from './interfaces';
 
 export type PageFull = {
   // eslint-disable-next-line no-unused-vars
@@ -25,7 +25,7 @@ export interface AlertProps {
 export interface AppProps {
   app: {
     theme: Theme;
-    user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+    user: UserCleanResult;
     userLoad: boolean;
     touchpad: boolean;
   };

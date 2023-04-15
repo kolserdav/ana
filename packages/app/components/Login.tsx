@@ -1,9 +1,7 @@
 import useChangeLocation from '../hooks/useChangeLocation';
-import useConnId from '../hooks/useConnId';
 import useLoad from '../hooks/useLoad';
-import useWS from '../hooks/useWS';
 import { Theme } from '../Theme';
-import { Locale, MessageType, SendMessageArgs } from '../types/interfaces';
+import { Locale, UserCleanResult } from '../types/interfaces';
 import { LOAD_PAGE_DURATION, Pages, TAB_INDEX_DEFAULT } from '../utils/constants';
 import {
   useCheckPage,
@@ -12,7 +10,6 @@ import {
   usePasswordInput,
   useTabs,
   useSurnameInput,
-  useMessages,
   useButton,
   useClean,
   useErrorDialog,
@@ -38,14 +35,10 @@ function Login({
   theme: Theme;
   locale: Locale['app']['login'];
   formDesc: string;
-  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+  user: UserCleanResult;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
 }) {
-  const { ws } = useWS({ protocol: 'login' });
-
-  const { setConnId, connId } = useConnId();
-
   const { load, setLoad } = useLoad();
 
   const { isSignUp, isRestore, isChangePass } = useCheckPage();
@@ -66,7 +59,7 @@ function Login({
     setEmailError,
     setEmail,
     setEmailSuccess,
-  } = useEmailInput({ locale, connId, ws });
+  } = useEmailInput({ locale, isSignUp });
 
   const {
     password,
@@ -102,33 +95,32 @@ function Login({
     onClickChangePasswordButton,
     setPageError,
     pageError,
+    needClean,
   } = useButton({
-    locale,
     name,
     nameError,
     surname,
     surnameError,
-    setEmailError,
-    setNameError,
-    setPasswordError,
-    setPasswordRepeatError,
-    setSurnameError,
+    email,
+    emailError,
     password,
     passwordError,
     passwordRepeat,
     passwordRepeatError,
-    email,
-    emailError,
-    tabSelected,
+    locale,
+    setNameError,
     setTabsError,
-    tabActive,
-    ws,
-    connId,
+    setSurnameError,
+    setEmailError,
+    setPasswordError,
+    setPasswordRepeatError,
     setLoad,
     setErrorDialogOpen,
+    tabSelected,
     setEmail,
     fieldMustBeNotEmpty,
     eliminateRemarks,
+    isSignUp,
   });
 
   const { cleanAllFields } = useClean({
@@ -148,6 +140,7 @@ function Login({
     setPasswordRepeatSuccess,
     setPasswordSuccess,
     setButtonError,
+    needClean,
   });
 
   useChangeLocation(() => {
@@ -155,23 +148,6 @@ function Login({
     setTimeout(() => setLoad(false), LOAD_PAGE_DURATION);
     cleanAllFields();
     setPageError('');
-  });
-
-  useMessages({
-    setConnId,
-    ws,
-    setEmailError,
-    locale,
-    isSignUp,
-    email,
-    password,
-    cleanAllFields,
-    setLoad,
-    setEmailSuccess,
-    setButtonError,
-    setPageError,
-    onClickLoginButton,
-    setPasswordError,
   });
 
   useRedirect({ user });

@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { Pages } from '../utils/constants';
+import { UserCleanResult } from '../types/interfaces';
 
 export default function useCloseAuth({
   user,
   userLoad,
 }: {
-  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+  user: UserCleanResult;
   userLoad: boolean;
 }) {
   const router = useRouter();

@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import storeUserRenew from '../store/userRenew';
-import { MessageType, SendMessageArgs } from '../types/interfaces';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
+import { UserCleanResult } from '../types/interfaces';
 
 const request = new Request();
 const { userRenew: userRenewDef } = storeUserRenew.getState();
 
 export default function useUser() {
   const [userLoad, setUserLoad] = useState<boolean>(false);
-  const [user, setUser] = useState<SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] | null>(
-    null
-  );
+  const [user, setUser] = useState<UserCleanResult | null>(null);
   const [renew, setRenew] = useState<boolean>(userRenewDef);
 
   /**
@@ -21,8 +19,8 @@ export default function useUser() {
     (async () => {
       const _user = await request.getUser();
       setUserLoad(true);
-      if (_user.type === MessageType.SET_ERROR) {
-        log(_user.data.status, _user.data.message, { _user });
+      if (_user.status !== 'info') {
+        log(_user.status, _user.message, { _user });
         setUser(null);
         return;
       }

@@ -114,17 +114,15 @@ export class ORM extends Service implements Database {
     const id = v4();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new Promise<any>((resolve) => {
-      const { master, handler } = this.listenMasterMessages<Result<any>>(
-        ({ id: _id, msg: { data } }) => {
-          if (id === _id) {
-            if (data.status === this.errorStatus) {
-              log('error', 'Database request failed', { args });
-            }
-            master.removeListener('message', handler);
-            resolve(data);
+      const { master, handler } = this.listenMasterMessages<Result<any>>(({ id: _id, msg }) => {
+        if (id === _id) {
+          if (msg.data.status === this.errorStatus) {
+            log('error', 'Database request failed', { args });
           }
+          master.removeListener('message', handler);
+          resolve(msg);
         }
-      );
+      });
       this.sendMessageToMaster<DBCommandProps>({
         id,
         msg: {

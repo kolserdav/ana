@@ -14,6 +14,9 @@ import userLogin from './api/v1/user/login';
 import checkEmailHandler from './api/v1/user/check-email';
 import userCreate from './api/v1/user/create';
 import forgotPassword from './api/v1/user/forgot-password';
+import checkRestoreKey from './api/v1/user/check-restore-key';
+import restorePassword from './api/v1/user/restore-password';
+import confirmEmail from './api/v1/user/confirm-email';
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -36,9 +39,13 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.postUserLogin, userLogin);
   fastify.post(Api.postUserCreateV1, userCreate);
   fastify.post(Api.postForgotPassword, forgotPassword);
+  fastify.post(Api.postRestorePassword, restorePassword);
   fastify.get(Api.testV1, getTestHandler);
+  fastify.get(Api.postPageFindManyV1, pageFindManyHandler);
+  fastify.get(Api.getCheckRestoreKey, checkRestoreKey);
   fastify.get(Api.getCheckEmail, checkEmailHandler);
   fastify.get(Api.getLocaleV1, getLocaleHandler);
+  fastify.put(Api.putConfirmEmail, confirmEmail);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

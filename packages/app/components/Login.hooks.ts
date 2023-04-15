@@ -4,12 +4,11 @@ import useQueryString from '../hooks/useQueryString';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import {
   checkEmail,
-  LOCALE_DEFAULT,
   Locale,
-  MessageType,
   PAGE_RESTORE_PASSWORD_CALLBACK,
   EMAIL_QS,
   KEY_QS,
+  UserCleanResult,
 } from '../types/interfaces';
 import {
   EMAIL_MAX_LENGTH,
@@ -19,8 +18,8 @@ import {
   SURNAME_MAX_LENGTH,
   TAB_INDEX_DEFAULT,
 } from '../utils/constants';
-import { CookieName, getCookie, getLangCookie, setCookie } from '../utils/cookies';
-import { awaitResponse, checkRouterPath, log } from '../utils/lib';
+import { CookieName, setCookie } from '../utils/cookies';
+import { checkRouterPath, log } from '../utils/lib';
 import { checkName, checkPasswordError } from './Login.lib';
 import Request from '../utils/request';
 
@@ -302,110 +301,7 @@ export const useCheckPage = () => {
   return { isSignUp, isRestore, isChangePass };
 };
 
-export const useMessages = ({
-  setConnId,
-  setEmailError,
-  setEmailSuccess,
-  setLoad,
-  onClickLoginButton,
-  locale,
-  isSignUp,
-  cleanAllFields,
-  setPageError,
-  email,
-  password,
-  setButtonError,
-  setPasswordError,
-}: {
-  setConnId: React.Dispatch<React.SetStateAction<string>>;
-  setEmailError: React.Dispatch<React.SetStateAction<string>>;
-  setPasswordError: React.Dispatch<React.SetStateAction<string>>;
-  setEmailSuccess: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
-  setButtonError: React.Dispatch<React.SetStateAction<string>>;
-  setPageError: React.Dispatch<React.SetStateAction<string>>;
-  onClickLoginButton: () => void;
-  locale: Locale['app']['login'];
-  isSignUp: boolean;
-  cleanAllFields: () => void;
-  email: string;
-  password: string;
-}) => {
-  /**
-   * Connect to WS
-   */
-  useEffect(() => {
-    const setError = async ({
-      data: { status, message, httpCode, type },
-      timeout,
-    }: SendMessageArgs<MessageType.SET_ERROR>) => {
-      await awaitResponse(timeout);
-      switch (type) {
-        case MessageType.GET_CHECK_RESTORE_KEY:
-          setPageError(message);
-          break;
-        default:
-      }
-      log(status, message, { httpCode }, true);
-    };
-
-    const setForgotPassword = ({
-      data: { message },
-    }: SendMessageArgs<MessageType.SET_FORGOT_PASSWORD>) => {
-      log('info', message, {}, true);
-      cleanAllFields();
-    };
-
-    const setRestorePassword = (_: SendMessageArgs<MessageType.SET_RESTORE_PASSWORD>) => {
-      onClickLoginButton();
-    };
-
-    // eslint-disable-next-line no-param-reassign
-    ws.connection.onmessage = async (msg) => {
-      const { data } = msg;
-      const rawMessage = ws.parseMessage(data);
-      if (!rawMessage) {
-        return;
-      }
-      const { type, id, timeout } = rawMessage;
-      switch (type) {
-        case MessageType.SET_ERROR:
-          setError(rawMessage);
-          break;
-        case MessageType.SET_CHECK_RESTORE_KEY:
-          //
-          break;
-        case MessageType.SET_FORGOT_PASSWORD:
-          setForgotPassword(rawMessage);
-          break;
-        case MessageType.SET_RESTORE_PASSWORD:
-          setRestorePassword(rawMessage);
-          break;
-        default:
-          log('warn', 'Not implemented on ws message case in login', rawMessage);
-      }
-      await awaitResponse(timeout);
-      setLoad(false);
-    };
-  }, [
-    setConnId,
-    setLoad,
-    setButtonError,
-    setPageError,
-    cleanAllFields,
-    isSignUp,
-    locale,
-    email,
-    password,
-    setEmailError,
-    setEmailSuccess,
-    onClickLoginButton,
-    setPasswordError,
-  ]);
-};
-
 export const useButton = ({
-  connId,
   name,
   nameError,
   surname,
@@ -426,14 +322,11 @@ export const useButton = ({
   setLoad,
   setErrorDialogOpen,
   tabSelected,
-  tabActive,
   setEmail,
   fieldMustBeNotEmpty,
   eliminateRemarks,
-  cleanAllFields,
   isSignUp,
 }: {
-  connId: string;
   name: string;
   nameError: string;
   surname: string;
@@ -454,22 +347,16 @@ export const useButton = ({
   setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  cleanAllFields: () => void;
   isSignUp: boolean;
   tabSelected: boolean;
-  tabActive: number;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
 }) => {
   const [buttonError, setButtonError] = useState<string>('');
   const [pageError, setPageError] = useState<string>('');
+  const [needClean, setNeedClean] = useState<boolean>(false);
 
   const { e, k } = useQueryString<{ [EMAIL_QS]: string; [KEY_QS]: string }>();
-
-  const role = useMemo(
-    () => locale.tabs.find((item) => item.id === tabActive)?.value || 'employer',
-    [tabActive, locale]
-  );
 
   const checkRestoreFields = () => {
     let error = false;
@@ -586,13 +473,16 @@ export const useButton = ({
     }
     setCookie(CookieName._utoken, user.data.token);
     setCookie(CookieName._uuid, user.data.userId);
-    cleanAllFields();
+    setNeedClean(true);
+    setTimeout(() => {
+      setNeedClean(false);
+    }, 1000);
     const { userRenew } = storeUserRenew.getState();
     storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
     log('info', locale.successLogin, { token: user.data.token }, !isSignUp);
   };
 
-  const onClickRestoreButton = () => {
+  const onClickRestoreButton = async () => {
     const error = checkRestoreFields();
     if (error) {
       return;
@@ -601,18 +491,17 @@ export const useButton = ({
       setButtonError('');
     }
     setLoad(true);
-    ws.sendMessage({
-      timeout: new Date().getTime(),
-      id: connId,
-      lang: getLangCookie(),
-      type: MessageType.GET_FORGOT_PASSWORD,
-      data: {
-        email,
-      },
-    });
+    const forgotRes = await request.forgotPassword({ email });
+    log(forgotRes.status, forgotRes.message, {}, true);
+    if (forgotRes.status === 'info') {
+      setNeedClean(true);
+      setTimeout(() => {
+        setNeedClean(false);
+      }, 1000);
+    }
   };
 
-  const onClickChangePasswordButton = () => {
+  const onClickChangePasswordButton = async () => {
     const error = checkChangePasswordFields();
     if (error) {
       return;
@@ -622,17 +511,11 @@ export const useButton = ({
     }
     setLoad(true);
     setEmail(e);
-    ws.sendMessage({
-      type: MessageType.GET_RESTORE_PASSWORD,
-      id: connId,
-      timeout: new Date().getTime(),
-      lang: getLangCookie(),
-      data: {
-        email: e,
-        password,
-        key: k,
-      },
-    });
+    const resRes = await request.restorePassword({ email: e, key: k, password });
+    log(resRes.status, resRes.message, resRes, true);
+    if (resRes.status === 'info') {
+      onClickLoginButton();
+    }
   };
 
   const onClickRegisterButton = async () => {
@@ -669,15 +552,14 @@ export const useButton = ({
    */
   useEffect(() => {
     if (e && k) {
-      ws.sendMessage({
-        id: connId,
-        lang: getLangCookie(),
-        timeout: new Date().getTime(),
-        type: MessageType.GET_CHECK_RESTORE_KEY,
-        data: { email: e, key: k },
-      });
+      (async () => {
+        const checkRes = await request.checkRestoreKey({ email: e, key: k });
+        if (checkRes.status !== 'info') {
+          setPageError(checkRes.message);
+        }
+      })();
     }
-  }, [e, k, connId]);
+  }, [e, k]);
 
   return {
     onClickLoginButton,
@@ -688,6 +570,7 @@ export const useButton = ({
     onClickChangePasswordButton,
     pageError,
     setPageError,
+    needClean,
   };
 };
 
@@ -708,6 +591,7 @@ export const useClean = ({
   setPasswordRepeatSuccess,
   setPasswordSuccess,
   setButtonError,
+  needClean,
 }: {
   setNameError: React.Dispatch<React.SetStateAction<string>>;
   setButtonError: React.Dispatch<React.SetStateAction<string>>;
@@ -725,25 +609,55 @@ export const useClean = ({
   setEmailSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setPasswordSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setPasswordRepeatSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  needClean: boolean;
 }) => {
-  const cleanAllFields = () => {
-    setEmail('');
-    setEmailError('');
-    setName('');
-    setNameError('');
-    setPassword('');
-    setPasswordError('');
-    setPasswordRepeat('');
-    setPasswordRepeatError('');
-    setSurname('');
-    setSurnameError('');
-    setTabActive(TAB_INDEX_DEFAULT);
-    setTabsError('');
-    setEmailSuccess(false);
-    setPasswordRepeatSuccess(false);
-    setPasswordSuccess(false);
-    setButtonError('');
-  };
+  const cleanAllFields = useMemo(
+    () => () => {
+      setEmail('');
+      setEmailError('');
+      setName('');
+      setNameError('');
+      setPassword('');
+      setPasswordError('');
+      setPasswordRepeat('');
+      setPasswordRepeatError('');
+      setSurname('');
+      setSurnameError('');
+      setTabActive(TAB_INDEX_DEFAULT);
+      setTabsError('');
+      setEmailSuccess(false);
+      setPasswordRepeatSuccess(false);
+      setPasswordSuccess(false);
+      setButtonError('');
+    },
+    [
+      setButtonError,
+      setEmail,
+      setEmailError,
+      setEmailSuccess,
+      setName,
+      setNameError,
+      setPassword,
+      setPasswordError,
+      setPasswordRepeat,
+      setPasswordRepeatError,
+      setPasswordRepeatSuccess,
+      setPasswordSuccess,
+      setSurname,
+      setSurnameError,
+      setTabActive,
+      setTabsError,
+    ]
+  );
+
+  /**
+   * Listen need clean
+   */
+  useEffect(() => {
+    if (needClean) {
+      cleanAllFields();
+    }
+  }, [needClean, cleanAllFields]);
 
   return { cleanAllFields };
 };
@@ -754,11 +668,7 @@ export const useErrorDialog = () => {
   return { errorDialogOpen, setErrorDialogOpen };
 };
 
-export const useRedirect = ({
-  user,
-}: {
-  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
-}) => {
+export const useRedirect = ({ user }: { user: UserCleanResult }) => {
   const router = useRouter();
   const { r } = useQueryString<{ r?: string }>();
 
@@ -771,17 +681,7 @@ export const useRedirect = ({
         router.push(r);
         return;
       }
-      const { role } = user;
-      switch (role) {
-        case 'employer':
-          router.push(Pages.meEmployer);
-          break;
-        case 'worker':
-          router.push(Pages.meWorker);
-          break;
-        default:
-          router.push(Pages.home);
-      }
+      router.push(Pages.home);
     }
   }, [user, router, r]);
 };

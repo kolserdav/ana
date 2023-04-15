@@ -29,6 +29,7 @@ const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResul
 
   const locale = getLocale(lang).server;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: Prisma.UserCreateArgs['data'] = { email, name } as any;
   if (!checkEmail(email)) {
     reply.type(APPLICATION_JSON).code(400);

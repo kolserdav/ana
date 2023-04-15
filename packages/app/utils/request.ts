@@ -15,6 +15,14 @@ import {
   UserLoginBody,
   UserLoginResult,
   UserCreateBody,
+  ForgotPasswordBody,
+  ForgotPasswordResult,
+  CheckRestoreKeyQuery,
+  CheckRestoreKeyResult,
+  RestorePasswordBody,
+  RestorePasswordResult,
+  ConfirmEmailBody,
+  ConfirmEmailResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -31,13 +39,11 @@ class Request {
   private async send({
     body: _body,
     url,
-    id,
     locale,
     method,
     contentType = APPLICATION_JSON,
   }: {
     url: string;
-    id?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body?: any;
     locale?: string;
@@ -49,7 +55,7 @@ class Request {
       log('info', 'Send request', { method, url });
       const headers: RequestInit['headers'] = {
         [LANGUAGE_HEADER]: getCookie(CookieName.lang) || locale || LOCALE_DEFAULT,
-        [USER_ID_HEADER]: id || getCookie(CookieName._uuid) || '',
+        [USER_ID_HEADER]: getCookie(CookieName._uuid) || '',
         [AUTHORIZATION_HEADER]: getCookie(CookieName._utoken) || '',
         [TIMEOUT_HEADER]: new Date().getTime().toString(),
       };
@@ -81,8 +87,8 @@ class Request {
     });
   }
 
-  public async test(id: string): Promise<any> {
-    return this.send({ url: Api.testV1, method: 'GET', id });
+  public async test(): Promise<any> {
+    return this.send({ url: Api.testV1, method: 'GET' });
   }
 
   public async getLocale<T extends keyof Locale['app']>({
@@ -114,6 +120,16 @@ class Request {
     });
   }
 
+  public async checkRestoreKey({
+    email,
+    key,
+  }: CheckRestoreKeyQuery): Promise<Result<CheckRestoreKeyResult>> {
+    return this.send({
+      url: `${Api.getCheckRestoreKey}?email=${email}&key=${key}`,
+      method: 'GET',
+    });
+  }
+
   public async userLogin(body: UserLoginBody): Promise<Result<UserLoginResult | null>> {
     return this.send({
       url: Api.postUserLogin,
@@ -122,9 +138,37 @@ class Request {
     });
   }
 
+  public async confirmEmail(body: ConfirmEmailBody): Promise<Result<ConfirmEmailResult | null>> {
+    return this.send({
+      url: Api.postUserLogin,
+      method: 'PUT',
+      body,
+    });
+  }
+
+  public async restorePassword(
+    body: RestorePasswordBody
+  ): Promise<Result<RestorePasswordResult | null>> {
+    return this.send({
+      url: Api.postRestorePassword,
+      method: 'POST',
+      body,
+    });
+  }
+
   public async userCreate(body: UserCreateBody): Promise<Result<UserCleanResult | null>> {
     return this.send({
       url: Api.postUserCreateV1,
+      method: 'POST',
+      body,
+    });
+  }
+
+  public async forgotPassword(
+    body: ForgotPasswordBody
+  ): Promise<Result<ForgotPasswordResult | null>> {
+    return this.send({
+      url: Api.postForgotPassword,
       method: 'POST',
       body,
     });

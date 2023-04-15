@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { ubuntu500 } from '../fonts/ubuntu';
 import { Theme } from '../Theme';
-import { Locale, MessageType, SendMessageArgs } from '../types/interfaces';
+import { Locale, UserCleanResult } from '../types/interfaces';
 import { Pages, PAGE_LOGIN_IN_MENU } from '../utils/constants';
 import { checkRouterPath, scrollToTop } from '../utils/lib';
 import ChevronUpIcon from './icons/ChevronUp';
@@ -12,7 +12,6 @@ import Link from './ui/Link';
 import Menu from './ui/Menu';
 import Switch from './ui/Switch';
 import l from './ui/Link.module.scss';
-import useIsEmployer from '../hooks/useIsEmployer';
 
 function AppBar({
   theme,
@@ -24,7 +23,7 @@ function AppBar({
   theme: Theme;
   locale: Locale['app']['appBar'];
   withoutExpandLess?: boolean;
-  user: SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'];
+  user: UserCleanResult;
   full?: boolean;
 }) {
   const router = useRouter();
@@ -34,11 +33,6 @@ function AppBar({
   const { darkTheme, onClickChangeTheme } = useChangeTheme();
 
   const { onClickLogout, onKeyDownLogout } = useLogout();
-
-  const createProject =
-    user?.role === 'employer'
-      ? `${Pages.meEmployer}${Pages.createProject}`
-      : `${Pages.meWorker}${Pages.createProject}`;
 
   return (
     <header>
@@ -64,29 +58,6 @@ function AppBar({
                 </div>
               </Link>
             )}
-            {!checkRouterPath(router.asPath, Pages.createProject) &&
-              (checkRouterPath(router.asPath, Pages.meEmployer) ||
-                checkRouterPath(router.asPath, Pages.meWorker)) && (
-                <Link noWrap theme={theme} href={createProject} className={s.item}>
-                  <div className={s.menu__item}>
-                    <div style={{ color: theme.text }}>{locale.createProject}</div>
-                  </div>
-                </Link>
-              )}
-            {!checkRouterPath(router.asPath, [Pages.meEmployer, Pages.meWorker]) &&
-              user &&
-              (user.role === 'employer' || user.role === 'worker') && (
-                <Link
-                  noWrap
-                  theme={theme}
-                  className={s.item}
-                  href={user.role === 'worker' ? Pages.meWorker : Pages.meEmployer}
-                >
-                  <div className={s.menu__item}>
-                    <div style={{ color: theme.text }}>{locale.personalArea}</div>
-                  </div>
-                </Link>
-              )}
           </div>
         )}
         <Menu theme={theme}>
@@ -109,20 +80,6 @@ function AppBar({
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
-          {!checkRouterPath(router.asPath, [Pages.meEmployer, Pages.meWorker]) &&
-            user &&
-            (user.role === 'employer' || user.role === 'worker') && (
-              <Link
-                withoutHover
-                fullWidth
-                theme={theme}
-                href={user.role === 'worker' ? Pages.meWorker : Pages.meEmployer}
-              >
-                <div className={clsx(s.menu__item, s.active)}>
-                  <div style={{ color: theme.text }}>{locale.personalArea}</div>
-                </div>
-              </Link>
-            )}
           {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
             <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>

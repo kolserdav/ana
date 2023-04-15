@@ -8,7 +8,10 @@ export enum Api {
   getLocaleV1 = '/v1/get-locale',
   postPageFindManyV1 = '/v1/page-get-fields',
   postUserCreateV1 = '/v1/user-create',
+  putConfirmEmail = '/v1/confirm-email',
+  postRestorePassword = '/v1/restore-password',
   getUserFindFirst = '/v1/user-find-first',
+  getCheckRestoreKey = '/v1/check-restore-key',
   postForgotPassword = '/v1/forgot-password',
   postUserLogin = '/v1/user-login',
   getCheckEmail = '/v1/check-email',
@@ -107,6 +110,25 @@ export interface ForgotPasswordBody {
 }
 
 export type ForgotPasswordResult = null;
+
+export interface CheckRestoreKeyQuery {
+  email: string;
+  key: string;
+}
+export type CheckRestoreKeyResult = boolean;
+
+export interface RestorePasswordBody {
+  email: string;
+  key: string;
+  password: string;
+}
+export type RestorePasswordResult = null;
+
+export interface ConfirmEmailBody {
+  email: string;
+  key: string;
+}
+export type ConfirmEmailResult = null;
 
 export interface Tab {
   id: number;

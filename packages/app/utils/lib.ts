@@ -1,6 +1,6 @@
 import { format, formatDistance } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { File, Page } from '@prisma/client';
+import { Page } from '@prisma/client';
 import storeAlert, { changeAlert } from '../store/alert';
 import { CLOUD_PREFIX, LogLevel } from '../types/interfaces';
 import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS, SERVER } from './constants';
@@ -106,9 +106,6 @@ export const checkRouterPath = (asPath: string, checkValue: string | string[]) =
   });
   return checkMany;
 };
-
-export const getFilePath = ({ id, userId, ext }: File) =>
-  `${SERVER}${CLOUD_PREFIX}/${userId}/${id}${ext}`;
 
 export const getWindowDimensions = () => {
   const res = {
