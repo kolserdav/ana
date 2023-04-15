@@ -11,7 +11,7 @@ const pageFindManyHandler: RequestHandler<
   { Body: Prisma.PageFindManyArgs },
   Result<Page[]>
 > = async ({ body }, reply) => {
-  const page = await orm.pageFindManyW(body);
+  const page = await orm.pageFindMany(body);
   reply.type(APPLICATION_JSON).code(getHttpCode(page.status));
   return page;
 };

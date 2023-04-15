@@ -2,56 +2,47 @@ import { RequestHandler } from '../../../types';
 import {
   APPLICATION_JSON,
   Result,
-  UserLoginBody,
   checkEmail,
-  UserLoginResult,
+  PAGE_RESTORE_PASSWORD_CALLBACK,
+  EMAIL_QS,
+  KEY_QS,
+  ForgotPasswordBody,
+  ForgotPasswordResult,
 } from '../../../types/interfaces';
 import { getHttpCode, getLocale, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
-import { createPasswordHash, createToken } from '../../../utils/auth';
+import { sendEmail } from '../../../utils/email';
+import { APP_URL, RESTORE_LINK_TIMEOUT_IN_HOURS } from '../../../utils/constants';
 
 const orm = new ORM();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const userLogin: RequestHandler<{ Body: UserLoginBody }, Result<UserLoginResult | null>> = async (
-  { headers, body },
-  reply
-) => {
+const forgotPassword: RequestHandler<
+  { Body: ForgotPasswordBody },
+  Result<ForgotPasswordResult | null>
+> = async ({ headers, body }, reply) => {
   const { lang } = parseHeaders(headers);
-  const { email, password } = body;
+  const { email } = body;
 
   const locale = getLocale(lang).server;
   if (!checkEmail(email)) {
-    amqp.sendToQueue({
-      type: MessageType.SET_ERROR,
-      lang,
-      id,
-      timeout,
-      data: {
-        status: 'warn',
-        type,
-        httpCode: 400,
-        message: locale.badRequest,
-      },
-    });
-    return;
+    reply.type(APPLICATION_JSON).code(400);
+    return {
+      status: 'warn',
+      message: locale.badRequest,
+      data: null,
+    };
   }
   const user = await orm.userFindFirst({ where: { email } });
   if (user.status !== 'info' || !user.data) {
-    amqp.sendToQueue({
-      id,
-      type: MessageType.SET_ERROR,
-      lang,
-      timeout,
-      data: {
-        status: user.status,
-        type,
-        message: user.status === 'error' ? locale.error : locale.notFound,
-        httpCode: getHttpCode(user.status),
-      },
-    });
-    return;
+    reply.type(APPLICATION_JSON).code(getHttpCode(user.status));
+    return {
+      status: user.status,
+      message: user.status === 'error' ? locale.error : locale.notFound,
+      data: null,
+    };
   }
+
   const restore = await orm.userUpdate({
     where: { id: user.data.id },
     data: {
@@ -64,61 +55,39 @@ const userLogin: RequestHandler<{ Body: UserLoginBody }, Result<UserLoginResult 
     },
   });
   if (restore.status === 'error' || !restore.data || !restore.data?.RestoreLink?.[0]) {
-    amqp.sendToQueue({
-      type: MessageType.SET_ERROR,
-      lang,
-      id,
-      timeout,
-      data: {
-        status: 'error',
-        type,
-        httpCode: 500,
-        message: locale.error,
-      },
-    });
-    return;
+    reply.type(APPLICATION_JSON).code(500);
+    return {
+      status: 'error',
+      message: locale.error,
+      data: null,
+    };
   }
+
   const sendRes = await sendEmail<'restore-password'>({
     email,
     locale: lang,
     type: 'restore-password',
     data: {
-      name: user.data.name,
+      name: user.data.name || '',
       link: `${APP_URL}/${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restore.data.RestoreLink[0].id}`,
       expire: RESTORE_LINK_TIMEOUT_IN_HOURS,
     },
   });
   if (sendRes === 1) {
-    amqp.sendToQueue({
-      id,
-      type: MessageType.SET_ERROR,
-      lang,
-      timeout,
-      data: {
-        status: 'error',
-        type,
-        message: locale.error,
-        httpCode: 502,
-      },
-    });
-    return;
+    reply.type(APPLICATION_JSON).code(502);
+    return {
+      status: 'error',
+      message: locale.error,
+      data: null,
+    };
   }
-  amqp.sendToQueue({
-    timeout,
-    id,
-    lang,
-    type: MessageType.SET_FORGOT_PASSWORD,
-    data: {
-      message: locale.emailIsSend,
-    },
-  });
 
-  reply.type(APPLICATION_JSON).code(200);
+  reply.type(APPLICATION_JSON).code(201);
   return {
-    status: 'info',
-    message: '',
-    data: { token, userId: user.data.id },
+    status: 'error',
+    message: locale.emailIsSend,
+    data: null,
   };
 };
 
-export default userLogin;
+export default forgotPassword;

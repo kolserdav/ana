@@ -13,6 +13,7 @@ import pageFindManyHandler from './api/v1/page/find-many';
 import userLogin from './api/v1/user/login';
 import checkEmailHandler from './api/v1/user/check-email';
 import userCreate from './api/v1/user/create';
+import forgotPassword from './api/v1/user/forgot-password';
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -34,6 +35,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.postPageFindManyV1, pageFindManyHandler);
   fastify.post(Api.postUserLogin, userLogin);
   fastify.post(Api.postUserCreateV1, userCreate);
+  fastify.post(Api.postForgotPassword, forgotPassword);
   fastify.get(Api.testV1, getTestHandler);
   fastify.get(Api.getCheckEmail, checkEmailHandler);
   fastify.get(Api.getLocaleV1, getLocaleHandler);

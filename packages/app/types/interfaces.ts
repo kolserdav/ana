@@ -9,6 +9,7 @@ export enum Api {
   postPageFindManyV1 = '/v1/page-get-fields',
   postUserCreateV1 = '/v1/user-create',
   getUserFindFirst = '/v1/user-find-first',
+  postForgotPassword = '/v1/forgot-password',
   postUserLogin = '/v1/user-login',
   getCheckEmail = '/v1/check-email',
 }
@@ -98,7 +99,14 @@ export type CheckEmailResult = boolean;
 export interface UserCreateBody {
   email: string;
   password: string;
+  name?: string;
 }
+
+export interface ForgotPasswordBody {
+  email: string;
+}
+
+export type ForgotPasswordResult = null;
 
 export interface Tab {
   id: number;
