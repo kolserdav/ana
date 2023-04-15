@@ -33,13 +33,6 @@ enum Lang {
   ru
 }
 
-enum Role {
-  employer
-  worker
-  moderator
-  admin
-}
-
 model Page {
   id    Int       @id @default(autoincrement())
   name  PageName
@@ -49,24 +42,16 @@ model Page {
 }
 
 model User {
-  id              String           @id @default(uuid())
-  name            String           @db.VarChar(24)
-  surname         String           @db.VarChar(35)
-  email           String           @unique @db.VarChar(255)
-  confirm         Boolean          @default(false)
-  online          Boolean          @default(true)
-  role            Role
-  password        String           @db.VarChar(64)
-  salt            String           @db.VarChar(32)
-  updated         DateTime         @default(now())
-  created         DateTime         @default(now())
-  RestoreLink     RestoreLink[]
-  ConfirmLink     ConfirmLink[]
-  ProjectWorker   Project[]        @relation("Worker")
-  ProjectEmployer Project[]        @relation("Employer")
-  File            File[]
-  ProjectEvent    ProjectEvent[]
-  ProjectMessage  ProjectMessage[]
+  id          String        @id @default(uuid())
+  name        String?       @db.VarChar(24)
+  email       String        @unique @db.VarChar(255)
+  confirm     Boolean       @default(false)
+  password    String        @db.VarChar(64)
+  salt        String        @db.VarChar(32)
+  updated     DateTime      @default(now())
+  created     DateTime      @default(now())
+  RestoreLink RestoreLink[]
+  ConfirmLink ConfirmLink[]
 }
 
 model RestoreLink {
@@ -81,105 +66,4 @@ model ConfirmLink {
   userId  String
   User    User     @relation(fields: [userId], references: [id])
   created DateTime @default(now())
-}
-
-model Project {
-  id                 String               @id @default(uuid())
-  title              String               @db.VarChar(255)
-  description        String               @db.Text
-  closed             Boolean              @default(false)
-  employerId         String?
-  Employer           User?                @relation("Employer", fields: [employerId], references: [id])
-  workerId           String?
-  Worker             User?                @relation("Worker", fields: [workerId], references: [id])
-  end                DateTime
-  stop               DateTime?
-  File               File[]
-  start              DateTime?
-  acceptEmployer     DateTime?
-  acceptWorker       DateTime?
-  updated            DateTime             @default(now())
-  created            DateTime             @default(now())
-  ProjectSubcategory ProjectSubcategory[]
-  ProjectEvent       ProjectEvent[]
-  ProjectMessage     ProjectMessage[]
-}
-
-enum EventName {
-  giveSide
-  acceptSide
-  startProject
-  stopProject
-  openDispute
-  adminMessage
-}
-
-model ProjectEvent {
-  id        Int       @id @default(autoincrement())
-  projectId String
-  Project   Project   @relation(fields: [projectId], references: [id])
-  sideId    String
-  event     EventName
-  content   String?
-  User      User      @relation(fields: [sideId], references: [id])
-  created   DateTime  @default(now())
-}
-
-model ProjectMessage {
-  id        Int      @id @default(autoincrement())
-  projectId String
-  Project   Project  @relation(fields: [projectId], references: [id])
-  content   String   @db.Text
-  fileId    String?
-  File      File?    @relation(fields: [fileId], references: [id])
-  userId    String
-  User      User     @relation(fields: [userId], references: [id])
-  created   DateTime @default(now())
-}
-
-model File {
-  id             String           @id @default(uuid())
-  filename       String
-  encoding       String
-  mimetype       String
-  fieldname      String
-  ext            String           @db.VarChar(5)
-  width          Int?
-  height         Int?
-  coeff          Float?
-  size           Int?
-  projectId      String?
-  userId         String
-  User           User             @relation(fields: [userId], references: [id])
-  Project        Project?         @relation(fields: [projectId], references: [id])
-  updated        DateTime         @default(now())
-  created        DateTime         @default(now())
-  ProjectMessage ProjectMessage[]
-}
-
-model Category {
-  id          Int           @id @default(autoincrement())
-  name        String
-  updated     DateTime      @default(now())
-  created     DateTime      @default(now())
-  Subcategory Subcategory[]
-}
-
-model ProjectSubcategory {
-  id            Int         @id @default(autoincrement())
-  projectId     String
-  Project       Project     @relation(fields: [projectId], references: [id])
-  subcategoryId Int
-  Subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
-  created       DateTime    @default(now())
-}
-
-model Subcategory {
-  id                 Int                  @id @default(autoincrement())
-  name               String
-  categoryId         Int
-  Category           Category             @relation(fields: [categoryId], references: [id])
-  updated            DateTime             @default(now())
-  created            DateTime             @default(now())
-  ProjectSubcategory ProjectSubcategory[]
 }

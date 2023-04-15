@@ -12,11 +12,6 @@ export type MiddleHandler = NextHandleFunction;
 
 export type Protocol = 'request' | 'ws' | 'orm';
 
-export interface ProcessMessage<T extends keyof typeof MessageType> {
-  msg: Omit<SendMessageArgs<T>, 'lang' | 'timeout'>;
-  protocol: Protocol;
-}
-
 export interface JWTFull {
   id: string;
   password: string;

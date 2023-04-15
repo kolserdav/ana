@@ -1,7 +1,5 @@
 import cluster from 'cluster';
-import HandleRequests from './services/handleRequests';
 import { log } from './utils/lib';
-import WS from './protocols/ws';
 import { ORM } from './services/orm';
 
 if (cluster.isPrimary) {
@@ -15,8 +13,6 @@ if (cluster.isPrimary) {
   });
 
   const worker = cluster.fork();
-  const ws = new WS(worker);
-  new HandleRequests({ worker, ws });
   new ORM(worker);
 } else {
   import('./http');

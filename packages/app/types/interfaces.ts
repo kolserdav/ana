@@ -1,17 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import {
-  Prisma,
-  PrismaClient,
-  Role,
-  User,
-  File,
-  Category,
-  Subcategory,
-  Project,
-  ProjectEvent,
-  ProjectMessage,
-} from '@prisma/client';
+import { Prisma, PrismaClient, User } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum Api {
@@ -20,16 +9,8 @@ export enum Api {
   postPageFindManyV1 = '/v1/page-get-fields',
   postUserCreateV1 = '/v1/user-create',
   getUserFindFirst = '/v1/user-find-first',
-  postFileUpload = '/v1/file-upload',
-  deleteFileDelete = '/v1/file-delete',
-  getFileFindMany = '/v1/file-find-many',
-  categoryFindMany = '/v1/category-find-many',
-  projectCreate = '/v1/project-create',
-  projectFindMany = '/v1/project-find-many',
-  projectFindFirst = '/v1/project-find-first',
-  projectGive = '/v1/project-give',
-  postProjectMessage = '/v1/post-project-message',
-  projectMessageFindMany = '/v1/project-messsage-find-many',
+  postUserLogin = '/v1/user-login',
+  getCheckEmail = '/v1/check-email',
 }
 
 // eslint-disable-next-line no-shadow
@@ -57,56 +38,6 @@ export const PREVIEW_IMAGE_WIDTH = 320;
 export const IMAGE_EXTS = '.avif, .jpg, .jpeg, .gif, .png, .webp';
 export const MAX_BODY_MB = 5;
 
-// eslint-disable-next-line no-shadow
-export enum MessageType {
-  // Test
-  TEST = 'TEST',
-  // Database
-  DB_COMMAND = 'DB_COMMAND',
-  DB_RESULT = 'DB_RESULT',
-  // WebSocket
-  SET_CONNECTION_ID = 'SET_CONNECTION_ID',
-  GET_CONNECTION_ID = 'GET_CONNECTION_ID',
-  SET_ERROR = 'SET_ERROR',
-  GET_USER_CREATE = 'GET_USER_CREATE',
-  SET_USER_CREATE = 'SET_USER_CREATE',
-  GET_USER_CHECK_EMAIL = 'GET_USER_CHECK_EMAIL',
-  SET_USER_CHECK_EMAIL = 'SET_USER_CHECK_EMAIL',
-  GET_USER_LOGIN = 'GET_USER_LOGIN',
-  SET_USER_LOGIN = 'SET_USER_LOGIN',
-  GET_FORGOT_PASSWORD = 'GET_FORGOT_PASSWORD',
-  SET_FORGOT_PASSWORD = 'SET_FORGOT_PASSWORD',
-  GET_CHECK_RESTORE_KEY = 'GET_CHECK_RESTORE_KEY',
-  SET_CHECK_RESTORE_KEY = 'SET_CHECK_RESTORE_KEY',
-  GET_RESTORE_PASSWORD = 'GET_RESTORE_PASSWORD',
-  SET_RESTORE_PASSWORD = 'SET_RESTORE_PASSWORD',
-  GET_CONFIRM_EMAIL = 'GET_CONFIRM_EMAIL',
-  SET_CONFIRM_EMAIL = 'SET_CONFIRM_EMAIL',
-  // HTTP
-  AUTH = 'AUTH',
-  GET_USER_FIND_FIRST = 'GET_USER_FIND_FIRST',
-  SET_USER_FIND_FIRST = 'SET_USER_FIND_FIRST',
-  GET_FILE_UPLOAD = 'GET_FILE_UPLOAD',
-  SET_FILE_UPLOAD = 'SET_FILE_UPLOAD',
-  GET_FILE_FIND_MANY = 'GET_FILE_FIND_MANY',
-  SET_FILE_FIND_MANY = 'SET_FILE_FIND_MANY',
-  GET_FILE_DELETE = 'GET_FILE_DELETE',
-  SET_FILE_DELETE = 'SET_FILE_DELETE',
-  SET_CATEGORY_FIND_MANY = 'SET_CATEGORY_FIND_MANY',
-  GET_PROJECT_CREATE = 'GET_PROJECT_CREATE',
-  SET_PROJECT_CREATE = 'SET_PROJECT_CREATE',
-  GET_PROJECT_FIND_MANY = 'GET_PROJECT_FIND_MANY',
-  SET_PROJECT_FIND_MANY = 'SET_PROJECT_FIND_MANY',
-  GET_PROJECT_FIND_FIRST = 'GET_PROJECT_FIND_FIRST',
-  SET_PROJECT_FIND_FIRST = 'SET_PROJECT_FIND_FIRST',
-  GET_GIVE_PROJECT = 'GET_GIVE_PROJECT',
-  SET_GIVE_PROJECT = 'SET_GIVE_PROJECT',
-  GET_POST_PROJECT_MESSAGE = 'GET_POST_PROJECT_MESSAGE',
-  SET_POST_PROJECT_MESSAGE = 'SET_POST_PROJECT_MESSAGE',
-  GET_PROJECT_MESSAGE_FIND_MANY = 'GET_PROJECT_MESSAGE_FIND_MANY',
-  SET_PROJECT_MESSAGE_FIND_MANY = 'SET_PROJECT_MESSAGE_FIND_MANY',
-}
-
 export interface RequestContext {
   lang: LocaleValue;
   timeout: number;
@@ -122,7 +53,7 @@ export interface Result<T> {
   status: Status;
   message: string;
   data: T;
-  code: number;
+  code?: number;
   stdErrMessage?: string;
   _model?: keyof PrismaClient;
   _command?: Prisma.PrismaAction;
@@ -140,45 +71,30 @@ export interface ManyResult<T> {
 
 export type DBResult<T> = Omit<Result<T>, 'message'>;
 
-export interface ProjectCreateBody {
-  title: string;
-  description: string;
-  endDate: string;
-  files: string[];
-  subcategories: number[];
-}
-
-export interface ProjectFindFirstQuery {
-  id: string;
-}
-
-export interface ProjectPostMessageBody {
-  projectId: string;
-  content: string;
-  fileId?: string;
-}
-
-export interface ProjectGiveBody {
-  id: string;
-}
-
-export interface ProjectMessageFindManyQuery {
-  projectId: string;
-}
-
-export interface FileDeleteBody {
-  fileId: string;
-}
-
 export type FullUserName = { name: string; surname: string };
 
-export type ProjectFull = Project & {
-  File: File[];
-  ProjectEvent: ProjectEvent[];
-  Employer: FullUserName | null;
-  Worker: FullUserName | null;
-};
-export type ProjectMessageFull = ProjectMessage & { File: File | null };
+export interface UserLoginBody {
+  email: string;
+  password: string;
+}
+
+export type UserCleanResult = Omit<User, 'password' | 'salt'>;
+
+export interface UserLoginResult {
+  token: string;
+  userId: string;
+}
+
+export interface CheckEmailQuery {
+  email: string;
+}
+export type CheckEmailResult = boolean;
+
+export interface UserCreateBody {
+  email: string;
+  password: string;
+  name?: string;
+}
 
 export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
   ? { ok: 'yes' | 'no' }
@@ -202,17 +118,6 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
       message: string;
       status: Status;
       httpCode: number;
-    }
-  : T extends MessageType.GET_USER_CHECK_EMAIL
-  ? {
-      email: string;
-    }
-  : T extends MessageType.SET_USER_CHECK_EMAIL
-  ? boolean
-  : T extends MessageType.GET_USER_LOGIN
-  ? {
-      email: string;
-      password: string;
     }
   : T extends MessageType.SET_USER_LOGIN
   ? {
@@ -251,69 +156,12 @@ export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageTy
   ? {
       message: string;
     }
-  : // HTTP
-  T extends MessageType.GET_USER_FIND_FIRST
-  ? Prisma.UserFindFirstArgs
-  : T extends MessageType.SET_USER_FIND_FIRST
-  ? Omit<User, 'password' | 'salt'>
-  : T extends MessageType.GET_FILE_UPLOAD
-  ? {
-      filePath: string;
-      file: File;
-    }
-  : T extends MessageType.SET_FILE_UPLOAD
-  ? null
-  : T extends MessageType.GET_FILE_FIND_MANY
-  ? Prisma.FileFindManyArgs
-  : T extends MessageType.SET_FILE_FIND_MANY
-  ? File[]
-  : T extends MessageType.GET_FILE_DELETE
-  ? Prisma.FileDeleteArgs
-  : T extends MessageType.SET_FILE_DELETE
-  ? null
-  : T extends MessageType.SET_CATEGORY_FIND_MANY
-  ? (Category & { Subcategory: Subcategory[] })[]
-  : T extends MessageType.GET_PROJECT_CREATE
-  ? ProjectCreateBody
-  : T extends MessageType.SET_PROJECT_CREATE
-  ? Project
-  : T extends MessageType.GET_PROJECT_FIND_MANY
-  ? null
-  : T extends MessageType.SET_PROJECT_FIND_MANY
-  ? ManyResult<Project & { File: { id: string }[] }>
-  : T extends MessageType.GET_PROJECT_FIND_FIRST
-  ? ProjectFindFirstQuery
-  : T extends MessageType.SET_PROJECT_FIND_FIRST
-  ? ProjectFull
-  : T extends MessageType.GET_GIVE_PROJECT
-  ? ProjectGiveBody
-  : T extends MessageType.SET_GIVE_PROJECT
-  ? ProjectFull
-  : T extends MessageType.GET_POST_PROJECT_MESSAGE
-  ? ProjectPostMessageBody
-  : T extends MessageType.SET_POST_PROJECT_MESSAGE
-  ? ProjectMessageFull
-  : T extends MessageType.GET_PROJECT_MESSAGE_FIND_MANY
-  ? ProjectMessageFindManyQuery
-  : T extends MessageType.SET_PROJECT_MESSAGE_FIND_MANY
-  ? ManyResult<ProjectMessageFull>
   : unknown;
 
 export interface Tab {
   id: number;
-  value: Role;
   title: string;
   content: string;
-}
-
-export interface SendMessageArgs<T extends keyof typeof MessageType> extends RequestContext {
-  type: T;
-  id: string;
-  data: ArgsSubset<T>;
-  /**
-   * Required in http request handler
-   */
-  connId?: string;
 }
 
 export interface Locale {

@@ -7,7 +7,6 @@ import {
   LOCALE_DEFAULT,
   Locale,
   MessageType,
-  SendMessageArgs,
   PAGE_RESTORE_PASSWORD_CALLBACK,
   EMAIL_QS,
   KEY_QS,
@@ -22,38 +21,38 @@ import {
 } from '../utils/constants';
 import { CookieName, getCookie, getLangCookie, setCookie } from '../utils/cookies';
 import { awaitResponse, checkRouterPath, log } from '../utils/lib';
-import WS from '../utils/ws';
 import { checkName, checkPasswordError } from './Login.lib';
+import Request from '../utils/request';
+
+const request = new Request();
 
 export const useEmailInput = ({
   locale,
-  connId,
-  ws,
+  isSignUp,
 }: {
   locale: Locale['app']['login'];
-  connId: string;
-  ws: WS;
+  isSignUp: boolean;
 }) => {
   const [emailError, setEmailError] = useState<string>('');
   const [emailSuccess, setEmailSuccess] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
+  const [emailRegistered, setEmailRegistered] = useState<boolean>(false);
 
-  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeEmail = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
     if (value.length < EMAIL_MAX_LENGTH) {
       const check = checkEmail(value);
       if (check) {
-        ws.sendMessage({
-          type: MessageType.GET_USER_CHECK_EMAIL,
-          id: connId,
-          timeout: new Date().getTime(),
-          lang: getCookie(CookieName.lang) || LOCALE_DEFAULT,
-          data: {
-            email: value,
-          },
-        });
+        const checkRes = await request.checkEmail({ email });
+        if (isSignUp && checkRes.data) {
+          setEmailError(locale.emailIsRegistered);
+          setEmailSuccess(false);
+        } else if (!isSignUp && !checkRes.data) {
+          setEmailError(locale.emailIsNotRegistered);
+          setEmailSuccess(false);
+        }
       }
       setEmailSuccess(check);
       if (emailError) {
@@ -82,6 +81,7 @@ export const useEmailInput = ({
     emailSuccess,
     setEmail,
     setEmailSuccess,
+    emailRegistered,
   };
 };
 
@@ -308,7 +308,6 @@ export const useMessages = ({
   setEmailSuccess,
   setLoad,
   onClickLoginButton,
-  ws,
   locale,
   isSignUp,
   cleanAllFields,
@@ -326,7 +325,6 @@ export const useMessages = ({
   setButtonError: React.Dispatch<React.SetStateAction<string>>;
   setPageError: React.Dispatch<React.SetStateAction<string>>;
   onClickLoginButton: () => void;
-  ws: WS;
   locale: Locale['app']['login'];
   isSignUp: boolean;
   cleanAllFields: () => void;
@@ -337,33 +335,12 @@ export const useMessages = ({
    * Connect to WS
    */
   useEffect(() => {
-    if (!ws.connection) {
-      return;
-    }
-
-    const setUserLogin = ({
-      data: { token, userId },
-    }: SendMessageArgs<MessageType.SET_USER_LOGIN>) => {
-      setCookie(CookieName._utoken, token);
-      setCookie(CookieName._uuid, userId);
-      cleanAllFields();
-      const { userRenew } = storeUserRenew.getState();
-      storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
-      log('info', locale.successLogin, { token }, !isSignUp);
-    };
-
     const setError = async ({
       data: { status, message, httpCode, type },
       timeout,
     }: SendMessageArgs<MessageType.SET_ERROR>) => {
       await awaitResponse(timeout);
       switch (type) {
-        case MessageType.GET_USER_LOGIN:
-          if (httpCode === 401) {
-            setPasswordError(message);
-          }
-          setButtonError(message);
-          break;
         case MessageType.GET_CHECK_RESTORE_KEY:
           setPageError(message);
           break;
@@ -379,32 +356,6 @@ export const useMessages = ({
       cleanAllFields();
     };
 
-    const setUserCreate = ({ id, lang }: SendMessageArgs<MessageType.SET_USER_CREATE>) => {
-      setTimeout(() => {
-        ws.sendMessage({
-          id,
-          type: MessageType.GET_USER_LOGIN,
-          lang,
-          timeout: new Date().getTime(),
-          data: {
-            email,
-            password,
-          },
-        });
-      }, 1000);
-      log('info', locale.successRegistration, '', true);
-    };
-
-    const setUserCheckEmail = ({ data }: SendMessageArgs<MessageType.SET_USER_CHECK_EMAIL>) => {
-      if (isSignUp && data) {
-        setEmailError(locale.emailIsRegistered);
-        setEmailSuccess(false);
-      } else if (!isSignUp && !data) {
-        setEmailError(locale.emailIsNotRegistered);
-        setEmailSuccess(false);
-      }
-    };
-
     const setRestorePassword = (_: SendMessageArgs<MessageType.SET_RESTORE_PASSWORD>) => {
       onClickLoginButton();
     };
@@ -418,19 +369,6 @@ export const useMessages = ({
       }
       const { type, id, timeout } = rawMessage;
       switch (type) {
-        case MessageType.SET_CONNECTION_ID:
-          setConnId(id);
-          setCookie(CookieName._uuid, id);
-          break;
-        case MessageType.SET_USER_CREATE:
-          setUserCreate(rawMessage);
-          break;
-        case MessageType.SET_USER_LOGIN:
-          setUserLogin(rawMessage);
-          break;
-        case MessageType.SET_USER_CHECK_EMAIL:
-          setUserCheckEmail(rawMessage);
-          break;
         case MessageType.SET_ERROR:
           setError(rawMessage);
           break;
@@ -450,7 +388,6 @@ export const useMessages = ({
       setLoad(false);
     };
   }, [
-    ws,
     setConnId,
     setLoad,
     setButtonError,
@@ -493,7 +430,8 @@ export const useButton = ({
   setEmail,
   fieldMustBeNotEmpty,
   eliminateRemarks,
-  ws,
+  cleanAllFields,
+  isSignUp,
 }: {
   connId: string;
   name: string;
@@ -516,11 +454,12 @@ export const useButton = ({
   setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  cleanAllFields: () => void;
+  isSignUp: boolean;
   tabSelected: boolean;
   tabActive: number;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
-  ws: WS;
 }) => {
   const [buttonError, setButtonError] = useState<string>('');
   const [pageError, setPageError] = useState<string>('');
@@ -628,7 +567,7 @@ export const useButton = ({
     return error;
   };
 
-  const onClickLoginButton = () => {
+  const onClickLoginButton = async () => {
     const error = checkLoginFields();
     if (error) {
       return;
@@ -637,16 +576,20 @@ export const useButton = ({
       setButtonError('');
     }
     setLoad(true);
-    ws.sendMessage({
-      type: MessageType.GET_USER_LOGIN,
-      id: connId,
-      timeout: new Date().getTime(),
-      lang: getLangCookie(),
-      data: {
-        email,
-        password,
-      },
-    });
+    const user = await request.userLogin({ email, password });
+    if (user.status !== 'info' || !user.data) {
+      if (user.code === 401) {
+        setPasswordError(user.message);
+      }
+      setButtonError(user.message);
+      return;
+    }
+    setCookie(CookieName._utoken, user.data.token);
+    setCookie(CookieName._uuid, user.data.userId);
+    cleanAllFields();
+    const { userRenew } = storeUserRenew.getState();
+    storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
+    log('info', locale.successLogin, { token: user.data.token }, !isSignUp);
   };
 
   const onClickRestoreButton = () => {
@@ -692,7 +635,7 @@ export const useButton = ({
     });
   };
 
-  const onClickRegisterButton = () => {
+  const onClickRegisterButton = async () => {
     const error = checkRegisterFields();
     if (error) {
       return;
@@ -701,19 +644,17 @@ export const useButton = ({
       setButtonError('');
     }
     setLoad(true);
-    ws.sendMessage({
-      type: MessageType.GET_USER_CREATE,
-      id: connId,
-      lang: getLangCookie(),
-      timeout: new Date().getTime(),
-      data: {
-        name,
-        email,
-        password,
-        surname,
-        role,
-      },
-    });
+
+    const createRes = await request.userCreate({ name, password, email });
+    setLoad(false);
+    if (createRes.status !== 'info' || !createRes.data) {
+      log('info', createRes.message, '', true);
+      return;
+    }
+    log('info', locale.successRegistration, '', true);
+    setTimeout(() => {
+      onClickLoginButton();
+    }, 1000);
   };
 
   /**
@@ -736,7 +677,7 @@ export const useButton = ({
         data: { email: e, key: k },
       });
     }
-  }, [e, k, connId, ws]);
+  }, [e, k, connId]);
 
   return {
     onClickLoginButton,

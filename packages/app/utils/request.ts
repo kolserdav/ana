@@ -6,17 +6,15 @@ import {
   Locale,
   Result,
   USER_ID_HEADER,
-  SendMessageArgs,
-  MessageType,
   TIMEOUT_HEADER,
   AUTHORIZATION_HEADER,
   APPLICATION_JSON,
-  FileDeleteBody,
-  ProjectCreateBody,
-  ProjectGiveBody,
-  ProjectFindFirstQuery,
-  ProjectPostMessageBody,
-  ProjectMessageFindManyQuery,
+  UserCleanResult,
+  CheckEmailQuery,
+  CheckEmailResult,
+  UserLoginBody,
+  UserLoginResult,
+  UserCreateBody,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -74,22 +72,16 @@ class Request {
         .catch((err) => {
           log('error', 'Request error', err);
           resolve({
-            type: MessageType.SET_ERROR,
-            id,
-            lang: 'ru',
-            timeout: new Date().getTime(),
-            data: {
-              message: 'Internet error',
-              httpCode: 503,
-              status: 'error',
-            },
+            status: 'error',
+            message: 'No internet',
+            data: null,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as SendMessageArgs<MessageType.SET_ERROR>);
+          } as Result<any>);
         });
     });
   }
 
-  public async test(id: string): Promise<SendMessageArgs<MessageType.TEST>> {
+  public async test(id: string): Promise<any> {
     return this.send({ url: Api.testV1, method: 'GET', id });
   }
 
@@ -103,9 +95,7 @@ class Request {
     return this.send({ url: `${Api.getLocaleV1}?field=${field}`, locale, method: 'GET' });
   }
 
-  public async getUser(): Promise<
-    SendMessageArgs<MessageType.SET_USER_FIND_FIRST> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
+  public async getUser(): Promise<Result<UserCleanResult>> {
     return this.send({ url: Api.getUserFindFirst, method: 'GET' });
   }
 
@@ -117,114 +107,26 @@ class Request {
     return this.send({ url: Api.postPageFindManyV1, method: 'POST', body: args });
   }
 
-  public async fileUpload(
-    files: FormData
-  ): Promise<
-    SendMessageArgs<MessageType.SET_FILE_UPLOAD> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
+  public async checkEmail({ email }: CheckEmailQuery): Promise<Result<CheckEmailResult>> {
     return this.send({
-      url: Api.postFileUpload,
-      method: 'POST',
-      body: files,
-      contentType: null,
-    });
-  }
-
-  public async fileFindMany(): Promise<
-    SendMessageArgs<MessageType.SET_FILE_FIND_MANY> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
-    return this.send({
-      url: Api.getFileFindMany,
+      url: `${Api.getCheckEmail}?email=${email}`,
       method: 'GET',
     });
   }
 
-  public async fileDelete(
-    body: FileDeleteBody
-  ): Promise<
-    SendMessageArgs<MessageType.SET_FILE_DELETE> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
+  public async userLogin(body: UserLoginBody): Promise<Result<UserLoginResult | null>> {
     return this.send({
-      url: Api.deleteFileDelete,
-      method: 'DELETE',
-      body,
-    });
-  }
-
-  public async categoryFindMany(): Promise<
-    SendMessageArgs<MessageType.SET_CATEGORY_FIND_MANY> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
-    return this.send({
-      url: Api.categoryFindMany,
-      method: 'GET',
-    });
-  }
-
-  public async projectCreate(
-    body: ProjectCreateBody
-  ): Promise<
-    SendMessageArgs<MessageType.SET_PROJECT_CREATE> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
-    return this.send({
-      url: Api.projectCreate,
+      url: Api.postUserLogin,
       method: 'POST',
       body,
     });
   }
 
-  public async projectFindMany(): Promise<
-    SendMessageArgs<MessageType.SET_PROJECT_FIND_MANY> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
+  public async userCreate(body: UserCreateBody): Promise<Result<UserCleanResult | null>> {
     return this.send({
-      url: Api.projectFindMany,
-      method: 'GET',
-    });
-  }
-
-  public async projectFindFirst({
-    id,
-  }: ProjectFindFirstQuery): Promise<
-    SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
-    return this.send({
-      url: `${Api.projectFindFirst}?id=${id}`,
-      method: 'GET',
-    });
-  }
-
-  public async projectGive(
-    body: ProjectGiveBody
-  ): Promise<
-    SendMessageArgs<MessageType.SET_PROJECT_FIND_FIRST> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
-    return this.send({
-      url: Api.projectGive,
-      method: 'PUT',
-      body,
-    });
-  }
-
-  public async postProjectMessage(
-    body: ProjectPostMessageBody
-  ): Promise<
-    SendMessageArgs<MessageType.SET_POST_PROJECT_MESSAGE> | SendMessageArgs<MessageType.SET_ERROR>
-  > {
-    return this.send({
-      url: Api.postProjectMessage,
+      url: Api.postUserCreateV1,
       method: 'POST',
       body,
-    });
-  }
-
-  public async projectMessageFindMany({
-    projectId,
-  }: ProjectMessageFindManyQuery): Promise<
-    | SendMessageArgs<MessageType.SET_PROJECT_MESSAGE_FIND_MANY>
-    | SendMessageArgs<MessageType.SET_ERROR>
-  > {
-    return this.send({
-      url: `${Api.projectMessageFindMany}?projectId=${projectId}`,
-      method: 'GET',
     });
   }
 }

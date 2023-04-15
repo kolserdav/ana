@@ -7,9 +7,9 @@
     "watch": "tsc -p . -w",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc -p .",
-    "dev:worker": "nodemon dist/worker.js",
+    "translate": "libretranslate --host 192.168.0.3  --api-keys --req-limit 100 --require-api-key-secret --disable-web-ui --threads 4",
     "dev:server": "nodemon dist/index.js",
-    "start:dev": "concurrently \"npm run dev:server\" \"npm run dev:worker\"",
+    "start:dev": "concurrently \"npm run dev:server\" \"npm run translate\"",
     "start": "env-cmd node dist/index.js",
     "dev": "concurrently \"npm run watch\" \"npm run start:dev\""
   },

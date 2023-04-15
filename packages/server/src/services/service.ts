@@ -1,7 +1,5 @@
 import cluster, { Worker } from 'cluster';
 import EventEmitter from 'events';
-import { ProcessMessage } from '../types';
-import { MessageType } from '../types/interfaces';
 
 class Service extends EventEmitter {
   private readonly workerNotFound = 'Worker not found in Service';
@@ -17,9 +15,9 @@ class Service extends EventEmitter {
     this.worker = _worker;
   }
 
-  protected listenMasterMessages<T extends keyof typeof MessageType>(
+  protected listenMasterMessages(
     // eslint-disable-next-line no-unused-vars
-    cb: (data: ProcessMessage<T>) => void
+    cb: (data: any) => void
   ) {
     if (!process) {
       throw new Error(this.workerNotFound);
@@ -36,9 +34,9 @@ class Service extends EventEmitter {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  protected listenWorkerMessages<T extends keyof typeof MessageType>(
+  protected listenWorkerMessages(
     // eslint-disable-next-line no-unused-vars
-    cb: (args: ProcessMessage<T>) => void
+    cb: (args: any) => void
   ) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
@@ -48,15 +46,13 @@ class Service extends EventEmitter {
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handler = (data: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const _data: ProcessMessage<any> = data as any;
-      cb(_data);
+      cb(data);
     };
     const worker = this.worker.on('message', handler);
     return { worker, handler };
   }
 
-  public sendMessageToWorker<T extends keyof typeof MessageType>(data: ProcessMessage<T>) {
+  public sendMessageToWorker(data: any) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
     }
@@ -66,7 +62,7 @@ class Service extends EventEmitter {
     this.worker.send(data);
   }
 
-  protected sendMessageToMaster<T extends keyof typeof MessageType>(data: ProcessMessage<T>) {
+  protected sendMessageToMaster(data: any) {
     if (!process.send) {
       throw new Error(this.masterNotFound);
     }
