@@ -58,7 +58,7 @@ const checkRestoreKey: RequestHandler<
     };
   }
   const { created } = user.data.RestoreLink[0];
-  const diffsInHours = differenceInHours(new Date(), created);
+  const diffsInHours = differenceInHours(new Date(), new Date(created));
   if (diffsInHours >= RESTORE_LINK_TIMEOUT_IN_HOURS) {
     reply.type(APPLICATION_JSON).code(408);
     return {

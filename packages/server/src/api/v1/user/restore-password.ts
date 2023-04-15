@@ -99,7 +99,7 @@ const restorePassword: RequestHandler<
   reply.type(APPLICATION_JSON).code(201);
   return {
     status: 'info',
-    message: '',
+    message: locale.success,
     data: null,
   };
 };

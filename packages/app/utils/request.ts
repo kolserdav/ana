@@ -140,7 +140,7 @@ class Request {
 
   public async confirmEmail(body: ConfirmEmailBody): Promise<Result<ConfirmEmailResult | null>> {
     return this.send({
-      url: Api.postUserLogin,
+      url: Api.putConfirmEmail,
       method: 'PUT',
       body,
     });

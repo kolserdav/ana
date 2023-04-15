@@ -84,7 +84,7 @@ const forgotPassword: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(201);
   return {
-    status: 'error',
+    status: 'info',
     message: locale.emailIsSend,
     data: null,
   };

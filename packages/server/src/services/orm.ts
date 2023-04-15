@@ -116,7 +116,7 @@ export class ORM extends Service implements Database {
     return new Promise<any>((resolve) => {
       const { master, handler } = this.listenMasterMessages<Result<any>>(({ id: _id, msg }) => {
         if (id === _id) {
-          if (msg.data.status === this.errorStatus) {
+          if (msg.status === this.errorStatus) {
             log('error', 'Database request failed', { args });
           }
           master.removeListener('message', handler);

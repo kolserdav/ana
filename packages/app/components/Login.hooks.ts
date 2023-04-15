@@ -36,6 +36,7 @@ export const useEmailInput = ({
     } = e;
     if (value.length < EMAIL_MAX_LENGTH) {
       const check = checkEmail(value);
+      setEmail(value);
       if (check) {
         const checkRes = await request.checkEmail({ email: value });
         if (isSignUp && checkRes.data) {
@@ -44,13 +45,15 @@ export const useEmailInput = ({
         } else if (!isSignUp && !checkRes.data) {
           setEmailError(locale.emailIsNotRegistered);
           setEmailSuccess(false);
+        } else {
+          setEmailError('');
+          setEmailSuccess(true);
         }
       }
       setEmailSuccess(check);
       if (emailError) {
         setEmailError('');
       }
-      setEmail(value);
     }
   };
 
@@ -164,7 +167,9 @@ export const usePasswordInput = ({
         if (psErr === '' && isSignUp && passwordRepeat && passwordRepeat !== password) {
           setPasswordRepeatError(locale.passwordsDoNotMatch);
         } else {
-          setPasswordRepeatSuccess(true);
+          if (passwordRepeat) {
+            setPasswordRepeatSuccess(true);
+          }
           setPasswordSuccess(true);
         }
       }
@@ -284,6 +289,7 @@ export const useButton = ({
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
 }) => {
+  const router = useRouter();
   const [buttonError, setButtonError] = useState<string>('');
   const [pageError, setPageError] = useState<string>('');
   const [needClean, setNeedClean] = useState<boolean>(false);
@@ -411,6 +417,7 @@ export const useButton = ({
     }
     setLoad(true);
     const forgotRes = await request.forgotPassword({ email });
+    setLoad(false);
     log(forgotRes.status, forgotRes.message, {}, true);
     if (forgotRes.status === 'info') {
       setNeedClean(true);
@@ -431,9 +438,12 @@ export const useButton = ({
     setLoad(true);
     setEmail(e);
     const resRes = await request.restorePassword({ email: e, key: k, password });
+    setLoad(false);
     log(resRes.status, resRes.message, resRes, true);
     if (resRes.status === 'info') {
-      onClickLoginButton();
+      setTimeout(() => {
+        router.push(Pages.signIn);
+      }, 1000);
     }
   };
 
