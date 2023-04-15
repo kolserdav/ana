@@ -1,5 +1,6 @@
 import cluster, { Worker } from 'cluster';
 import EventEmitter from 'events';
+import { ProcessMessage } from '../types/interfaces';
 
 class Service extends EventEmitter {
   private readonly workerNotFound = 'Worker not found in Service';
@@ -15,9 +16,9 @@ class Service extends EventEmitter {
     this.worker = _worker;
   }
 
-  protected listenMasterMessages(
+  protected listenMasterMessages<T>(
     // eslint-disable-next-line no-unused-vars
-    cb: (data: any) => void
+    cb: (data: ProcessMessage<T>) => void
   ) {
     if (!process) {
       throw new Error(this.workerNotFound);
@@ -34,9 +35,9 @@ class Service extends EventEmitter {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  protected listenWorkerMessages(
+  protected listenWorkerMessages<T>(
     // eslint-disable-next-line no-unused-vars
-    cb: (args: any) => void
+    cb: (args: ProcessMessage<T>) => void
   ) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
@@ -52,7 +53,7 @@ class Service extends EventEmitter {
     return { worker, handler };
   }
 
-  public sendMessageToWorker(data: any) {
+  public sendMessageToWorker<T>(data: ProcessMessage<T>) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
     }
@@ -62,7 +63,7 @@ class Service extends EventEmitter {
     this.worker.send(data);
   }
 
-  protected sendMessageToMaster(data: any) {
+  protected sendMessageToMaster<T>(data: ProcessMessage<T>) {
     if (!process.send) {
       throw new Error(this.masterNotFound);
     }

@@ -4,8 +4,7 @@ import { v4 } from 'uuid';
 import Service from './service';
 import Database from '../database';
 import { checkIsFind, checkIsMany, log } from '../utils/lib';
-import { MessageType, SendMessageArgs, DBCommandProps } from '../types/interfaces';
-import { ProcessMessage } from '../types';
+import { DBCommandProps, Result } from '../types/interfaces';
 
 const prisma = new PrismaClient();
 
@@ -21,7 +20,7 @@ export class ORM extends Service implements Database {
     }
   }
 
-  public userFindFirstW: Database['userFindFirst'] = async (args) => {
+  public userFindFirst: Database['userFindFirst'] = async (args) => {
     return this.runFromWorker({
       args,
       model: 'user',
@@ -29,48 +28,8 @@ export class ORM extends Service implements Database {
     });
   };
 
-  public fileCreateW: Database['fileCreateW'] = async (args) => {
-    return this.runFromWorker({
-      args,
-      model: 'file',
-      command: 'create',
-    });
-  };
-
-  public fileUpdate: Database['fileUpdate'] = async (args) => {
-    return this.run({
-      args,
-      model: 'file',
-      command: 'update',
-    });
-  };
-
-  public fileDelete: Database['fileDelete'] = async (args) => {
-    return this.run({
-      args,
-      model: 'file',
-      command: 'delete',
-    });
-  };
-
-  public fileDeleteW: Database['fileDelete'] = async (args) => {
-    return this.runFromWorker({
-      args,
-      model: 'file',
-      command: 'delete',
-    });
-  };
-
-  public categoryFindManyW: Database['categoryFindManyW'] = async (args) => {
-    return this.runFromWorker({
-      args,
-      model: 'category',
-      command: 'findMany',
-    });
-  };
-
   public userCreate: Database['userCreate'] = async (args) => {
-    return this.run({
+    return this.runFromWorker({
       args,
       model: 'user',
       command: 'create',
@@ -78,38 +37,14 @@ export class ORM extends Service implements Database {
   };
 
   public userUpdate: Database['userUpdate'] = async (args) => {
-    return this.run({
+    return this.runFromWorker({
       args,
       model: 'user',
       command: 'update',
     });
   };
 
-  public userFindFirst: Database['userFindFirst'] = async (args) => {
-    return this.run({
-      args,
-      model: 'user',
-      command: 'findFirst',
-    });
-  };
-
-  public fileFindMany: Database['fileFindMany'] = async (args) => {
-    return this.run({
-      args,
-      model: 'file',
-      command: 'findMany',
-    });
-  };
-
-  public fileFindFirst: Database['fileFindFirst'] = async (args) => {
-    return this.run({
-      args,
-      model: 'file',
-      command: 'findFirst',
-    });
-  };
-
-  public pageFindManyW: Database['pageFindManyW'] = async (args) => {
+  public pageFindMany: Database['pageFindMany'] = async (args) => {
     return this.runFromWorker({
       args,
       model: 'page',
@@ -117,68 +52,14 @@ export class ORM extends Service implements Database {
     });
   };
 
-  public projectCreate: Database['projectCreate'] = async (args) => {
-    return this.run({
-      args,
-      model: 'project',
-      command: 'create',
-    });
-  };
-
-  public projectMessageCreate: Database['projectMessageCreate'] = async (args) => {
-    return this.run({
-      args,
-      model: 'projectMessage',
-      command: 'create',
-    });
-  };
-
-  public projectMessageFindMany: Database['projectMessageFindMany'] = async (args) => {
-    return this.run({
-      args,
-      model: 'projectMessage',
-      command: 'findMany',
-    });
-  };
-
-  public projectUpdate: Database['projectUpdate'] = async (args) => {
-    return this.run({
-      args,
-      model: 'project',
-      command: 'update',
-    });
-  };
-
-  public projectFindFirst: Database['projectFindFirst'] = async (args) => {
-    return this.run({
-      args,
-      model: 'project',
-      command: 'findFirst',
-    });
-  };
-
-  public projectFindMany: Database['projectFindMany'] = async (args) => {
-    return this.run({
-      args,
-      model: 'project',
-      command: 'findMany',
-    });
-  };
-
   private createServer() {
-    this.listenWorkerMessages<MessageType.DB_COMMAND>(async ({ protocol, msg }) => {
-      if (protocol === 'orm' && msg.type === MessageType.DB_COMMAND) {
-        const { data } = msg;
-        const result = await this.run({ ...data });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const _msg: ProcessMessage<MessageType.DB_RESULT>['msg'] = { ...msg } as any;
-        _msg.data = result;
-        _msg.type = MessageType.DB_RESULT;
-        this.sendMessageToWorker<MessageType.DB_RESULT>({
-          protocol,
-          msg: _msg,
-        });
-      }
+    this.listenWorkerMessages<DBCommandProps>(async ({ id, msg }) => {
+      const result = await this.run({ ...msg });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.sendMessageToWorker<Result<any>>({
+        id,
+        msg: result,
+      });
     });
   }
 
@@ -187,7 +68,7 @@ export class ORM extends Service implements Database {
     command,
     args,
   }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  SendMessageArgs<MessageType.DB_COMMAND>['data']): Promise<any> {
+  DBCommandProps): Promise<any> {
     const { skip, take, where } = args;
     let count: number | undefined;
 
@@ -233,8 +114,8 @@ export class ORM extends Service implements Database {
     const id = v4();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new Promise<any>((resolve) => {
-      const { master, handler } = this.listenMasterMessages<MessageType.DB_RESULT>(
-        ({ msg: { id: _id, data } }) => {
+      const { master, handler } = this.listenMasterMessages<Result<any>>(
+        ({ id: _id, msg: { data } }) => {
           if (id === _id) {
             if (data.status === this.errorStatus) {
               log('error', 'Database request failed', { args });
@@ -244,16 +125,12 @@ export class ORM extends Service implements Database {
           }
         }
       );
-      this.sendMessageToMaster<MessageType.DB_COMMAND>({
-        protocol: this.protocol,
+      this.sendMessageToMaster<DBCommandProps>({
+        id,
         msg: {
-          type: MessageType.DB_COMMAND,
-          id,
-          data: {
-            model,
-            command,
-            args,
-          },
+          model,
+          command,
+          args,
         },
       });
     });

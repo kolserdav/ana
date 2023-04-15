@@ -38,6 +38,11 @@ export const PREVIEW_IMAGE_WIDTH = 320;
 export const IMAGE_EXTS = '.avif, .jpg, .jpeg, .gif, .png, .webp';
 export const MAX_BODY_MB = 5;
 
+export interface ProcessMessage<T> {
+  id: string;
+  msg: T;
+}
+
 export interface RequestContext {
   lang: LocaleValue;
   timeout: number;
@@ -93,70 +98,7 @@ export type CheckEmailResult = boolean;
 export interface UserCreateBody {
   email: string;
   password: string;
-  name?: string;
 }
-
-export type ArgsSubset<T extends keyof typeof MessageType> = T extends MessageType.TEST
-  ? { ok: 'yes' | 'no' }
-  : // Database
-  T extends MessageType.DB_COMMAND
-  ? DBCommandProps
-  : T extends MessageType.DB_RESULT
-  ? DBResult<any>
-  : // WebSocket
-  T extends MessageType.SET_CONNECTION_ID
-  ? null | string
-  : T extends MessageType.GET_CONNECTION_ID
-  ? { newId: string }
-  : T extends MessageType.GET_USER_CREATE
-  ? Omit<Prisma.UserCreateArgs['data'], 'salt'>
-  : T extends MessageType.SET_USER_CREATE
-  ? User | null
-  : T extends MessageType.SET_ERROR
-  ? {
-      type: keyof typeof MessageType;
-      message: string;
-      status: Status;
-      httpCode: number;
-    }
-  : T extends MessageType.SET_USER_LOGIN
-  ? {
-      token: string;
-      userId: string;
-    }
-  : T extends MessageType.GET_FORGOT_PASSWORD
-  ? {
-      email: string;
-    }
-  : T extends MessageType.SET_FORGOT_PASSWORD
-  ? {
-      message: string;
-    }
-  : T extends MessageType.GET_CHECK_RESTORE_KEY
-  ? {
-      email: string;
-      key: string;
-    }
-  : T extends MessageType.SET_CHECK_RESTORE_KEY
-  ? null
-  : T extends MessageType.GET_RESTORE_PASSWORD
-  ? {
-      email: string;
-      key: string;
-      password: string;
-    }
-  : T extends MessageType.SET_RESTORE_PASSWORD
-  ? null
-  : T extends MessageType.GET_CONFIRM_EMAIL
-  ? {
-      email: string;
-      key: string;
-    }
-  : T extends MessageType.SET_CONFIRM_EMAIL
-  ? {
-      message: string;
-    }
-  : unknown;
 
 export interface Tab {
   id: number;

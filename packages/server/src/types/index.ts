@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import type { RequestGenericInterface, FastifyRequest, FastifyReply } from 'fastify';
 import type { NextHandleFunction } from '@fastify/middie';
-import { LocaleValue, MessageType, SendMessageArgs } from './interfaces';
+import { LocaleValue } from './interfaces';
 
 export type RequestHandler<T extends RequestGenericInterface, R> = (
   req: FastifyRequest<T>,
