@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
+import { TRANSLATE_DELAY } from '../utils/constants';
 
 const request = new Request();
 
@@ -39,6 +40,10 @@ export const useLanguages = () => {
   return { learnLang, nativeLang, langs, changeLangWrapper };
 };
 
+let timeout = setTimeout(() => {
+  /**/
+}, 0);
+
 export const useTranslate = ({
   learnLang,
   nativeLang,
@@ -49,14 +54,17 @@ export const useTranslate = ({
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
   const [reTranslate, setRetranslate] = useState<string>('');
+  const [startDelay, setStartDelay] = useState<number>(0);
 
   /**
    * Tranlate
    */
   useEffect(() => {
+    clearTimeout(timeout);
     if (!text || !learnLang || !nativeLang) {
       return;
     }
+
     const runTranslate = async (q: string) => {
       const data = await request.translate({
         q,
@@ -67,8 +75,10 @@ export const useTranslate = ({
       if (data.status === 'error' || !data.translatedText) {
         if (data.message) {
           log('error', data.message, data, true);
+        } else if (data.error) {
+          log('error', data.error, data, true);
         } else {
-          log('error', data.message, data);
+          log('error', 'Unexpected response', data);
         }
         return;
       }
@@ -77,13 +87,13 @@ export const useTranslate = ({
       setTranslate(data.translatedText);
     };
 
-    const last = text[text.length - 1];
-    if (/(\s|[!.?:,])/g.test(last)) {
+    timeout = setTimeout(() => {
       runTranslate(text);
-    }
-  }, [text, learnLang, nativeLang]);
+    }, TRANSLATE_DELAY);
+  }, [text, learnLang, nativeLang, startDelay]);
 
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    setStartDelay(new Date().getTime());
     const {
       target: { value },
     } = e as any;
@@ -107,8 +117,10 @@ export const useTranslate = ({
       if (data.status === 'error' || !data.translatedText) {
         if (data.message) {
           log('error', data.message, data, true);
+        } else if (data.error) {
+          log('error', data.error, data, true);
         } else {
-          log('error', data.message, data);
+          log('error', 'Unexpected respose', data);
         }
         return;
       }

@@ -71,3 +71,5 @@ export const MENU_TRANSITION = 300;
 export const NO_SCROLL_CLASS = 'no__scroll';
 // Deps $html-editor-height
 export const HTML_EDITOR_HEIGHT = 300;
+
+export const TRANSLATE_DELAY = 1000;

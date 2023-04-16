@@ -42,6 +42,7 @@ export type HTMLEditorOnChange = (e: string) => void;
 
 export interface TranslateResult extends Result<null> {
   translatedText?: string;
+  error?: string;
 }
 
 export interface ServerLanguage {
