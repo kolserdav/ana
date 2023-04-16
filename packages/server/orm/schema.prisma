@@ -14,12 +14,7 @@ enum PageName {
   restorePassword
   changePassword
   confirmEmail
-  meEmployer
-  meEmployerCreateProject
-  meWorker
-  meWorkerCreateProject
-  meEmployerProjects
-  meWorkerProjects
+  translate
 }
 
 enum PageField {

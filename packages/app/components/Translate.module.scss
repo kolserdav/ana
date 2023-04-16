@@ -1,0 +1,41 @@
+@import '../styles/constants.scss';
+
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .container {
+    position: relative;
+    width: 100%;
+    max-width: $translate-container-max;
+    margin: 1rem;
+
+    .title {
+      text-align: center;
+    }
+
+    .textarea {
+      position: relative;
+      width: 100%;
+      margin-top: 2rem;
+    }
+
+    .selectors {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .native_res {
+      margin: 1rem;
+    }
+
+    .learn_res {
+      margin: 1rem;
+    }
+  }
+}

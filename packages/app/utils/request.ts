@@ -27,6 +27,7 @@ import {
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
 import { log } from './lib';
+import { ServerLanguage, TranslateResult } from '../types';
 
 class Request {
   protocol: string;
@@ -76,7 +77,7 @@ class Request {
           resolve(d.json());
         })
         .catch((err) => {
-          log('error', 'Request error', err);
+          log('error', 'Request error', { err, SERVER, url });
           resolve({
             status: 'error',
             message: 'No internet',
@@ -171,6 +172,34 @@ class Request {
       url: Api.postForgotPassword,
       method: 'POST',
       body,
+    });
+  }
+
+  public async translate({
+    q,
+    source,
+    target,
+  }: {
+    q: string;
+    source: string;
+    target: string;
+  }): Promise<TranslateResult> {
+    return this.send({
+      url: '/libre/translate',
+      method: 'POST',
+      body: {
+        q,
+        source,
+        target,
+        format: 'text',
+      },
+    });
+  }
+
+  public async getLanguages(): Promise<ServerLanguage[]> {
+    return this.send({
+      url: '/libre/languages',
+      method: 'GET',
     });
   }
 }

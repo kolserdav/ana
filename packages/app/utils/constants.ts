@@ -16,6 +16,8 @@ export enum Pages {
   signUp = '/account/sign-up',
   // eslint-disable-next-line no-unused-vars
   restorePassword = '/account/restore-password',
+  // eslint-disable-next-line no-unused-vars
+  translate = '/translate',
 }
 
 const now = new Date();

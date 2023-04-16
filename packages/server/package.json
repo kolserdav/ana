@@ -7,7 +7,7 @@
     "watch": "tsc -p . -w",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc -p .",
-    "translate": "libretranslate --host 192.168.0.3  --api-keys --req-limit 100 --require-api-key-secret --disable-web-ui --threads 4",
+    "translate": "libretranslate --host 192.168.0.3  --req-limit 0 --disable-web-ui --threads 4",
     "dev:server": "nodemon dist/index.js",
     "start:dev": "concurrently \"npm run dev:server\" \"npm run translate\"",
     "start": "env-cmd node dist/index.js",
@@ -17,6 +17,7 @@
   "author": "kolserdav",
   "license": "ISC",
   "dependencies": {
+    "@fastify/http-proxy": "^9.0.0",
     "@fastify/middie": "^8.1.0",
     "@fastify/multipart": "^7.4.1",
     "amqplib": "^0.10.3",

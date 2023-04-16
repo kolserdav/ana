@@ -58,6 +58,13 @@ function AppBar({
                 </div>
               </Link>
             )}
+            {!checkRouterPath(router.asPath, Pages.translate) && (
+              <Link noWrap theme={theme} href={Pages.translate} className={s.item}>
+                <div className={s.menu__item}>
+                  <div style={{ color: theme.text }}>{locale.translate}</div>
+                </div>
+              </Link>
+            )}
           </div>
         )}
         <Menu theme={theme}>
@@ -65,6 +72,13 @@ function AppBar({
             <Link fullWidth withoutHover theme={theme} href={Pages.home}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.homePage}</div>
+              </div>
+            </Link>
+          )}
+          {!checkRouterPath(router.asPath, Pages.translate) && (
+            <Link withoutHover fullWidth theme={theme} href={Pages.translate}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.translate}</div>
               </div>
             </Link>
           )}

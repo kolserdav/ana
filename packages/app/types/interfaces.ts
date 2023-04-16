@@ -15,6 +15,7 @@ export enum Api {
   postForgotPassword = '/v1/forgot-password',
   postUserLogin = '/v1/user-login',
   getCheckEmail = '/v1/check-email',
+  getLanguages = '/v1/languages',
 }
 
 // eslint-disable-next-line no-shadow
@@ -150,11 +151,7 @@ export interface Locale {
     successConfirmEmail: string;
     forbidden: string;
     unauthorized: string;
-    someFilesNotSaved: string;
     notImplement: string;
-    unacceptedImage: string;
-    maxFileSize: string;
-    projectCreateButFilesNotSaved: string;
     sendToSupport: string;
   };
   app: {
@@ -198,33 +195,11 @@ export interface Locale {
       homePage: string;
       login: string;
       logout: string;
-      personalArea: string;
-      createProject: string;
+      translate: string;
     };
     confirmEmail: {
       title: string;
       paramsNotFound: string;
-    };
-    me: {
-      myProjects: string;
-      projectsIsMissing: string;
-      files: string;
-    };
-    createProject: {
-      createProject: string;
-      projectTitle: string;
-      projectDescription: string;
-      projectDesPlaceholder: string;
-      projectActualFor: string;
-      projectAddFilesDesc: string;
-      projectDragDropFiles: string;
-      projectDateTooltip: string;
-      withoutCategory: string;
-      maxFileSizeIs: string;
-      categoryHelp: string;
-      categoryLabel: string;
-      buttonCreate: string;
-      projectCreated: string;
     };
     common: {
       formDesc: string;
@@ -233,14 +208,11 @@ export interface Locale {
       maxFileSize: string;
       fieldMustBeNotEmpty: string;
       eliminateRemarks: string;
-      projectAddFiles: string;
     };
-    projectStatus: {
-      waitEmployer: string;
-      waitWorker: string;
-      agreementOfConditions: string;
-      inWork: string;
-      finished: string;
+    translate: {
+      title: string;
+      nativeLang: string;
+      learnLang: string;
     };
   };
 }

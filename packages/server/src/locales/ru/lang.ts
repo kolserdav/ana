@@ -15,11 +15,7 @@ const lang: Locale = {
     successConfirmEmail: 'Данная почта успешно подтверждена',
     forbidden: 'Доступ запрещен',
     unauthorized: 'Недостаточно прав',
-    someFilesNotSaved: 'Некоторые файлы не могут быть сохранены',
     notImplement: 'Устаревшая версия запроса',
-    unacceptedImage: 'Неподдерживаемый формат изображения',
-    maxFileSize: 'Превышен допустимый размер загружаемого файла',
-    projectCreateButFilesNotSaved: 'Проект создан. Но некоторые файлы не могли быть приклеплены',
     sendToSupport: 'Обратитесь в техподдержку',
   },
   app: {
@@ -35,13 +31,11 @@ const lang: Locale = {
       tabs: [
         {
           id: 0,
-          value: 'employer',
           title: 'Заказчик',
           content: 'Вы сможете создавать заказы и контролировать ход их выполнения',
         },
         {
           id: 1,
-          value: 'worker',
           title: 'Исполнитель',
           content: 'Вы сможете принимать заказы и зарабатывать деньги своим трудом',
         },
@@ -77,37 +71,11 @@ const lang: Locale = {
       homePage: 'Главная',
       login: 'Вход',
       logout: 'Выход',
-      personalArea: 'Личный кабинет',
-      createProject: 'Создать проект',
+      translate: 'Перевод',
     },
     confirmEmail: {
       title: 'Подтверждение почты',
       paramsNotFound: 'Не найдены необходимые параметры страницы',
-    },
-    me: {
-      myProjects: 'Мои проекты',
-      projectsIsMissing: 'В настоящее время проекты отсутствуют',
-      files: 'Файлов',
-    },
-    createProject: {
-      createProject: 'Создать новый проект',
-      projectTitle: 'Название проекта',
-      projectDescription: 'Описание проекта',
-      projectDesPlaceholder:
-        'Подробно опишите что нужно сделать и по каким критериям будете оценивать результат',
-      projectActualFor: 'Актуален до',
-      projectAddFilesDesc:
-        'Загрузите файлы с дополнительной информацией о проекте. В дальнейшем вы сможете добавить и другие файлы',
-      projectDragDropFiles: 'Или перетяните файлы в эту область',
-      projectDateTooltip:
-        'Дата, не позднее которой, по вашим подсчетам, проект должен быть завершен',
-      maxFileSizeIs: 'Максимальный размер файла',
-      withoutCategory: 'Без категории',
-      categoryHelp:
-        'Начисление дополнительного рейтинга по каждой выбранной подкатегории. Можно выбрать подкатегории только из одной категории! Максимальное количество:',
-      categoryLabel: 'Категория',
-      buttonCreate: 'Создать',
-      projectCreated: 'Проект успешно добавлен',
     },
     common: {
       formDesc: 'Поля помеченные * обязательны для заполенения',
@@ -116,14 +84,11 @@ const lang: Locale = {
       maxFileSize: 'Файл слишком большой',
       fieldMustBeNotEmpty: 'Поле не должно быть пустым',
       eliminateRemarks: 'Устраните замечания в форме',
-      projectAddFiles: 'Прикрепить файлы',
     },
-    projectStatus: {
-      finished: 'Закончен',
-      inWork: 'В работе',
-      waitEmployer: 'Ожидает заказчика',
-      waitWorker: 'Ожидает исполнителя',
-      agreementOfConditions: 'Согласование условий',
+    translate: {
+      title: 'Перевод предложений',
+      nativeLang: 'Язык который вы знаете',
+      learnLang: 'Язык который вы изучаете',
     },
   },
 };

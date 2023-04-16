@@ -1,9 +1,7 @@
 import { User } from '@prisma/client';
-import { MessageType, SendMessageArgs } from '../types/interfaces';
+import { UserCleanResult } from '../types/interfaces';
 
-export function cleanUserFields(
-  user: User | null
-): SendMessageArgs<MessageType.SET_USER_FIND_FIRST>['data'] | null {
+export function cleanUserFields(user: User | null): UserCleanResult | null {
   if (!user) {
     return user;
   }

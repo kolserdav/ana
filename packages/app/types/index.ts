@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { PageField } from '@prisma/client';
 import { Theme } from '../Theme';
-import { Locale, Status, UserCleanResult } from './interfaces';
+import { Locale, Result, Status, UserCleanResult } from './interfaces';
 
 export type PageFull = {
   // eslint-disable-next-line no-unused-vars
@@ -40,16 +40,12 @@ export interface LoginProps extends AppProps {
 
 export type HTMLEditorOnChange = (e: string) => void;
 
-export interface MePageProps extends AppProps {
-  localeAppBar: Locale['app']['appBar'];
-  page: PageFull;
-  localeMe: Locale['app']['me'];
-  localeProjectStatus: Locale['app']['projectStatus'];
+export interface TranslateResult extends Result<null> {
+  translatedText?: string;
 }
 
-export interface CreateProjectPageProps extends AppProps {
-  localeAppBar: Locale['app']['appBar'];
-  localeCreateProject: Locale['app']['createProject'];
-  localeCommon: Locale['app']['common'];
-  page: PageFull;
+export interface ServerLanguage {
+  code: string;
+  name: string;
+  targets: string[];
 }

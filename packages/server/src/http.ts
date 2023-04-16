@@ -1,8 +1,8 @@
 import Fastify from 'fastify';
 import cors from 'cors';
 import serveStatic from 'serve-static';
-
-import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT } from './utils/constants';
+import proxy from '@fastify/http-proxy';
+import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT, TRANSLATE_URL } from './utils/constants';
 import { createDir, log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
 import { Api, CLOUD_PREFIX } from './types/interfaces';
@@ -30,7 +30,11 @@ process.on('unhandledRejection', (err: Error) => {
   const fastify = Fastify({
     logger: FASTIFY_LOGGER,
   });
-
+  fastify.register(proxy, {
+    upstream: TRANSLATE_URL,
+    prefix: '/libre',
+    http2: false,
+  });
   await fastify.register(import('@fastify/middie'), { hook: 'preHandler' });
   await fastify.use(cors({ origin: [APP_URL] }));
   await fastify.use([Api.getUserFindFirst], checkTokenMiddleware);
