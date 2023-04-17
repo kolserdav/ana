@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { Phrase, Prisma, PrismaClient, User } from '@prisma/client';
+import { Phrase, Prisma, PrismaClient, Tag, User } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum Api {
@@ -12,7 +12,9 @@ export enum Api {
   postRestorePassword = '/v1/restore-password',
   getUserFindFirst = '/v1/user-find-first',
   getCheckRestoreKey = '/v1/check-restore-key',
+  getTagsFindMany = '/v1/tags-find-many',
   postPhraseCreate = '/v1/phrase-create',
+  postTagCreate = '/v1/tag-create',
   postForgotPassword = '/v1/forgot-password',
   postUserLogin = '/v1/user-login',
   getCheckEmail = '/v1/check-email',
@@ -133,6 +135,14 @@ export interface PhraseCreateBody {
 }
 export type PhraseCreateResult = Phrase | null;
 
+export interface TagCreateBody {
+  text: string;
+}
+export type TagCreateResult = Tag | null;
+
+export type TagFindManyQuery = void;
+export type TagFindManyResult = Tag[];
+
 export interface ConfirmEmailBody {
   email: string;
   key: string;
@@ -161,6 +171,9 @@ export interface Locale {
     unauthorized: string;
     notImplement: string;
     sendToSupport: string;
+    phraseSaved: string;
+    tagExists: string;
+    tagSaved: string;
   };
   app: {
     login: {

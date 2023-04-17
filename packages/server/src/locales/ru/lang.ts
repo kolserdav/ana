@@ -17,6 +17,9 @@ const lang: Locale = {
     unauthorized: 'Недостаточно прав',
     notImplement: 'Устаревшая версия запроса',
     sendToSupport: 'Обратитесь в техподдержку',
+    phraseSaved: 'Фраза сохранена',
+    tagExists: 'Тег был создан ранее',
+    tagSaved: 'Тег сохранен',
   },
   app: {
     login: {

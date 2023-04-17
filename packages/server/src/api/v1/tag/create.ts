@@ -2,28 +2,26 @@ import { ORM } from '../../../services/orm';
 import { RequestHandler } from '../../../types';
 import {
   APPLICATION_JSON,
-  PhraseCreateBody,
-  PhraseCreateResult,
   Result,
+  TagCreateBody,
+  TagCreateResult,
 } from '../../../types/interfaces';
 import { getLocale, parseHeaders } from '../../../utils/lib';
 
 const orm = new ORM();
 
-const phraseCreate: RequestHandler<{ Body: PhraseCreateBody }, Result<PhraseCreateResult>> = async (
+const tagCreate: RequestHandler<{ Body: TagCreateBody }, Result<TagCreateResult>> = async (
   { headers, body },
   reply
 ) => {
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const { tags, text, translate } = body;
+  const { text } = body;
 
   const _tags = await orm.tagFindMany({
     where: {
-      OR: tags.map((item) => ({
-        id: item,
-      })),
+      text,
     },
   });
   if (_tags.status === 'error') {
@@ -34,17 +32,19 @@ const phraseCreate: RequestHandler<{ Body: PhraseCreateBody }, Result<PhraseCrea
       data: null,
     };
   }
+  if (_tags.data.length) {
+    reply.type(APPLICATION_JSON).code(409);
+    return {
+      status: 'warn',
+      message: locale.tagExists,
+      data: null,
+    };
+  }
 
-  const createRes = await orm.phraseCreate({
+  const createRes = await orm.tagCreate({
     data: {
       text,
-      translate: translate || null,
       userId: id,
-      PhraseTag: {
-        createMany: {
-          data: _tags.data.map((item) => ({ tagId: item.id })),
-        },
-      },
     },
   });
   if (createRes.status === 'error') {
@@ -58,7 +58,7 @@ const phraseCreate: RequestHandler<{ Body: PhraseCreateBody }, Result<PhraseCrea
 
   reply.type(APPLICATION_JSON).code(201);
 
-  return { status: 'info', message: locale.phraseSaved, data: createRes.data };
+  return { status: 'info', message: locale.tagSaved, data: createRes.data };
 };
 
-export default phraseCreate;
+export default tagCreate;

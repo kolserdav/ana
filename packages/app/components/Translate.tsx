@@ -25,7 +25,7 @@ function Translate({
   user: UserCleanResult;
   save: string;
 }) {
-  useLoad();
+  const { load, setLoad } = useLoad();
   const { langs, nativeLang, learnLang, changeLangWrapper, changeLang, setChangeLang } =
     useLanguages();
   const {
@@ -50,12 +50,18 @@ function Translate({
     learnLang,
   });
 
-  const { saveDialog, onClickSavePhrase, setSaveDialog, saveTranslate, setSaveTranslate } =
-    useSavePhrase({
-      translate,
-      learnLang,
-      text,
-    });
+  const {
+    saveDialog,
+    onClickSavePhrase,
+    setSaveDialog,
+    saveTranslate,
+    setSaveTranslate,
+    onClickSave,
+  } = useSavePhrase({
+    translate,
+    text,
+    setLoad,
+  });
 
   return (
     <div className={s.wrapper}>
@@ -146,43 +152,40 @@ function Translate({
           </div>
         )}
       </div>
-      <Dialog theme={theme} open={saveDialog} onClose={setSaveDialog}>
-        <Typography align="center" theme={theme} variant="h2">
-          {locale.savePhrase}
-        </Typography>
-        <Typography align="center" theme={theme} variant="h4">
-          {locale.savePhraseDesc}
-        </Typography>
-        <div className={s.active} style={{ backgroundColor: theme.active }}>
-          <Typography align="center" theme={theme} variant="p">
-            {text}
+      {user && (
+        <Dialog theme={theme} open={saveDialog} onClose={setSaveDialog}>
+          <Typography align="center" theme={theme} variant="h2">
+            {locale.savePhrase}
           </Typography>
-        </div>
-        <Checkbox
-          theme={theme}
-          label={locale.saveTranlsate}
-          id="save-translate"
-          checked={saveTranslate}
-          onChange={setSaveTranslate}
-        />
-        {saveTranslate && (
+          <Typography align="center" theme={theme} variant="h4">
+            {locale.savePhraseDesc}
+          </Typography>
           <div className={s.active} style={{ backgroundColor: theme.active }}>
             <Typography align="center" theme={theme} variant="p">
-              {translate}
+              {text}
             </Typography>
           </div>
-        )}
-        <div className={s.actions}>
-          <Button
+          <Checkbox
             theme={theme}
-            onClick={() => {
-              /** */
-            }}
-          >
-            {save}
-          </Button>
-        </div>
-      </Dialog>
+            label={locale.saveTranlsate}
+            id="save-translate"
+            checked={saveTranslate}
+            onChange={setSaveTranslate}
+          />
+          {saveTranslate && (
+            <div className={s.active} style={{ backgroundColor: theme.active }}>
+              <Typography align="center" theme={theme} variant="p">
+                {translate}
+              </Typography>
+            </div>
+          )}
+          <div className={s.actions}>
+            <Button theme={theme} onClick={onClickSave} disabled={load}>
+              {save}
+            </Button>
+          </div>
+        </Dialog>
+      )}
     </div>
   );
 }

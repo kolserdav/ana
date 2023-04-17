@@ -3,7 +3,7 @@ import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
 import { TEXTAREA_ROWS, TRANSLATE_DELAY } from '../utils/constants';
-import { Locale } from '../types/interfaces';
+import { Locale, TagFindManyResult } from '../types/interfaces';
 
 const request = new Request();
 
@@ -234,12 +234,12 @@ export const useSpeechSynth = ({
 };
 
 export const useSavePhrase = ({
-  learnLang,
   text,
   translate,
+  setLoad,
 }: {
-  learnLang: string;
   text: string;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   translate?: string;
 }) => {
   const [tags, setTags] = useState<string[]>([]);
@@ -250,5 +250,44 @@ export const useSavePhrase = ({
     setSaveDialog(true);
   };
 
-  return { tags, onClickSavePhrase, saveDialog, setSaveDialog, saveTranslate, setSaveTranslate };
+  const onClickSave = async () => {
+    setLoad(true);
+    const saveRes = await request.phraseCreate({
+      text,
+      translate: saveTranslate ? translate : undefined,
+      tags: [],
+    });
+    setLoad(false);
+    log(saveRes.status, saveRes.message, saveRes, true);
+  };
+
+  return {
+    tags,
+    onClickSavePhrase,
+    saveDialog,
+    setSaveDialog,
+    saveTranslate,
+    setSaveTranslate,
+    onClickSave,
+  };
+};
+
+export const useTags = () => {
+  const [allTags, setAllTags] = useState<TagFindManyResult>([]);
+
+  /**
+   * Set all tags
+   */
+  useEffect(() => {
+    (async () => {
+      const tags = await request.tagFindMany();
+      setAllTags(tags.data);
+    })();
+  }, []);
+
+  const createTag = () => {
+    /** */
+  };
+
+  return { allTags };
 };

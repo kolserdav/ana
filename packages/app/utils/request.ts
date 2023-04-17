@@ -25,6 +25,10 @@ import {
   ConfirmEmailResult,
   PhraseCreateBody,
   PhraseCreateResult,
+  TagCreateBody,
+  TagCreateResult,
+  TagFindManyQuery,
+  TagFindManyResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -182,6 +186,21 @@ class Request {
       url: Api.postPhraseCreate,
       method: 'POST',
       body,
+    });
+  }
+
+  public async tagCreate(body: TagCreateBody): Promise<Result<TagCreateResult>> {
+    return this.send({
+      url: Api.postTagCreate,
+      method: 'POST',
+      body,
+    });
+  }
+
+  public async tagFindMany(query: TagFindManyQuery): Promise<Result<TagFindManyResult>> {
+    return this.send({
+      url: Api.getTagsFindMany,
+      method: 'GET',
     });
   }
 
