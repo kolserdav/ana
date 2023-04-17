@@ -7,12 +7,10 @@
     "watch": "tsc -p . -w",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc -p .",
-    "translate": "libretranslate --host 192.168.0.3  --req-limit 0 --disable-web-ui --threads 4",
     "dev:server": "nodemon dist/index.js",
     "start:dev": "concurrently \"npm run dev:server\"",
     "start": "env-cmd node dist/index.js",
-    "dev": "concurrently \"npm run watch\" \"npm run start:dev\" \"npm run translate\"",
-    "dev:win": "concurrently \"npm run watch\" \"npm run start:dev\""
+    "dev": "concurrently \"npm run watch\" \"npm run start:dev\""
   },
   "keywords": [],
   "author": "kolserdav",
