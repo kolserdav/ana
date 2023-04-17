@@ -73,3 +73,4 @@ export const NO_SCROLL_CLASS = 'no__scroll';
 export const HTML_EDITOR_HEIGHT = 300;
 
 export const TRANSLATE_DELAY = 1000;
+export const TEXTAREA_ROWS = 2;

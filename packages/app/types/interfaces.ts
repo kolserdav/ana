@@ -214,6 +214,8 @@ export interface Locale {
       description: string;
       nativeLang: string;
       learnLang: string;
+      allowRecomend: string;
+      voiceNotFound: string;
     };
   };
 }

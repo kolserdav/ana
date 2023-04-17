@@ -23,7 +23,7 @@
     "format": "prisma format",
     "seed": "prisma db seed",
     "translate": "python packages/translate/src/main.py --host 192.168.0.3  --req-limit 0 --disable-web-ui --threads 4",
-    "postinstall": "npm run install:server && npm run install:app && npm run install:translate && npm run scripts",
+    "postinstall": "npm run install:server && npm run install:app && npm run scripts && npm run install:translate",
     "dev:server": "cd packages/server && npm run dev",
     "dev:app": "cd packages/app && npm run dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:app\" \"npm run translate\"",

@@ -6,8 +6,8 @@ Application for easy composing phrases in the target language.
 
 ```sh
 NodeJS: 18
-Python 3 + pip
-PostgreSQL: latest
+Python 3 + pip (or docker-compose)
+PostgreSQL: latest (or docker-compose)
 ```
 
 ## Installation

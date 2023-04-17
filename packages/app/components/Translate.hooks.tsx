@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
-import { TRANSLATE_DELAY } from '../utils/constants';
+import { TEXTAREA_ROWS, TRANSLATE_DELAY } from '../utils/constants';
+import { Locale } from '../types/interfaces';
 
 const request = new Request();
 
@@ -10,6 +11,7 @@ export const useLanguages = () => {
   const [nativeLang, setNativeLang] = useState<string>('ru');
   const [learnLang, setLearnLang] = useState<string>('en');
   const [langs, setLangs] = useState<ServerLanguage[]>([]);
+  const [changeLang, setChangeLang] = useState<boolean>(false);
 
   const changeLangWrapper =
     (type: 'native' | 'learn') => (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -25,6 +27,7 @@ export const useLanguages = () => {
           break;
         default:
       }
+      setChangeLang(true);
     };
 
   /**
@@ -37,7 +40,7 @@ export const useLanguages = () => {
     })();
   }, []);
 
-  return { learnLang, nativeLang, langs, changeLangWrapper };
+  return { learnLang, nativeLang, langs, changeLangWrapper, changeLang, setChangeLang };
 };
 
 let timeout = setTimeout(() => {
@@ -47,14 +50,18 @@ let timeout = setTimeout(() => {
 export const useTranslate = ({
   learnLang,
   nativeLang,
+  changeLang,
+  setChangeLang,
 }: {
   learnLang: string;
   nativeLang: string;
+  changeLang: boolean;
+  setChangeLang: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
   const [reTranslate, setRetranslate] = useState<string>('');
-  const [startDelay, setStartDelay] = useState<number>(0);
+  const [rows, setRows] = useState<number>(TEXTAREA_ROWS);
 
   /**
    * Tranlate
@@ -87,17 +94,32 @@ export const useTranslate = ({
       setTranslate(data.translatedText);
     };
 
-    timeout = setTimeout(() => {
-      runTranslate(text);
-    }, TRANSLATE_DELAY);
-  }, [text, learnLang, nativeLang, startDelay]);
+    timeout = setTimeout(
+      () => {
+        runTranslate(text);
+        setChangeLang(false);
+      },
+      changeLang ? 0 : TRANSLATE_DELAY
+    );
+  }, [text, learnLang, nativeLang, changeLang, setChangeLang]);
 
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    setStartDelay(new Date().getTime());
     const {
-      target: { value },
+      target: { value, scrollHeight, clientHeight },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } = e as any;
+    if (scrollHeight > clientHeight) {
+      setRows(rows + 1);
+    }
+
     setText(value);
+  };
+
+  const cleanText = () => {
+    setText('');
+    setRows(TEXTAREA_ROWS);
+    setTranslate('');
+    setRetranslate('');
   };
 
   /**
@@ -131,5 +153,82 @@ export const useTranslate = ({
     runRetranslate(translate);
   }, [translate, learnLang, nativeLang]);
 
-  return { changeText, translate, reTranslate };
+  const setRightText = () => {
+    setText(reTranslate);
+  };
+
+  const onKeyDownReTranslate = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      setRightText();
+    }
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const onClickRetranslate = (_: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setRightText();
+  };
+
+  return {
+    changeText,
+    translate,
+    reTranslate,
+    rows,
+    cleanText,
+    text,
+    onKeyDownReTranslate,
+    onClickRetranslate,
+  };
+};
+
+export const useSpeechSynth = ({
+  reTranslate,
+  locale,
+  learnLang,
+}: {
+  reTranslate: string;
+  learnLang: string;
+  locale: Locale['app']['translate'];
+}) => {
+  const [textToSpeech, setTextToSpeech] = useState<string>();
+  const [synthAllow, setSynthAllow] = useState<boolean>(false);
+
+  /**
+   * Speech text
+   */
+  useEffect(() => {
+    const synth = window.speechSynthesis;
+    if (!synth) {
+      log('warn', 'Speech synth is not support', { synth });
+      setSynthAllow(false);
+      return;
+    }
+    const voices = synth.getVoices();
+    const voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
+    if (!voice) {
+      log('warn', locale.voiceNotFound, voices, true);
+      setSynthAllow(false);
+      return;
+    }
+
+    if (!synthAllow) {
+      setSynthAllow(true);
+    }
+
+    if (!textToSpeech) {
+      return;
+    }
+
+    const utterThis = new SpeechSynthesisUtterance(textToSpeech);
+
+    utterThis.lang = voice.lang;
+    synth.speak(utterThis);
+
+    setTextToSpeech('');
+  }, [synthAllow, textToSpeech, locale, learnLang]);
+
+  const speechRetranslate = () => {
+    setTextToSpeech(reTranslate);
+  };
+
+  return { synthAllow, speechRetranslate };
 };

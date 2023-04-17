@@ -15,5 +15,6 @@
     ".env": "ini",
     ".env.development": "ini",
     ".env.example": "ini"
-  }
+  },
+  "python.analysis.typeCheckingMode": "basic"
 }

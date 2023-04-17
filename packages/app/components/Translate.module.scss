@@ -18,10 +18,22 @@
       text-align: center;
     }
 
+    .sound_button {
+      margin-left: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
     .textarea {
       position: relative;
       width: 100%;
       margin-top: 2rem;
+
+      .close_button {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+      }
     }
 
     .selectors {
@@ -35,8 +47,26 @@
       margin: 1rem 0;
     }
 
-    .learn_res {
-      margin: 1rem 0;
+    .retrans_container {
+      display: flex;
+      flex-direction: row;
+
+      .learn_res {
+        cursor: pointer;
+        display: inline-block;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &.disabled {
+          cursor: text;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
     }
   }
 }
