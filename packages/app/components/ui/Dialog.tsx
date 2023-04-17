@@ -13,7 +13,7 @@ function Dialog({
 }: {
   theme: Theme;
   open: boolean;
-  children: React.ReactElement | React.ReactElement[];
+  children: React.ReactNode | React.ReactNode[];
   onClose?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const ref = useRef<HTMLDivElement>(null);

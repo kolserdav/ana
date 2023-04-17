@@ -1,4 +1,4 @@
-import { Page, Prisma } from '@prisma/client';
+import { Page, Phrase, Prisma } from '@prisma/client';
 import {
   Api,
   LOCALE_DEFAULT,
@@ -23,6 +23,8 @@ import {
   RestorePasswordResult,
   ConfirmEmailBody,
   ConfirmEmailResult,
+  PhraseCreateBody,
+  PhraseCreateResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -170,6 +172,14 @@ class Request {
   ): Promise<Result<ForgotPasswordResult | null>> {
     return this.send({
       url: Api.postForgotPassword,
+      method: 'POST',
+      body,
+    });
+  }
+
+  public async phraseCreate(body: PhraseCreateBody): Promise<Result<PhraseCreateResult>> {
+    return this.send({
+      url: Api.postPhraseCreate,
       method: 'POST',
       body,
     });

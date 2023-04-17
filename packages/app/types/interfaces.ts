@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { Prisma, PrismaClient, User } from '@prisma/client';
+import { Phrase, Prisma, PrismaClient, User } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum Api {
@@ -12,6 +12,7 @@ export enum Api {
   postRestorePassword = '/v1/restore-password',
   getUserFindFirst = '/v1/user-find-first',
   getCheckRestoreKey = '/v1/check-restore-key',
+  postPhraseCreate = '/v1/phrase-create',
   postForgotPassword = '/v1/forgot-password',
   postUserLogin = '/v1/user-login',
   getCheckEmail = '/v1/check-email',
@@ -125,6 +126,13 @@ export interface RestorePasswordBody {
 }
 export type RestorePasswordResult = null;
 
+export interface PhraseCreateBody {
+  text: string;
+  tags: string[];
+  translate?: string;
+}
+export type PhraseCreateResult = Phrase | null;
+
 export interface ConfirmEmailBody {
   email: string;
   key: string;
@@ -208,6 +216,7 @@ export interface Locale {
       maxFileSize: string;
       fieldMustBeNotEmpty: string;
       eliminateRemarks: string;
+      save: string;
     };
     translate: {
       title: string;
@@ -216,6 +225,10 @@ export interface Locale {
       learnLang: string;
       allowRecomend: string;
       voiceNotFound: string;
+      savePhrase: string;
+      needLogin: string;
+      savePhraseDesc: string;
+      saveTranlsate: string;
     };
   };
 }

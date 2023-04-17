@@ -232,3 +232,23 @@ export const useSpeechSynth = ({
 
   return { synthAllow, speechRetranslate };
 };
+
+export const useSavePhrase = ({
+  learnLang,
+  text,
+  translate,
+}: {
+  learnLang: string;
+  text: string;
+  translate?: string;
+}) => {
+  const [tags, setTags] = useState<string[]>([]);
+  const [saveDialog, setSaveDialog] = useState<boolean>(false);
+  const [saveTranslate, setSaveTranslate] = useState<boolean>(true);
+
+  const onClickSavePhrase = () => {
+    setSaveDialog(true);
+  };
+
+  return { tags, onClickSavePhrase, saveDialog, setSaveDialog, saveTranslate, setSaveTranslate };
+};

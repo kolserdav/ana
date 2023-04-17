@@ -9,8 +9,6 @@ import { DBCommandProps, Result } from '../types/interfaces';
 const prisma = new PrismaClient();
 
 export class ORM extends Service implements Database {
-  private readonly protocol = 'orm';
-
   private readonly errorStatus = 'error';
 
   constructor(worker?: Worker) {
@@ -19,6 +17,70 @@ export class ORM extends Service implements Database {
       this.createServer();
     }
   }
+
+  public phraseFindMany: Database['phraseFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'findMany',
+    });
+  };
+
+  public phraseCreate: Database['phraseCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'create',
+    });
+  };
+
+  public phraseUpdate: Database['phraseUpdate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'update',
+    });
+  };
+
+  public phraseDelete: Database['phraseDelete'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'delete',
+    });
+  };
+
+  public tagFindMany: Database['tagFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'tag',
+      command: 'findMany',
+    });
+  };
+
+  public tagCreate: Database['tagCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'tag',
+      command: 'create',
+    });
+  };
+
+  public tagUpdate: Database['tagUpdate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'tag',
+      command: 'update',
+    });
+  };
+
+  public tagDelete: Database['tagDelete'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'tag',
+      command: 'delete',
+    });
+  };
 
   public userFindFirst: Database['userFindFirst'] = async (args) => {
     return this.runFromWorker({

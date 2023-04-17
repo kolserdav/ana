@@ -84,6 +84,7 @@ const lang: Locale = {
       maxFileSize: 'Файл слишком большой',
       fieldMustBeNotEmpty: 'Поле не должно быть пустым',
       eliminateRemarks: 'Устраните замечания в форме',
+      save: 'Сохранить',
     },
     translate: {
       title: 'Перевод предложений',
@@ -92,6 +93,10 @@ const lang: Locale = {
       learnLang: 'Изучаю',
       allowRecomend: 'Применить предложенный вариант',
       voiceNotFound: 'Голос для озвучивания не найден',
+      savePhrase: 'Сохранить фразу',
+      needLogin: 'Необходим вход в учетную запись',
+      savePhraseDesc: 'Сохраненная фраза будет доступна только вам',
+      saveTranlsate: 'Сохранить вместе с переводом',
     },
   },
 };

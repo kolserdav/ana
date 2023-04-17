@@ -10,10 +10,12 @@ function Button({
   theme,
   error,
   children,
+  title,
   className,
 }: {
   children: React.ReactNode | string;
   theme: Theme;
+  title?: string;
   disabled?: boolean;
   error?: string;
   // eslint-disable-next-line no-unused-vars
@@ -32,6 +34,7 @@ function Button({
   return (
     <div className={clsx(s.wrapper, ubuntu500.className)}>
       <button
+        title={title}
         disabled={disabled}
         onClick={onClick}
         type="button"
@@ -60,6 +63,7 @@ Button.defaultProps = {
   className: '',
   disabled: false,
   error: '',
+  title: '',
 };
 
 export default Button;

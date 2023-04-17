@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale } from '../types/interfaces';
-import { useLanguages, useSpeechSynth, useTranslate } from './Translate.hooks';
+import { Locale, UserCleanResult } from '../types/interfaces';
+import { useLanguages, useSavePhrase, useSpeechSynth, useTranslate } from './Translate.hooks';
 import s from './Translate.module.scss';
 import CloseIcon from './icons/Close';
 import IconButton from './ui/IconButton';
@@ -10,8 +10,21 @@ import Select from './ui/Select';
 import Textarea from './ui/Textarea';
 import Typography from './ui/Typography';
 import VolumeHighIcon from './icons/VolumeHigh';
+import Button from './ui/Button';
+import Dialog from './ui/Dialog';
+import Checkbox from './ui/Checkbox';
 
-function Translate({ theme, locale }: { theme: Theme; locale: Locale['app']['translate'] }) {
+function Translate({
+  theme,
+  locale,
+  user,
+  save,
+}: {
+  theme: Theme;
+  locale: Locale['app']['translate'];
+  user: UserCleanResult;
+  save: string;
+}) {
   useLoad();
   const { langs, nativeLang, learnLang, changeLangWrapper, changeLang, setChangeLang } =
     useLanguages();
@@ -37,13 +50,20 @@ function Translate({ theme, locale }: { theme: Theme; locale: Locale['app']['tra
     learnLang,
   });
 
+  const { saveDialog, onClickSavePhrase, setSaveDialog, saveTranslate, setSaveTranslate } =
+    useSavePhrase({
+      translate,
+      learnLang,
+      text,
+    });
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography variant="h1" theme={theme} align="center">
           {locale.title}
         </Typography>
-        <Typography variant="p" theme={theme}>
+        <Typography variant="p" align="center" theme={theme}>
           {locale.description}
         </Typography>
         <div className={s.selectors}>
@@ -113,7 +133,56 @@ function Translate({ theme, locale }: { theme: Theme; locale: Locale['app']['tra
             </div>
           )}
         </div>
+        {reTranslate && (
+          <div className={s.actions}>
+            <Button
+              title={!user ? locale.needLogin : ''}
+              disabled={!user}
+              theme={theme}
+              onClick={onClickSavePhrase}
+            >
+              {locale.savePhrase}
+            </Button>
+          </div>
+        )}
       </div>
+      <Dialog theme={theme} open={saveDialog} onClose={setSaveDialog}>
+        <Typography align="center" theme={theme} variant="h2">
+          {locale.savePhrase}
+        </Typography>
+        <Typography align="center" theme={theme} variant="h4">
+          {locale.savePhraseDesc}
+        </Typography>
+        <div className={s.active} style={{ backgroundColor: theme.active }}>
+          <Typography align="center" theme={theme} variant="p">
+            {text}
+          </Typography>
+        </div>
+        <Checkbox
+          theme={theme}
+          label={locale.saveTranlsate}
+          id="save-translate"
+          checked={saveTranslate}
+          onChange={setSaveTranslate}
+        />
+        {saveTranslate && (
+          <div className={s.active} style={{ backgroundColor: theme.active }}>
+            <Typography align="center" theme={theme} variant="p">
+              {translate}
+            </Typography>
+          </div>
+        )}
+        <div className={s.actions}>
+          <Button
+            theme={theme}
+            onClick={() => {
+              /** */
+            }}
+          >
+            {save}
+          </Button>
+        </div>
+      </Dialog>
     </div>
   );
 }
