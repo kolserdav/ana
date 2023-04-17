@@ -5,6 +5,7 @@ import { useLanguages, useTranslate } from './Translate.hooks';
 import s from './Translate.module.scss';
 import Select from './ui/Select';
 import Textarea from './ui/Textarea';
+import Typography from './ui/Typography';
 
 function Translate({ theme, locale }: { theme: Theme; locale: Locale['app']['translate'] }) {
   useLoad();
@@ -14,9 +15,12 @@ function Translate({ theme, locale }: { theme: Theme; locale: Locale['app']['tra
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
-        <h1 className={s.title} style={{ color: theme.text }}>
+        <Typography variant="h1" theme={theme} align="center">
           {locale.title}
-        </h1>
+        </Typography>
+        <Typography variant="p" theme={theme}>
+          {locale.description}
+        </Typography>
         <div className={s.selectors}>
           <Select
             onChange={changeLangWrapper('native')}
@@ -43,7 +47,7 @@ function Translate({ theme, locale }: { theme: Theme; locale: Locale['app']['tra
             ))}
           </Select>
         </div>
-        <Textarea onInput={changeText} className={s.textarea} theme={theme} />
+        <Textarea spellCheck={false} onInput={changeText} className={s.textarea} theme={theme} />
         <div style={{ color: theme.text }} className={s.native_res}>
           {translate}
         </div>

@@ -12,6 +12,7 @@
     width: 100%;
     max-width: $translate-container-max;
     margin: 1rem;
+    padding: 1rem;
 
     .title {
       text-align: center;
@@ -31,11 +32,11 @@
     }
 
     .native_res {
-      margin: 1rem;
+      margin: 1rem 0;
     }
 
     .learn_res {
-      margin: 1rem;
+      margin: 1rem 0;
     }
   }
 }

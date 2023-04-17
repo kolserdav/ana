@@ -211,6 +211,7 @@ export interface Locale {
     };
     translate: {
       title: string;
+      description: string;
       nativeLang: string;
       learnLang: string;
     };
