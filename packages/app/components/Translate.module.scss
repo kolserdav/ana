@@ -84,4 +84,28 @@
     width: 100%;
     border-radius: 4px;
   }
+
+  .tags {
+    .title {
+      h4 {
+        margin-bottom: 0;
+      }
+    }
+
+    .input {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      .field {
+        margin-bottom: 12px;
+      }
+    }
+
+    .box {
+      flex-flow: row wrap;
+      margin-top: 1rem;
+    }
+  }
 }

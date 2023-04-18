@@ -243,6 +243,9 @@ export interface Locale {
       savePhraseDesc: string;
       saveTranlsate: string;
       newTag: string;
+      tagsTitle: string;
+      tagHelp: string;
+      addTags: string;
     };
   };
 }

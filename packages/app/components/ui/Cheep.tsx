@@ -2,8 +2,10 @@ import clsx from 'clsx';
 import { Theme } from '../../Theme';
 import { ubuntu500 } from '../../fonts/ubuntu';
 import s from './Cheep.module.scss';
+import CloseIcon from '../icons/Close';
+import IconButton from './IconButton';
 
-function Cheap({
+function Cheep({
   theme,
   children,
   onClick,
@@ -39,16 +41,18 @@ function Cheap({
       className={clsx(s.wrapper, ubuntu500, disabled ? s.disabled : '')}
       style={{ backgroundColor: add ? theme.cyan : theme.blue, color: theme.black }}
     >
-      {add && <span className={s.symbol}>+ </span>}
-      <span className={clsx(s.text, !add ? s.del : '')}>{children}</span>
-      {!add && <span className={s.symbol}> -</span>}
+      <div className={s.container}>
+        {add && <span className={s.symbol}>+ </span>}
+        <span className={clsx(s.text, !add ? s.del : '')}>{children}</span>
+        {!add && <span className={s.symbol}> -</span>}
+      </div>
     </div>
   );
 }
 
-Cheap.defaultProps = {
+Cheep.defaultProps = {
   add: false,
   disabled: false,
 };
 
-export default Cheap;
+export default Cheep;

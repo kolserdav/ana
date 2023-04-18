@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
@@ -20,18 +21,24 @@ import Button from './ui/Button';
 import Dialog from './ui/Dialog';
 import Checkbox from './ui/Checkbox';
 import Input from './ui/Input';
+import HelpIcon from './icons/Help';
+import Tooltip from './ui/Tooltip';
+import Cheep from './ui/Cheep';
 
 function Translate({
   theme,
   locale,
   user,
   save,
+  showHelp,
 }: {
   theme: Theme;
   locale: Locale['app']['translate'];
   user: UserCleanResult;
   save: string;
+  showHelp: string;
 }) {
+  const helpTagRef = useRef(null);
   const { load, setLoad } = useLoad();
   const { langs, nativeLang, learnLang, changeLangWrapper, changeLang, setChangeLang } =
     useLanguages();
@@ -58,6 +65,17 @@ function Translate({
   });
 
   const {
+    onChangeNewTag,
+    newTag,
+    allTags,
+    onClicTagCheepWrapper,
+    tags,
+    addTags,
+    setAddTags,
+    setTags,
+  } = useTags();
+
+  const {
     saveDialog,
     onClickSavePhrase,
     setSaveDialog,
@@ -68,9 +86,9 @@ function Translate({
     translate,
     text,
     setLoad,
+    setTags,
+    tags,
   });
-
-  const { onChangeNewTag, newTag } = useTags();
 
   return (
     <div className={s.wrapper}>
@@ -188,14 +206,60 @@ function Translate({
               </Typography>
             </div>
           )}
-          <Input
-            type="text"
-            id="add-new-tag"
-            onChange={onChangeNewTag}
-            value={newTag}
-            name={locale.newTag}
+          <Checkbox
             theme={theme}
+            label={locale.addTags}
+            id="add-tags"
+            checked={addTags}
+            onChange={setAddTags}
           />
+          {addTags && (
+            <div className={s.tags}>
+              <Typography className={s.title} variant="h4" theme={theme}>
+                {locale.tagsTitle}
+              </Typography>
+              <div className={s.input}>
+                <Input
+                  className={s.field}
+                  type="text"
+                  id="add-new-tag"
+                  onChange={onChangeNewTag}
+                  value={newTag}
+                  name={locale.newTag}
+                  theme={theme}
+                />
+                <IconButton title={showHelp} ref={helpTagRef}>
+                  <HelpIcon color={theme.text} />
+                </IconButton>
+              </div>
+              <div className={s.box}>
+                {tags.map((item) => (
+                  <Cheep
+                    key={item.id}
+                    onClick={onClicTagCheepWrapper(item, 'del')}
+                    add={false}
+                    disabled={false}
+                    theme={theme}
+                  >
+                    {item.text}
+                  </Cheep>
+                ))}
+              </div>
+              <div className={s.box}>
+                {allTags.map((item) => (
+                  <Cheep
+                    key={item.id}
+                    onClick={onClicTagCheepWrapper(item, 'add')}
+                    add
+                    disabled={tags.findIndex((i) => i.id === item.id) !== -1}
+                    theme={theme}
+                  >
+                    {item.text}
+                  </Cheep>
+                ))}
+              </div>
+            </div>
+          )}
           <div className={s.actions}>
             <Button theme={theme} onClick={onClickSave} disabled={load}>
               {save}
@@ -203,6 +267,9 @@ function Translate({
           </div>
         </Dialog>
       )}
+      <Tooltip theme={theme} current={helpTagRef.current}>
+        {locale.tagHelp}
+      </Tooltip>
     </div>
   );
 }

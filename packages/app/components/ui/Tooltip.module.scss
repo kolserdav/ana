@@ -16,7 +16,7 @@
   word-wrap: normal;
 
   &.open {
-    z-index: 14;
+    z-index: 16;
     transition: opacity 0.1s ease-in, z-index 0.1s ease-in;
     opacity: 1;
   }

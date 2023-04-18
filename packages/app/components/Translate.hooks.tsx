@@ -237,12 +237,15 @@ export const useSavePhrase = ({
   text,
   translate,
   setLoad,
+  setTags,
+  tags,
 }: {
   text: string;
+  tags: TagFindManyResult;
+  setTags: React.Dispatch<React.SetStateAction<TagFindManyResult>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   translate?: string;
 }) => {
-  const [tags, setTags] = useState<string[]>([]);
   const [saveDialog, setSaveDialog] = useState<boolean>(false);
   const [saveTranslate, setSaveTranslate] = useState<boolean>(true);
 
@@ -255,14 +258,17 @@ export const useSavePhrase = ({
     const saveRes = await request.phraseCreate({
       text,
       translate: saveTranslate ? translate : undefined,
-      tags: [],
+      tags: tags.map((item) => item.id),
     });
     setLoad(false);
     log(saveRes.status, saveRes.message, saveRes, true);
+    if (saveRes.status === 'info') {
+      setSaveDialog(false);
+      setTags([]);
+    }
   };
 
   return {
-    tags,
     onClickSavePhrase,
     saveDialog,
     setSaveDialog,
@@ -274,28 +280,73 @@ export const useSavePhrase = ({
 
 export const useTags = () => {
   const [allTags, setAllTags] = useState<TagFindManyResult>([]);
+  const [tags, setTags] = useState<TagFindManyResult>([]);
   const [newTag, setNewTag] = useState<string>('');
+  const [restart, setRestart] = useState<boolean>(false);
+  const [addTags, setAddTags] = useState<boolean>(false);
 
   /**
    * Set all tags
    */
   useEffect(() => {
     (async () => {
-      const tags = await request.tagFindMany();
-      setAllTags(tags.data);
+      const _allTags = await request.tagFindMany();
+      setAllTags(_allTags.data);
     })();
-  }, []);
+  }, [restart]);
+
+  const createTag = async (text: string) => {
+    const createRes = await request.tagCreate({ text });
+    log(createRes.status, createRes.message, createRes, true);
+    if (createRes.status !== 'info') {
+      return;
+    }
+    setNewTag('');
+    setRestart(!restart);
+  };
 
   const onChangeNewTag = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
-    console.log(value);
+    setNewTag(value);
+    if (value[value.length - 1] === ' ') {
+      createTag(value.trim());
+    }
   };
 
-  const createTag = () => {
-    /** */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onClicTagCheepWrapper = (tag: TagFindManyResult[any], command: 'add' | 'del') => () => {
+    const _tags = tags.slice();
+    const index = _tags.findIndex((item) => item.id === tag.id);
+    switch (command) {
+      case 'add':
+        if (index !== -1) {
+          log('warn', 'Duplicate tag', { _tags, tag });
+          return;
+        }
+        _tags.push(tag);
+        break;
+      case 'del':
+        if (index === -1) {
+          log('warn', 'Missing tag', { _tags, tag });
+          return;
+        }
+        _tags.splice(index, 1);
+        break;
+      default:
+    }
+    setTags(_tags);
   };
 
-  return { allTags, newTag, onChangeNewTag };
+  return {
+    allTags,
+    newTag,
+    onChangeNewTag,
+    tags,
+    onClicTagCheepWrapper,
+    addTags,
+    setAddTags,
+    setTags,
+  };
 };

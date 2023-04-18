@@ -1,21 +1,19 @@
 import clsx from 'clsx';
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 import storeClick from '../../store/click';
 import { Theme } from '../../Theme';
 import { checkClickBy, setBodyScroll } from '../../utils/lib';
 import s from './Dialog.module.scss';
 
-function Dialog({
-  theme,
-  open,
-  children,
-  onClose,
-}: {
-  theme: Theme;
-  open: boolean;
-  children: React.ReactNode | React.ReactNode[];
-  onClose?: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+const Dialog = forwardRef<
+  HTMLDivElement,
+  {
+    theme: Theme;
+    open: boolean;
+    children: React.ReactNode | React.ReactNode[];
+    onClose?: React.Dispatch<React.SetStateAction<boolean>>;
+  }
+>(({ theme, open, children, onClose }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   /**
@@ -59,14 +57,16 @@ function Dialog({
         style={{
           color: theme.text,
           backgroundColor: theme.paper,
-          boxShadow: `1px 1px 20px ${theme.contrast}, -1px -1px 20px ${theme.contrast}`,
+          boxShadow: `1px 1px 8px ${theme.active}, -1px -1px 8px ${theme.contrast}`,
         }}
       >
         {children}
       </div>
     </div>
   );
-}
+});
+
+Dialog.displayName = 'Tooltip';
 
 Dialog.defaultProps = {
   onClose: undefined,

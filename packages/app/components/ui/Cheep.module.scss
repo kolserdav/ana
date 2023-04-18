@@ -6,26 +6,27 @@ $cheap-text-margin: 1rem;
   border-radius: 0.3rem;
   cursor: pointer;
   font-size: smaller;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  display: inline-block;
 
   &.disabled {
     cursor: default;
     opacity: 0.5;
   }
 
-  .symbol {
-    font-size: large;
-    margin: 0 $cheap-text-margin;
-  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 
-  .text {
-    margin-right: $cheap-text-margin;
+    .symbol {
+      font-size: large;
+      margin: 0 $cheap-text-margin;
+    }
 
-    &.del {
-      margin-left: $cheap-text-margin;
+    .text {
+      position: relative;
+      margin: 0 $cheap-text-margin;
     }
   }
 }

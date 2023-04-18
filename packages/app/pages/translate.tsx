@@ -33,7 +33,13 @@ export default function TestPage({
       </Head>
       <AppBar user={user} full theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Translate save={localeCommon.save} user={user} theme={theme} locale={localeTranslate} />
+        <Translate
+          showHelp={localeCommon.showHelp}
+          save={localeCommon.save}
+          user={user}
+          theme={theme}
+          locale={localeTranslate}
+        />
       </main>
     </>
   );
