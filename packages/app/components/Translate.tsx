@@ -267,7 +267,7 @@ function Translate({
           </div>
         </Dialog>
       )}
-      <Tooltip theme={theme} current={helpTagRef.current}>
+      <Tooltip theme={theme} parent={helpTagRef}>
         {locale.tagHelp}
       </Tooltip>
     </div>

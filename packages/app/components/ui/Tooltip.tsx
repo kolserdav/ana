@@ -15,13 +15,17 @@ const POSITION_DEFAULT = {
 };
 
 function Tooltip({
-  current,
+  parent,
   children,
   theme,
+  length,
+  closeOnClick,
 }: {
-  current: HTMLElement | null;
-  children: string;
+  parent: React.RefObject<HTMLElement>;
+  children: string | React.ReactNode;
   theme: Theme;
+  length?: number;
+  closeOnClick?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -32,6 +36,7 @@ function Tooltip({
    * Handle click
    */
   useEffect(() => {
+    const { current } = parent;
     if (!current) {
       return () => {
         /** */
@@ -39,37 +44,43 @@ function Tooltip({
     }
     const onClick = () => {
       const b = current.getBoundingClientRect();
-      const { y, x, width: _width, height: _height, right } = b;
+      const { y, x, width: _width, height: _height } = b;
       const { innerWidth } = window;
       const pt = 20;
-      const { length } = children;
+      let _length = 0;
+      if (typeof children !== 'string') {
+        _length = length || 200;
+      } else {
+        _length = children.length;
+      }
+
       let cols = 4;
       let rows = 1;
-      if (length >= 10 && length < 30) {
+      if (_length >= 10 && _length < 30) {
         cols = 4;
         rows = 3;
-      } else if (length >= 30 && length < 50) {
+      } else if (_length >= 30 && _length < 50) {
         cols = 6;
         rows = 3;
-      } else if (length >= 50 && length < 70) {
+      } else if (_length >= 50 && _length < 70) {
         cols = 8;
         rows = 4;
-      } else if (length >= 70 && length < 90) {
+      } else if (_length >= 70 && _length < 90) {
         cols = 9;
         rows = 5;
-      } else if (length >= 90 && length < 110) {
+      } else if (_length >= 90 && _length < 110) {
         cols = 10;
         rows = 5;
-      } else if (length >= 110 && length < 130) {
+      } else if (_length >= 110 && _length < 130) {
         cols = 10;
         rows = 6;
-      } else if (length >= 130 && length < 150) {
+      } else if (_length >= 130 && _length < 150) {
         cols = 11;
         rows = 7;
       } else {
         cols = 12;
         rows = 8;
-        log('warn', 'Tooltip length is too long', { length, max: 150 });
+        log('warn', 'Tooltip length is too long', { _length, max: 150 });
       }
       const width = cols * pt;
       const height = rows * pt;
@@ -94,7 +105,7 @@ function Tooltip({
     return () => {
       current.removeEventListener('click', onClick);
     };
-  }, [current, children]);
+  }, [parent, children, length]);
 
   /**
    * Listen scroll
@@ -120,14 +131,19 @@ function Tooltip({
     }
     const cleanSubs = storeClick.subscribe(() => {
       const { clientX, clientY } = storeClick.getState();
-      if (!checkClickBy({ current: _current, clientX, clientY }) && open) {
-        setOpen(false);
+      const clickBy = checkClickBy({ current: _current, clientX, clientY });
+      if (open) {
+        if (!clickBy) {
+          setOpen(false);
+        } else if (closeOnClick) {
+          setOpen(false);
+        }
       }
     });
     return () => {
       cleanSubs();
     };
-  }, [ref, open]);
+  }, [ref, open, closeOnClick]);
 
   return (
     <div
@@ -146,5 +162,10 @@ function Tooltip({
     </div>
   );
 }
+
+Tooltip.defaultProps = {
+  length: 0,
+  closeOnClick: false,
+};
 
 export default Tooltip;

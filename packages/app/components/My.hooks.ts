@@ -5,7 +5,6 @@ import { log } from '../utils/lib';
 
 const request = new Request();
 
-// eslint-disable-next-line import/prefer-default-export
 export const usePhrases = () => {
   const [phrases, setPhrases] = useState<PhraseFindManyResult>([]);
 
@@ -24,4 +23,32 @@ export const usePhrases = () => {
   }, []);
 
   return { phrases };
+};
+
+export const usePhraseDelete = () => {
+  const [deletePhrase, setDeletePhrase] = useState<boolean>(false);
+  const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[any] | null>(null);
+
+  const onClickDeletePhraseWrapper = (phrase: PhraseFindManyResult[any]) => () => {
+    setPhraseToDelete(phrase);
+    setDeletePhrase(true);
+  };
+
+  const onClickCloseDelete = () => {
+    setPhraseToDelete(null);
+    setDeletePhrase(false);
+  };
+
+  const onClickDeletePhrase = () => {
+    console.log(phraseToDelete);
+  };
+
+  return {
+    deletePhrase,
+    setDeletePhrase,
+    onClickDeletePhraseWrapper,
+    phraseToDelete,
+    onClickCloseDelete,
+    onClickDeletePhrase,
+  };
 };

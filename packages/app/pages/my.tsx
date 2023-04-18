@@ -13,6 +13,7 @@ const request = new Request();
 interface EmployerPageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
   localeMy: Locale['app']['my'];
+  localeCommon: Locale['app']['common'];
   page: PageFull;
 }
 
@@ -21,6 +22,7 @@ export default function MyPage({
   localeAppBar,
   page,
   localeMy,
+  localeCommon,
 }: EmployerPageProps) {
   return (
     <>
@@ -31,7 +33,14 @@ export default function MyPage({
       </Head>
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <My locale={localeMy} user={user} theme={theme} />
+        <My
+          edit={localeCommon.edit}
+          _delete={localeCommon.delete}
+          locale={localeMy}
+          user={user}
+          theme={theme}
+          cancel={localeCommon.cancel}
+        />
       </main>
     </>
   );
@@ -42,6 +51,7 @@ export async function getStaticProps({
 }: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const localeMy = await request.getLocale({ field: 'my', locale });
+  const localeCommon = await request.getLocale({ field: 'common', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
@@ -59,6 +69,7 @@ export async function getStaticProps({
       page: prepagePage(page.data),
       localeAppBar: localeAppBar.data,
       localeMy: localeMy.data,
+      localeCommon: localeCommon.data,
     },
   };
 }

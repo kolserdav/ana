@@ -236,6 +236,9 @@ export interface Locale {
       fieldMustBeNotEmpty: string;
       eliminateRemarks: string;
       save: string;
+      edit: string;
+      delete: string;
+      cancel: string;
     };
     translate: {
       title: string;
@@ -255,6 +258,7 @@ export interface Locale {
     };
     my: {
       title: string;
+      deletePhrase: string;
     };
   };
 }

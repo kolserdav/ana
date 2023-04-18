@@ -2,8 +2,6 @@ import clsx from 'clsx';
 import { Theme } from '../../Theme';
 import { ubuntu500 } from '../../fonts/ubuntu';
 import s from './Cheep.module.scss';
-import CloseIcon from '../icons/Close';
-import IconButton from './IconButton';
 
 function Cheep({
   theme,

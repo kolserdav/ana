@@ -27,7 +27,7 @@ const colors: Themes = {
     text: '#cfcfcf',
     active: '#222f3e',
     contrast: 'white',
-    red: 'orange',
+    red: 'red',
     yellow: 'yellow',
     blue: '#1a6aaf',
     green: '#02e721',

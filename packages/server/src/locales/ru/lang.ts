@@ -89,6 +89,9 @@ const lang: Locale = {
       fieldMustBeNotEmpty: 'Поле не должно быть пустым',
       eliminateRemarks: 'Устраните замечания в форме',
       save: 'Сохранить',
+      edit: 'Изменить',
+      delete: 'Удалить',
+      cancel: 'Отмена',
     },
     translate: {
       title: 'Перевод предложений',
@@ -108,6 +111,7 @@ const lang: Locale = {
     },
     my: {
       title: 'Мой словарь',
+      deletePhrase: 'Удалить запись',
     },
   },
 };
