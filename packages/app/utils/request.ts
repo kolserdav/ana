@@ -1,4 +1,4 @@
-import { Page, Phrase, Prisma } from '@prisma/client';
+import { Page, Prisma } from '@prisma/client';
 import {
   Api,
   LOCALE_DEFAULT,
@@ -29,6 +29,8 @@ import {
   TagCreateResult,
   TagFindManyQuery,
   TagFindManyResult,
+  PhraseFindManyQuery,
+  PhraseFindManyResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -94,6 +96,7 @@ class Request {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async test(): Promise<any> {
     return this.send({ url: Api.testV1, method: 'GET' });
   }
@@ -200,6 +203,13 @@ class Request {
   public async tagFindMany(query: TagFindManyQuery): Promise<Result<TagFindManyResult>> {
     return this.send({
       url: Api.getTagsFindMany,
+      method: 'GET',
+    });
+  }
+
+  public async phraseFindMany(query: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
+    return this.send({
+      url: Api.getPhraseFindMany,
       method: 'GET',
     });
   }

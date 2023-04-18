@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { Phrase, Prisma, PrismaClient, Tag, User } from '@prisma/client';
+import { Phrase, PhraseTag, Prisma, PrismaClient, Tag, User } from '@prisma/client';
 
 // eslint-disable-next-line no-shadow
 export enum Api {
@@ -13,6 +13,7 @@ export enum Api {
   getUserFindFirst = '/v1/user-find-first',
   getCheckRestoreKey = '/v1/check-restore-key',
   getTagsFindMany = '/v1/tags-find-many',
+  getPhraseFindMany = '/v1/phrase-find-many',
   postPhraseCreate = '/v1/phrase-create',
   postTagCreate = '/v1/tag-create',
   postForgotPassword = '/v1/forgot-password',
@@ -59,6 +60,7 @@ export interface RequestContext {
 export interface DBCommandProps {
   model: keyof PrismaClient;
   command: Prisma.PrismaAction;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: Prisma.SelectSubset<any, any>;
 }
 export type Status = 'error' | 'warn' | 'info';
@@ -143,6 +145,9 @@ export type TagCreateResult = Tag | null;
 export type TagFindManyQuery = void;
 export type TagFindManyResult = Tag[];
 
+export type PhraseFindManyQuery = void;
+export type PhraseFindManyResult = (Phrase & { PhraseTag: (PhraseTag & { Tag: Tag })[] })[];
+
 export interface ConfirmEmailBody {
   email: string;
   key: string;
@@ -217,6 +222,7 @@ export interface Locale {
       login: string;
       logout: string;
       translate: string;
+      myDictionary: string;
     };
     confirmEmail: {
       title: string;
@@ -246,6 +252,9 @@ export interface Locale {
       tagsTitle: string;
       tagHelp: string;
       addTags: string;
+    };
+    my: {
+      title: string;
     };
   };
 }

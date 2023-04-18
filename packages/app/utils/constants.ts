@@ -18,6 +18,8 @@ export enum Pages {
   restorePassword = '/account/restore-password',
   // eslint-disable-next-line no-unused-vars
   translate = '/translate',
+  // eslint-disable-next-line no-unused-vars
+  myDictionary = '/my',
 }
 
 const now = new Date();

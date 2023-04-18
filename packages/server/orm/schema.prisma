@@ -15,6 +15,7 @@ enum PageName {
   changePassword
   confirmEmail
   translate
+  my
 }
 
 enum PageField {

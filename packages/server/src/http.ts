@@ -21,6 +21,7 @@ import userFindFirst from './api/v1/user/find-first';
 import phraseCreate from './api/v1/phrase/create';
 import tagCreate from './api/v1/tag/create';
 import tagFindMany from './api/v1/tag/findMany';
+import phraseFindMany from './api/v1/phrase/find-many';
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -64,6 +65,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.postPhraseCreate, phraseCreate);
   fastify.post(Api.postTagCreate, tagCreate);
   fastify.get(Api.getTagsFindMany, tagFindMany);
+  fastify.get(Api.getPhraseFindMany, phraseFindMany);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

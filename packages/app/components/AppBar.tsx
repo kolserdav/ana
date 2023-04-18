@@ -65,6 +65,13 @@ function AppBar({
                 </div>
               </Link>
             )}
+            {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
+              <Link noWrap theme={theme} href={Pages.myDictionary} className={s.item}>
+                <div className={s.menu__item}>
+                  <div style={{ color: theme.text }}>{locale.myDictionary}</div>
+                </div>
+              </Link>
+            )}
           </div>
         )}
         <Menu theme={theme}>
@@ -79,6 +86,13 @@ function AppBar({
             <Link withoutHover fullWidth theme={theme} href={Pages.translate}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.translate}</div>
+              </div>
+            </Link>
+          )}
+          {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
+            <Link withoutHover fullWidth theme={theme} href={Pages.myDictionary}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.myDictionary}</div>
               </div>
             </Link>
           )}

@@ -75,6 +75,7 @@ const lang: Locale = {
       login: 'Вход',
       logout: 'Выход',
       translate: 'Перевод',
+      myDictionary: 'Мой словарь',
     },
     confirmEmail: {
       title: 'Подтверждение почты',
@@ -104,6 +105,9 @@ const lang: Locale = {
       tagsTitle: 'Теги',
       tagHelp: 'Введите пробел после названия тега, чтобы он сохранился',
       addTags: 'Добавить теги',
+    },
+    my: {
+      title: 'Мой словарь',
     },
   },
 };
