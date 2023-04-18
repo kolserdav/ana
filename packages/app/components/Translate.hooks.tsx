@@ -274,6 +274,7 @@ export const useSavePhrase = ({
 
 export const useTags = () => {
   const [allTags, setAllTags] = useState<TagFindManyResult>([]);
+  const [newTag, setNewTag] = useState<string>('');
 
   /**
    * Set all tags
@@ -285,9 +286,16 @@ export const useTags = () => {
     })();
   }, []);
 
+  const onChangeNewTag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    console.log(value);
+  };
+
   const createTag = () => {
     /** */
   };
 
-  return { allTags };
+  return { allTags, newTag, onChangeNewTag };
 };

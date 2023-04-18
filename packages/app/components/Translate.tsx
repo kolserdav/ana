@@ -2,7 +2,13 @@ import clsx from 'clsx';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { useLanguages, useSavePhrase, useSpeechSynth, useTranslate } from './Translate.hooks';
+import {
+  useLanguages,
+  useSavePhrase,
+  useSpeechSynth,
+  useTags,
+  useTranslate,
+} from './Translate.hooks';
 import s from './Translate.module.scss';
 import CloseIcon from './icons/Close';
 import IconButton from './ui/IconButton';
@@ -13,6 +19,7 @@ import VolumeHighIcon from './icons/VolumeHigh';
 import Button from './ui/Button';
 import Dialog from './ui/Dialog';
 import Checkbox from './ui/Checkbox';
+import Input from './ui/Input';
 
 function Translate({
   theme,
@@ -62,6 +69,8 @@ function Translate({
     text,
     setLoad,
   });
+
+  const { onChangeNewTag, newTag } = useTags();
 
   return (
     <div className={s.wrapper}>
@@ -179,6 +188,14 @@ function Translate({
               </Typography>
             </div>
           )}
+          <Input
+            type="text"
+            id="add-new-tag"
+            onChange={onChangeNewTag}
+            value={newTag}
+            name={locale.newTag}
+            theme={theme}
+          />
           <div className={s.actions}>
             <Button theme={theme} onClick={onClickSave} disabled={load}>
               {save}
