@@ -242,6 +242,7 @@ export interface Locale {
       needLogin: string;
       savePhraseDesc: string;
       saveTranlsate: string;
+      newTag: string;
     };
   };
 }
