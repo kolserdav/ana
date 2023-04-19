@@ -286,14 +286,14 @@ function Translate({
               </div>
             </div>
           )}
-          <div className={s.actions}>
+          <div className={s.dialog_actions}>
             <Button theme={theme} onClick={edit ? onClickUpdate : onClickSave} disabled={load}>
               {save}
             </Button>
           </div>
         </Dialog>
       )}
-      <Tooltip theme={theme} parent={helpTagRef}>
+      <Tooltip theme={theme} parent={helpTagRef.current}>
         {locale.tagHelp}
       </Tooltip>
     </div>

@@ -15,13 +15,15 @@ const POSITION_DEFAULT = {
 };
 
 function Tooltip({
-  parent,
   children,
   theme,
   length,
   closeOnClick,
+  parentRef,
+  parent,
 }: {
-  parent: React.RefObject<HTMLElement>;
+  parentRef?: React.RefObject<HTMLElement>;
+  parent?: HTMLElement | null;
   children: string | React.ReactNode;
   theme: Theme;
   length?: number;
@@ -36,8 +38,11 @@ function Tooltip({
    * Handle click
    */
   useEffect(() => {
-    const { current } = parent;
+    const current = parentRef ? parentRef.current : parent;
     if (!current) {
+      if (!parent && !parentRef) {
+        log('warn', 'Parent is not passed into Tooltip', { children });
+      }
       return () => {
         /** */
       };
@@ -105,7 +110,7 @@ function Tooltip({
     return () => {
       current.removeEventListener('click', onClick);
     };
-  }, [parent, children, length]);
+  }, [parent, children, length, parentRef]);
 
   /**
    * Listen scroll
@@ -166,6 +171,8 @@ function Tooltip({
 Tooltip.defaultProps = {
   length: 0,
   closeOnClick: false,
+  parent: undefined,
+  parentRef: undefined,
 };
 
 export default Tooltip;

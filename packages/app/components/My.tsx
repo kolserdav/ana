@@ -59,7 +59,7 @@ function My({
                 <IconButton ref={ref}>
                   <DotsHorisontalIcon color={theme.text} />
                 </IconButton>
-                <Tooltip closeOnClick theme={theme} parent={ref} length={40}>
+                <Tooltip closeOnClick theme={theme} parentRef={ref} length={40}>
                   <div className={s.menu_tooltip}>
                     <IconButton title={edit} onClick={onClickPhraseUpdateWraper(item)}>
                       <EditIcon color={theme.blue} />
