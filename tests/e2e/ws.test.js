@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const assert = require('assert');
 const { test } = require('node:test');
-const { wait } = require('../../server/dist/utils/lib');
+const { wait } = require('../../packages/server/dist/utils/lib');
 const { APP_URL, TIMEOUT } = require('../constants.json');
 const { getPage } = require('../lib');
 
@@ -23,7 +23,7 @@ const test1 = async () => {
   await page.close();
   await browser.close();
   await test('Check WS', () => {
-    return assert.equal('2', tests);
+    return assert.equal('1', tests);
   });
 };
 

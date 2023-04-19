@@ -7,7 +7,7 @@ const getTestHandler: RequestHandler<any, any> = async ({ headers, body, query }
   // const locale = getLocale(lang).server;
 
   reply.type(APPLICATION_JSON).code(200);
-  return { body, query, headers };
+  return { body, query, headers, ok: 'yes' };
 };
 
 export default getTestHandler;

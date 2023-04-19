@@ -20,7 +20,8 @@ function Test() {
     send = true;
     (async () => {
       const res = await req.test();
-      if (res?.data?.ok === 'yes') {
+
+      if (res?.ok === 'yes') {
         setCount(count + 1);
         setLoad(false);
       } else {
