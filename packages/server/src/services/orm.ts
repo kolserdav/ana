@@ -34,6 +34,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public phraseFindFirst: Database['phraseFindFirst'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'findFirst',
+    });
+  };
+
   public phraseUpdate: Database['phraseUpdate'] = async (args) => {
     return this.runFromWorker({
       args,

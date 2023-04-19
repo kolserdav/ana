@@ -20,6 +20,7 @@ const lang: Locale = {
     phraseSaved: 'Фраза сохранена',
     tagExists: 'Тег был создан ранее',
     tagSaved: 'Тег сохранен',
+    phraseDeleted: 'Фраза удалена',
   },
   app: {
     login: {

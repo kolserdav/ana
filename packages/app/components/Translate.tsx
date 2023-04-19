@@ -180,7 +180,7 @@ function Translate({
         )}
       </div>
       {user && (
-        <Dialog theme={theme} open={saveDialog} onClose={setSaveDialog}>
+        <Dialog className={s.dialog} theme={theme} open={saveDialog} onClose={setSaveDialog}>
           <Typography align="center" theme={theme} variant="h2">
             {locale.savePhrase}
           </Typography>
@@ -192,13 +192,15 @@ function Translate({
               {text}
             </Typography>
           </div>
-          <Checkbox
-            theme={theme}
-            label={locale.saveTranlsate}
-            id="save-translate"
-            checked={saveTranslate}
-            onChange={setSaveTranslate}
-          />
+          <div className={s.check_item}>
+            <Checkbox
+              theme={theme}
+              label={locale.saveTranlsate}
+              id="save-translate"
+              checked={saveTranslate}
+              onChange={setSaveTranslate}
+            />
+          </div>
           {saveTranslate && (
             <div className={s.active} style={{ backgroundColor: theme.active }}>
               <Typography align="center" theme={theme} variant="p">
@@ -206,13 +208,15 @@ function Translate({
               </Typography>
             </div>
           )}
-          <Checkbox
-            theme={theme}
-            label={locale.addTags}
-            id="add-tags"
-            checked={addTags}
-            onChange={setAddTags}
-          />
+          <div className={s.check_item}>
+            <Checkbox
+              theme={theme}
+              label={locale.addTags}
+              id="add-tags"
+              checked={addTags}
+              onChange={setAddTags}
+            />
+          </div>
           {addTags && (
             <div className={s.tags}>
               <Typography className={s.title} variant="h4" theme={theme}>

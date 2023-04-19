@@ -196,6 +196,9 @@ export const useSpeechSynth = ({
    * Speech text
    */
   useEffect(() => {
+    if (!learnLang) {
+      return;
+    }
     const synth = window.speechSynthesis;
     if (!synth) {
       log('warn', 'Speech synth is not support', { synth });

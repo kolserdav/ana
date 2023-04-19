@@ -5,10 +5,9 @@ import proxy from '@fastify/http-proxy';
 import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT, TRANSLATE_URL } from './utils/constants';
 import { createDir, log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
-import { Api, CLOUD_PREFIX } from './types/interfaces';
+import { Api, CLOUD_PREFIX, PhraseDeleteBody } from './types/interfaces';
 import getLocaleHandler from './api/v1/get-locale';
 import checkTokenMiddleware from './api/middlewares/checkToken';
-
 import pageFindManyHandler from './api/v1/page/find-many';
 import userLogin from './api/v1/user/login';
 import checkEmailHandler from './api/v1/user/check-email';
@@ -22,6 +21,11 @@ import phraseCreate from './api/v1/phrase/create';
 import tagCreate from './api/v1/tag/create';
 import tagFindMany from './api/v1/tag/findMany';
 import phraseFindMany from './api/v1/phrase/find-many';
+import phraseDelete from './api/v1/phrase/delete';
+import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 process.on('uncaughtException', (err: Error) => {
   log('error', '[WORKER] uncaughtException', err);
@@ -34,16 +38,34 @@ process.on('unhandledRejection', (err: Error) => {
   const fastify = Fastify({
     logger: FASTIFY_LOGGER,
   });
+
   fastify.register(proxy, {
     upstream: TRANSLATE_URL,
     prefix: '/libre',
     http2: false,
   });
+
   await fastify.register(import('@fastify/middie'), { hook: 'preHandler' });
   await fastify.use(cors({ origin: [APP_URL] }));
   await fastify.use(
-    [Api.getUserFindFirst, Api.postPhraseCreate, Api.postTagCreate, Api.getTagsFindMany],
+    [
+      Api.getUserFindFirst,
+      Api.postPhraseCreate,
+      Api.postTagCreate,
+      Api.getTagsFindMany,
+      Api.getPhraseFindMany,
+      Api.deletePhrase,
+    ],
     checkTokenMiddleware
+  );
+  await fastify.use(
+    [Api.deletePhrase],
+    checkAccessMiddlewareWrapper(prisma, {
+      model: 'Phrase',
+      bodyField: 'userId',
+      key: 'PhraseScalarFieldEnum',
+      fieldId: 'phraseId',
+    })
   );
 
   // Open routes
@@ -66,6 +88,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.postTagCreate, tagCreate);
   fastify.get(Api.getTagsFindMany, tagFindMany);
   fastify.get(Api.getPhraseFindMany, phraseFindMany);
+  fastify.delete(Api.deletePhrase, phraseDelete);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

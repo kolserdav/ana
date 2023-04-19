@@ -5,15 +5,19 @@ import { Theme } from '../../Theme';
 import { checkClickBy, setBodyScroll } from '../../utils/lib';
 import s from './Dialog.module.scss';
 
-const Dialog = forwardRef<
-  HTMLDivElement,
-  {
-    theme: Theme;
-    open: boolean;
-    children: React.ReactNode | React.ReactNode[];
-    onClose?: React.Dispatch<React.SetStateAction<boolean>>;
-  }
->(({ theme, open, children, onClose }) => {
+function Dialog({
+  theme,
+  open,
+  children,
+  onClose,
+  className,
+}: {
+  theme: Theme;
+  open: boolean;
+  children: React.ReactNode | React.ReactNode[];
+  className?: string;
+  onClose?: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   /**
@@ -53,7 +57,7 @@ const Dialog = forwardRef<
     <div className={clsx(s.wrapper, open ? s.open : '')}>
       <div
         ref={ref}
-        className={s.container}
+        className={clsx(s.container, className || '')}
         style={{
           color: theme.text,
           backgroundColor: theme.paper,
@@ -64,12 +68,13 @@ const Dialog = forwardRef<
       </div>
     </div>
   );
-});
+}
 
 Dialog.displayName = 'Tooltip';
 
 Dialog.defaultProps = {
   onClose: undefined,
+  className: undefined,
 };
 
 export default Dialog;

@@ -1,5 +1,15 @@
+$checkbox-size: 24px;
+
 .wrapper {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  input {
+    width: $checkbox-size;
+    height: $checkbox-size;
+  }
 
   label {
     margin-left: 1rem;

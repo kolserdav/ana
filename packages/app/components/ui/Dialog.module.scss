@@ -10,6 +10,7 @@
   top: 0;
   background-color: rgba($color: #000, $alpha: 80%);
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
 
@@ -24,10 +25,18 @@
     min-width: 320px;
     height: auto;
     min-height: 200px;
-    max-height: 90vh;
-    max-width: calc($dialog-max-width + $dialog-padding * 2);
+    max-height: 80vh;
+    max-width: calc($dialog-max-width - $dialog-padding * 2);
     border-radius: 8px;
     padding: $dialog-padding;
     overflow: auto;
+
+    @media (max-width: $mobile-width) {
+      max-width: 95vw;
+    }
+
+    @media (max-height: $mobile-width) {
+      max-height: 95vh;
+    }
   }
 }

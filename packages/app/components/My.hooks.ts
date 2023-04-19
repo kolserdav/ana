@@ -7,6 +7,7 @@ const request = new Request();
 
 export const usePhrases = () => {
   const [phrases, setPhrases] = useState<PhraseFindManyResult>([]);
+  const [restart, setRestart] = useState<boolean>(false);
 
   /**
    * Set phrases
@@ -20,12 +21,20 @@ export const usePhrases = () => {
       }
       setPhrases(_phrases.data);
     })();
-  }, []);
+  }, [restart]);
 
-  return { phrases };
+  return { phrases, setRestart, restart };
 };
 
-export const usePhraseDelete = () => {
+export const usePhraseDelete = ({
+  setLoad,
+  setRestart,
+  restart,
+}: {
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  setRestart: React.Dispatch<React.SetStateAction<boolean>>;
+  restart: boolean;
+}) => {
   const [deletePhrase, setDeletePhrase] = useState<boolean>(false);
   const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[any] | null>(null);
 
@@ -39,8 +48,21 @@ export const usePhraseDelete = () => {
     setDeletePhrase(false);
   };
 
-  const onClickDeletePhrase = () => {
-    console.log(phraseToDelete);
+  const onClickDeletePhrase = async () => {
+    if (!phraseToDelete) {
+      log('warn', 'Phrase to delete is missing', { phraseToDelete });
+      return;
+    }
+    setLoad(true);
+    const delRes = await request.phraseDelete({ phraseId: phraseToDelete.id });
+    setLoad(false);
+    log(delRes.status, delRes.message, delRes, true);
+    if (delRes.status !== 'info') {
+      return;
+    }
+    setPhraseToDelete(null);
+    setDeletePhrase(false);
+    setRestart(!restart);
   };
 
   return {

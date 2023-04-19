@@ -31,6 +31,8 @@ import {
   TagFindManyResult,
   PhraseFindManyQuery,
   PhraseFindManyResult,
+  PhraseDeleteBody,
+  PhraseDeleteResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -188,6 +190,14 @@ class Request {
     return this.send({
       url: Api.postPhraseCreate,
       method: 'POST',
+      body,
+    });
+  }
+
+  public async phraseDelete(body: PhraseDeleteBody): Promise<Result<PhraseDeleteResult>> {
+    return this.send({
+      url: Api.deletePhrase,
+      method: 'DELETE',
       body,
     });
   }

@@ -7,6 +7,15 @@
   justify-content: center;
   width: 100%;
 
+  .dialog {
+    display: flex;
+    flex-direction: column;
+
+    .check_item {
+      margin: 1rem 0;
+    }
+  }
+
   .container {
     position: relative;
     width: 100%;

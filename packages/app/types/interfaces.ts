@@ -12,9 +12,10 @@ export enum Api {
   postRestorePassword = '/v1/restore-password',
   getUserFindFirst = '/v1/user-find-first',
   getCheckRestoreKey = '/v1/check-restore-key',
+  deletePhrase = '/v1/phrase',
+  postPhraseCreate = '/v1/phrase',
   getTagsFindMany = '/v1/tags-find-many',
   getPhraseFindMany = '/v1/phrase-find-many',
-  postPhraseCreate = '/v1/phrase-create',
   postTagCreate = '/v1/tag-create',
   postForgotPassword = '/v1/forgot-password',
   postUserLogin = '/v1/user-login',
@@ -137,6 +138,11 @@ export interface PhraseCreateBody {
 }
 export type PhraseCreateResult = Phrase | null;
 
+export interface PhraseDeleteBody {
+  phraseId: string;
+}
+export type PhraseDeleteResult = Phrase | null;
+
 export interface TagCreateBody {
   text: string;
 }
@@ -179,6 +185,7 @@ export interface Locale {
     phraseSaved: string;
     tagExists: string;
     tagSaved: string;
+    phraseDeleted: string;
   };
   app: {
     login: {

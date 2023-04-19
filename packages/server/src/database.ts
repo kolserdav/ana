@@ -33,6 +33,12 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<Array<Phrase>>, Promise<Result<Array<Prisma.PhraseGetPayload<T>>>>>
   >;
 
+  public abstract phraseFindFirst<T extends Prisma.PhraseFindFirstArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PhraseFindFirstArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Phrase | null>, Promise<Result<Prisma.PhraseGetPayload<T> | null>>>
+  >;
+
   public abstract phraseCreate<T extends Prisma.PhraseCreateArgs>(
     args: Prisma.SelectSubset<T, Prisma.PhraseCreateArgs>
   ): Promise<

@@ -1,5 +1,6 @@
 import { Theme } from '../../Theme';
 import s from './Checkbox.module.scss';
+import Typography from './Typography';
 
 function Checkbox({
   checked,
@@ -24,10 +25,11 @@ function Checkbox({
         aria-label={label}
         type="checkbox"
         checked={checked}
+        style={{ accentColor: theme.blue }}
       />
-      <label htmlFor={id} style={{ color: theme.text }}>
+      <Typography variant="label" theme={theme}>
         {label}
-      </label>
+      </Typography>
     </div>
   );
 }

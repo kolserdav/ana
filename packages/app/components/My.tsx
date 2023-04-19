@@ -28,9 +28,9 @@ function My({
   _delete: string;
   cancel: string;
 }) {
-  useLoad();
+  const { load, setLoad } = useLoad();
 
-  const { phrases } = usePhrases();
+  const { phrases, restart, setRestart } = usePhrases();
 
   const {
     deletePhrase,
@@ -39,7 +39,7 @@ function My({
     phraseToDelete,
     onClickCloseDelete,
     onClickDeletePhrase,
-  } = usePhraseDelete();
+  } = usePhraseDelete({ setLoad, restart, setRestart });
 
   return (
     <div className={s.wrapper}>
