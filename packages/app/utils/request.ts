@@ -37,6 +37,10 @@ import {
   PhraseUpdateResult,
   PhraseFindFirstResult,
   PhraseFindFirstQuery,
+  TagDeleteBody,
+  TagDeleteResult,
+  TagUpdateBody,
+  TagUpdateResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -227,6 +231,22 @@ class Request {
     return this.send({
       url: Api.postTagCreate,
       method: 'POST',
+      body,
+    });
+  }
+
+  public async tagDelete(body: TagDeleteBody): Promise<Result<TagDeleteResult>> {
+    return this.send({
+      url: Api.deleteTag,
+      method: 'DELETE',
+      body,
+    });
+  }
+
+  public async tagUpdate(body: TagUpdateBody): Promise<Result<TagUpdateResult>> {
+    return this.send({
+      url: Api.putTag,
+      method: 'PUT',
       body,
     });
   }

@@ -89,6 +89,13 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
       id: phraseId,
     },
     data: _data,
+    include: {
+      PhraseTag: {
+        include: {
+          Tag: true,
+        },
+      },
+    },
   });
   if (updRes.status === 'error') {
     reply.type(APPLICATION_JSON).code(500);

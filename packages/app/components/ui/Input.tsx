@@ -31,6 +31,7 @@ const Input = forwardRef<
     hidden?: boolean;
     desc?: string;
     accept?: string;
+    classWrapper?: string;
   }
 >(
   (
@@ -56,6 +57,7 @@ const Input = forwardRef<
       multiple,
       hidden,
       desc,
+      classWrapper,
     },
     ref
   ) => {
@@ -87,7 +89,9 @@ const Input = forwardRef<
     }, [value]);
 
     return (
-      <div className={clsx(s.wrapper, ubuntu500.className, hidden ? s.hidden : '')}>
+      <div
+        className={clsx(s.wrapper, classWrapper || '', ubuntu500.className, hidden ? s.hidden : '')}
+      >
         <input
           ref={ref || inputRef}
           disabled={disabled}
@@ -170,6 +174,7 @@ Input.defaultProps = {
   hidden: undefined,
   desc: undefined,
   accept: undefined,
+  classWrapper: undefined,
 };
 
 export default Input;

@@ -17,6 +17,8 @@ export enum Api {
   getPhrase = '/v1/phrase-find-first',
   postPhraseCreate = '/v1/phrase-create',
   getTagsFindMany = '/v1/tags-find-many',
+  deleteTag = '/v1/tag',
+  putTag = '/v1/tag',
   getPhraseFindMany = '/v1/phrase-find-many',
   postTagCreate = '/v1/tag-create',
   postForgotPassword = '/v1/forgot-password',
@@ -147,21 +149,32 @@ export interface PhraseDeleteBody {
 }
 export type PhraseDeleteResult = Phrase | null;
 
+export type PhraseFull = Phrase & { PhraseTag: (PhraseTag & { Tag: Tag })[] };
+
 export interface PhraseUpdateBody {
   phraseId: string;
   data: Partial<PhraseCreateBody>;
 }
-export type PhraseUpdateResult = Phrase | null;
+export type PhraseUpdateResult = PhraseFull | null;
 
 export interface TagCreateBody {
   text: string;
 }
 export type TagCreateResult = Tag | null;
 
+export interface TagUpdateBody {
+  tagId: string;
+  data: Partial<TagCreateBody>;
+}
+export type TagUpdateResult = Tag | null;
+
+export interface TagDeleteBody {
+  tagId: string;
+}
+export type TagDeleteResult = Tag | null;
+
 export type TagFindManyQuery = void;
 export type TagFindManyResult = Tag[];
-
-export type PhraseFull = Phrase & { PhraseTag: (PhraseTag & { Tag: Tag })[] };
 
 export interface PhraseFindFirstQuery {
   phraseId: string;
@@ -204,6 +217,9 @@ export interface Locale {
     tagSaved: string;
     phraseDeleted: string;
     phraseLoad: string;
+    tagDeleteConflict: string;
+    tagDeleted: string;
+    tagUpdated: string;
   };
   app: {
     login: {
@@ -282,6 +298,9 @@ export interface Locale {
       addTags: string;
       updatePhrase: string;
       createPhrase: string;
+      deleteTag: string;
+      updateTag: string;
+      changeTag: string;
     };
     my: {
       title: string;

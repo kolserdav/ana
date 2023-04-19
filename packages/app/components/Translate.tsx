@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useRef } from 'react';
+import { createRef, useRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
@@ -24,6 +24,8 @@ import Input from './ui/Input';
 import HelpIcon from './icons/Help';
 import Tooltip from './ui/Tooltip';
 import Cheep from './ui/Cheep';
+import EditIcon from './icons/Edit';
+import DeleteIcon from './icons/Delete';
 
 function Translate({
   theme,
@@ -31,14 +33,20 @@ function Translate({
   user,
   save,
   showHelp,
+  _edit,
+  _delete,
+  cancel,
 }: {
   theme: Theme;
   locale: Locale['app']['translate'];
   user: UserCleanResult;
   save: string;
   showHelp: string;
+  _edit: string;
+  _delete: string;
+  cancel: string;
 }) {
-  const helpTagRef = useRef(null);
+  const helpTagRef = createRef<HTMLButtonElement>();
   const { load, setLoad } = useLoad();
   const {
     langs,
@@ -60,7 +68,15 @@ function Translate({
     addTags,
     setAddTags,
     setTags,
-  } = useTags();
+    onClickTagDeleteWrapper,
+    onClickTagUpdateWrapper,
+    deleteTagDialog,
+    tagToDelete,
+    tagToUpdate,
+    setDeleteTagDialog,
+    onClickCancelDeleteTag,
+    onClickDeleteTag,
+  } = useTags({ setLoad });
 
   const {
     translate,
@@ -74,6 +90,7 @@ function Translate({
     edit,
     restart,
     setRestart,
+    phraseToUpdate,
   } = useTranslate({
     nativeLang,
     learnLang,
@@ -110,6 +127,7 @@ function Translate({
     edit,
     restart,
     setRestart,
+    addTags,
   });
 
   return (
@@ -118,11 +136,21 @@ function Translate({
         <Typography variant="h1" theme={theme} align="center">
           {edit ? locale.updatePhrase : locale.title}
         </Typography>
-        {!edit && (
+
+        {!edit ? (
           <Typography variant="p" align="center" theme={theme}>
             {locale.description}
           </Typography>
+        ) : (
+          <div className={s.tag_cloud}>
+            {phraseToUpdate?.PhraseTag.map((item) => (
+              <span className={s.tag_cloud__item} style={{ color: theme.text }} key={item.id}>
+                #{item.Tag.text}
+              </span>
+            ))}
+          </div>
         )}
+
         <div className={s.selectors}>
           <Select
             onChange={changeLangWrapper('native')}
@@ -248,12 +276,13 @@ function Translate({
               </Typography>
               <div className={s.input}>
                 <Input
+                  classWrapper={s.field_wrapper}
                   className={s.field}
                   type="text"
                   id="add-new-tag"
                   onChange={onChangeNewTag}
                   value={newTag}
-                  name={locale.newTag}
+                  name={tagToUpdate ? locale.changeTag : locale.newTag}
                   theme={theme}
                 />
                 <IconButton title={showHelp} ref={helpTagRef}>
@@ -277,7 +306,22 @@ function Translate({
                 {allTags.map((item) => (
                   <span key={item.id}>
                     {tags.findIndex((i) => i.id === item.id) === -1 && (
-                      <Cheep onClick={onClicTagCheepWrapper(item, 'add')} add theme={theme}>
+                      <Cheep
+                        menuChildren={
+                          <div className={s.menu_tooltip}>
+                            <IconButton title={_edit} onClick={onClickTagUpdateWrapper(item)}>
+                              <EditIcon color={theme.blue} />
+                            </IconButton>
+                            <IconButton onClick={onClickTagDeleteWrapper(item)} title={_delete}>
+                              <DeleteIcon color={theme.red} />
+                            </IconButton>
+                          </div>
+                        }
+                        menuChildrenLength={30}
+                        onClick={onClicTagCheepWrapper(item, 'add')}
+                        add
+                        theme={theme}
+                      >
                         {item.text}
                       </Cheep>
                     )}
@@ -293,7 +337,30 @@ function Translate({
           </div>
         </Dialog>
       )}
-      <Tooltip theme={theme} parent={helpTagRef.current}>
+      {user && (
+        <Dialog
+          className={s.dialog}
+          onClose={setDeleteTagDialog}
+          theme={theme}
+          open={deleteTagDialog}
+        >
+          <Typography theme={theme} variant="h3">
+            {locale.deleteTag}?
+          </Typography>
+          <Typography variant="p" theme={theme}>
+            {tagToDelete?.text || ''}
+          </Typography>
+          <div className={s.actions}>
+            <Button className={s.button} onClick={onClickCancelDeleteTag} theme={theme}>
+              {cancel}
+            </Button>
+            <Button className={s.button} onClick={onClickDeleteTag} theme={theme}>
+              {_delete}
+            </Button>
+          </div>
+        </Dialog>
+      )}
+      <Tooltip theme={theme} parentRef={helpTagRef}>
         {locale.tagHelp}
       </Tooltip>
     </div>

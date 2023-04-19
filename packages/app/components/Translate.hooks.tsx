@@ -4,7 +4,7 @@ import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { cleanPath, log } from '../utils/lib';
 import { TEXTAREA_ROWS, TRANSLATE_DELAY } from '../utils/constants';
-import { Locale, TagFindManyResult } from '../types/interfaces';
+import { Locale, PhraseUpdateResult, TagFindManyResult } from '../types/interfaces';
 
 const request = new Request();
 
@@ -83,6 +83,7 @@ export const useTranslate = ({
   const [rows, setRows] = useState<number>(TEXTAREA_ROWS);
   const [edit, setEdit] = useState<string | null>(null);
   const [restart, setRestart] = useState<boolean>(false);
+  const [phraseToUpdate, setPhraseToUpdate] = useState<PhraseUpdateResult>(null);
 
   /**
    * Set edit
@@ -108,6 +109,7 @@ export const useTranslate = ({
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
+      setPhraseToUpdate(phrase.data);
       setText(phrase.data.text);
       setNativeLang(phrase.data.nativeLang);
       setLearnLang(phrase.data.learnLang);
@@ -238,6 +240,7 @@ export const useTranslate = ({
     edit,
     restart,
     setRestart,
+    phraseToUpdate,
   };
 };
 
@@ -307,6 +310,7 @@ export const useSavePhrase = ({
   edit,
   restart,
   setRestart,
+  addTags,
   tags,
 }: {
   text: string;
@@ -318,6 +322,7 @@ export const useSavePhrase = ({
   edit: string | null;
   restart: boolean;
   setRestart: React.Dispatch<React.SetStateAction<boolean>>;
+  addTags: boolean;
   translate?: string;
 }) => {
   const [saveDialog, setSaveDialog] = useState<boolean>(false);
@@ -357,7 +362,7 @@ export const useSavePhrase = ({
         learnLang,
         nativeLang,
         translate: saveTranslate ? translate : undefined,
-        tags: tags.map((item) => item.id),
+        tags: addTags ? tags.map((item) => item.id) : [],
       },
     });
     setLoad(false);
@@ -379,12 +384,19 @@ export const useSavePhrase = ({
   };
 };
 
-export const useTags = () => {
+export const useTags = ({
+  setLoad,
+}: {
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [allTags, setAllTags] = useState<TagFindManyResult>([]);
   const [tags, setTags] = useState<TagFindManyResult>([]);
   const [newTag, setNewTag] = useState<string>('');
   const [restart, setRestart] = useState<boolean>(false);
   const [addTags, setAddTags] = useState<boolean>(false);
+  const [deleteTagDialog, setDeleteTagDialog] = useState<boolean>(false);
+  const [tagToDelete, setTagToDelete] = useState<TagFindManyResult[0] | null>(null);
+  const [tagToUpdate, setTagToUpdate] = useState<TagFindManyResult[0] | null>(null);
 
   /**
    * Set all tags
@@ -397,9 +409,23 @@ export const useTags = () => {
   }, [restart]);
 
   const createTag = async (text: string) => {
-    const createRes = await request.tagCreate({ text });
-    log(createRes.status, createRes.message, createRes, true);
-    if (createRes.status !== 'info') {
+    const res = await request.tagCreate({ text });
+    log(res.status, res.message, res, true);
+    if (res.status !== 'info') {
+      return;
+    }
+    setNewTag('');
+    setRestart(!restart);
+  };
+
+  const updateTag = async (text: string) => {
+    if (!tagToUpdate) {
+      log('warn', 'Tag to update is missing', {});
+      return;
+    }
+    const res = await request.tagUpdate({ tagId: tagToUpdate.id, data: { text } });
+    log(res.status, res.message, res, true);
+    if (res.status !== 'info') {
       return;
     }
     setNewTag('');
@@ -412,7 +438,11 @@ export const useTags = () => {
     } = e;
     setNewTag(value);
     if (value[value.length - 1] === ' ') {
-      createTag(value.trim());
+      if (tagToUpdate) {
+        updateTag(value.trim());
+      } else {
+        createTag(value.trim());
+      }
     }
   };
 
@@ -440,6 +470,38 @@ export const useTags = () => {
     setTags(_tags);
   };
 
+  const onClickTagUpdateWrapper = (tag: TagFindManyResult[0]) => () => {
+    setTagToUpdate(tag);
+    setNewTag(tag.text);
+  };
+
+  const onClickTagDeleteWrapper = (tag: TagFindManyResult[0]) => () => {
+    setTagToDelete(tag);
+    setDeleteTagDialog(true);
+  };
+
+  const onClickCancelDeleteTag = () => {
+    setTagToDelete(null);
+    setDeleteTagDialog(false);
+  };
+
+  const onClickDeleteTag = async () => {
+    if (!tagToDelete) {
+      log('warn', 'Tag to delete is missing', tagToDelete);
+      return;
+    }
+    setLoad(true);
+    const delRes = await request.tagDelete({ tagId: tagToDelete.id });
+    setLoad(false);
+    log(delRes.status, delRes.message, delRes, true);
+    if (delRes.status !== 'info') {
+      return;
+    }
+    setRestart(!restart);
+    setTagToDelete(null);
+    setDeleteTagDialog(false);
+  };
+
   return {
     allTags,
     newTag,
@@ -449,5 +511,13 @@ export const useTags = () => {
     addTags,
     setAddTags,
     setTags,
+    onClickTagDeleteWrapper,
+    onClickTagUpdateWrapper,
+    tagToDelete,
+    tagToUpdate,
+    deleteTagDialog,
+    setDeleteTagDialog,
+    onClickCancelDeleteTag,
+    onClickDeleteTag,
   };
 };

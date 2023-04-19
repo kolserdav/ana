@@ -34,11 +34,14 @@ export default function TestPage({
       <AppBar user={user} full theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Translate
+          _edit={localeCommon.edit}
+          _delete={localeCommon.delete}
           showHelp={localeCommon.showHelp}
           save={localeCommon.save}
           user={user}
           theme={theme}
           locale={localeTranslate}
+          cancel={localeCommon.cancel}
         />
       </main>
     </>

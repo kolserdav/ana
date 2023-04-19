@@ -26,6 +26,8 @@ import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
 import { PrismaClient } from '@prisma/client';
 import phraseUpdate from './api/v1/phrase/update';
 import phraseFindFirst from './api/v1/phrase/find-first';
+import tagDelete from './api/v1/tag/delete';
+import tagUpdate from './api/v1/tag/update';
 
 const prisma = new PrismaClient();
 
@@ -59,6 +61,8 @@ process.on('unhandledRejection', (err: Error) => {
       Api.deletePhrase,
       Api.putPhrase,
       Api.getPhrase,
+      Api.deleteTag,
+      Api.putTag,
     ],
     checkTokenMiddleware
   );
@@ -69,6 +73,16 @@ process.on('unhandledRejection', (err: Error) => {
       bodyField: 'userId',
       key: 'PhraseScalarFieldEnum',
       fieldId: 'phraseId',
+    })
+  );
+
+  await fastify.use(
+    [Api.deleteTag, Api.putTag],
+    checkAccessMiddlewareWrapper(prisma, {
+      model: 'Phrase',
+      bodyField: 'userId',
+      key: 'TagScalarFieldEnum',
+      fieldId: 'tagId',
     })
   );
 
@@ -105,6 +119,8 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.delete(Api.deletePhrase, phraseDelete);
   fastify.put(Api.putPhrase, phraseUpdate);
   fastify.get(Api.getPhrase, phraseFindFirst);
+  fastify.delete(Api.deleteTag, tagDelete);
+  fastify.put(Api.putTag, tagUpdate);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

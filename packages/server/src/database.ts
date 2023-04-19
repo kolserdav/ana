@@ -69,6 +69,12 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<Tag | null>, Promise<Result<Prisma.TagGetPayload<T> | null>>>
   >;
 
+  public abstract tagFindFirst<T extends Prisma.TagFindFirstArgs>(
+    args: Prisma.SelectSubset<T, Prisma.TagFindFirstArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Tag | null>, Promise<Result<Prisma.TagGetPayload<T> | null>>>
+  >;
+
   public abstract tagUpdate<T extends Prisma.TagUpdateArgs>(
     args: Prisma.SelectSubset<T, Prisma.TagUpdateArgs>
   ): Promise<

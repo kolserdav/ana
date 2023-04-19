@@ -74,6 +74,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public tagFindFirst: Database['tagFindFirst'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'tag',
+      command: 'findFirst',
+    });
+  };
+
   public tagUpdate: Database['tagUpdate'] = async (args) => {
     return this.runFromWorker({
       args,

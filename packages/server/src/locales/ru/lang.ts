@@ -22,6 +22,9 @@ const lang: Locale = {
     tagSaved: 'Тег сохранен',
     phraseDeleted: 'Фраза удалена',
     phraseLoad: 'Фраза загружена из базы данных',
+    tagDeleteConflict: 'Тег не может быть удален, пока он привязан к фразе',
+    tagDeleted: 'Тег удален',
+    tagUpdated: 'Тег изменен для всех фраз',
   },
   app: {
     login: {
@@ -108,10 +111,13 @@ const lang: Locale = {
       savePhraseDesc: 'Сохраненная фраза будет доступна только вам',
       saveTranlsate: 'Сохранить вместе с переводом',
       newTag: 'Новый тег',
+      changeTag: 'Изменение тега',
       tagsTitle: 'Теги',
       tagHelp: 'Введите пробел после названия тега, чтобы он сохранился',
       addTags: 'Добавить теги',
       updatePhrase: 'Редактирование фразы',
+      deleteTag: 'Удалить тег',
+      updateTag: 'Обновить тег',
     },
     my: {
       title: 'Мой словарь',
