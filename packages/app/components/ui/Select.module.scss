@@ -5,7 +5,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  width: $small-width;
+  min-width: calc(($small-width - 2rem) / 2);
 
   label {
     position: absolute;

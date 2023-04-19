@@ -56,6 +56,8 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
   }
   if (translate) {
     _data.translate = translate;
+  } else {
+    _data.translate = null;
   }
   if (tags) {
     const updRes = await orm.phraseUpdate({
