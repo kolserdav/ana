@@ -24,6 +24,8 @@ import phraseFindMany from './api/v1/phrase/find-many';
 import phraseDelete from './api/v1/phrase/delete';
 import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
 import { PrismaClient } from '@prisma/client';
+import phraseUpdate from './api/v1/phrase/update';
+import phraseFindFirst from './api/v1/phrase/find-first';
 
 const prisma = new PrismaClient();
 
@@ -55,14 +57,26 @@ process.on('unhandledRejection', (err: Error) => {
       Api.getTagsFindMany,
       Api.getPhraseFindMany,
       Api.deletePhrase,
+      Api.putPhrase,
+      Api.getPhrase,
     ],
     checkTokenMiddleware
   );
   await fastify.use(
-    [Api.deletePhrase],
+    [Api.deletePhrase, Api.putPhrase, Api.getPhrase],
     checkAccessMiddlewareWrapper(prisma, {
       model: 'Phrase',
       bodyField: 'userId',
+      key: 'PhraseScalarFieldEnum',
+      fieldId: 'phraseId',
+    })
+  );
+
+  await fastify.use(
+    [Api.getPhrase],
+    checkAccessMiddlewareWrapper(prisma, {
+      model: 'Phrase',
+      queryField: 'userId',
       key: 'PhraseScalarFieldEnum',
       fieldId: 'phraseId',
     })
@@ -89,6 +103,8 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.get(Api.getTagsFindMany, tagFindMany);
   fastify.get(Api.getPhraseFindMany, phraseFindMany);
   fastify.delete(Api.deletePhrase, phraseDelete);
+  fastify.put(Api.putPhrase, phraseUpdate);
+  fastify.get(Api.getPhrase, phraseFindFirst);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

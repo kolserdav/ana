@@ -14,7 +14,7 @@ const phraseDelete: RequestHandler<{ Body: PhraseDeleteBody }, Result<PhraseDele
   { headers, body },
   reply
 ) => {
-  const { lang, id } = parseHeaders(headers);
+  const { lang } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
   const { phraseId } = body;

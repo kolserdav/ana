@@ -133,6 +133,7 @@ export class ORM extends Service implements Database {
     });
   }
 
+  // FIXME protect message
   private async run({
     model,
     command,

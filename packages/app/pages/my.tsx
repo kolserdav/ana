@@ -40,6 +40,7 @@ export default function MyPage({
           user={user}
           theme={theme}
           cancel={localeCommon.cancel}
+          save={localeCommon.save}
         />
       </main>
     </>

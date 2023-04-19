@@ -13,7 +13,9 @@ export enum Api {
   getUserFindFirst = '/v1/user-find-first',
   getCheckRestoreKey = '/v1/check-restore-key',
   deletePhrase = '/v1/phrase',
-  postPhraseCreate = '/v1/phrase',
+  putPhrase = '/v1/phrase',
+  getPhrase = '/v1/phrase-find-first',
+  postPhraseCreate = '/v1/phrase-create',
   getTagsFindMany = '/v1/tags-find-many',
   getPhraseFindMany = '/v1/phrase-find-many',
   postTagCreate = '/v1/tag-create',
@@ -134,6 +136,8 @@ export type RestorePasswordResult = null;
 export interface PhraseCreateBody {
   text: string;
   tags: string[];
+  learnLang: string;
+  nativeLang: string;
   translate?: string;
 }
 export type PhraseCreateResult = Phrase | null;
@@ -143,6 +147,12 @@ export interface PhraseDeleteBody {
 }
 export type PhraseDeleteResult = Phrase | null;
 
+export interface PhraseUpdateBody {
+  phraseId: string;
+  data: Partial<PhraseCreateBody>;
+}
+export type PhraseUpdateResult = Phrase | null;
+
 export interface TagCreateBody {
   text: string;
 }
@@ -151,8 +161,15 @@ export type TagCreateResult = Tag | null;
 export type TagFindManyQuery = void;
 export type TagFindManyResult = Tag[];
 
+export type PhraseFull = Phrase & { PhraseTag: (PhraseTag & { Tag: Tag })[] };
+
+export interface PhraseFindFirstQuery {
+  phraseId: string;
+}
+export type PhraseFindFirstResult = PhraseFull | null;
+
 export type PhraseFindManyQuery = void;
-export type PhraseFindManyResult = (Phrase & { PhraseTag: (PhraseTag & { Tag: Tag })[] })[];
+export type PhraseFindManyResult = PhraseFull[];
 
 export interface ConfirmEmailBody {
   email: string;
@@ -186,6 +203,7 @@ export interface Locale {
     tagExists: string;
     tagSaved: string;
     phraseDeleted: string;
+    phraseLoad: string;
   };
   app: {
     login: {
@@ -262,10 +280,13 @@ export interface Locale {
       tagsTitle: string;
       tagHelp: string;
       addTags: string;
+      updatePhrase: string;
+      createPhrase: string;
     };
     my: {
       title: string;
       deletePhrase: string;
+      updatePhrase: string;
     };
   };
 }

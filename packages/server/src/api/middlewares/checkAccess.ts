@@ -25,7 +25,7 @@ const checkAccessMiddlewareWrapper: <
     const { lang, id } = parseHeaders(headers);
 
     const locale = getLocale(lang).server;
-    const targetId = bodyField ? body[fieldId] : query[fieldId];
+    const targetId = bodyField && body ? body[fieldId] : query[fieldId];
     if (!targetId) {
       log('error', 'Target id not specified in middleware', { url: req.url });
       res.statusCode = 501;

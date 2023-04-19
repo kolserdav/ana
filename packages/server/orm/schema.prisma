@@ -67,14 +67,16 @@ model ConfirmLink {
 }
 
 model Phrase {
-  id        String      @id @default(uuid())
-  text      String      @db.VarChar(1000)
-  translate String?     @db.VarChar(1500)
-  userId    String
-  User      User        @relation(fields: [userId], references: [id])
-  updated   DateTime    @default(now())
-  created   DateTime    @default(now())
-  PhraseTag PhraseTag[]
+  id         String      @id @default(uuid())
+  text       String      @db.VarChar(1000)
+  translate  String?     @db.VarChar(1500)
+  userId     String
+  nativeLang String      @db.VarChar(2)
+  learnLang  String      @db.VarChar(2)
+  User       User        @relation(fields: [userId], references: [id])
+  updated    DateTime    @default(now())
+  created    DateTime    @default(now())
+  PhraseTag  PhraseTag[]
 }
 
 model PhraseTag {

@@ -33,6 +33,10 @@ import {
   PhraseFindManyResult,
   PhraseDeleteBody,
   PhraseDeleteResult,
+  PhraseUpdateBody,
+  PhraseUpdateResult,
+  PhraseFindFirstResult,
+  PhraseFindFirstQuery,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -198,6 +202,23 @@ class Request {
     return this.send({
       url: Api.deletePhrase,
       method: 'DELETE',
+      body,
+    });
+  }
+
+  public async phraseFindFirst({
+    phraseId,
+  }: PhraseFindFirstQuery): Promise<Result<PhraseFindFirstResult>> {
+    return this.send({
+      url: `${Api.getPhrase}?phraseId=${phraseId}`,
+      method: 'GET',
+    });
+  }
+
+  public async phraseUpdate(body: PhraseUpdateBody): Promise<Result<PhraseUpdateResult>> {
+    return this.send({
+      url: Api.putPhrase,
+      method: 'PUT',
       body,
     });
   }

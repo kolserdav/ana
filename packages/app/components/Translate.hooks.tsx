@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
-import { log } from '../utils/lib';
+import { cleanPath, log } from '../utils/lib';
 import { TEXTAREA_ROWS, TRANSLATE_DELAY } from '../utils/constants';
 import { Locale, TagFindManyResult } from '../types/interfaces';
 
@@ -40,7 +41,16 @@ export const useLanguages = () => {
     })();
   }, []);
 
-  return { learnLang, nativeLang, langs, changeLangWrapper, changeLang, setChangeLang };
+  return {
+    learnLang,
+    nativeLang,
+    langs,
+    changeLangWrapper,
+    changeLang,
+    setChangeLang,
+    setNativeLang,
+    setLearnLang,
+  };
 };
 
 let timeout = setTimeout(() => {
@@ -52,16 +62,60 @@ export const useTranslate = ({
   nativeLang,
   changeLang,
   setChangeLang,
+  setNativeLang,
+  setLearnLang,
+  setTags,
+  setAddTags,
 }: {
   learnLang: string;
   nativeLang: string;
   changeLang: boolean;
   setChangeLang: React.Dispatch<React.SetStateAction<boolean>>;
+  setNativeLang: React.Dispatch<React.SetStateAction<string>>;
+  setLearnLang: React.Dispatch<React.SetStateAction<string>>;
+  setTags: React.Dispatch<React.SetStateAction<TagFindManyResult>>;
+  setAddTags: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const router = useRouter();
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
   const [reTranslate, setRetranslate] = useState<string>('');
   const [rows, setRows] = useState<number>(TEXTAREA_ROWS);
+  const [edit, setEdit] = useState<string | null>(null);
+  const [restart, setRestart] = useState<boolean>(false);
+
+  /**
+   * Set edit
+   */
+  useEffect(() => {
+    const {
+      query: { edit: _edit },
+    } = router;
+
+    setEdit(_edit as string);
+  }, [router]);
+
+  /**
+   * If edit
+   */
+  useEffect(() => {
+    if (!edit) {
+      return;
+    }
+    (async () => {
+      const phrase = await request.phraseFindFirst({ phraseId: edit as string });
+      log(phrase.status, phrase.message, phrase, true);
+      if (phrase.status !== 'info' || !phrase.data) {
+        return;
+      }
+      setText(phrase.data.text);
+      setNativeLang(phrase.data.nativeLang);
+      setLearnLang(phrase.data.learnLang);
+      const tags = phrase.data.PhraseTag.map((item) => item.Tag);
+      setTags(tags);
+      setAddTags(tags.length !== 0);
+    })();
+  }, [edit, setNativeLang, setLearnLang, setTags, setAddTags, restart]);
 
   /**
    * Tranlate
@@ -120,6 +174,10 @@ export const useTranslate = ({
     setRows(TEXTAREA_ROWS);
     setTranslate('');
     setRetranslate('');
+    if (edit) {
+      setEdit(null);
+      router.push(cleanPath(router.asPath));
+    }
   };
 
   /**
@@ -177,6 +235,9 @@ export const useTranslate = ({
     text,
     onKeyDownReTranslate,
     onClickRetranslate,
+    edit,
+    restart,
+    setRestart,
   };
 };
 
@@ -241,12 +302,22 @@ export const useSavePhrase = ({
   translate,
   setLoad,
   setTags,
+  learnLang,
+  nativeLang,
+  edit,
+  restart,
+  setRestart,
   tags,
 }: {
   text: string;
   tags: TagFindManyResult;
   setTags: React.Dispatch<React.SetStateAction<TagFindManyResult>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  learnLang: string;
+  nativeLang: string;
+  edit: string | null;
+  restart: boolean;
+  setRestart: React.Dispatch<React.SetStateAction<boolean>>;
   translate?: string;
 }) => {
   const [saveDialog, setSaveDialog] = useState<boolean>(false);
@@ -260,6 +331,8 @@ export const useSavePhrase = ({
     setLoad(true);
     const saveRes = await request.phraseCreate({
       text,
+      learnLang,
+      nativeLang,
       translate: saveTranslate ? translate : undefined,
       tags: tags.map((item) => item.id),
     });
@@ -271,6 +344,30 @@ export const useSavePhrase = ({
     }
   };
 
+  const onClickUpdate = async () => {
+    if (!edit) {
+      log('warn', 'This is not editable phrase', { edit });
+      return;
+    }
+    setLoad(true);
+    const saveRes = await request.phraseUpdate({
+      phraseId: edit,
+      data: {
+        text,
+        learnLang,
+        nativeLang,
+        translate: saveTranslate ? translate : undefined,
+        tags: tags.map((item) => item.id),
+      },
+    });
+    setLoad(false);
+    log(saveRes.status, saveRes.message, saveRes, true);
+    if (saveRes.status === 'info') {
+      setSaveDialog(false);
+      setRestart(!restart);
+    }
+  };
+
   return {
     onClickSavePhrase,
     saveDialog,
@@ -278,6 +375,7 @@ export const useSavePhrase = ({
     saveTranslate,
     setSaveTranslate,
     onClickSave,
+    onClickUpdate,
   };
 };
 

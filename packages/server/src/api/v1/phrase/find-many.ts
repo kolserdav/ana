@@ -17,7 +17,7 @@ const phraseFindMany: RequestHandler<
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const tags = await orm.phraseFindMany({
+  const res = await orm.phraseFindMany({
     where: {
       userId: id,
     },
@@ -29,7 +29,7 @@ const phraseFindMany: RequestHandler<
       },
     },
   });
-  if (tags.status === 'error') {
+  if (res.status === 'error') {
     reply.type(APPLICATION_JSON).code(500);
     return {
       status: 'error',
@@ -40,7 +40,7 @@ const phraseFindMany: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(200);
 
-  return { status: 'info', message: locale.tagSaved, data: tags.data };
+  return { status: 'info', message: locale.tagSaved, data: res.data };
 };
 
 export default phraseFindMany;

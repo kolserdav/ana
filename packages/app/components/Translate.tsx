@@ -40,29 +40,16 @@ function Translate({
 }) {
   const helpTagRef = useRef(null);
   const { load, setLoad } = useLoad();
-  const { langs, nativeLang, learnLang, changeLangWrapper, changeLang, setChangeLang } =
-    useLanguages();
   const {
-    translate,
-    reTranslate,
-    changeText,
-    rows,
-    cleanText,
-    text,
-    onKeyDownReTranslate,
-    onClickRetranslate,
-  } = useTranslate({
+    langs,
     nativeLang,
     learnLang,
+    changeLangWrapper,
     changeLang,
     setChangeLang,
-  });
-
-  const { speechRetranslate, synthAllow } = useSpeechSynth({
-    reTranslate,
-    locale,
-    learnLang,
-  });
+    setNativeLang,
+    setLearnLang,
+  } = useLanguages();
 
   const {
     onChangeNewTag,
@@ -76,29 +63,66 @@ function Translate({
   } = useTags();
 
   const {
+    translate,
+    reTranslate,
+    changeText,
+    rows,
+    cleanText,
+    text,
+    onKeyDownReTranslate,
+    onClickRetranslate,
+    edit,
+    restart,
+    setRestart,
+  } = useTranslate({
+    nativeLang,
+    learnLang,
+    changeLang,
+    setChangeLang,
+    setNativeLang,
+    setLearnLang,
+    setTags,
+    setAddTags,
+  });
+
+  const { speechRetranslate, synthAllow } = useSpeechSynth({
+    reTranslate,
+    locale,
+    learnLang,
+  });
+
+  const {
     saveDialog,
     onClickSavePhrase,
     setSaveDialog,
     saveTranslate,
     setSaveTranslate,
     onClickSave,
+    onClickUpdate,
   } = useSavePhrase({
     translate,
     text,
     setLoad,
     setTags,
     tags,
+    learnLang,
+    nativeLang,
+    edit,
+    restart,
+    setRestart,
   });
 
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography variant="h1" theme={theme} align="center">
-          {locale.title}
+          {edit ? locale.updatePhrase : locale.title}
         </Typography>
-        <Typography variant="p" align="center" theme={theme}>
-          {locale.description}
-        </Typography>
+        {!edit && (
+          <Typography variant="p" align="center" theme={theme}>
+            {locale.description}
+          </Typography>
+        )}
         <div className={s.selectors}>
           <Select
             onChange={changeLangWrapper('native')}
@@ -174,7 +198,7 @@ function Translate({
               theme={theme}
               onClick={onClickSavePhrase}
             >
-              {locale.savePhrase}
+              {edit ? locale.savePhrase : locale.createPhrase}
             </Button>
           </div>
         )}
@@ -251,21 +275,19 @@ function Translate({
               </div>
               <div className={s.box}>
                 {allTags.map((item) => (
-                  <Cheep
-                    key={item.id}
-                    onClick={onClicTagCheepWrapper(item, 'add')}
-                    add
-                    disabled={tags.findIndex((i) => i.id === item.id) !== -1}
-                    theme={theme}
-                  >
-                    {item.text}
-                  </Cheep>
+                  <span key={item.id}>
+                    {tags.findIndex((i) => i.id === item.id) === -1 && (
+                      <Cheep onClick={onClicTagCheepWrapper(item, 'add')} add theme={theme}>
+                        {item.text}
+                      </Cheep>
+                    )}
+                  </span>
                 ))}
               </div>
             </div>
           )}
           <div className={s.actions}>
-            <Button theme={theme} onClick={onClickSave} disabled={load}>
+            <Button theme={theme} onClick={edit ? onClickUpdate : onClickSave} disabled={load}>
               {save}
             </Button>
           </div>

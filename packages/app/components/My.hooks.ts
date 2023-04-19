@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { PhraseFindManyResult } from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
+import { Pages } from '../utils/constants';
 
 const request = new Request();
 
@@ -36,9 +38,9 @@ export const usePhraseDelete = ({
   restart: boolean;
 }) => {
   const [deletePhrase, setDeletePhrase] = useState<boolean>(false);
-  const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[any] | null>(null);
+  const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[0] | null>(null);
 
-  const onClickDeletePhraseWrapper = (phrase: PhraseFindManyResult[any]) => () => {
+  const onClickDeletePhraseWrapper = (phrase: PhraseFindManyResult[0]) => () => {
     setPhraseToDelete(phrase);
     setDeletePhrase(true);
   };
@@ -73,4 +75,14 @@ export const usePhraseDelete = ({
     onClickCloseDelete,
     onClickDeletePhrase,
   };
+};
+
+export const usePhraseUpdate = () => {
+  const router = useRouter();
+
+  const onClickPhraseUpdateWraper = (phrase: PhraseFindManyResult[0]) => () => {
+    router.push(`${Pages.translate}?edit=${phrase.id}`);
+  };
+
+  return { onClickPhraseUpdateWraper };
 };

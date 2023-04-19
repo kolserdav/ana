@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { forwardRef, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import storeClick from '../../store/click';
 import { Theme } from '../../Theme';
 import { checkClickBy, setBodyScroll } from '../../utils/lib';

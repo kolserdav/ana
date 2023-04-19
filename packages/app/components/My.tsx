@@ -2,7 +2,7 @@ import { createRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { usePhraseDelete, usePhrases } from './My.hooks';
+import { usePhraseDelete, usePhraseUpdate, usePhrases } from './My.hooks';
 import s from './My.module.scss';
 import DeleteIcon from './icons/Delete';
 import DotsHorisontalIcon from './icons/DotsHorisontal';
@@ -18,6 +18,7 @@ function My({
   theme,
   user,
   edit,
+  save,
   _delete,
   cancel,
 }: {
@@ -26,6 +27,7 @@ function My({
   user: UserCleanResult;
   edit: string;
   _delete: string;
+  save: string;
   cancel: string;
 }) {
   const { load, setLoad } = useLoad();
@@ -40,6 +42,8 @@ function My({
     onClickCloseDelete,
     onClickDeletePhrase,
   } = usePhraseDelete({ setLoad, restart, setRestart });
+
+  const { onClickPhraseUpdateWraper } = usePhraseUpdate();
 
   return (
     <div className={s.wrapper}>
@@ -57,7 +61,7 @@ function My({
                 </IconButton>
                 <Tooltip closeOnClick theme={theme} parent={ref} length={40}>
                   <div className={s.menu_tooltip}>
-                    <IconButton title={edit}>
+                    <IconButton title={edit} onClick={onClickPhraseUpdateWraper(item)}>
                       <EditIcon color={theme.blue} />
                     </IconButton>
                     <IconButton onClick={onClickDeletePhraseWrapper(item)} title={_delete}>
@@ -89,22 +93,20 @@ function My({
           );
         })}
       </div>
-      <Dialog theme={theme} onClose={setDeletePhrase} open={deletePhrase}>
-        <div className={s.dialog}>
-          <Typography variant="h3" theme={theme} align="center">
-            {locale.deletePhrase}?
-          </Typography>
-          <Typography variant="p" theme={theme}>
-            {phraseToDelete?.text || ''}
-          </Typography>
-          <div className={s.actions}>
-            <Button className={s.button} onClick={onClickCloseDelete} theme={theme}>
-              {cancel}
-            </Button>
-            <Button className={s.button} onClick={onClickDeletePhrase} theme={theme}>
-              {_delete}
-            </Button>
-          </div>
+      <Dialog className={s.dialog} theme={theme} onClose={setDeletePhrase} open={deletePhrase}>
+        <Typography variant="h3" theme={theme} align="center">
+          {locale.deletePhrase}?
+        </Typography>
+        <Typography variant="p" theme={theme}>
+          {phraseToDelete?.text || ''}
+        </Typography>
+        <div className={s.actions}>
+          <Button className={s.button} onClick={onClickCloseDelete} theme={theme}>
+            {cancel}
+          </Button>
+          <Button className={s.button} onClick={onClickDeletePhrase} theme={theme}>
+            {_delete}
+          </Button>
         </div>
       </Dialog>
     </div>
