@@ -53,7 +53,7 @@ export const useAppBar = () => {
     };
   }, []);
 
-  return { showAppBar, showExpandLess };
+  return { showAppBar, showExpandLess, menuOpen };
 };
 
 export const useChangeTheme = () => {

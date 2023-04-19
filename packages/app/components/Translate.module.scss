@@ -11,10 +11,6 @@
     display: flex;
     flex-direction: column;
 
-    .check_item {
-      margin: 1rem 0;
-    }
-
     .actions {
       margin: 1.2rem 0;
       display: flex;
@@ -106,6 +102,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
+
+      .save_button {
+        margin-top: 2rem;
+      }
+
+      .check_item {
+        margin: 1rem 0;
+      }
     }
   }
 
@@ -117,6 +122,13 @@
   }
 
   .tags {
+    border-width: 1px;
+    border-style: groove;
+    border-radius: 4px;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.5rem;
+
     .title {
       h4 {
         margin-bottom: 1rem;

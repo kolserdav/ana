@@ -29,10 +29,6 @@ $app-bar-transition: 0.2s;
     &:first-child {
       margin-left: 0;
     }
-
-    @media (max-width: $mobile-width) {
-      display: none;
-    }
   }
 
   &.full {

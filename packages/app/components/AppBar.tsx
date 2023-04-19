@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { ubuntu500 } from '../fonts/ubuntu';
 import { Theme } from '../Theme';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { Pages, PAGE_LOGIN_IN_MENU } from '../utils/constants';
+import { Pages, PAGE_LOGIN_IN_MENU, MENU_TRANSITION } from '../utils/constants';
 import { checkRouterPath, scrollToTop } from '../utils/lib';
 import ChevronUpIcon from './icons/ChevronUp';
 import { useAppBar, useChangeTheme, useLogout } from './AppBar.hooks';
@@ -28,11 +28,19 @@ function AppBar({
 }) {
   const router = useRouter();
 
-  const { showAppBar, showExpandLess } = useAppBar();
+  const { showAppBar, showExpandLess, menuOpen } = useAppBar();
 
   const { darkTheme, onClickChangeTheme } = useChangeTheme();
 
   const { onClickLogout, onKeyDownLogout } = useLogout();
+
+  const linkStyle: React.CSSProperties = menuOpen
+    ? {
+        color: 'transparent',
+        textShadow: `0 0 8px ${theme.text}`,
+        transition: `all ${MENU_TRANSITION / 1000}s ease-out`,
+      }
+    : { color: theme.text, transition: `all ${MENU_TRANSITION / 1000}s ease-in` };
 
   return (
     <header>
@@ -54,21 +62,21 @@ function AppBar({
             {!checkRouterPath(router.asPath, Pages.home) && (
               <Link noWrap theme={theme} href={Pages.home} className={s.item}>
                 <div className={s.menu__item}>
-                  <div style={{ color: theme.text }}>{locale.homePage}</div>
+                  <div style={linkStyle}>{locale.homePage}</div>
                 </div>
               </Link>
             )}
             {!checkRouterPath(router.asPath, Pages.translate) && (
               <Link noWrap theme={theme} href={Pages.translate} className={s.item}>
                 <div className={s.menu__item}>
-                  <div style={{ color: theme.text }}>{locale.translate}</div>
+                  <div style={linkStyle}>{locale.translate}</div>
                 </div>
               </Link>
             )}
             {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
               <Link noWrap theme={theme} href={Pages.myDictionary} className={s.item}>
                 <div className={s.menu__item}>
-                  <div style={{ color: theme.text }}>{locale.myDictionary}</div>
+                  <div style={linkStyle}>{locale.myDictionary}</div>
                 </div>
               </Link>
             )}

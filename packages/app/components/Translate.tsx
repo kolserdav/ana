@@ -137,18 +137,10 @@ function Translate({
           {edit ? locale.updatePhrase : locale.title}
         </Typography>
 
-        {!edit ? (
+        {!edit && (
           <Typography variant="p" align="center" theme={theme}>
             {locale.description}
           </Typography>
-        ) : (
-          <div className={s.tag_cloud}>
-            {phraseToUpdate?.PhraseTag.map((item) => (
-              <span className={s.tag_cloud__item} style={{ color: theme.text }} key={item.id}>
-                #{item.Tag.text}
-              </span>
-            ))}
-          </div>
         )}
 
         <div className={s.selectors}>
@@ -218,9 +210,88 @@ function Translate({
             </div>
           )}
         </div>
+
         {reTranslate && (
           <div className={s.actions}>
+            {user && (
+              <>
+                <div className={s.check_item}>
+                  <Checkbox
+                    theme={theme}
+                    label={locale.addTags}
+                    id="add-tags"
+                    checked={addTags}
+                    onChange={setAddTags}
+                  />
+                </div>
+                {addTags && (
+                  <div className={s.tags} style={{ borderColor: theme.active }}>
+                    <Typography className={s.title} variant="h4" theme={theme}>
+                      {locale.tagsTitle}
+                    </Typography>
+                    <div className={s.input}>
+                      <Input
+                        classWrapper={s.field_wrapper}
+                        className={s.field}
+                        type="text"
+                        id="add-new-tag"
+                        onChange={onChangeNewTag}
+                        value={newTag}
+                        name={tagToUpdate ? locale.changeTag : locale.newTag}
+                        theme={theme}
+                      />
+                      <IconButton title={showHelp} ref={helpTagRef}>
+                        <HelpIcon color={theme.text} />
+                      </IconButton>
+                    </div>
+                    <div className={s.box}>
+                      {tags.map((item) => (
+                        <Cheep
+                          key={item.id}
+                          onClick={onClicTagCheepWrapper(item, 'del')}
+                          add={false}
+                          disabled={false}
+                          theme={theme}
+                        >
+                          {item.text}
+                        </Cheep>
+                      ))}
+                    </div>
+                    <div className={s.box}>
+                      {allTags.map((item) => (
+                        <span key={item.id}>
+                          {tags.findIndex((i) => i.id === item.id) === -1 && (
+                            <Cheep
+                              menuChildren={
+                                <div className={s.menu_tooltip}>
+                                  <IconButton title={_edit} onClick={onClickTagUpdateWrapper(item)}>
+                                    <EditIcon color={theme.blue} />
+                                  </IconButton>
+                                  <IconButton
+                                    onClick={onClickTagDeleteWrapper(item)}
+                                    title={_delete}
+                                  >
+                                    <DeleteIcon color={theme.red} />
+                                  </IconButton>
+                                </div>
+                              }
+                              menuChildrenLength={30}
+                              onClick={onClicTagCheepWrapper(item, 'add')}
+                              add
+                              theme={theme}
+                            >
+                              {item.text}
+                            </Cheep>
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
             <Button
+              className={s.save_button}
               title={!user ? locale.needLogin : ''}
               disabled={!user}
               theme={theme}
@@ -260,76 +331,7 @@ function Translate({
               </Typography>
             </div>
           )}
-          <div className={s.check_item}>
-            <Checkbox
-              theme={theme}
-              label={locale.addTags}
-              id="add-tags"
-              checked={addTags}
-              onChange={setAddTags}
-            />
-          </div>
-          {addTags && (
-            <div className={s.tags}>
-              <Typography className={s.title} variant="h4" theme={theme}>
-                {locale.tagsTitle}
-              </Typography>
-              <div className={s.input}>
-                <Input
-                  classWrapper={s.field_wrapper}
-                  className={s.field}
-                  type="text"
-                  id="add-new-tag"
-                  onChange={onChangeNewTag}
-                  value={newTag}
-                  name={tagToUpdate ? locale.changeTag : locale.newTag}
-                  theme={theme}
-                />
-                <IconButton title={showHelp} ref={helpTagRef}>
-                  <HelpIcon color={theme.text} />
-                </IconButton>
-              </div>
-              <div className={s.box}>
-                {tags.map((item) => (
-                  <Cheep
-                    key={item.id}
-                    onClick={onClicTagCheepWrapper(item, 'del')}
-                    add={false}
-                    disabled={false}
-                    theme={theme}
-                  >
-                    {item.text}
-                  </Cheep>
-                ))}
-              </div>
-              <div className={s.box}>
-                {allTags.map((item) => (
-                  <span key={item.id}>
-                    {tags.findIndex((i) => i.id === item.id) === -1 && (
-                      <Cheep
-                        menuChildren={
-                          <div className={s.menu_tooltip}>
-                            <IconButton title={_edit} onClick={onClickTagUpdateWrapper(item)}>
-                              <EditIcon color={theme.blue} />
-                            </IconButton>
-                            <IconButton onClick={onClickTagDeleteWrapper(item)} title={_delete}>
-                              <DeleteIcon color={theme.red} />
-                            </IconButton>
-                          </div>
-                        }
-                        menuChildrenLength={30}
-                        onClick={onClicTagCheepWrapper(item, 'add')}
-                        add
-                        theme={theme}
-                      >
-                        {item.text}
-                      </Cheep>
-                    )}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+
           <div className={s.dialog_actions}>
             <Button theme={theme} onClick={edit ? onClickUpdate : onClickSave} disabled={load}>
               {save}
