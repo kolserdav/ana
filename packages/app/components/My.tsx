@@ -12,7 +12,6 @@ import Tooltip from './ui/Tooltip';
 import Typography from './ui/Typography';
 import Dialog from './ui/Dialog';
 import Button from './ui/Button';
-import Tabs from './ui/Tabs';
 import FilterIcon from './icons/Filter';
 
 function My({

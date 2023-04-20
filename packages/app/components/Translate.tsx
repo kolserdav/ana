@@ -26,6 +26,7 @@ import Tooltip from './ui/Tooltip';
 import Cheep from './ui/Cheep';
 import EditIcon from './icons/Edit';
 import DeleteIcon from './icons/Delete';
+import SwapHorizontalIcon from './icons/SwapHorisontal';
 
 function Translate({
   theme,
@@ -48,16 +49,6 @@ function Translate({
 }) {
   const helpTagRef = createRef<HTMLButtonElement>();
   const { load, setLoad } = useLoad();
-  const {
-    langs,
-    nativeLang,
-    learnLang,
-    changeLangWrapper,
-    changeLang,
-    setChangeLang,
-    setNativeLang,
-    setLearnLang,
-  } = useLanguages();
 
   const {
     onChangeNewTag,
@@ -79,17 +70,34 @@ function Translate({
   } = useTags({ setLoad });
 
   const {
+    langs,
+    nativeLang,
+    learnLang,
+    changeLangWrapper,
+    changeLang,
+    setChangeLang,
+    setNativeLang,
+    setLearnLang,
+    onClickChangeLangs,
+    text,
+    setText,
     translate,
+    setTranslate,
+    synthAllow,
+    voice,
+  } = useLanguages({ locale });
+
+  const {
     reTranslate,
     changeText,
     rows,
     cleanText,
-    text,
     onKeyDownReTranslate,
     onClickRetranslate,
     edit,
     restart,
     setRestart,
+
     phraseToUpdate,
   } = useTranslate({
     nativeLang,
@@ -100,12 +108,17 @@ function Translate({
     setLearnLang,
     setTags,
     setAddTags,
+    text,
+    setText,
+    translate,
+    setTranslate,
   });
 
-  const { speechRetranslate, synthAllow } = useSpeechSynth({
+  const { speechRetranslate } = useSpeechSynth({
     reTranslate,
     locale,
     learnLang,
+    voice,
   });
 
   const {
@@ -156,6 +169,11 @@ function Translate({
               </option>
             ))}
           </Select>
+          <div className={s.swap_button}>
+            <IconButton onClick={onClickChangeLangs}>
+              <SwapHorizontalIcon color={theme.text} />
+            </IconButton>
+          </div>
           <Select
             onChange={changeLangWrapper('learn')}
             value={learnLang}
@@ -171,6 +189,7 @@ function Translate({
         </div>
         <div className={s.textarea}>
           <Textarea
+            placeholder={locale.textareaPlaceholder}
             value={text}
             spellCheck={false}
             onInput={changeText}

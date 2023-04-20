@@ -125,3 +125,28 @@ export const cleanPath = (asPath: string) => asPath.replace(/(\?|#)?.*$/, '');
 
 export const getFormatDistance = (dateFrom: Date) =>
   formatDistance(dateFrom, new Date(), { addSuffix: true, locale: ru });
+
+export async function copyToClipboard(textToCopy: string, message: string) {
+  // Navigator clipboard api needs a secure context (https)
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(textToCopy);
+  } else {
+    const textArea = document.createElement('textarea');
+    textArea.value = textToCopy;
+
+    textArea.style.position = 'absolute';
+    textArea.style.left = '-999999px';
+
+    document.body.prepend(textArea);
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+    } catch (error) {
+      log('error', 'Error copy to clipboard', error);
+    } finally {
+      textArea.remove();
+    }
+  }
+  log('info', message, {}, true);
+}

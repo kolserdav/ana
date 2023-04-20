@@ -1,4 +1,4 @@
-@import '../styles/constants.scss';
+@import '../styles/constants';
 
 .wrapper {
   position: relative;
@@ -68,10 +68,23 @@
       display: flex;
       flex-direction: row;
       justify-content: space-around;
+
+      .swap_button {
+        margin: 0 0.5rem;
+        display: flex;
+        align-items: center;
+      }
     }
 
     .native_res {
       margin: 1rem 0;
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+
+      .copy_button {
+        margin: 0 0.5rem;
+      }
     }
 
     .retrans_container {
@@ -139,7 +152,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
 
       .field {
         margin: 0;

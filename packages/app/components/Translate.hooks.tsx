@@ -8,11 +8,15 @@ import { Locale, PhraseUpdateResult, TagFindManyResult } from '../types/interfac
 
 const request = new Request();
 
-export const useLanguages = () => {
+export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] }) => {
+  const [text, setText] = useState<string>('');
+  const [translate, setTranslate] = useState<string>('');
   const [nativeLang, setNativeLang] = useState<string>('ru');
   const [learnLang, setLearnLang] = useState<string>('en');
   const [langs, setLangs] = useState<ServerLanguage[]>([]);
   const [changeLang, setChangeLang] = useState<boolean>(false);
+  const [synthAllow, setSynthAllow] = useState<boolean>(false);
+  const [voice, setVoice] = useState<SpeechSynthesisVoice>();
 
   const changeLangWrapper =
     (type: 'native' | 'learn') => (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,6 +47,33 @@ export const useLanguages = () => {
     })();
   }, []);
 
+  const onClickChangeLangs = () => {
+    setNativeLang(learnLang);
+    setLearnLang(nativeLang);
+    setText(translate);
+  };
+
+  /**
+   * Set suitable voice
+   */
+  useEffect(() => {
+    const synth = window.speechSynthesis;
+    if (!synth) {
+      log('warn', 'Speech synth is not support', { synth });
+      setSynthAllow(false);
+      return;
+    }
+    const voices = synth.getVoices();
+    const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
+    if (!_voice) {
+      log('warn', locale.voiceNotFound, voices, true);
+      setSynthAllow(false);
+      return;
+    }
+    setSynthAllow(true);
+    setVoice(_voice);
+  }, [locale.voiceNotFound, learnLang]);
+
   return {
     learnLang,
     nativeLang,
@@ -52,6 +83,13 @@ export const useLanguages = () => {
     setChangeLang,
     setNativeLang,
     setLearnLang,
+    onClickChangeLangs,
+    text,
+    translate,
+    setText,
+    setTranslate,
+    voice,
+    synthAllow,
   };
 };
 
@@ -68,10 +106,18 @@ export const useTranslate = ({
   setLearnLang,
   setTags,
   setAddTags,
+  text,
+  translate,
+  setText,
+  setTranslate,
 }: {
   learnLang: string;
   nativeLang: string;
   changeLang: boolean;
+  translate: string;
+  setTranslate: React.Dispatch<React.SetStateAction<string>>;
+  text: string;
+  setText: React.Dispatch<React.SetStateAction<string>>;
   setChangeLang: React.Dispatch<React.SetStateAction<boolean>>;
   setNativeLang: React.Dispatch<React.SetStateAction<string>>;
   setLearnLang: React.Dispatch<React.SetStateAction<string>>;
@@ -79,8 +125,7 @@ export const useTranslate = ({
   setAddTags: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
-  const [text, setText] = useState<string>('');
-  const [translate, setTranslate] = useState<string>('');
+
   const [reTranslate, setRetranslate] = useState<string>('');
   const [rows, setRows] = useState<number>(TEXTAREA_ROWS);
   const [edit, setEdit] = useState<string | null>(null);
@@ -119,7 +164,7 @@ export const useTranslate = ({
       setTags(tags);
       setAddTags(tags.length !== 0);
     })();
-  }, [edit, setNativeLang, setLearnLang, setTags, setAddTags, restart]);
+  }, [edit, setNativeLang, setLearnLang, setTags, setAddTags, restart, setText]);
 
   /**
    * Tranlate
@@ -159,7 +204,7 @@ export const useTranslate = ({
       },
       changeLang ? 0 : TRANSLATE_DELAY
     );
-  }, [text, learnLang, nativeLang, changeLang, setChangeLang]);
+  }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate]);
 
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const {
@@ -232,11 +277,9 @@ export const useTranslate = ({
 
   return {
     changeText,
-    translate,
     reTranslate,
     rows,
     cleanText,
-    text,
     onKeyDownReTranslate,
     onClickRetranslate,
     edit,
@@ -250,13 +293,14 @@ export const useSpeechSynth = ({
   reTranslate,
   locale,
   learnLang,
+  voice,
 }: {
   reTranslate: string;
   learnLang: string;
   locale: Locale['app']['translate'];
+  voice: SpeechSynthesisVoice | undefined;
 }) => {
   const [textToSpeech, setTextToSpeech] = useState<string>();
-  const [synthAllow, setSynthAllow] = useState<boolean>(false);
 
   /**
    * Speech text
@@ -266,21 +310,8 @@ export const useSpeechSynth = ({
       return;
     }
     const synth = window.speechSynthesis;
-    if (!synth) {
-      log('warn', 'Speech synth is not support', { synth });
-      setSynthAllow(false);
+    if (!synth || !voice) {
       return;
-    }
-    const voices = synth.getVoices();
-    const voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
-    if (!voice) {
-      log('warn', locale.voiceNotFound, voices, true);
-      setSynthAllow(false);
-      return;
-    }
-
-    if (!synthAllow) {
-      setSynthAllow(true);
     }
 
     if (!textToSpeech) {
@@ -293,13 +324,13 @@ export const useSpeechSynth = ({
     synth.speak(utterThis);
 
     setTextToSpeech('');
-  }, [synthAllow, textToSpeech, locale, learnLang]);
+  }, [textToSpeech, locale, learnLang, voice]);
 
   const speechRetranslate = () => {
     setTextToSpeech(reTranslate);
   };
 
-  return { synthAllow, speechRetranslate };
+  return { speechRetranslate };
 };
 
 export const useSavePhrase = ({

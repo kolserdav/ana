@@ -306,6 +306,8 @@ export interface Locale {
       deleteTag: string;
       updateTag: string;
       changeTag: string;
+      textareaPlaceholder: string;
+      copied: string;
     };
     my: {
       title: string;

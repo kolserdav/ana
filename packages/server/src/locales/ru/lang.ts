@@ -106,6 +106,8 @@ const lang: Locale = {
       updatePhrase: 'Редактирование фразы',
       deleteTag: 'Удалить метку',
       updateTag: 'Обновить метку',
+      textareaPlaceholder: 'Пишите на языке, который изучаете',
+      copied: 'Скопировано в буфер',
     },
     my: {
       title: 'Мой словарь',
