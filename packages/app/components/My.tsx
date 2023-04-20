@@ -12,6 +12,8 @@ import Tooltip from './ui/Tooltip';
 import Typography from './ui/Typography';
 import Dialog from './ui/Dialog';
 import Button from './ui/Button';
+import Tabs from './ui/Tabs';
+import FilterIcon from './icons/Filter';
 
 function My({
   locale,
@@ -32,7 +34,7 @@ function My({
 }) {
   const { load, setLoad } = useLoad();
 
-  const { phrases, restart, setRestart } = usePhrases();
+  const { phrases, restart, setRestart, orderBy, onClickSortByDate } = usePhrases();
 
   const {
     deletePhrase,
@@ -51,14 +53,25 @@ function My({
         <Typography theme={theme} variant="h1" align="center">
           {locale.title}
         </Typography>
+        <div className={s.filters}>
+          <div className={s.sort_item}>
+            <Typography small variant="span" theme={theme}>
+              {locale.byUpdateDate}:
+            </Typography>
+            <IconButton onClick={onClickSortByDate}>
+              <FilterIcon className={orderBy === 'asc' ? s.asc : s.desc} color={theme.text} />
+            </IconButton>
+          </div>
+        </div>
         {phrases.map((item) => {
           const ref = createRef<HTMLButtonElement>();
           return (
             <div key={item.id} className={s.item_container}>
               <div className={s.actions}>
-                <IconButton ref={ref}>
+                <IconButton aria-label={locale.byUpdateDate} ref={ref}>
                   <DotsHorisontalIcon color={theme.text} />
                 </IconButton>
+
                 <Tooltip closeOnClick theme={theme} parentRef={ref} length={40}>
                   <div className={s.menu_tooltip}>
                     <IconButton title={edit} onClick={onClickPhraseUpdateWraper(item)}>

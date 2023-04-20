@@ -13,9 +13,10 @@ const orm = new ORM();
 const phraseFindMany: RequestHandler<
   { Querystring: PhraseFindManyQuery },
   Result<PhraseFindManyResult>
-> = async ({ headers }, reply) => {
+> = async ({ headers, query }, reply) => {
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
+  const { orderBy } = query;
 
   const res = await orm.phraseFindMany({
     where: {
@@ -27,6 +28,9 @@ const phraseFindMany: RequestHandler<
           Tag: true,
         },
       },
+    },
+    orderBy: {
+      updated: orderBy,
     },
   });
   if (res.status === 'error') {

@@ -14,6 +14,7 @@ export interface IconProps {
   children: string;
   color?: string;
   animate?: React.ReactNode;
+  className?: string;
 }
 
 export interface AlertProps {

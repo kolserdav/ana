@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { ThemeType } from '../Theme';
+import { OrderBy } from '../types/interfaces';
 
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
 export const IS_DEV = process.env.NODE_ENV === 'development';
@@ -76,3 +77,4 @@ export const HTML_EDITOR_HEIGHT = 300;
 
 export const TRANSLATE_DELAY = 1000;
 export const TEXTAREA_ROWS = 2;
+export const ORDER_BY_DEFAULT: OrderBy = 'asc';

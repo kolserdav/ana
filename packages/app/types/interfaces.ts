@@ -91,6 +91,8 @@ export interface ManyResult<T> {
 
 export type DBResult<T> = Omit<Result<T>, 'message'>;
 
+export type OrderBy = 'desc' | 'asc';
+
 export type FullUserName = { name: string; surname: string };
 
 export interface UserLoginBody {
@@ -181,7 +183,9 @@ export interface PhraseFindFirstQuery {
 }
 export type PhraseFindFirstResult = PhraseFull | null;
 
-export type PhraseFindManyQuery = void;
+export interface PhraseFindManyQuery {
+  orderBy: OrderBy;
+}
 export type PhraseFindManyResult = PhraseFull[];
 
 export interface ConfirmEmailBody {
@@ -228,7 +232,6 @@ export interface Locale {
       surname: string;
       register: string;
       loginButton: string;
-      tabs: Tab[];
       tabDefault: string;
       signUp: string;
       signIn: string;
@@ -306,6 +309,7 @@ export interface Locale {
       title: string;
       deletePhrase: string;
       updatePhrase: string;
+      byUpdateDate: string;
     };
   };
 }

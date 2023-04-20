@@ -258,9 +258,11 @@ class Request {
     });
   }
 
-  public async phraseFindMany(query: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
+  public async phraseFindMany({
+    orderBy,
+  }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
     return this.send({
-      url: Api.getPhraseFindMany,
+      url: `${Api.getPhraseFindMany}?orderBy=${orderBy}`,
       method: 'GET',
     });
   }

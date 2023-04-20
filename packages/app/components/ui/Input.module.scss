@@ -28,7 +28,7 @@
   }
 
   input {
-    width: $small-width;
+    max-width: $small-width;
 
     &:disabled {
       opacity: 0.5;

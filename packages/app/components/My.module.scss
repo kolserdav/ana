@@ -17,6 +17,29 @@ $phrase-item-margin: 1.5rem;
     max-width: $translate-container-max;
     padding: 0 1rem;
 
+    .filters {
+      .asc {
+        position: relative;
+        transition: transform 0.1s ease-in;
+      }
+
+      .desc {
+        position: relative;
+        transform: rotate(180deg);
+        transition: transform 0.1s ease-out;
+      }
+
+      .sort_item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &:first-child {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
     .item_container {
       .actions {
         margin-bottom: calc(-1 * $phrase-item-margin);

@@ -1,31 +1,50 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { PhraseFindManyResult } from '../types/interfaces';
+import { OrderBy, PhraseFindManyResult } from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
-import { Pages } from '../utils/constants';
+import { ORDER_BY_DEFAULT, Pages } from '../utils/constants';
+import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 const request = new Request();
 
 export const usePhrases = () => {
   const [phrases, setPhrases] = useState<PhraseFindManyResult>([]);
   const [restart, setRestart] = useState<boolean>(false);
+  const [orderBy, setOrderBy] = useState<OrderBy>();
+
+  /**
+   * Set order by
+   */
+  useEffect(() => {
+    const _orderBy = getLocalStorage(LocalStorageName.ORDER_BY);
+    setOrderBy(_orderBy || ORDER_BY_DEFAULT);
+  }, []);
 
   /**
    * Set phrases
    */
   useEffect(() => {
+    if (!orderBy) {
+      return;
+    }
     (async () => {
-      const _phrases = await request.phraseFindMany();
+      const _phrases = await request.phraseFindMany({ orderBy });
       if (_phrases.status !== 'info') {
         log(_phrases.status, _phrases.message, _phrases, true);
         return;
       }
       setPhrases(_phrases.data);
     })();
-  }, [restart]);
+  }, [restart, orderBy]);
 
-  return { phrases, setRestart, restart };
+  const onClickSortByDate = () => {
+    const _orderBy = orderBy === 'asc' ? 'desc' : 'asc';
+    setOrderBy(_orderBy);
+    setLocalStorage(LocalStorageName.ORDER_BY, _orderBy);
+  };
+
+  return { phrases, setRestart, restart, orderBy, onClickSortByDate };
 };
 
 export const usePhraseDelete = ({

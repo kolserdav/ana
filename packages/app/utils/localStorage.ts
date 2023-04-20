@@ -1,14 +1,19 @@
 import { ThemeType } from '../Theme';
+import { OrderBy } from '../types/interfaces';
 import { log } from './lib';
 
 // eslint-disable-next-line no-shadow
 export enum LocalStorageName {
   // eslint-disable-next-line no-unused-vars
   THEME = 'THEME',
+  // eslint-disable-next-line no-unused-vars
+  ORDER_BY = 'ORDER_BY',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
   ? ThemeType
+  : T extends LocalStorageName.ORDER_BY
+  ? OrderBy
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(

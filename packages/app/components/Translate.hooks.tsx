@@ -37,7 +37,9 @@ export const useLanguages = () => {
   useEffect(() => {
     (async () => {
       const _langs = await request.getLanguages();
-      setLangs(_langs);
+      if (typeof _langs.map === 'function') {
+        setLangs(_langs);
+      }
     })();
   }, []);
 
