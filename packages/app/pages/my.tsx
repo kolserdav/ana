@@ -7,6 +7,7 @@ import { prepagePage } from '../utils/lib';
 import Request from '../utils/request';
 import s from '../styles/Page.module.scss';
 import My from '../components/My';
+import useCloseAuth from '../hooks/useCloseAuth';
 
 const request = new Request();
 
@@ -18,12 +19,14 @@ interface EmployerPageProps extends AppProps {
 }
 
 export default function MyPage({
-  app: { user, theme },
+  app: { user, theme, userLoad },
   localeAppBar,
   page,
   localeMy,
   localeCommon,
 }: EmployerPageProps) {
+  useCloseAuth({ user, userLoad });
+
   return (
     <>
       <Head>

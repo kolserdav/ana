@@ -260,9 +260,11 @@ class Request {
 
   public async phraseFindMany({
     orderBy,
+    skip,
+    take,
   }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
     return this.send({
-      url: `${Api.getPhraseFindMany}?orderBy=${orderBy}`,
+      url: `${Api.getPhraseFindMany}?orderBy=${orderBy}&skip=${skip}&take=${take}`,
       method: 'GET',
     });
   }

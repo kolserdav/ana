@@ -17,7 +17,7 @@ interface EmployerPageProps extends AppProps {
   page: PageFull;
 }
 
-export default function TestPage({
+export default function TranslatePage({
   app: { user, theme },
   localeAppBar,
   page,

@@ -5,6 +5,7 @@ import storeLoad from '../store/load';
 import storeScroll, { changeScroll } from '../store/scroll';
 import { setBodyScroll } from '../utils/lib';
 import { UserCleanResult } from '../types/interfaces';
+import storeTouchEvent, { changeTouchEvent } from '../store/touchEvent';
 
 export default function useApp({ user }: { user: UserCleanResult | null }) {
   const [load, setLoad] = useState<boolean>(true);
@@ -23,6 +24,32 @@ export default function useApp({ user }: { user: UserCleanResult | null }) {
     window.addEventListener('scroll', scrollHandler);
     return () => {
       window.removeEventListener('scroll', scrollHandler);
+    };
+  }, []);
+
+  /**
+   * Touch start handler
+   */
+  useEffect(() => {
+    const touchHandler = () => {
+      storeTouchEvent.dispatch(changeTouchEvent({ touchEvent: 'start' }));
+    };
+    window.addEventListener('touchstart', touchHandler);
+    return () => {
+      window.removeEventListener('touchstart', touchHandler);
+    };
+  }, []);
+
+  /**
+   * Touch end handler
+   */
+  useEffect(() => {
+    const touchHandler = () => {
+      storeTouchEvent.dispatch(changeTouchEvent({ touchEvent: 'end' }));
+    };
+    window.addEventListener('touchend', touchHandler);
+    return () => {
+      window.removeEventListener('touchend', touchHandler);
     };
   }, []);
 

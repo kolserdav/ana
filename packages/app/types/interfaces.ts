@@ -185,6 +185,8 @@ export type PhraseFindFirstResult = PhraseFull | null;
 
 export interface PhraseFindManyQuery {
   orderBy: OrderBy;
+  skip: string;
+  take: string;
 }
 export type PhraseFindManyResult = PhraseFull[];
 

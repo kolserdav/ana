@@ -34,7 +34,9 @@ function My({
 }) {
   const { load, setLoad } = useLoad();
 
-  const { phrases, restart, setRestart, orderBy, onClickSortByDate } = usePhrases();
+  const { phrases, restart, setRestart, orderBy, onClickSortByDate, lastRef } = usePhrases({
+    setLoad,
+  });
 
   const {
     deletePhrase,
@@ -63,10 +65,14 @@ function My({
             </IconButton>
           </div>
         </div>
-        {phrases.map((item) => {
+        {phrases.map((item, index) => {
           const ref = createRef<HTMLButtonElement>();
           return (
-            <div key={item.id} className={s.item_container}>
+            <div
+              ref={phrases[index + 1] === undefined ? lastRef : undefined}
+              key={item.id}
+              className={s.item_container}
+            >
               <div className={s.actions}>
                 <IconButton aria-label={locale.byUpdateDate} ref={ref}>
                   <DotsHorisontalIcon color={theme.text} />

@@ -6,8 +6,10 @@ import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import { DEFAULT_THEME, EXPAND_LESS_SHOW_FROM } from '../utils/constants';
 import { CookieName, setCookie } from '../utils/cookies';
 import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
+import storeTouchEvent from '../store/touchEvent';
 
 let oldY = 0;
+let mayChange = true;
 
 // eslint-disable-next-line import/prefer-default-export
 export const useAppBar = () => {
@@ -22,16 +24,18 @@ export const useAppBar = () => {
     const hideOnScroll = () => {
       const rects = document.body.getBoundingClientRect();
       const { y } = rects;
-      if (y > oldY || oldY === 0) {
-        setShowAppBar(true);
-      } else if (!menuOpen) {
-        setShowAppBar(false);
-      }
-      oldY = y;
-      if (y < EXPAND_LESS_SHOW_FROM && !menuOpen) {
-        setShowExpandLess(true);
-      } else {
-        setShowExpandLess(false);
+      if (mayChange) {
+        if (y > oldY || oldY === 0) {
+          setShowAppBar(true);
+        } else if (!menuOpen) {
+          setShowAppBar(false);
+        }
+        oldY = y;
+        if (y < EXPAND_LESS_SHOW_FROM && !menuOpen) {
+          setShowExpandLess(true);
+        } else {
+          setShowExpandLess(false);
+        }
       }
     };
     const cleanSubs = storeScroll.subscribe(hideOnScroll);
@@ -39,6 +43,28 @@ export const useAppBar = () => {
       cleanSubs();
     };
   }, [menuOpen]);
+
+  /**
+   * Listen touch events
+   */
+  useEffect(() => {
+    const cleanSubs = storeTouchEvent.subscribe(() => {
+      const { touchEvent } = storeTouchEvent.getState();
+      switch (touchEvent) {
+        case 'start':
+          mayChange = false;
+          break;
+        case 'end':
+          mayChange = true;
+          break;
+        default:
+      }
+    });
+
+    return () => {
+      cleanSubs();
+    };
+  }, []);
 
   /**
    * Listen menu open

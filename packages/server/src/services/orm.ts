@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Phrase, Prisma, PrismaClient } from '@prisma/client';
 import cluster, { Worker } from 'cluster';
 import { v4 } from 'uuid';
 import Service from './service';
@@ -129,6 +129,15 @@ export class ORM extends Service implements Database {
       command: 'findMany',
     });
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public count<T>(model: keyof PrismaClient, args: Prisma.SelectSubset<T, any>) {
+    return this.runFromWorker({
+      args,
+      model,
+      command: 'count',
+    });
+  }
 
   private createServer() {
     this.listenWorkerMessages<DBCommandProps>(async ({ id, msg }) => {
