@@ -54,7 +54,7 @@ function Translate({
     onChangeNewTag,
     newTag,
     allTags,
-    onClicTagCheepWrapper,
+    onClickTagCheepWrapper,
     tags,
     addTags,
     setAddTags,
@@ -267,7 +267,7 @@ function Translate({
                       {tags.map((item) => (
                         <Cheep
                           key={item.id}
-                          onClick={onClicTagCheepWrapper(item, 'del')}
+                          onClick={onClickTagCheepWrapper(item, 'del')}
                           add={false}
                           disabled={false}
                           theme={theme}
@@ -295,7 +295,7 @@ function Translate({
                                 </div>
                               }
                               menuChildrenLength={30}
-                              onClick={onClicTagCheepWrapper(item, 'add')}
+                              onClick={onClickTagCheepWrapper(item, 'add')}
                               add
                               theme={theme}
                             >

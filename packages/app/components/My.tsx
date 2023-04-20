@@ -2,7 +2,7 @@ import { createRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { usePhraseDelete, usePhraseUpdate, usePhrases } from './My.hooks';
+import { usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
 import s from './My.module.scss';
 import DeleteIcon from './icons/Delete';
 import DotsHorisontalIcon from './icons/DotsHorisontal';
@@ -13,6 +13,8 @@ import Typography from './ui/Typography';
 import Dialog from './ui/Dialog';
 import Button from './ui/Button';
 import FilterIcon from './icons/Filter';
+import Checkbox from './ui/Checkbox';
+import Cheep from './ui/Cheep';
 
 function My({
   locale,
@@ -33,10 +35,28 @@ function My({
 }) {
   const { load, setLoad } = useLoad();
 
+  const { onClickPhraseUpdateWraper } = usePhraseUpdate();
+
+  const {
+    filterTags,
+    setFilterTags,
+    tags,
+    onClickTagCheepWrapper,
+    allTags,
+    skip,
+    setSkip,
+    strongTags,
+    setStrongTags,
+    changeStrongCb,
+  } = useTags();
+
   const { phrases, restart, setRestart, orderBy, onClickSortByDate, lastRef } = usePhrases({
     setLoad,
+    tags,
+    setSkip,
+    skip,
+    strongTags,
   });
-
   const {
     deletePhrase,
     setDeletePhrase,
@@ -46,15 +66,13 @@ function My({
     onClickDeletePhrase,
   } = usePhraseDelete({ setLoad, restart, setRestart });
 
-  const { onClickPhraseUpdateWraper } = usePhraseUpdate();
-
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography theme={theme} variant="h1" align="center">
           {locale.title}
         </Typography>
-        <div className={s.filters}>
+        <div className={s.sorts}>
           <div className={s.sort_item}>
             <Typography small variant="span" theme={theme}>
               {locale.byUpdateDate}:
@@ -64,6 +82,59 @@ function My({
             </IconButton>
           </div>
         </div>
+        <div className={s.filters} style={{ backgroundColor: theme.active }}>
+          <Checkbox
+            theme={theme}
+            label={locale.filterByTags}
+            id="filter-tags"
+            checked={filterTags}
+            onChange={setFilterTags}
+          />
+          {filterTags && (
+            <div className={s.tags}>
+              {allTags.map((item) => (
+                <span key={item.id}>
+                  {tags.findIndex((i) => i.id === item.id) === -1 && (
+                    <Cheep
+                      onClick={onClickTagCheepWrapper(item, 'add')}
+                      add
+                      disabled={false}
+                      theme={theme}
+                    >
+                      {item.text}
+                    </Cheep>
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
+          {filterTags && (
+            <div className={s.tags}>
+              {tags.map((item) => (
+                <Cheep
+                  key={item.id}
+                  onClick={onClickTagCheepWrapper(item, 'del')}
+                  add={false}
+                  disabled={false}
+                  theme={theme}
+                >
+                  {item.text}
+                </Cheep>
+              ))}
+            </div>
+          )}
+          {filterTags && tags.length > 1 && (
+            <Checkbox
+              theme={theme}
+              label={locale.strongAccord}
+              id="filter-tags-strong"
+              checked={strongTags}
+              onChange={setStrongTags}
+              cb={changeStrongCb}
+            />
+          )}
+        </div>
+
         {phrases.map((item, index) => {
           const ref = createRef<HTMLButtonElement>();
           return (
@@ -118,7 +189,7 @@ function My({
         <Typography variant="p" theme={theme}>
           {phraseToDelete?.text || ''}
         </Typography>
-        <div className={s.actions}>
+        <div className={s.dialog__actions}>
           <Button className={s.button} onClick={onClickCloseDelete} theme={theme}>
             {cancel}
           </Button>

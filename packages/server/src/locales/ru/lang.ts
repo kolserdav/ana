@@ -114,6 +114,8 @@ const lang: Locale = {
       deletePhrase: 'Удалить запись',
       updatePhrase: 'Изменить фразу',
       byUpdateDate: 'По времени изменения',
+      filterByTags: 'Фильтр по тегам',
+      strongAccord: 'Строгое соответствие',
     },
   },
 };

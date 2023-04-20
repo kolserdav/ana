@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { ORM } from '../../../services/orm';
 import { RequestHandler } from '../../../types';
 import {
@@ -25,14 +25,31 @@ const phraseFindMany: RequestHandler<
 > = async ({ headers, query }, reply) => {
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
-  const { orderBy, skip: _skip, take: _take } = query;
+  const { orderBy, skip: _skip, take: _take, tags: _tags, strongTags } = query;
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
   const take = _skip ? parseInt(_take, 10) : undefined;
+  let tags: string[] = [];
+  if (_tags) {
+    tags = _tags.split(',');
+  }
+
+  const tagsFilter = strongTags === '1' ? 'AND' : 'OR';
 
   const res = await orm.phraseFindMany({
     where: {
-      userId: id,
+      AND: [
+        { userId: id },
+        {
+          [tagsFilter]: tags.map((item) => ({
+            PhraseTag: {
+              some: {
+                tagId: item,
+              },
+            },
+          })),
+        },
+      ],
     },
     include: {
       PhraseTag: {

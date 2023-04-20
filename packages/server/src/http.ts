@@ -20,12 +20,12 @@ import userFindFirst from './api/v1/user/find-first';
 import phraseCreate from './api/v1/phrase/create';
 import tagCreate from './api/v1/tag/create';
 import tagFindMany from './api/v1/tag/findMany';
-import phraseFindMany from './api/v1/phrase/find-many';
+import phraseFindMany from './api/v1/phrase/findMany';
 import phraseDelete from './api/v1/phrase/delete';
 import checkAccessMiddlewareWrapper from './api/middlewares/checkAccess';
 import { PrismaClient } from '@prisma/client';
 import phraseUpdate from './api/v1/phrase/update';
-import phraseFindFirst from './api/v1/phrase/find-first';
+import phraseFindFirst from './api/v1/phrase/findFirst';
 import tagDelete from './api/v1/tag/delete';
 import tagUpdate from './api/v1/tag/update';
 
@@ -41,6 +41,11 @@ process.on('unhandledRejection', (err: Error) => {
 (async () => {
   const fastify = Fastify({
     logger: FASTIFY_LOGGER,
+    ajv: {
+      customOptions: {
+        coerceTypes: 'array',
+      },
+    },
   });
 
   fastify.register(proxy, {

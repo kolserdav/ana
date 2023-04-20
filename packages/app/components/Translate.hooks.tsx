@@ -5,6 +5,7 @@ import Request from '../utils/request';
 import { cleanPath, log } from '../utils/lib';
 import { TEXTAREA_ROWS, TRANSLATE_DELAY } from '../utils/constants';
 import { Locale, PhraseUpdateResult, TagFindManyResult } from '../types/interfaces';
+import useTagsGlobal from '../hooks/useTags';
 
 const request = new Request();
 
@@ -422,8 +423,6 @@ export const useTags = ({
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [allTags, setAllTags] = useState<TagFindManyResult>([]);
-  const [tags, setTags] = useState<TagFindManyResult>([]);
   const [newTag, setNewTag] = useState<string>('');
   const [restart, setRestart] = useState<boolean>(false);
   const [addTags, setAddTags] = useState<boolean>(false);
@@ -431,15 +430,7 @@ export const useTags = ({
   const [tagToDelete, setTagToDelete] = useState<TagFindManyResult[0] | null>(null);
   const [tagToUpdate, setTagToUpdate] = useState<TagFindManyResult[0] | null>(null);
 
-  /**
-   * Set all tags
-   */
-  useEffect(() => {
-    (async () => {
-      const _allTags = await request.tagFindMany();
-      setAllTags(_allTags.data);
-    })();
-  }, [restart]);
+  const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({ restart });
 
   const createTag = async (text: string) => {
     const res = await request.tagCreate({ text });
@@ -479,30 +470,6 @@ export const useTags = ({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onClicTagCheepWrapper = (tag: TagFindManyResult[any], command: 'add' | 'del') => () => {
-    const _tags = tags.slice();
-    const index = _tags.findIndex((item) => item.id === tag.id);
-    switch (command) {
-      case 'add':
-        if (index !== -1) {
-          log('warn', 'Duplicate tag', { _tags, tag });
-          return;
-        }
-        _tags.push(tag);
-        break;
-      case 'del':
-        if (index === -1) {
-          log('warn', 'Missing tag', { _tags, tag });
-          return;
-        }
-        _tags.splice(index, 1);
-        break;
-      default:
-    }
-    setTags(_tags);
-  };
-
   const onClickTagUpdateWrapper = (tag: TagFindManyResult[0]) => () => {
     setTagToUpdate(tag);
     setNewTag(tag.text);
@@ -540,7 +507,7 @@ export const useTags = ({
     newTag,
     onChangeNewTag,
     tags,
-    onClicTagCheepWrapper,
+    onClickTagCheepWrapper,
     addTags,
     setAddTags,
     setTags,

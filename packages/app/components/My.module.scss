@@ -1,4 +1,4 @@
-@import '../styles/constants.scss';
+@import '../styles/constants';
 
 $phrase-item-margin: 1.5rem;
 
@@ -17,7 +17,26 @@ $phrase-item-margin: 1.5rem;
     max-width: $translate-container-max;
     padding: 0 1rem;
 
+    .sorts {
+      display: flex;
+      flex-direction: row;
+      margin: 1rem 0;
+
+      .sort_item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &:first-child {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
     .filters {
+      padding: 1rem;
+      border-radius: 4px;
+
       .asc {
         position: relative;
         transition: transform 0.1s ease-in;
@@ -29,14 +48,8 @@ $phrase-item-margin: 1.5rem;
         transition: transform 0.1s ease-out;
       }
 
-      .sort_item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        &:first-child {
-          margin-right: 0.5rem;
-        }
+      .tags {
+        margin: 1rem;
       }
     }
 
@@ -93,7 +106,7 @@ $phrase-item-margin: 1.5rem;
     align-items: center;
     justify-content: center;
 
-    .actions {
+    .dialog__actions {
       display: flex;
       flex-direction: row;
       width: 100%;

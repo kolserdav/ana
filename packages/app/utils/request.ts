@@ -262,9 +262,11 @@ class Request {
     orderBy,
     skip,
     take,
+    tags,
+    strongTags,
   }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
     return this.send({
-      url: `${Api.getPhraseFindMany}?orderBy=${orderBy}&skip=${skip}&take=${take}`,
+      url: `${Api.getPhraseFindMany}?orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}`,
       method: 'GET',
     });
   }

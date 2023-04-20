@@ -92,6 +92,7 @@ export interface ManyResult<T> {
 export type DBResult<T> = Omit<Result<T>, 'message'>;
 
 export type OrderBy = 'desc' | 'asc';
+export type Bool = '1' | '0';
 
 export type FullUserName = { name: string; surname: string };
 
@@ -187,6 +188,8 @@ export interface PhraseFindManyQuery {
   orderBy: OrderBy;
   skip: string;
   take: string;
+  tags: string;
+  strongTags: Bool;
 }
 export type PhraseFindManyResult = PhraseFull[];
 
@@ -314,6 +317,8 @@ export interface Locale {
       deletePhrase: string;
       updatePhrase: string;
       byUpdateDate: string;
+      filterByTags: string;
+      strongAccord: string;
     };
   };
 }
