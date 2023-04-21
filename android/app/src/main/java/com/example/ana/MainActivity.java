@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
         webSettings.setSupportZoom(false);
         webSettings.setDefaultTextEncodingName("utf-8");
 
-        mWebView.loadUrl("https://uyem.ru/");
+        mWebView.loadUrl("https://kbm-rsa.ru/");
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
