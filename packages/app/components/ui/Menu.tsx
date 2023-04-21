@@ -12,9 +12,11 @@ import s from './Menu.module.scss';
 function Menu({
   theme,
   children,
+  openMenu,
 }: {
   theme: Theme;
   children: React.ReactNode | React.ReactNode[];
+  openMenu: string;
 }) {
   const menuRef = useRef<HTMLMenuElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -62,6 +64,7 @@ function Menu({
   return (
     <div className={s.wrapper}>
       <button
+        title={openMenu}
         ref={buttonRef}
         type="button"
         onClick={onClickOpen}

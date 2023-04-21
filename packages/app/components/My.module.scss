@@ -16,13 +16,55 @@ $phrase-item-margin: 1.5rem;
     height: 100%;
     max-width: $translate-container-max;
     padding: 0 1rem;
+    margin-top: 2rem;
+
+    .search {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+
+      .search_input {
+        margin-bottom: 0;
+      }
+
+      .sorts {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        margin: 1rem 0;
+
+        .sort_item {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          &:first-child {
+            margin-right: 0.5rem;
+          }
+        }
+
+        .asc {
+          position: relative;
+          transition: transform 0.1s ease-in;
+        }
+
+        .desc {
+          position: relative;
+          transform: rotate(180deg);
+          transition: transform 0.1s ease-out;
+        }
+      }
+    }
 
     .phrases {
       position: relative;
       width: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       margin-top: 1rem;
 
@@ -35,36 +77,10 @@ $phrase-item-margin: 1.5rem;
       }
     }
 
-    .sorts {
-      display: flex;
-      flex-direction: row;
-      margin: 1rem 0;
-
-      .sort_item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        &:first-child {
-          margin-right: 0.5rem;
-        }
-      }
-
-      .asc {
-        position: relative;
-        transition: transform 0.1s ease-in;
-      }
-
-      .desc {
-        position: relative;
-        transform: rotate(180deg);
-        transition: transform 0.1s ease-out;
-      }
-    }
-
     .filters {
       padding: 1rem;
       border-radius: 4px;
+      margin-top: 1.5rem;
 
       .filters_tags {
         margin: 1rem;

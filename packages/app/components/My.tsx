@@ -17,6 +17,8 @@ import Checkbox from './ui/Checkbox';
 import Cheep from './ui/Cheep';
 import LoadIcon from './icons/LoadIcon';
 import { TAKE_PHRASES_DEFAULT } from '../utils/constants';
+import Input from './ui/Input';
+import SearchIcon from './icons/Search';
 
 function My({
   locale,
@@ -62,6 +64,8 @@ function My({
     setStrongTags,
     pagination,
     count,
+    search,
+    changeSearch,
   } = usePhrases({
     setLoad,
     tags,
@@ -86,16 +90,7 @@ function My({
         <Typography theme={theme} variant="h1" align="center">
           {locale.title}
         </Typography>
-        <div className={s.sorts}>
-          <div className={s.sort_item}>
-            <Typography small variant="span" theme={theme}>
-              {locale.byUpdateDate}:
-            </Typography>
-            <IconButton onClick={onClickSortByDate}>
-              <FilterIcon className={orderBy === 'asc' ? s.asc : s.desc} color={theme.text} />
-            </IconButton>
-          </div>
-        </div>
+
         <div className={s.filters} style={{ backgroundColor: theme.active }}>
           <Checkbox
             theme={theme}
@@ -135,7 +130,27 @@ function My({
             />
           )}
         </div>
-
+        <div className={s.search}>
+          <Input
+            className={s.search_input}
+            type="text"
+            theme={theme}
+            value={search}
+            name={<SearchIcon color={theme.text} />}
+            id="search"
+            onChange={changeSearch}
+          />
+          <div className={s.sorts}>
+            <div className={s.sort_item}>
+              <Typography small variant="span" theme={theme}>
+                {locale.byUpdateDate}:
+              </Typography>
+              <IconButton onClick={onClickSortByDate}>
+                <FilterIcon className={orderBy === 'asc' ? s.asc : s.desc} color={theme.text} />
+              </IconButton>
+            </div>
+          </div>
+        </div>
         <div className={s.phrases}>
           {phrases.length !== 0 && count > TAKE_PHRASES_DEFAULT && (
             <div className={s.pagination}>

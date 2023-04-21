@@ -69,6 +69,8 @@ const lang: Locale = {
       logout: 'Выход',
       translate: 'Перевод',
       myDictionary: 'Мой словарь',
+      openMenu: 'Открыть меню',
+      closeMenu: 'Закрыть меню',
     },
     confirmEmail: {
       title: 'Подтверждение почты',

@@ -83,7 +83,7 @@ function AppBar({
             )}
           </div>
         )}
-        <Menu theme={theme}>
+        <Menu openMenu={menuOpen ? locale.closeMenu : locale.openMenu} theme={theme}>
           {!checkRouterPath(router.asPath, Pages.home) && (
             <Link fullWidth withoutHover theme={theme} href={Pages.home}>
               <div className={clsx(s.menu__item, s.active)}>

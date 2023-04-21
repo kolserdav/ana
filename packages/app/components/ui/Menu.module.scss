@@ -12,21 +12,28 @@ $container-top: calc($app-bar-height / 2 - 6px);
     cursor: pointer;
     position: relative;
     margin: 0 1rem;
+    right: calc((100vw - $translate-container-max) / 2);
     transform: rotate(180deg);
     border: none;
     transition: all $menu-transition ease-in;
     background-color: transparent;
+
+    @media (max-width: $translate-container-max) {
+      right: 0;
+    }
 
     &:active {
       opacity: 0.5;
     }
 
     &.open {
-      margin-right: $small-width;
       position: fixed;
-      right: 0;
       top: calc($app-bar-height / 2 - $icon-width-default / 2);
       transition: all $menu-transition ease-out;
+
+      @media (max-width: $translate-container-max) {
+        margin-right: $small-width;
+      }
 
       @media (max-width: $small-width) {
         margin-right: $x-small-width;

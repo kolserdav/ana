@@ -10,7 +10,7 @@ const Input = forwardRef<
   {
     disabled?: boolean;
     value: string | readonly string[];
-    name: string;
+    name: string | React.ReactNode;
     // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     theme: Theme;

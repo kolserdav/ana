@@ -42,6 +42,14 @@ export const usePhrases = ({
   const [orderBy, setOrderBy] = useState<OrderBy>();
   const [strongTags, setStrongTags] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
+  const [search, setSearch] = useState<string>('');
+
+  const changeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setSearch(value);
+  };
 
   /**
    * Set saved strong tags
@@ -168,6 +176,8 @@ export const usePhrases = ({
     setStrongTags,
     pagination,
     count,
+    search,
+    changeSearch,
   };
 };
 

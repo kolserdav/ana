@@ -277,6 +277,8 @@ export interface Locale {
       logout: string;
       translate: string;
       myDictionary: string;
+      openMenu: string;
+      closeMenu: string;
     };
     confirmEmail: {
       title: string;
