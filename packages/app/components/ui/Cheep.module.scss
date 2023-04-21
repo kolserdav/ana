@@ -1,9 +1,9 @@
-$cheap-text-margin: 1rem;
+$cheap-text-margin: 0.5rem;
 
 .wrapper {
   position: relative;
-  padding: 0.3rem;
-  margin: 0.3rem;
+  padding: 0.2rem;
+  margin: 0.2rem;
   border-radius: 0.3rem;
   cursor: pointer;
   font-size: smaller;
@@ -27,8 +27,9 @@ $cheap-text-margin: 1rem;
       align-items: center;
     }
 
-    .delete {
+    .postfix {
       position: relative;
+      margin: 0 $cheap-text-margin;
     }
 
     .symbol {

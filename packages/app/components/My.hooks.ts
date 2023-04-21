@@ -30,7 +30,7 @@ export const usePhrases = ({
   const [restart, setRestart] = useState<boolean>(false);
   const [orderBy, setOrderBy] = useState<OrderBy>();
   const [strongTags, setStrongTags] = useState<boolean>(false);
-  const [showStrongTags, setShowStrongTags] = useState<boolean>(false);
+  const [showStrongTags, setShowStrongTags] = useState<boolean>();
 
   const [count, setCount] = useState<number>(0);
 
@@ -75,7 +75,7 @@ export const usePhrases = ({
         return;
       }
 
-      setShowStrongTags(_phrases.strong !== undefined && _phrases.strong && tags.length > 1);
+      setShowStrongTags(_phrases.strong && tags.length > 1);
       setCount(_phrases.count || 0);
       setPhrasesChunk(_phrases.data);
       setTimeout(() => {

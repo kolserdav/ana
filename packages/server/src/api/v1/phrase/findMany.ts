@@ -77,13 +77,15 @@ const phraseFindMany: RequestHandler<
 
   let strong = false;
   res.data.every((item) => {
+    let check = true;
     tags.every((_item) => {
-      if (item.PhraseTag.find((__item) => __item.Tag.id === _item)) {
-        strong = true;
+      if (!item.PhraseTag.find((__item) => __item.Tag.id === _item)) {
+        check = false;
         return false;
       }
       return true;
     });
+    strong = check;
     return !strong;
   });
 

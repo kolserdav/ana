@@ -98,7 +98,7 @@ function My({
             onChange={setFilterTags}
           />
           {filterTags && (
-            <div className={s.tags}>
+            <div className={s.filters_tags}>
               {allTags.map((item) => (
                 <span key={item.id}>
                   <Cheep
@@ -106,6 +106,7 @@ function My({
                       item,
                       tags.findIndex((i) => i.id === item.id) === -1 ? 'add' : 'del'
                     )}
+                    postfix={item.PhraseTag.length.toString()}
                     add={tags.findIndex((i) => i.id === item.id) === -1}
                     disabled={item.PhraseTag.length === 0}
                     theme={theme}

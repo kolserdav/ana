@@ -15,6 +15,7 @@ function Cheep({
   disabled,
   menuChildren,
   menuChildrenLength,
+  postfix,
 }: {
   theme: Theme;
   children: string;
@@ -24,6 +25,7 @@ function Cheep({
   disabled?: boolean;
   menuChildren?: React.ReactNode | React.ReactNode[];
   menuChildrenLength?: number;
+  postfix?: string;
 }) {
   const menuRef = useRef(null);
 
@@ -57,8 +59,9 @@ function Cheep({
           <span className={clsx(s.text, !add ? s.del : '')}>{children}</span>
           {!add && <span className={s.symbol}> -</span>}
         </div>
+        {postfix && add && <div className={s.postfix}>{postfix}</div>}
         {add && menuChildren && (
-          <div className={s.delete}>
+          <div className={s.postfix}>
             <IconButton ref={menuRef}>
               <DotsHorisontalIcon color={theme.text} />
             </IconButton>
@@ -82,6 +85,7 @@ Cheep.defaultProps = {
   disabled: false,
   menuChildren: undefined,
   menuChildrenLength: undefined,
+  postfix: undefined,
 };
 
 export default Cheep;

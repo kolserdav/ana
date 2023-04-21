@@ -48,8 +48,11 @@ $phrase-item-margin: 1.5rem;
         transition: transform 0.1s ease-out;
       }
 
-      .tags {
+      .filters_tags {
         margin: 1rem;
+        display: flex;
+        flex-wrap: row wrap;
+        align-items: center;
       }
     }
 
