@@ -21,6 +21,13 @@ const tagFindMany: RequestHandler<
     where: {
       userId: id,
     },
+    include: {
+      PhraseTag: {
+        select: {
+          phraseId: true,
+        },
+      },
+    },
   });
   if (tags.status === 'error') {
     reply.type(APPLICATION_JSON).code(500);

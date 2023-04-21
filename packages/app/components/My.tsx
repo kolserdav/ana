@@ -45,17 +45,24 @@ function My({
     allTags,
     skip,
     setSkip,
-    strongTags,
-    setStrongTags,
     changeStrongCb,
   } = useTags();
 
-  const { phrases, restart, setRestart, orderBy, onClickSortByDate, lastRef } = usePhrases({
+  const {
+    phrases,
+    restart,
+    setRestart,
+    orderBy,
+    onClickSortByDate,
+    lastRef,
+    strongTags,
+    setStrongTags,
+    showStrongTags,
+  } = usePhrases({
     setLoad,
     tags,
     setSkip,
     skip,
-    strongTags,
   });
   const {
     deletePhrase,
@@ -94,36 +101,22 @@ function My({
             <div className={s.tags}>
               {allTags.map((item) => (
                 <span key={item.id}>
-                  {tags.findIndex((i) => i.id === item.id) === -1 && (
-                    <Cheep
-                      onClick={onClickTagCheepWrapper(item, 'add')}
-                      add
-                      disabled={false}
-                      theme={theme}
-                    >
-                      {item.text}
-                    </Cheep>
-                  )}
+                  <Cheep
+                    onClick={onClickTagCheepWrapper(
+                      item,
+                      tags.findIndex((i) => i.id === item.id) === -1 ? 'add' : 'del'
+                    )}
+                    add={tags.findIndex((i) => i.id === item.id) === -1}
+                    disabled={item.PhraseTag.length === 0}
+                    theme={theme}
+                  >
+                    {item.text}
+                  </Cheep>
                 </span>
               ))}
             </div>
           )}
-          {filterTags && (
-            <div className={s.tags}>
-              {tags.map((item) => (
-                <Cheep
-                  key={item.id}
-                  onClick={onClickTagCheepWrapper(item, 'del')}
-                  add={false}
-                  disabled={false}
-                  theme={theme}
-                >
-                  {item.text}
-                </Cheep>
-              ))}
-            </div>
-          )}
-          {filterTags && tags.length > 1 && (
+          {filterTags && showStrongTags && (
             <Checkbox
               theme={theme}
               label={locale.strongAccord}

@@ -75,6 +75,18 @@ const phraseFindMany: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(200);
 
+  let strong = false;
+  res.data.every((item) => {
+    tags.every((_item) => {
+      if (item.PhraseTag.find((__item) => __item.Tag.id === _item)) {
+        strong = true;
+        return false;
+      }
+      return true;
+    });
+    return !strong;
+  });
+
   return {
     status: 'info',
     message: locale.success,
@@ -82,6 +94,7 @@ const phraseFindMany: RequestHandler<
     count: res.count,
     skip: res.skip,
     take: res.take,
+    strong,
   };
 };
 

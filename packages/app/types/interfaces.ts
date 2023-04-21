@@ -80,6 +80,7 @@ export interface Result<T> {
   skip?: number | undefined;
   take?: number | undefined;
   count?: number | undefined;
+  strong?: boolean;
 }
 
 export interface ManyResult<T> {
@@ -93,8 +94,8 @@ export type DBResult<T> = Omit<Result<T>, 'message'>;
 
 export type OrderBy = 'desc' | 'asc';
 export type Bool = '1' | '0';
-
 export type FullUserName = { name: string; surname: string };
+export type FullTag = Tag & { PhraseTag: { phraseId: string }[] };
 
 export interface UserLoginBody {
   email: string;
@@ -177,7 +178,7 @@ export interface TagDeleteBody {
 export type TagDeleteResult = Tag | null;
 
 export type TagFindManyQuery = void;
-export type TagFindManyResult = Tag[];
+export type TagFindManyResult = FullTag[];
 
 export interface PhraseFindFirstQuery {
   phraseId: string;

@@ -17,13 +17,11 @@ export const usePhrases = ({
   tags,
   setSkip,
   skip,
-  strongTags,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tags: TagFindManyResult;
   setSkip: React.Dispatch<React.SetStateAction<number>>;
   skip: number;
-  strongTags: boolean;
 }) => {
   const lastRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +29,8 @@ export const usePhrases = ({
   const [phrasesChunk, setPhrasesChunk] = useState<PhraseFindManyResult>([]);
   const [restart, setRestart] = useState<boolean>(false);
   const [orderBy, setOrderBy] = useState<OrderBy>();
+  const [strongTags, setStrongTags] = useState<boolean>(false);
+  const [showStrongTags, setShowStrongTags] = useState<boolean>(false);
 
   const [count, setCount] = useState<number>(0);
 
@@ -75,6 +75,7 @@ export const usePhrases = ({
         return;
       }
 
+      setShowStrongTags(_phrases.strong !== undefined && _phrases.strong && tags.length > 1);
       setCount(_phrases.count || 0);
       setPhrasesChunk(_phrases.data);
       setTimeout(() => {
@@ -113,7 +114,17 @@ export const usePhrases = ({
     };
   }, [count, phrases.length, skip, setSkip]);
 
-  return { phrases, setRestart, restart, orderBy, onClickSortByDate, lastRef };
+  return {
+    phrases,
+    setRestart,
+    restart,
+    orderBy,
+    onClickSortByDate,
+    lastRef,
+    strongTags,
+    setStrongTags,
+    showStrongTags,
+  };
 };
 
 export const usePhraseDelete = ({
@@ -179,7 +190,6 @@ export const useTags = () => {
   const [filterTags, setFilterTags] = useState<boolean>(false);
   const [allTags, setAllTags] = useState<TagFindManyResult>([]);
   const [skip, setSkip] = useState<number>(0);
-  const [strongTags, setStrongTags] = useState(false);
 
   const { tags, onClickTagCheepWrapper, setTags } = useTagsGlobal({
     onChangeTags: () => {
@@ -227,8 +237,6 @@ export const useTags = () => {
     allTags,
     skip,
     setSkip,
-    strongTags,
-    setStrongTags,
     changeStrongCb,
   };
 };
