@@ -51,6 +51,8 @@ function My({
     setSkip,
     changeStrongCb,
     tagsIsSet,
+    strongTags,
+    setStrongTags,
   } = useTags();
 
   const {
@@ -60,8 +62,7 @@ function My({
     orderBy,
     onClickSortByDate,
     lastRef,
-    strongTags,
-    setStrongTags,
+
     pagination,
     count,
     search,
@@ -73,6 +74,7 @@ function My({
     skip,
     locale,
     tagsIsSet,
+    strongTags,
   });
 
   const {
@@ -132,8 +134,8 @@ function My({
         </div>
         <div className={s.search}>
           <Input
-            className={s.search_input}
             type="text"
+            desc={locale.minimalSearchLenght}
             theme={theme}
             value={search}
             name={<SearchIcon color={theme.text} />}

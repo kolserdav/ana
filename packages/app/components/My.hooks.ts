@@ -6,6 +6,7 @@ import {
   LocaleVars,
   OrderBy,
   PhraseFindManyResult,
+  SEARCH_MIN_LENGTH,
   TagFindManyResult,
 } from '../types/interfaces';
 import Request from '../utils/request';
@@ -26,6 +27,7 @@ export const usePhrases = ({
   skip,
   locale,
   tagsIsSet,
+  strongTags,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tags: TagFindManyResult;
@@ -33,6 +35,7 @@ export const usePhrases = ({
   skip: number;
   locale: Locale['app']['my'];
   tagsIsSet: boolean;
+  strongTags: boolean;
 }) => {
   const lastRef = useRef<HTMLDivElement>(null);
 
@@ -40,37 +43,27 @@ export const usePhrases = ({
   const [phrasesChunk, setPhrasesChunk] = useState<PhraseFindManyResult>([]);
   const [restart, setRestart] = useState<boolean>(false);
   const [orderBy, setOrderBy] = useState<OrderBy>();
-  const [strongTags, setStrongTags] = useState<boolean>(false);
+
   const [count, setCount] = useState<number>(0);
+
   const [search, setSearch] = useState<string>('');
 
   const changeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
+
+    if (skip !== 0) {
+      setSkip(0);
+    }
     setSearch(value);
   };
-
-  /**
-   * Set saved strong tags
-   */
-  useEffect(() => {
-    const _strongTags = getLocalStorage(LocalStorageName.STRONG_FILTER);
-    if (_strongTags !== null) {
-      setStrongTags(_strongTags);
-    } else {
-      setStrongTags(false);
-    }
-  }, []);
 
   /**
    * Save strong tags
    */
   useEffect(() => {
-    const _strongTags = getLocalStorage(LocalStorageName.STRONG_FILTER);
-    if (_strongTags !== strongTags && strongTags) {
-      setLocalStorage(LocalStorageName.STRONG_FILTER, strongTags);
-    }
+    setLocalStorage(LocalStorageName.STRONG_FILTER, strongTags);
   }, [strongTags]);
 
   /**
@@ -96,7 +89,8 @@ export const usePhrases = ({
    * Set phrases chunk
    */
   useEffect(() => {
-    if (!orderBy || !tagsIsSet) {
+    const _search = search?.trim();
+    if (!orderBy || !tagsIsSet || (_search && _search.length < SEARCH_MIN_LENGTH)) {
       return;
     }
     (async () => {
@@ -107,6 +101,7 @@ export const usePhrases = ({
         take: TAKE_PHRASES_DEFAULT.toString(),
         tags: tags.map((item) => item.id).join(','),
         strongTags: strongTags ? '1' : '0',
+        search: _search,
       });
       setLoad(false);
       if (_phrases.status !== 'info') {
@@ -125,7 +120,7 @@ export const usePhrases = ({
         _load = false;
       }, 0);
     })();
-  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet]);
+  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search]);
 
   const onClickSortByDate = () => {
     const _orderBy = orderBy === 'asc' ? 'desc' : 'asc';
@@ -172,8 +167,6 @@ export const usePhrases = ({
     orderBy,
     onClickSortByDate,
     lastRef,
-    strongTags,
-    setStrongTags,
     pagination,
     count,
     search,
@@ -244,6 +237,19 @@ export const useTags = () => {
   const [filterTags, setFilterTags] = useState<boolean>(false);
   const [tagsIsSet, setTagsIsSet] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
+  const [strongTags, setStrongTags] = useState<boolean>(false);
+
+  /**
+   * Set saved strong tags
+   */
+  useEffect(() => {
+    const _strongTags = getLocalStorage(LocalStorageName.STRONG_FILTER);
+    if (_strongTags !== null) {
+      setStrongTags(_strongTags);
+    } else {
+      setStrongTags(false);
+    }
+  }, []);
 
   const { tags, onClickTagCheepWrapper, setTags, allTags } = useTagsGlobal({
     onChangeTags: (_tags) => {
@@ -266,6 +272,15 @@ export const useTags = () => {
   }, [filterTags, setTags]);
 
   /**
+   * Check filter tags
+   */
+  useEffect(() => {
+    if (!filterTags && strongTags) {
+      setFilterTags(true);
+    }
+  }, [filterTags, strongTags]);
+
+  /**
    * Set filter tags
    */
   useEffect(() => {
@@ -284,6 +299,7 @@ export const useTags = () => {
         setFilterTags(true);
       }
     }
+
     setTagsIsSet(true);
   }, [allTags, setTags]);
 
@@ -301,5 +317,7 @@ export const useTags = () => {
     setSkip,
     changeStrongCb,
     tagsIsSet,
+    strongTags,
+    setStrongTags,
   };
 };

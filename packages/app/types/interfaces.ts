@@ -34,6 +34,7 @@ export enum LogLevel {
   error = 2,
 }
 
+// eslint-disable-next-line no-shadow
 export enum LocaleVars {
   show = '%show',
   all = '%all',
@@ -57,6 +58,10 @@ export const APPLICATION_JSON = 'application/json';
 export const PREVIEW_IMAGE_WIDTH = 320;
 export const IMAGE_EXTS = '.avif, .jpg, .jpeg, .gif, .png, .webp';
 export const MAX_BODY_MB = 5;
+/**
+ * This required to be 4
+ */
+export const SEARCH_MIN_LENGTH = 4;
 
 export interface ProcessMessage<T> {
   id: string;
@@ -195,6 +200,7 @@ export interface PhraseFindManyQuery {
   take: string;
   tags: string;
   strongTags: Bool;
+  search: string;
 }
 export type PhraseFindManyResult = PhraseFull[];
 
@@ -327,7 +333,12 @@ export interface Locale {
       filterByTags: string;
       strongAccord: string;
       emptyPhrases: string;
+      /**
+       * @description
+       * Required to change LocaleVars.show and LocaleVars.all
+       */
       pagination: string;
+      minimalSearchLenght: string;
     };
   };
 }

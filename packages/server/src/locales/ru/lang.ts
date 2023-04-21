@@ -1,4 +1,4 @@
-import { Locale, LocaleVars } from '../../types/interfaces';
+import { Locale, LocaleVars, SEARCH_MIN_LENGTH } from '../../types/interfaces';
 
 const lang: Locale = {
   server: {
@@ -120,6 +120,7 @@ const lang: Locale = {
       strongAccord: 'Строгое соответствие',
       emptyPhrases: 'По заданному фильтру фразы не найдены',
       pagination: `Показано: ${LocaleVars.show} из ${LocaleVars.all}`,
+      minimalSearchLenght: `Минимум ${SEARCH_MIN_LENGTH} символa в слове`,
     },
   },
 };

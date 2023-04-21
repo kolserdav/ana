@@ -94,7 +94,15 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
     include: {
       PhraseTag: {
         include: {
-          Tag: true,
+          Tag: {
+            include: {
+              PhraseTag: {
+                select: {
+                  phraseId: true,
+                },
+              },
+            },
+          },
         },
       },
     },

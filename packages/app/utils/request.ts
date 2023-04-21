@@ -264,9 +264,10 @@ class Request {
     take,
     tags,
     strongTags,
+    search,
   }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
     return this.send({
-      url: `${Api.getPhraseFindMany}?orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}`,
+      url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}`,
       method: 'GET',
     });
   }

@@ -36,6 +36,8 @@ $cheap-text-margin: 0.5rem;
     .symbol {
       font-size: large;
       margin: 0 $cheap-text-margin;
+      display: table-cell;
+      vertical-align: middle;
     }
 
     .text {

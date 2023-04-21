@@ -5,6 +5,7 @@ import {
   PhraseFindManyQuery,
   PhraseFindManyResult,
   Result,
+  SEARCH_MIN_LENGTH,
 } from '../../../types/interfaces';
 import { getLocale, parseHeaders } from '../../../utils/lib';
 
@@ -16,7 +17,14 @@ const phraseFindMany: RequestHandler<
 > = async ({ headers, query }, reply) => {
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
-  const { orderBy, skip: _skip, take: _take, tags: _tags, strongTags: _strongTags } = query;
+  const {
+    orderBy,
+    skip: _skip,
+    take: _take,
+    tags: _tags,
+    strongTags: _strongTags,
+    search: _search,
+  } = query;
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
   const take = _skip ? parseInt(_take, 10) : undefined;
@@ -27,7 +35,10 @@ const phraseFindMany: RequestHandler<
 
   const strongTags = _strongTags === '1';
   const tagsFilter = strongTags ? 'AND' : 'OR';
+  const search =
+    _search?.length >= SEARCH_MIN_LENGTH ? _search.replace(/[\s\n\t]/g, ' | ') : undefined;
 
+  // FIXME ajust search
   const res = await orm.phraseFindMany({
     where: {
       AND: [
@@ -40,6 +51,20 @@ const phraseFindMany: RequestHandler<
               },
             },
           })),
+        },
+        {
+          OR: [
+            {
+              text: {
+                search,
+              },
+            },
+            {
+              translate: {
+                search,
+              },
+            },
+          ],
         },
       ],
       NOT: strongTags
