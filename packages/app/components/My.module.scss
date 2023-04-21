@@ -17,6 +17,24 @@ $phrase-item-margin: 1.5rem;
     max-width: $translate-container-max;
     padding: 0 1rem;
 
+    .phrases {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+
+      .pagination {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        opacity: 0.6;
+      }
+    }
+
     .sorts {
       display: flex;
       flex-direction: row;
@@ -31,11 +49,6 @@ $phrase-item-margin: 1.5rem;
           margin-right: 0.5rem;
         }
       }
-    }
-
-    .filters {
-      padding: 1rem;
-      border-radius: 4px;
 
       .asc {
         position: relative;
@@ -47,6 +60,11 @@ $phrase-item-margin: 1.5rem;
         transform: rotate(180deg);
         transition: transform 0.1s ease-out;
       }
+    }
+
+    .filters {
+      padding: 1rem;
+      border-radius: 4px;
 
       .filters_tags {
         margin: 1rem;
@@ -57,6 +75,9 @@ $phrase-item-margin: 1.5rem;
     }
 
     .item_container {
+      position: relative;
+      width: 100%;
+
       .actions {
         margin-bottom: calc(-1 * $phrase-item-margin);
         margin-top: $phrase-item-margin;

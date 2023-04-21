@@ -33,6 +33,12 @@ export enum LogLevel {
   warn = 1,
   error = 2,
 }
+
+export enum LocaleVars {
+  show = '%show',
+  all = '%all',
+}
+
 export type LocaleValue = 'ru';
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
 export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
@@ -80,7 +86,6 @@ export interface Result<T> {
   skip?: number | undefined;
   take?: number | undefined;
   count?: number | undefined;
-  strong?: boolean;
 }
 
 export interface ManyResult<T> {
@@ -96,6 +101,7 @@ export type OrderBy = 'desc' | 'asc';
 export type Bool = '1' | '0';
 export type FullUserName = { name: string; surname: string };
 export type FullTag = Tag & { PhraseTag: { phraseId: string }[] };
+export type PhraseFull = Phrase & { PhraseTag: (PhraseTag & { Tag: FullTag })[] };
 
 export interface UserLoginBody {
   email: string;
@@ -152,8 +158,6 @@ export interface PhraseDeleteBody {
   phraseId: string;
 }
 export type PhraseDeleteResult = Phrase | null;
-
-export type PhraseFull = Phrase & { PhraseTag: (PhraseTag & { Tag: Tag })[] };
 
 export interface PhraseUpdateBody {
   phraseId: string;
@@ -320,6 +324,8 @@ export interface Locale {
       byUpdateDate: string;
       filterByTags: string;
       strongAccord: string;
+      emptyPhrases: string;
+      pagination: string;
     };
   };
 }

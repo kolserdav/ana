@@ -224,6 +224,8 @@ export const useTranslate = ({
     setRows(TEXTAREA_ROWS);
     setTranslate('');
     setRetranslate('');
+    setAddTags(false);
+    setTags([]);
     if (edit) {
       setEdit(null);
       router.push(cleanPath(router.asPath));
@@ -344,6 +346,8 @@ export const useSavePhrase = ({
   edit,
   restart,
   setRestart,
+  tagRestart,
+  setTagRestart,
   addTags,
   tags,
 }: {
@@ -356,6 +360,8 @@ export const useSavePhrase = ({
   edit: string | null;
   restart: boolean;
   setRestart: React.Dispatch<React.SetStateAction<boolean>>;
+  tagRestart: boolean;
+  setTagRestart: React.Dispatch<React.SetStateAction<boolean>>;
   addTags: boolean;
   translate?: string;
 }) => {
@@ -380,6 +386,8 @@ export const useSavePhrase = ({
     if (saveRes.status === 'info') {
       setSaveDialog(false);
       setTags([]);
+      setRestart(!restart);
+      setTagRestart(!tagRestart);
     }
   };
 
@@ -404,6 +412,7 @@ export const useSavePhrase = ({
     if (saveRes.status === 'info') {
       setSaveDialog(false);
       setRestart(!restart);
+      setTagRestart(!tagRestart);
     }
   };
 
@@ -424,13 +433,13 @@ export const useTags = ({
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [newTag, setNewTag] = useState<string>('');
-  const [restart, setRestart] = useState<boolean>(false);
+  const [tagRestart, setTagRestart] = useState<boolean>(false);
   const [addTags, setAddTags] = useState<boolean>(false);
   const [deleteTagDialog, setDeleteTagDialog] = useState<boolean>(false);
   const [tagToDelete, setTagToDelete] = useState<TagFindManyResult[0] | null>(null);
   const [tagToUpdate, setTagToUpdate] = useState<TagFindManyResult[0] | null>(null);
 
-  const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({ restart });
+  const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({ restart: tagRestart });
 
   const createTag = async (text: string) => {
     const res = await request.tagCreate({ text });
@@ -439,7 +448,7 @@ export const useTags = ({
       return;
     }
     setNewTag('');
-    setRestart(!restart);
+    setTagRestart(!tagRestart);
   };
 
   const updateTag = async (text: string) => {
@@ -453,7 +462,7 @@ export const useTags = ({
       return;
     }
     setNewTag('');
-    setRestart(!restart);
+    setTagRestart(!tagRestart);
   };
 
   const onChangeNewTag = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -497,7 +506,7 @@ export const useTags = ({
     if (delRes.status !== 'info') {
       return;
     }
-    setRestart(!restart);
+    setTagRestart(!tagRestart);
     setTagToDelete(null);
     setDeleteTagDialog(false);
   };
@@ -519,5 +528,7 @@ export const useTags = ({
     setDeleteTagDialog,
     onClickCancelDeleteTag,
     onClickDeleteTag,
+    tagRestart,
+    setTagRestart,
   };
 };

@@ -16,7 +16,7 @@ function Typography({
   disabled,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
-  children: string | string[];
+  children: string | string[] | React.ReactNode;
   theme: Theme;
   htmlFor?: string;
   className?: string;

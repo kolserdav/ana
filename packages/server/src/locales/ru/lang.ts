@@ -1,4 +1,4 @@
-import { Locale } from '../../types/interfaces';
+import { Locale, LocaleVars } from '../../types/interfaces';
 
 const lang: Locale = {
   server: {
@@ -116,6 +116,8 @@ const lang: Locale = {
       byUpdateDate: 'По времени изменения',
       filterByTags: 'Фильтр по тегам',
       strongAccord: 'Строгое соответствие',
+      emptyPhrases: 'По заданному фильтру фразы не найдены',
+      pagination: `Показано: ${LocaleVars.show} из ${LocaleVars.all}`,
     },
   },
 };

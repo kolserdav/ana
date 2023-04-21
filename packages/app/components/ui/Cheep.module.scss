@@ -30,6 +30,7 @@ $cheap-text-margin: 0.5rem;
     .postfix {
       position: relative;
       margin: 0 $cheap-text-margin;
+      font-size: smaller;
     }
 
     .symbol {
@@ -40,6 +41,7 @@ $cheap-text-margin: 0.5rem;
     .text {
       position: relative;
       margin: 0 $cheap-text-margin;
+      vertical-align: baseline;
     }
   }
 }

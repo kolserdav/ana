@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale, UserCleanResult } from '../types/interfaces';
+import { Locale, LocaleVars, UserCleanResult } from '../types/interfaces';
 import { usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
 import s from './My.module.scss';
 import DeleteIcon from './icons/Delete';
@@ -15,6 +15,8 @@ import Button from './ui/Button';
 import FilterIcon from './icons/Filter';
 import Checkbox from './ui/Checkbox';
 import Cheep from './ui/Cheep';
+import LoadIcon from './icons/LoadIcon';
+import { TAKE_PHRASES_DEFAULT } from '../utils/constants';
 
 function My({
   locale,
@@ -46,6 +48,7 @@ function My({
     skip,
     setSkip,
     changeStrongCb,
+    tagsIsSet,
   } = useTags();
 
   const {
@@ -57,13 +60,17 @@ function My({
     lastRef,
     strongTags,
     setStrongTags,
-    showStrongTags,
+    pagination,
+    count,
   } = usePhrases({
     setLoad,
     tags,
     setSkip,
     skip,
+    locale,
+    tagsIsSet,
   });
+
   const {
     deletePhrase,
     setDeletePhrase,
@@ -117,7 +124,7 @@ function My({
               ))}
             </div>
           )}
-          {filterTags && showStrongTags && (
+          {filterTags && (
             <Checkbox
               theme={theme}
               label={locale.strongAccord}
@@ -129,52 +136,74 @@ function My({
           )}
         </div>
 
-        {phrases.map((item, index) => {
-          const ref = createRef<HTMLButtonElement>();
-          return (
-            <div
-              ref={phrases[index + 1] === undefined ? lastRef : undefined}
-              key={item.id}
-              className={s.item_container}
-            >
-              <div className={s.actions}>
-                <IconButton aria-label={locale.byUpdateDate} ref={ref}>
-                  <DotsHorisontalIcon color={theme.text} />
-                </IconButton>
-
-                <Tooltip closeOnClick theme={theme} parentRef={ref} length={40}>
-                  <div className={s.menu_tooltip}>
-                    <IconButton title={edit} onClick={onClickPhraseUpdateWraper(item)}>
-                      <EditIcon color={theme.blue} />
-                    </IconButton>
-                    <IconButton onClick={onClickDeletePhraseWrapper(item)} title={_delete}>
-                      <DeleteIcon color={theme.red} />
-                    </IconButton>
-                  </div>
-                </Tooltip>
-              </div>
-              <div className={s.item} style={{ borderColor: theme.active }}>
-                <Typography variant="p" theme={theme}>
-                  {item.text}
-                </Typography>
-                {item.translate && (
-                  <Typography className={s.translate} variant="p" theme={theme} small>
-                    {item.translate}
-                  </Typography>
-                )}
-              </div>
-              <div className={s.tags}>
-                {item.PhraseTag.map((tag) => (
-                  <div key={tag.id} className={s.tag_item}>
-                    <Typography variant="span" theme={theme} small disabled>
-                      #{tag.Tag.text}
-                    </Typography>
-                  </div>
-                ))}
-              </div>
+        <div className={s.phrases}>
+          {phrases.length !== 0 && count > TAKE_PHRASES_DEFAULT && (
+            <div className={s.pagination}>
+              <Typography small theme={theme} variant="span">
+                {pagination}
+              </Typography>
             </div>
-          );
-        })}
+          )}
+          {phrases.length !== 0 ? (
+            phrases.map((item, index) => {
+              const ref = createRef<HTMLButtonElement>();
+              return (
+                <div
+                  ref={phrases[index + 1] === undefined ? lastRef : undefined}
+                  key={item.id}
+                  className={s.item_container}
+                >
+                  <div className={s.actions}>
+                    <IconButton aria-label={locale.byUpdateDate} ref={ref}>
+                      <DotsHorisontalIcon color={theme.text} />
+                    </IconButton>
+
+                    <Tooltip closeOnClick theme={theme} parentRef={ref} length={40}>
+                      <div className={s.menu_tooltip}>
+                        <IconButton title={edit} onClick={onClickPhraseUpdateWraper(item)}>
+                          <EditIcon color={theme.blue} />
+                        </IconButton>
+                        <IconButton onClick={onClickDeletePhraseWrapper(item)} title={_delete}>
+                          <DeleteIcon color={theme.red} />
+                        </IconButton>
+                      </div>
+                    </Tooltip>
+                  </div>
+                  <div className={s.item} style={{ borderColor: theme.active }}>
+                    <Typography variant="p" theme={theme}>
+                      {item.text}
+                    </Typography>
+                    {item.translate && (
+                      <Typography className={s.translate} variant="p" theme={theme} small>
+                        {item.translate}
+                      </Typography>
+                    )}
+                  </div>
+                  <div className={s.tags}>
+                    {item.PhraseTag.map((tag) => (
+                      <div key={tag.id} className={s.tag_item}>
+                        <Typography variant="span" theme={theme} small disabled>
+                          #{tag.Tag.text}
+                        </Typography>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <Typography variant="p" theme={theme} align="center">
+              {load ? <LoadIcon color={theme.blue} /> : locale.emptyPhrases}
+            </Typography>
+          )}
+          {phrases.length !== 0 && phrases.length === count && (
+            <div className={s.pagination}>
+              <Typography small theme={theme} variant="span">
+                {pagination}
+              </Typography>
+            </div>
+          )}
+        </div>
       </div>
       <Dialog className={s.dialog} theme={theme} onClose={setDeletePhrase} open={deletePhrase}>
         <Typography variant="h3" theme={theme} align="center">

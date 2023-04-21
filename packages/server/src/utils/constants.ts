@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
@@ -17,6 +18,8 @@ export const PORT = parseInt(process.env.PORT as string, 10);
 export const LOG_LEVEL = parseInt(process.env.LOG_LEVEL as string, 10);
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const FASTIFY_LOGGER = process.env.FASTIFY_LOGGER === 'true';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const PRISMA_LOG: Prisma.LogLevel = process.env.PRISMA_LOG as any;
 
 export const PASSWORD_SALT_LENGTH = 16;
 export const PASWWORD_HASH_LENGTH = 64;

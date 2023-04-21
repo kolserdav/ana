@@ -8,12 +8,20 @@ export enum LocalStorageName {
   THEME = 'THEME',
   // eslint-disable-next-line no-unused-vars
   ORDER_BY = 'ORDER_BY',
+  // eslint-disable-next-line no-unused-vars
+  FILTER_TAGS = 'FILTER_TAGS',
+  // eslint-disable-next-line no-unused-vars
+  STRONG_FILTER = 'STRONG_FILTER',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
   ? ThemeType
   : T extends LocalStorageName.ORDER_BY
   ? OrderBy
+  : T extends LocalStorageName.FILTER_TAGS
+  ? string[]
+  : T extends LocalStorageName.STRONG_FILTER
+  ? boolean
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(

@@ -25,7 +25,15 @@ const phraseFindFirst: RequestHandler<
     include: {
       PhraseTag: {
         include: {
-          Tag: true,
+          Tag: {
+            include: {
+              PhraseTag: {
+                select: {
+                  phraseId: true,
+                },
+              },
+            },
+          },
         },
       },
     },

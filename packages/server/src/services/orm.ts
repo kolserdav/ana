@@ -5,8 +5,9 @@ import Service from './service';
 import Database from '../database';
 import { checkIsFind, checkIsMany, log } from '../utils/lib';
 import { DBCommandProps, Result } from '../types/interfaces';
+import { PRISMA_LOG } from '../utils/constants';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ log: [PRISMA_LOG] });
 
 export class ORM extends Service implements Database {
   private readonly errorStatus = 'error';

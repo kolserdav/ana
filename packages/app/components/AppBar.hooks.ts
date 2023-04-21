@@ -3,7 +3,7 @@ import storeMenuOpen from '../store/menuOpen';
 import storeScroll from '../store/scroll';
 import storeTheme, { changeTheme } from '../store/theme';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
-import { DEFAULT_THEME, EXPAND_LESS_SHOW_FROM } from '../utils/constants';
+import { DEFAULT_THEME, EXPAND_LESS_SHOW_FROM, MOBILE_WIDTH } from '../utils/constants';
 import { CookieName, setCookie } from '../utils/cookies';
 import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
 import storeTouchEvent from '../store/touchEvent';
@@ -16,6 +16,14 @@ export const useAppBar = () => {
   const [showAppBar, setShowAppBar] = useState<boolean>(true);
   const [showExpandLess, setShowExpandLess] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  /**
+   * Set is mobile
+   */
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= MOBILE_WIDTH);
+  }, []);
 
   /**
    * Listen scroll
@@ -79,7 +87,7 @@ export const useAppBar = () => {
     };
   }, []);
 
-  return { showAppBar, showExpandLess, menuOpen };
+  return { showAppBar, showExpandLess, menuOpen, isMobile };
 };
 
 export const useChangeTheme = () => {

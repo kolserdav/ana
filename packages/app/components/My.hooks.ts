@@ -1,6 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { OrderBy, PhraseFindManyResult, TagFindManyResult } from '../types/interfaces';
+import {
+  FullTag,
+  Locale,
+  LocaleVars,
+  OrderBy,
+  PhraseFindManyResult,
+  TagFindManyResult,
+} from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
 import { ORDER_BY_DEFAULT, Pages, TAKE_PHRASES_DEFAULT } from '../utils/constants';
@@ -17,11 +24,15 @@ export const usePhrases = ({
   tags,
   setSkip,
   skip,
+  locale,
+  tagsIsSet,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tags: TagFindManyResult;
   setSkip: React.Dispatch<React.SetStateAction<number>>;
   skip: number;
+  locale: Locale['app']['my'];
+  tagsIsSet: boolean;
 }) => {
   const lastRef = useRef<HTMLDivElement>(null);
 
@@ -30,9 +41,29 @@ export const usePhrases = ({
   const [restart, setRestart] = useState<boolean>(false);
   const [orderBy, setOrderBy] = useState<OrderBy>();
   const [strongTags, setStrongTags] = useState<boolean>(false);
-  const [showStrongTags, setShowStrongTags] = useState<boolean>();
-
   const [count, setCount] = useState<number>(0);
+
+  /**
+   * Set saved strong tags
+   */
+  useEffect(() => {
+    const _strongTags = getLocalStorage(LocalStorageName.STRONG_FILTER);
+    if (_strongTags !== null) {
+      setStrongTags(_strongTags);
+    } else {
+      setStrongTags(false);
+    }
+  }, []);
+
+  /**
+   * Save strong tags
+   */
+  useEffect(() => {
+    const _strongTags = getLocalStorage(LocalStorageName.STRONG_FILTER);
+    if (_strongTags !== strongTags && strongTags) {
+      setLocalStorage(LocalStorageName.STRONG_FILTER, strongTags);
+    }
+  }, [strongTags]);
 
   /**
    * Set order by
@@ -57,7 +88,7 @@ export const usePhrases = ({
    * Set phrases chunk
    */
   useEffect(() => {
-    if (!orderBy) {
+    if (!orderBy || !tagsIsSet) {
       return;
     }
     (async () => {
@@ -75,14 +106,18 @@ export const usePhrases = ({
         return;
       }
 
-      setShowStrongTags(_phrases.strong && tags.length > 1);
       setCount(_phrases.count || 0);
       setPhrasesChunk(_phrases.data);
+
+      if (_phrases.data.length === 0 && skip === 0) {
+        setPhrases([]);
+      }
+
       setTimeout(() => {
         _load = false;
       }, 0);
     })();
-  }, [orderBy, skip, setLoad, tags, strongTags]);
+  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet]);
 
   const onClickSortByDate = () => {
     const _orderBy = orderBy === 'asc' ? 'desc' : 'asc';
@@ -114,6 +149,14 @@ export const usePhrases = ({
     };
   }, [count, phrases.length, skip, setSkip]);
 
+  const pagination = useMemo(
+    () =>
+      locale.pagination
+        .replace(LocaleVars.show, phrases.length.toString())
+        .replace(LocaleVars.all, count.toString()),
+    [locale.pagination, phrases, count]
+  );
+
   return {
     phrases,
     setRestart,
@@ -123,7 +166,8 @@ export const usePhrases = ({
     lastRef,
     strongTags,
     setStrongTags,
-    showStrongTags,
+    pagination,
+    count,
   };
 };
 
@@ -188,12 +232,16 @@ export const usePhraseUpdate = () => {
 
 export const useTags = () => {
   const [filterTags, setFilterTags] = useState<boolean>(false);
-  const [allTags, setAllTags] = useState<TagFindManyResult>([]);
+  const [tagsIsSet, setTagsIsSet] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
 
-  const { tags, onClickTagCheepWrapper, setTags } = useTagsGlobal({
-    onChangeTags: () => {
+  const { tags, onClickTagCheepWrapper, setTags, allTags } = useTagsGlobal({
+    onChangeTags: (_tags) => {
       setSkip(0);
+      setLocalStorage(
+        LocalStorageName.FILTER_TAGS,
+        _tags.map((item) => item.id)
+      );
     },
   });
 
@@ -208,22 +256,26 @@ export const useTags = () => {
   }, [filterTags, setTags]);
 
   /**
-   * Set tags
+   * Set filter tags
    */
   useEffect(() => {
-    if (!filterTags) {
+    if (allTags.length === 0) {
       return;
     }
 
-    (async () => {
-      const _tags = await request.tagFindMany();
-      if (_tags.status !== 'info') {
-        log(_tags.status, _tags.message, _tags, true);
-        return;
+    const savedTags = getLocalStorage(LocalStorageName.FILTER_TAGS);
+    if (savedTags?.length) {
+      const _tags = savedTags
+        .map((item) => allTags.find((_item) => _item.id === item))
+        .filter((item) => item !== undefined) as FullTag[];
+
+      if (_tags.length) {
+        setTags(_tags);
+        setFilterTags(true);
       }
-      setAllTags(_tags.data);
-    })();
-  }, [filterTags]);
+    }
+    setTagsIsSet(true);
+  }, [allTags, setTags]);
 
   const changeStrongCb = () => {
     setSkip(0);
@@ -238,5 +290,6 @@ export const useTags = () => {
     skip,
     setSkip,
     changeStrongCb,
+    tagsIsSet,
   };
 };

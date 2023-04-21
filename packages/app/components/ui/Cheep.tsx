@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useRef } from 'react';
 import { Theme } from '../../Theme';
-import { ubuntu500 } from '../../fonts/ubuntu';
+import { ubuntu300, ubuntu500 } from '../../fonts/ubuntu';
 import s from './Cheep.module.scss';
 import IconButton from './IconButton';
 import DotsHorisontalIcon from '../icons/DotsHorisontal';
@@ -55,11 +55,17 @@ function Cheep({
             }
           }}
         >
-          {add && <span className={s.symbol}>+ </span>}
-          <span className={clsx(s.text, !add ? s.del : '')}>{children}</span>
-          {!add && <span className={s.symbol}> -</span>}
+          <span className={s.symbol} style={{ color: theme.contrast }}>
+            {add ? '+' : '-'}{' '}
+          </span>
+          <span className={clsx(s.text, ubuntu300.className)}>{children}</span>
+          {postfix && (
+            <div style={{ color: theme.contrast }} className={s.postfix}>
+              {postfix}
+            </div>
+          )}
         </div>
-        {postfix && add && <div className={s.postfix}>{postfix}</div>}
+
         {add && menuChildren && (
           <div className={s.postfix}>
             <IconButton ref={menuRef}>

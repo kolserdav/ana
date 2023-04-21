@@ -1,4 +1,3 @@
-import { Prisma, PrismaClient } from '@prisma/client';
 import { ORM } from '../../../services/orm';
 import { RequestHandler } from '../../../types';
 import {
@@ -9,14 +8,6 @@ import {
 } from '../../../types/interfaces';
 import { getLocale, parseHeaders } from '../../../utils/lib';
 
-const prisma = new PrismaClient();
-
-prisma.phrase.findMany({
-  orderBy: {
-    updated: undefined,
-  },
-});
-
 const orm = new ORM();
 
 const phraseFindMany: RequestHandler<
@@ -25,7 +16,7 @@ const phraseFindMany: RequestHandler<
 > = async ({ headers, query }, reply) => {
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
-  const { orderBy, skip: _skip, take: _take, tags: _tags, strongTags } = query;
+  const { orderBy, skip: _skip, take: _take, tags: _tags, strongTags: _strongTags } = query;
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
   const take = _skip ? parseInt(_take, 10) : undefined;
@@ -34,7 +25,8 @@ const phraseFindMany: RequestHandler<
     tags = _tags.split(',');
   }
 
-  const tagsFilter = strongTags === '1' ? 'AND' : 'OR';
+  const strongTags = _strongTags === '1';
+  const tagsFilter = strongTags ? 'AND' : 'OR';
 
   const res = await orm.phraseFindMany({
     where: {
@@ -50,11 +42,30 @@ const phraseFindMany: RequestHandler<
           })),
         },
       ],
+      NOT: strongTags
+        ? tags.map(() => ({
+            PhraseTag: {
+              some: {
+                tagId: {
+                  notIn: tags,
+                },
+              },
+            },
+          }))
+        : undefined,
     },
     include: {
       PhraseTag: {
         include: {
-          Tag: true,
+          Tag: {
+            include: {
+              PhraseTag: {
+                select: {
+                  phraseId: true,
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -75,20 +86,6 @@ const phraseFindMany: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(200);
 
-  let strong = false;
-  res.data.every((item) => {
-    let check = true;
-    tags.every((_item) => {
-      if (!item.PhraseTag.find((__item) => __item.Tag.id === _item)) {
-        check = false;
-        return false;
-      }
-      return true;
-    });
-    strong = check;
-    return !strong;
-  });
-
   return {
     status: 'info',
     message: locale.success,
@@ -96,7 +93,6 @@ const phraseFindMany: RequestHandler<
     count: res.count,
     skip: res.skip,
     take: res.take,
-    strong,
   };
 };
 

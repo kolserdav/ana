@@ -28,19 +28,20 @@ function AppBar({
 }) {
   const router = useRouter();
 
-  const { showAppBar, showExpandLess, menuOpen } = useAppBar();
+  const { showAppBar, showExpandLess, menuOpen, isMobile } = useAppBar();
 
   const { darkTheme, onClickChangeTheme } = useChangeTheme();
 
   const { onClickLogout, onKeyDownLogout } = useLogout();
 
-  const linkStyle: React.CSSProperties = menuOpen
-    ? {
-        color: 'transparent',
-        textShadow: `0 0 8px ${theme.text}`,
-        transition: `all ${MENU_TRANSITION / 1000}s ease-out`,
-      }
-    : { color: theme.text, transition: `all ${MENU_TRANSITION / 1000}s ease-in` };
+  const linkStyle: React.CSSProperties =
+    menuOpen && isMobile
+      ? {
+          color: 'transparent',
+          textShadow: `0 0 8px ${theme.text}`,
+          transition: `all ${MENU_TRANSITION / 1000}s ease-out`,
+        }
+      : { color: theme.text, transition: `all ${MENU_TRANSITION / 1000}s ease-in` };
 
   return (
     <header>

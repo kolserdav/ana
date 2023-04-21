@@ -67,6 +67,8 @@ function Translate({
     setDeleteTagDialog,
     onClickCancelDeleteTag,
     onClickDeleteTag,
+    tagRestart,
+    setTagRestart,
   } = useTags({ setLoad });
 
   const {
@@ -141,6 +143,8 @@ function Translate({
     restart,
     setRestart,
     addTags,
+    tagRestart,
+    setTagRestart,
   });
 
   return (
@@ -266,6 +270,7 @@ function Translate({
                     <div className={s.box}>
                       {tags.map((item) => (
                         <Cheep
+                          postfix={item.PhraseTag.length.toString()}
                           key={item.id}
                           onClick={onClickTagCheepWrapper(item, 'del')}
                           add={false}
@@ -281,6 +286,7 @@ function Translate({
                         <span key={item.id}>
                           {tags.findIndex((i) => i.id === item.id) === -1 && (
                             <Cheep
+                              postfix={item.PhraseTag.length.toString()}
                               menuChildren={
                                 <div className={s.menu_tooltip}>
                                   <IconButton title={_edit} onClick={onClickTagUpdateWrapper(item)}>

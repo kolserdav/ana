@@ -74,6 +74,8 @@ export const MENU_TRANSITION = 300;
 export const NO_SCROLL_CLASS = 'no__scroll';
 // Deps $html-editor-height
 export const HTML_EDITOR_HEIGHT = 300;
+// Deps $mobile-width
+export const MOBILE_WIDTH = 760;
 
 export const TRANSLATE_DELAY = 1000;
 export const TEXTAREA_ROWS = 2;
