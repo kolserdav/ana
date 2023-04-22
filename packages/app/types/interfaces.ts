@@ -382,3 +382,12 @@ export const getFileExt = (filename: string): string => {
 };
 
 export const getMaxBodySize = () => 1024 * 1024 * MAX_BODY_MB;
+
+export const firstCapitalize = (word: string) => {
+  let res = '';
+  const { length } = word;
+  for (let i = 0; i < length; i++) {
+    res += i === 0 ? word[i]?.toUpperCase() : word[i];
+  }
+  return res;
+};

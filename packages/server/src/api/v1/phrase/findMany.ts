@@ -6,6 +6,7 @@ import {
   PhraseFindManyResult,
   Result,
   SEARCH_MIN_LENGTH,
+  firstCapitalize,
 } from '../../../types/interfaces';
 import { getLocale, parseHeaders } from '../../../utils/lib';
 
@@ -38,7 +39,7 @@ const phraseFindMany: RequestHandler<
   const search =
     _search?.length >= SEARCH_MIN_LENGTH ? _search.replace(/[\s\n\t]/g, ' | ') : undefined;
 
-  // FIXME ajust search
+  console.log(firstCapitalize(search || ''));
   const res = await orm.phraseFindMany({
     where: {
       AND: [
@@ -60,8 +61,48 @@ const phraseFindMany: RequestHandler<
               },
             },
             {
+              text: {
+                contains: search,
+              },
+            },
+            {
+              text: {
+                contains: search ? firstCapitalize(search) : undefined,
+              },
+            },
+            {
+              text: {
+                contains: search?.toUpperCase(),
+              },
+            },
+            {
+              text: {
+                contains: search?.toLowerCase(),
+              },
+            },
+            {
               translate: {
                 search,
+              },
+            },
+            {
+              translate: {
+                contains: search,
+              },
+            },
+            {
+              translate: {
+                contains: search ? firstCapitalize(search) : undefined,
+              },
+            },
+            {
+              translate: {
+                contains: search?.toUpperCase(),
+              },
+            },
+            {
+              translate: {
+                contains: search?.toLowerCase(),
               },
             },
           ],

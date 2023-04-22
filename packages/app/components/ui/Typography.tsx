@@ -16,7 +16,7 @@ function Typography({
   disabled,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
-  children: string | string[] | React.ReactNode;
+  children: string | React.ReactNode;
   theme: Theme;
   htmlFor?: string;
   className?: string;
@@ -53,27 +53,27 @@ function Typography({
             ? theme.green
             : theme.text,
       }}
-    >
-      {variant === 'p' ? (
-        <p>{children}</p>
-      ) : variant === 'h1' ? (
-        <h1>{children}</h1>
-      ) : variant === 'h2' ? (
-        <h2>{children}</h2>
-      ) : variant === 'h3' ? (
-        <h3>{children}</h3>
-      ) : variant === 'h4' ? (
-        <h4>{children}</h4>
-      ) : variant === 'h5' ? (
-        <h5>{children}</h5>
-      ) : variant === 'h6' ? (
-        <h6>{children}</h6>
-      ) : variant === 'label' ? (
-        <label htmlFor={htmlFor}>{children}</label>
-      ) : (
-        <span>{children}</span>
-      )}
-    </div>
+      dangerouslySetInnerHTML={{
+        __html:
+          variant === 'p'
+            ? `<p>${children}</p>`
+            : variant === 'h1'
+            ? `<h1>${children}</h1>`
+            : variant === 'h2'
+            ? `<h2>${children}</h2>`
+            : variant === 'h3'
+            ? `<h3>${children}</h3>`
+            : variant === 'h4'
+            ? `<h4>${children}</h4>`
+            : variant === 'h5'
+            ? `<h5>${children}</h5>`
+            : variant === 'h6'
+            ? `<h6>${children}</h6>`
+            : variant === 'label'
+            ? `<label for="${htmlFor}">${children}</label>`
+            : `<span>${children}</span>`,
+      }}
+    />
   );
 }
 

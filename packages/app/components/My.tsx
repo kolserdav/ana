@@ -19,22 +19,19 @@ import LoadIcon from './icons/LoadIcon';
 import { TAKE_PHRASES_DEFAULT } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
+import { setMatchesBold } from './Me.lib';
 
 function My({
   locale,
   theme,
-  user,
   edit,
-  save,
   _delete,
   cancel,
 }: {
   locale: Locale['app']['my'];
   theme: Theme;
-  user: UserCleanResult;
   edit: string;
   _delete: string;
-  save: string;
   cancel: string;
 }) {
   const { load, setLoad } = useLoad();
@@ -85,6 +82,8 @@ function My({
     onClickCloseDelete,
     onClickDeletePhrase,
   } = usePhraseDelete({ setLoad, restart, setRestart });
+
+  const sePieces = search.split(' ');
 
   return (
     <div className={s.wrapper}>
@@ -145,7 +144,7 @@ function My({
           <div className={s.sorts}>
             <div className={s.sort_item}>
               <Typography small variant="span" theme={theme}>
-                {locale.byUpdateDate}:
+                {`${locale.byUpdateDate}:`}
               </Typography>
               <IconButton onClick={onClickSortByDate}>
                 <FilterIcon className={orderBy === 'asc' ? s.asc : s.desc} color={theme.text} />
@@ -188,11 +187,15 @@ function My({
                   </div>
                   <div className={s.item} style={{ borderColor: theme.active }}>
                     <Typography variant="p" theme={theme}>
-                      {item.text}
+                      {sePieces.length === 0
+                        ? item.text
+                        : setMatchesBold({ text: item.text, matches: sePieces })}
                     </Typography>
                     {item.translate && (
                       <Typography className={s.translate} variant="p" theme={theme} small>
-                        {item.translate}
+                        {sePieces.length === 0
+                          ? item.translate
+                          : setMatchesBold({ text: item.translate, matches: sePieces })}
                       </Typography>
                     )}
                   </div>
@@ -200,7 +203,7 @@ function My({
                     {item.PhraseTag.map((tag) => (
                       <div key={tag.id} className={s.tag_item}>
                         <Typography variant="span" theme={theme} small disabled>
-                          #{tag.Tag.text}
+                          {`#${tag.Tag.text}`}
                         </Typography>
                       </div>
                     ))}
