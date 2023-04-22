@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable camelcase */
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
@@ -6,6 +7,7 @@ import { cleanPath, log } from '../utils/lib';
 import { TEXTAREA_ROWS, TRANSLATE_DELAY } from '../utils/constants';
 import { Locale, PhraseUpdateResult, TagFindManyResult } from '../types/interfaces';
 import useTagsGlobal from '../hooks/useTags';
+import { RECOGNITION_LANGS } from './Translate.lib';
 
 const request = new Request();
 
@@ -59,12 +61,16 @@ export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] })
    */
   useEffect(() => {
     const synth = window.speechSynthesis;
+    if (!learnLang) {
+      return;
+    }
     if (!synth) {
       log('warn', 'Speech synth is not support', { synth });
       setSynthAllow(false);
       return;
     }
     const voices = synth.getVoices();
+    console.log(voices);
     const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
     if (!_voice) {
       log('warn', locale.voiceNotFound, voices, true);
@@ -531,4 +537,130 @@ export const useTags = ({
     tagRestart,
     setTagRestart,
   };
+};
+
+export const useSpeechRecognize = ({
+  setText,
+  locale,
+  learnLang,
+}: {
+  setText: React.Dispatch<React.SetStateAction<string>>;
+  locale: Locale['app']['translate'];
+  learnLang: string;
+}) => {
+  const [allowRecogn, setAllowRecogn] = useState<boolean>(false);
+  const [allowMicro, setAllowMicro] = useState<boolean>(false);
+  const [recognition, setRecognition] = useState<webkitSpeechRecognition>();
+
+  const recognitionLang = useMemo(() => {
+    if (!learnLang) {
+      return null;
+    }
+
+    let res: string | null = null;
+    RECOGNITION_LANGS.every((item) => {
+      if (new RegExp(`^${learnLang}`).test(item[1][0])) {
+        // eslint-disable-next-line prefer-destructuring
+        res = item[1][0];
+        return false;
+      }
+      return true;
+    });
+
+    return res;
+  }, [learnLang]);
+
+  /**
+   * Give microphone access
+   */
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then(() => {
+        setAllowMicro(true);
+      })
+      .catch((err) => {
+        log('error', 'Error get user media', err);
+        setAllowMicro(false);
+      });
+  }, []);
+
+  /**
+   * Set recognition
+   */
+  useEffect(() => {
+    if (!allowMicro) {
+      log('warn', locale.microNotPermitted, {}, true);
+      return;
+    }
+    if (!('webkitSpeechRecognition' in window)) {
+      log('warn', locale.recognizeNotSupport, {}, true);
+      return;
+    }
+
+    // eslint-disable-next-line new-cap
+    const _recognition = new webkitSpeechRecognition();
+    setAllowRecogn(true);
+    setRecognition(_recognition);
+  }, [allowMicro, locale.recognizeNotSupport, locale.microNotPermitted, recognitionLang]);
+
+  const onStartRecognize = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!recognitionLang) {
+      return;
+    }
+    if (!recognition) {
+      log('warn', 'Recognition not found in onStartRecognize', e);
+      return;
+    }
+
+    if (!('webkitSpeechRecognition' in window)) {
+      log('warn', locale.recognizeNotSupport, e, true);
+    } else {
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        log('info', 'Start speech recognize');
+      };
+
+      recognition.onerror = (event) => {
+        log('error', locale.errorSpeechRecog, event, true);
+      };
+
+      recognition.onend = () => {
+        log('info', 'End speech recognize');
+      };
+
+      recognition.onresult = (event) => {
+        let intTranscipt = '';
+        if (typeof event.results === 'undefined') {
+          recognition.onend = null;
+          recognition.stop();
+          return;
+        }
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            setText(event.results[i][0].transcript);
+          } else {
+            intTranscipt += event.results[i][0].transcript;
+            setText(intTranscipt);
+          }
+        }
+      };
+
+      recognition.lang = recognitionLang;
+      recognition.start();
+    }
+  };
+
+  const onStopRecognize = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!recognition) {
+      log('warn', 'Recognition not found in onStopRecognize', e);
+      return;
+    }
+    recognition.stop();
+  };
+
+  return { onStartRecognize, onStopRecognize, allowRecogn };
 };

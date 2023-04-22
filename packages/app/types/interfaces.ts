@@ -324,6 +324,14 @@ export interface Locale {
       changeTag: string;
       textareaPlaceholder: string;
       copied: string;
+      swapLangs: string;
+      cleanField: string;
+      quitEdit: string;
+      startRecognize: string;
+      playSound: string;
+      errorSpeechRecog: string;
+      recognizeNotSupport: string;
+      microNotPermitted: string;
     };
     my: {
       title: string;

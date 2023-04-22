@@ -39,7 +39,6 @@ const phraseFindMany: RequestHandler<
   const search =
     _search?.length >= SEARCH_MIN_LENGTH ? _search.replace(/[\s\n\t]/g, ' | ') : undefined;
 
-  console.log(firstCapitalize(search || ''));
   const res = await orm.phraseFindMany({
     where: {
       AND: [

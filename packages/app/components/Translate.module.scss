@@ -1,5 +1,7 @@
 @import '../styles/constants';
 
+$textare-button-indent: 4px;
+
 .wrapper {
   position: relative;
   display: flex;
@@ -58,8 +60,14 @@
 
       .close_button {
         position: absolute;
-        top: 4px;
-        right: 4px;
+        top: $textare-button-indent;
+        right: $textare-button-indent;
+      }
+
+      .micro_button {
+        position: absolute;
+        bottom: $textare-button-indent;
+        right: $textare-button-indent;
       }
     }
 

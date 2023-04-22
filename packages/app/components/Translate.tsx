@@ -6,6 +6,7 @@ import { Locale, UserCleanResult } from '../types/interfaces';
 import {
   useLanguages,
   useSavePhrase,
+  useSpeechRecognize,
   useSpeechSynth,
   useTags,
   useTranslate,
@@ -27,6 +28,7 @@ import Cheep from './ui/Cheep';
 import EditIcon from './icons/Edit';
 import DeleteIcon from './icons/Delete';
 import SwapHorizontalIcon from './icons/SwapHorisontal';
+import MicrophoneIcon from './icons/Microphone';
 
 function Translate({
   theme,
@@ -147,6 +149,12 @@ function Translate({
     setTagRestart,
   });
 
+  const { onStartRecognize, onStopRecognize, allowRecogn } = useSpeechRecognize({
+    setText,
+    locale,
+    learnLang,
+  });
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
@@ -174,7 +182,7 @@ function Translate({
             ))}
           </Select>
           <div className={s.swap_button}>
-            <IconButton onClick={onClickChangeLangs}>
+            <IconButton onClick={onClickChangeLangs} title={locale.swapLangs}>
               <SwapHorizontalIcon color={theme.text} />
             </IconButton>
           </div>
@@ -201,10 +209,17 @@ function Translate({
             theme={theme}
           />
           <div className={s.close_button}>
-            <IconButton onClick={cleanText}>
+            <IconButton onClick={cleanText} title={edit ? locale.quitEdit : locale.cleanField}>
               <CloseIcon color={theme.text} />
             </IconButton>
           </div>
+          {allowRecogn && (
+            <div className={s.micro_button} title={locale.startRecognize}>
+              <IconButton onMouseUp={onStopRecognize} onMouseDown={onStartRecognize}>
+                <MicrophoneIcon color={theme.text} />
+              </IconButton>
+            </div>
+          )}
         </div>
         <div style={{ color: theme.text }} className={s.native_res}>
           <Typography variant="p" theme={theme}>
@@ -227,7 +242,7 @@ function Translate({
           </div>
           {reTranslate && synthAllow && (
             <div className={s.sound_button}>
-              <IconButton onClick={speechRetranslate}>
+              <IconButton onClick={speechRetranslate} title={locale.playSound}>
                 <VolumeHighIcon color={theme.text} />
               </IconButton>
             </div>
