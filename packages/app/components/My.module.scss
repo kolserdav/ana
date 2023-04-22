@@ -1,6 +1,7 @@
 @import '../styles/constants';
 
 $phrase-item-margin: 1.5rem;
+$search-input-wudth-coeff: 1.5;
 
 .wrapper {
   position: relative;
@@ -21,10 +22,22 @@ $phrase-item-margin: 1.5rem;
     .search {
       position: relative;
       display: flex;
-      flex-direction: row;
+      flex-flow: row wrap-reverse;
       align-items: center;
       justify-content: space-between;
       margin-top: 1.5rem;
+      width: 100%;
+
+      .input_wrapper {
+        max-width: calc($small-width * $search-input-wudth-coeff);
+        width: 100%;
+      }
+
+      input {
+        min-width: calc($small-width - 4rem);
+        width: 100%;
+        max-width: calc($small-width * $search-input-wudth-coeff);
+      }
 
       .search_input {
         margin-bottom: 0;

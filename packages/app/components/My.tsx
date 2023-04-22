@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale, LocaleVars, UserCleanResult } from '../types/interfaces';
+import { Locale } from '../types/interfaces';
 import { usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
 import s from './My.module.scss';
 import DeleteIcon from './icons/Delete';
@@ -137,6 +137,7 @@ function My({
             desc={locale.minimalSearchLenght}
             theme={theme}
             value={search}
+            classWrapper={s.input_wrapper}
             name={<SearchIcon color={theme.text} />}
             id="search"
             onChange={changeSearch}
