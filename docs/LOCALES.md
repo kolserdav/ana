@@ -1,4 +1,4 @@
-# Add custom language interfaaces
+# Add interface language
 
 1. Create folder with two letter name of locale in `packages/server/src/locales`
 2. Put in this folder file `lang.ts`. As sample use [packages/server/src/locales/en/lang.ts](./packages/server/src/locales/en/lang.ts)
