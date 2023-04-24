@@ -8,7 +8,8 @@ import {
   SEARCH_MIN_LENGTH,
   firstCapitalize,
 } from '../../../types/interfaces';
-import { getLocale, parseHeaders } from '../../../utils/lib';
+import getLocale from '../../../utils/getLocale';
+import { parseHeaders } from '../../../utils/lib';
 
 const orm = new ORM();
 

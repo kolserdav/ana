@@ -12,6 +12,10 @@ export enum LocalStorageName {
   FILTER_TAGS = 'FILTER_TAGS',
   // eslint-disable-next-line no-unused-vars
   STRONG_FILTER = 'STRONG_FILTER',
+  // eslint-disable-next-line no-unused-vars
+  LEARN_LANG = 'LEARN_LANG',
+  // eslint-disable-next-line no-unused-vars
+  NATIVE_LANG = 'NATIVE_LANG',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
@@ -22,6 +26,10 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   ? string[]
   : T extends LocalStorageName.STRONG_FILTER
   ? boolean
+  : T extends LocalStorageName.LEARN_LANG
+  ? string
+  : T extends LocalStorageName.NATIVE_LANG
+  ? string
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(

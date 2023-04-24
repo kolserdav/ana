@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -28,6 +28,7 @@ enum PageField {
 
 enum Lang {
   ru
+  en
 }
 
 model Page {

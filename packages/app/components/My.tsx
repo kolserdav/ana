@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale } from '../types/interfaces';
+import { Locale, UserCleanResult } from '../types/interfaces';
 import { usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
 import s from './My.module.scss';
 import DeleteIcon from './icons/Delete';
@@ -27,12 +27,14 @@ function My({
   edit,
   _delete,
   cancel,
+  user,
 }: {
   locale: Locale['app']['my'];
   theme: Theme;
   edit: string;
   _delete: string;
   cancel: string;
+  user: UserCleanResult;
 }) {
   const { load, setLoad } = useLoad();
 

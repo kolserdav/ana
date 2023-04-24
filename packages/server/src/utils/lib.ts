@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import fs from 'fs';
 import { IncomingHttpHeaders } from 'http';
 import path from 'path';
-import ru from '../locales/ru/lang';
+
 import {
   Locale,
   LOCALE_DEFAULT,
@@ -56,15 +56,6 @@ export const checkCors = (headers: IncomingHttpHeaders) => {
     return false;
   }
   return true;
-};
-
-const locales: Record<string, Locale> = {
-  ru,
-};
-
-export const getLocale = (_value: string | undefined): Locale => {
-  const value = _value || LOCALE_DEFAULT;
-  return (!locales[value] ? locales[LOCALE_DEFAULT] : locales[value]) as Locale;
 };
 
 export const parseHeaders = (headers: IncomingHttpHeaders) => {

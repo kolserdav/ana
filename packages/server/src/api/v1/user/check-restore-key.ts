@@ -6,10 +6,11 @@ import {
   Result,
   checkEmail,
 } from '../../../types/interfaces';
-import { getHttpCode, getLocale, parseHeaders } from '../../../utils/lib';
+import { getHttpCode, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
 import { differenceInHours } from 'date-fns';
 import { RESTORE_LINK_TIMEOUT_IN_HOURS } from '../../../utils/constants';
+import getLocale from '../../../utils/getLocale';
 
 const orm = new ORM();
 

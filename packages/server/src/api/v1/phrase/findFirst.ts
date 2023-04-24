@@ -6,7 +6,8 @@ import {
   PhraseFindFirstResult,
   Result,
 } from '../../../types/interfaces';
-import { getHttpCode, getLocale, parseHeaders } from '../../../utils/lib';
+import getLocale from '../../../utils/getLocale';
+import { getHttpCode, parseHeaders } from '../../../utils/lib';
 
 const orm = new ORM();
 

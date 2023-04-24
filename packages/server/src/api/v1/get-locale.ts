@@ -1,6 +1,7 @@
 import { RequestHandler } from '../../types';
 import { Locale, Result, APPLICATION_JSON } from '../../types/interfaces';
-import { parseHeaders, getLocale } from '../../utils/lib';
+import getLocale from '../../utils/getLocale';
+import { parseHeaders } from '../../utils/lib';
 
 const getLocaleHandler: RequestHandler<
   { Querystring: { field: keyof Locale['app'] } },

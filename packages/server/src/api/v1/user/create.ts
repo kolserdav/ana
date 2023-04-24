@@ -9,13 +9,14 @@ import {
   EMAIL_QS,
   KEY_QS,
 } from '../../../types/interfaces';
-import { getHttpCode, getLocale, log, parseHeaders } from '../../../utils/lib';
+import { getHttpCode, log, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
 import { createPasswordHash, createRandomSalt } from '../../../utils/auth';
 import { Prisma } from '@prisma/client';
 import { sendEmail } from '../../../utils/email';
 import { APP_URL } from '../../../utils/constants';
 import { cleanUserFields } from '../../../components/lib';
+import getLocale from '../../../utils/getLocale';
 
 const orm = new ORM();
 

@@ -1,7 +1,11 @@
 import { format } from 'date-fns';
 import { ThemeType } from '../Theme';
-import { OrderBy } from '../types/interfaces';
+import { LocaleValue, OrderBy } from '../types/interfaces';
 
+export const LOCALE_NAMES: Record<LocaleValue, string> = {
+  en: 'English',
+  ru: 'Русский',
+};
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const LOG_LEVEL = parseInt(process.env.NEXT_PUBLIC_LOG_LEVEL as string, 10);
@@ -81,3 +85,5 @@ export const TRANSLATE_DELAY = 1000;
 export const TEXTAREA_ROWS = 2;
 export const ORDER_BY_DEFAULT: OrderBy = 'asc';
 export const TAKE_PHRASES_DEFAULT = 10;
+export const LEARN_LANG_DEFAULT = 'en';
+export const NATIVE_LANG_DEFAULT = 'ru';

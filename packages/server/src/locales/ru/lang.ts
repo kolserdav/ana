@@ -34,10 +34,6 @@ const lang: Locale = {
       signUp: 'Зарегистрировать новый аккаунт',
       email: 'Почта',
       name: 'Имя',
-      surname: 'Фамилия',
-      accountType: 'Зарегистрировать как',
-      tabDefault:
-        'Выберите тип учетной записи.<br><br> <i>В дальнейшем вы сможете переключаться между ними</i>',
       password: 'Пароль',
       passwordRepeat: 'Повтор пароля',
       fieldProhibited: 'Поле содержит запрещенные символы',
@@ -71,6 +67,7 @@ const lang: Locale = {
       myDictionary: 'Мои фразы',
       openMenu: 'Открыть меню',
       closeMenu: 'Закрыть меню',
+      changeInterfaceLang: 'Сменить язык интерфейса',
     },
     confirmEmail: {
       title: 'Подтверждение почты',
@@ -80,7 +77,6 @@ const lang: Locale = {
       formDesc: 'Поля помеченные * обязательны для заполенения',
       showHelp: 'Показать справку',
       somethingWentWrong: 'Что-то пошло не так',
-      maxFileSize: 'Файл слишком большой',
       fieldMustBeNotEmpty: 'Поле не должно быть пустым',
       eliminateRemarks: 'Устраните замечания в форме',
       save: 'Сохранить',

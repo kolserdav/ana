@@ -40,7 +40,7 @@ export enum LocaleVars {
   all = '%all',
 }
 
-export type LocaleValue = 'ru';
+export type LocaleValue = 'ru' | 'en';
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
 export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
 export const EMAIL_QS = 'e';
@@ -245,13 +245,10 @@ export interface Locale {
     login: {
       email: string;
       name: string;
-      surname: string;
       register: string;
       loginButton: string;
-      tabDefault: string;
       signUp: string;
       signIn: string;
-      accountType: string;
       password: string;
       passwordRepeat: string;
       fieldProhibited: string;
@@ -285,6 +282,7 @@ export interface Locale {
       myDictionary: string;
       openMenu: string;
       closeMenu: string;
+      changeInterfaceLang: string;
     };
     confirmEmail: {
       title: string;
@@ -294,7 +292,6 @@ export interface Locale {
       formDesc: string;
       showHelp: string;
       somethingWentWrong: string;
-      maxFileSize: string;
       fieldMustBeNotEmpty: string;
       eliminateRemarks: string;
       save: string;
@@ -395,7 +392,10 @@ export const firstCapitalize = (word: string) => {
   let res = '';
   const { length } = word;
   for (let i = 0; i < length; i++) {
-    res += i === 0 ? word[i]?.toUpperCase() : word[i];
+    const letter = word[i];
+    if (letter) {
+      res += i === 0 ? letter.toUpperCase() : word[i];
+    }
   }
   return res;
 };

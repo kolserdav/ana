@@ -6,8 +6,9 @@ import {
   Result,
   checkEmail,
 } from '../../../types/interfaces';
-import { getLocale, parseHeaders } from '../../../utils/lib';
+import { parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
+import getLocale from '../../../utils/getLocale';
 
 const orm = new ORM();
 

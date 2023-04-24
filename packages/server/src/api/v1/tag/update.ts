@@ -7,7 +7,8 @@ import {
   TagUpdateBody,
   TagUpdateResult,
 } from '../../../types/interfaces';
-import { getHttpCode, getLocale, parseHeaders } from '../../../utils/lib';
+import { getHttpCode, parseHeaders } from '../../../utils/lib';
+import getLocale from '../../../utils/getLocale';
 
 const orm = new ORM();
 

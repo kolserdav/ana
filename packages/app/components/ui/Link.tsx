@@ -15,6 +15,7 @@ interface LinkProps {
   fullWidth?: boolean;
   noWrap?: boolean;
   style?: React.CSSProperties;
+  locale?: string;
 }
 
 function Link({
@@ -27,6 +28,7 @@ function Link({
   fullWidth,
   noWrap,
   style,
+  locale,
 }: LinkProps) {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
@@ -36,6 +38,7 @@ function Link({
       </span>
     ) : (
       <NextLink
+        locale={locale}
         href={href}
         className={clsx(
           s.wrapper,
@@ -62,6 +65,7 @@ Link.defaultProps = {
   fullWidth: false,
   noWrap: false,
   style: undefined,
+  locale: undefined,
 };
 
 export default Link;

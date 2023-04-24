@@ -4,22 +4,39 @@ import { useRouter } from 'next/router';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { cleanPath, log } from '../utils/lib';
-import { TEXTAREA_ROWS, TRANSLATE_DELAY } from '../utils/constants';
+import {
+  LEARN_LANG_DEFAULT,
+  NATIVE_LANG_DEFAULT,
+  TEXTAREA_ROWS,
+  TRANSLATE_DELAY,
+} from '../utils/constants';
 import { Locale, PhraseUpdateResult, TagFindManyResult } from '../types/interfaces';
 import useTagsGlobal from '../hooks/useTags';
 import { RECOGNITION_LANGS } from './Translate.lib';
+import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 const request = new Request();
 
 export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] }) => {
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
-  const [nativeLang, setNativeLang] = useState<string>('ru');
-  const [learnLang, setLearnLang] = useState<string>('en');
+  const [nativeLang, setNativeLang] = useState<string>();
+  const [learnLang, setLearnLang] = useState<string>();
   const [langs, setLangs] = useState<ServerLanguage[]>([]);
   const [changeLang, setChangeLang] = useState<boolean>(false);
   const [synthAllow, setSynthAllow] = useState<boolean>(false);
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
+
+  /**
+   * Set default langs
+   */
+  useEffect(() => {
+    const _learnLang = getLocalStorage(LocalStorageName.LEARN_LANG);
+    setLearnLang(_learnLang || LEARN_LANG_DEFAULT);
+
+    const _nativeLang = getLocalStorage(LocalStorageName.NATIVE_LANG);
+    setNativeLang(_nativeLang || NATIVE_LANG_DEFAULT);
+  }, []);
 
   const changeLangWrapper =
     (type: 'native' | 'learn') => (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -29,9 +46,11 @@ export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] })
       switch (type) {
         case 'native':
           setNativeLang(value);
+          setLocalStorage(LocalStorageName.NATIVE_LANG, value);
           break;
         case 'learn':
           setLearnLang(value);
+          setLocalStorage(LocalStorageName.LEARN_LANG, value);
           break;
         default:
       }
@@ -117,16 +136,16 @@ export const useTranslate = ({
   setText,
   setTranslate,
 }: {
-  learnLang: string;
-  nativeLang: string;
+  learnLang: string | undefined;
+  nativeLang: string | undefined;
   changeLang: boolean;
   translate: string;
   setTranslate: React.Dispatch<React.SetStateAction<string>>;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   setChangeLang: React.Dispatch<React.SetStateAction<boolean>>;
-  setNativeLang: React.Dispatch<React.SetStateAction<string>>;
-  setLearnLang: React.Dispatch<React.SetStateAction<string>>;
+  setNativeLang: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setLearnLang: React.Dispatch<React.SetStateAction<string | undefined>>;
   setTags: React.Dispatch<React.SetStateAction<TagFindManyResult>>;
   setAddTags: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -304,7 +323,7 @@ export const useSpeechSynth = ({
   voice,
 }: {
   reTranslate: string;
-  learnLang: string;
+  learnLang: string | undefined;
   locale: Locale['app']['translate'];
   voice: SpeechSynthesisVoice | undefined;
 }) => {
@@ -360,8 +379,8 @@ export const useSavePhrase = ({
   tags: TagFindManyResult;
   setTags: React.Dispatch<React.SetStateAction<TagFindManyResult>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
-  learnLang: string;
-  nativeLang: string;
+  learnLang: string | undefined;
+  nativeLang: string | undefined;
   edit: string | null;
   restart: boolean;
   setRestart: React.Dispatch<React.SetStateAction<boolean>>;
@@ -378,6 +397,10 @@ export const useSavePhrase = ({
   };
 
   const onClickSave = async () => {
+    if (!learnLang || !nativeLang) {
+      return;
+    }
+
     setLoad(true);
     const saveRes = await request.phraseCreate({
       text,
@@ -545,7 +568,7 @@ export const useSpeechRecognize = ({
 }: {
   setText: React.Dispatch<React.SetStateAction<string>>;
   locale: Locale['app']['translate'];
-  learnLang: string;
+  learnLang: string | undefined;
 }) => {
   const [allowRecogn, setAllowRecogn] = useState<boolean>(false);
   const [allowMicro, setAllowMicro] = useState<boolean>(false);
@@ -573,6 +596,11 @@ export const useSpeechRecognize = ({
    * Give microphone access
    */
   useEffect(() => {
+    if (!navigator.mediaDevices) {
+      log('warn', 'Media devices is', navigator.mediaDevices);
+      return;
+    }
+
     navigator.mediaDevices
       .getUserMedia({ video: false, audio: true })
       .then(() => {

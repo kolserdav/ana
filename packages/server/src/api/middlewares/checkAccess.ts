@@ -1,7 +1,8 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { MiddleHandler } from '../../types';
-import { getLocale, log, parseHeaders } from '../../utils/lib';
+import { log, parseHeaders } from '../../utils/lib';
 import { getErrorResult } from './lib';
+import getLocale from '../../utils/getLocale';
 
 const checkAccessMiddlewareWrapper: <
   P extends keyof typeof Prisma,

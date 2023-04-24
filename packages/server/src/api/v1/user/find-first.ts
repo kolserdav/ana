@@ -1,8 +1,9 @@
 import { RequestHandler } from '../../../types';
 import { APPLICATION_JSON, UserCleanResult, Result } from '../../../types/interfaces';
-import { getHttpCode, getLocale, parseHeaders } from '../../../utils/lib';
+import { getHttpCode, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
 import { cleanUserFields } from '../../../components/lib';
+import getLocale from '../../../utils/getLocale';
 
 const orm = new ORM();
 

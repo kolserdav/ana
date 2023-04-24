@@ -6,7 +6,8 @@ import {
   TagFindManyQuery,
   TagFindManyResult,
 } from '../../../types/interfaces';
-import { getLocale, parseHeaders } from '../../../utils/lib';
+import getLocale from '../../../utils/getLocale';
+import { parseHeaders } from '../../../utils/lib';
 
 const orm = new ORM();
 

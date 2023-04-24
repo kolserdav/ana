@@ -17,10 +17,34 @@ $app-bar-transition: 0.2s;
   .links {
     position: relative;
     width: 100%;
+    max-width: $translate-container-max;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     margin: 0 1rem;
     left: calc((100vw - $translate-container-max) / 2);
+
+    .items {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .langs_tooltip {
+      display: flex;
+      flex-flow: row wrap;
+
+      .lang_item {
+        margin: 0 1rem;
+      }
+    }
+
+    .actions {
+      position: relative;
+      right: 80px;
+      display: flex;
+      align-items: center;
+    }
 
     @media (max-width: $translate-container-max) {
       left: 0;

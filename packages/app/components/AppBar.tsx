@@ -1,9 +1,11 @@
 import clsx from 'clsx';
+
 import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
 import { ubuntu500 } from '../fonts/ubuntu';
 import { Theme } from '../Theme';
-import { Locale, UserCleanResult } from '../types/interfaces';
-import { Pages, PAGE_LOGIN_IN_MENU, MENU_TRANSITION } from '../utils/constants';
+import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
+import { Pages, PAGE_LOGIN_IN_MENU, MENU_TRANSITION, LOCALE_NAMES } from '../utils/constants';
 import { checkRouterPath, scrollToTop } from '../utils/lib';
 import ChevronUpIcon from './icons/ChevronUp';
 import { useAppBar, useChangeTheme, useLogout } from './AppBar.hooks';
@@ -12,6 +14,9 @@ import Link from './ui/Link';
 import Menu from './ui/Menu';
 import Switch from './ui/Switch';
 import l from './ui/Link.module.scss';
+import IconButton from './ui/IconButton';
+import TranslateIcon from './icons/Translate';
+import Select from './ui/Select';
 
 function AppBar({
   theme,
@@ -27,6 +32,11 @@ function AppBar({
   full?: boolean;
 }) {
   const router = useRouter();
+  const { locales, locale: lang } = router;
+
+  const [language, setLanguage] = useState<LocaleValue>(lang as LocaleValue);
+
+  const localeRef = useRef<HTMLSelectElement>(null);
 
   const { showAppBar, showExpandLess, menuOpen, isMobile } = useAppBar();
 
@@ -42,6 +52,22 @@ function AppBar({
           transition: `all ${MENU_TRANSITION / 1000}s ease-out`,
         }
       : { color: theme.text, transition: `all ${MENU_TRANSITION / 1000}s ease-in` };
+
+  const onChangeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setLanguage(value as LocaleValue);
+  };
+
+  /**
+   * Change lang
+   */
+  useEffect(() => {
+    if (lang !== language) {
+      router.push(router.asPath, router.asPath, { locale: language });
+    }
+  }, [router, lang, language]);
 
   return (
     <header>
@@ -60,27 +86,40 @@ function AppBar({
       >
         {full && (
           <div className={s.links}>
-            {!checkRouterPath(router.asPath, Pages.home) && (
-              <Link noWrap theme={theme} href={Pages.home} className={s.item}>
-                <div className={s.menu__item}>
-                  <div style={linkStyle}>{locale.homePage}</div>
-                </div>
-              </Link>
-            )}
-            {!checkRouterPath(router.asPath, Pages.translate) && (
-              <Link noWrap theme={theme} href={Pages.translate} className={s.item}>
-                <div className={s.menu__item}>
-                  <div style={linkStyle}>{locale.translate}</div>
-                </div>
-              </Link>
-            )}
-            {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
-              <Link noWrap theme={theme} href={Pages.myDictionary} className={s.item}>
-                <div className={s.menu__item}>
-                  <div style={linkStyle}>{locale.myDictionary}</div>
-                </div>
-              </Link>
-            )}
+            <div className={s.items}>
+              {!checkRouterPath(router.asPath, Pages.home) && (
+                <Link noWrap theme={theme} href={Pages.home} className={s.item}>
+                  <div className={s.menu__item}>
+                    <div style={linkStyle}>{locale.homePage}</div>
+                  </div>
+                </Link>
+              )}
+              {!checkRouterPath(router.asPath, Pages.translate) && (
+                <Link noWrap theme={theme} href={Pages.translate} className={s.item}>
+                  <div className={s.menu__item}>
+                    <div style={linkStyle}>{locale.translate}</div>
+                  </div>
+                </Link>
+              )}
+              {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
+                <Link noWrap theme={theme} href={Pages.myDictionary} className={s.item}>
+                  <div className={s.menu__item}>
+                    <div style={linkStyle}>{locale.myDictionary}</div>
+                  </div>
+                </Link>
+              )}
+            </div>
+            <div className={s.actions}>
+              <TranslateIcon color={theme.text} />
+
+              <Select ref={localeRef} onChange={onChangeLang} active theme={theme} value={language}>
+                {(locales as LocaleValue[])?.map((item) => (
+                  <option value={item} key={item}>
+                    {LOCALE_NAMES[item]}
+                  </option>
+                ))}
+              </Select>
+            </div>
           </div>
         )}
         <Menu openMenu={menuOpen ? locale.closeMenu : locale.openMenu} theme={theme}>

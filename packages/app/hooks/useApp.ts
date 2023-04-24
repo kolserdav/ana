@@ -1,17 +1,30 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import useTheme from './useTheme';
 import storeClick, { changeClick } from '../store/click';
 import storeLoad from '../store/load';
 import storeScroll, { changeScroll } from '../store/scroll';
 import { setBodyScroll } from '../utils/lib';
-import { UserCleanResult } from '../types/interfaces';
+import { LocaleValue, UserCleanResult } from '../types/interfaces';
 import storeTouchEvent, { changeTouchEvent } from '../store/touchEvent';
+import { CookieName, setCookie } from '../utils/cookies';
 
 export default function useApp({ user }: { user: UserCleanResult | null }) {
+  const router = useRouter();
   const [load, setLoad] = useState<boolean>(true);
   const [touchpad, setTouchpad] = useState<boolean>(false);
 
   const { theme } = useTheme();
+
+  /**
+   * Set lang cookie
+   */
+  useEffect(() => {
+    if (!router.locale) {
+      return;
+    }
+    setCookie(CookieName.lang, router.locale as LocaleValue);
+  }, [router.locale]);
 
   /**
    * Scroll handler

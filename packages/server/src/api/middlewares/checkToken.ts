@@ -1,7 +1,8 @@
 import { MiddleHandler } from '../../types';
-import { getLocale, parseHeaders } from '../../utils/lib';
+import { parseHeaders } from '../../utils/lib';
 import { checkToken } from '../../utils/auth';
 import { getErrorResult } from './lib';
+import getLocale from '../../utils/getLocale';
 
 const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
   const { headers, method } = req;

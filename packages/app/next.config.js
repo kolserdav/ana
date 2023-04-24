@@ -6,8 +6,8 @@ const nextConfig = {
     formats: ['image/avif'],
   },
   i18n: {
-    locales: ['ru'],
-    defaultLocale: 'ru',
+    locales: ['ru', 'en'],
+    defaultLocale: 'en',
     localeDetection: false,
   },
 };
