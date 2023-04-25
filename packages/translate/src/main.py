@@ -1,3 +1,9 @@
-from libretranslate import main
+from args import Args
+from translate import Translate
 
-main()
+args = Args()
+print(args.update)
+
+translate = Translate(args)
+
+print(translate.translate('Test', 'en', 'ru'))
