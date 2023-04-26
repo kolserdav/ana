@@ -49,5 +49,4 @@ export interface TranslateResult extends Result<null> {
 export interface ServerLanguage {
   code: string;
   name: string;
-  targets: string[];
 }

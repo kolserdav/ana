@@ -1,20 +1,27 @@
 {
   "eslint.validate": ["javascript", "typescript"],
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.workingDirectories": ["app", "server"],
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.fixAll.stylelint": true
   },
+	"python.activeStateToolPath": "packages/translate",
   "editor.formatOnSave": true,
   "stylelint.enable": true,
   "stylelint.validate": ["css", "scss"],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "python.analysis.typeCheckingMode": "basic",
+
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+  },
   "files.associations": {
     ".stylelintrc": ".json",
     ".env": "ini",
     ".env.development": "ini",
     ".env.example": "ini"
   },
-  "python.analysis.typeCheckingMode": "basic"
 }

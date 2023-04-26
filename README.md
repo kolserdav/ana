@@ -27,13 +27,14 @@ npm i
 
 3. Set up server environment file `.env`.
 4. Set up client environment file `packages/app/.env`.
-5. Run migrations:
+5. Set up translate environment file `packages/translate/.env`.
+6. Run migrations:
 
 ```sh
 npm run migrate
 ```
 
-6. Run in development mode:
+7. Run in development mode:
 
 ```sh
 npm run dev

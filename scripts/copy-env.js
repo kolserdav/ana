@@ -8,6 +8,9 @@ const destPath = resolve(__dirname, '../.env');
 const srcPathC = resolve(__dirname, '../packages/app/.env.example');
 const destPathC = resolve(__dirname, '../packages/app/.env');
 
+const srcPathT = resolve(__dirname, '../packages/translate/.env.example');
+const destPathT = resolve(__dirname, '../packages/translate/.env');
+
 if (existsSync(destPath)) {
   console.info('Env copied:', destPath);
 } else {
@@ -29,5 +32,17 @@ if (existsSync(destPathC)) {
       return;
     }
     console.info('Env app copied:', destPathC);
+  });
+}
+
+if (existsSync(destPathT)) {
+  console.info('Env app copied:', destPathT);
+} else {
+  copyFile(srcPathT, destPathT, (err) => {
+    if (err) {
+      console.error('Error copy env app', err);
+      return;
+    }
+    console.info('Env app copied:', destPathT);
   });
 }
