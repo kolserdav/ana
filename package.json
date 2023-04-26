@@ -9,6 +9,8 @@
   "scripts": {
     "build:app": "cd packages/app && npm run build",
     "build:server": "cd packages/server && npm run build",
+    "start:server": "cd packages/server && npm run start",
+    "start:app": "cd packages/app && npm run start",
     "build": "npm run build:app && npm run build:server",
     "install:server": "cd packages/server && npm i",
     "install:app": "cd packages/app && npm i",
