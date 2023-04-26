@@ -43,6 +43,14 @@ const checkEmailHandler: RequestHandler<
       data: false,
     };
   }
+  if (!user.data) {
+    reply.type(APPLICATION_JSON).code(404);
+    return {
+      status: 'warn',
+      message: locale.notFound,
+      data: false,
+    };
+  }
 
   reply.type(APPLICATION_JSON).code(200);
   return {

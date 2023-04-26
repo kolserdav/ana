@@ -9,7 +9,7 @@
     "build": "npm run clean && tsc -p .",
     "dev:server": "nodemon dist/index.js",
     "start:dev": "concurrently \"npm run dev:server\"",
-    "start": "env-cmd node dist/index.js",
+    "start": "env-cmd -f ../../.env node dist/index.js",
     "dev": "concurrently \"npm run watch\" \"npm run start:dev\""
   },
   "keywords": [],

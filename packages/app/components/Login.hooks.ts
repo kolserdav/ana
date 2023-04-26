@@ -28,7 +28,6 @@ export const useEmailInput = ({
   const [emailError, setEmailError] = useState<string>('');
   const [emailSuccess, setEmailSuccess] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
-  const [emailRegistered, setEmailRegistered] = useState<boolean>(false);
 
   const onChangeEmail = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -76,7 +75,6 @@ export const useEmailInput = ({
     emailSuccess,
     setEmail,
     setEmailSuccess,
-    emailRegistered,
   };
 };
 
