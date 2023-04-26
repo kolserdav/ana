@@ -631,17 +631,17 @@ export const useSpeechRecognize = ({
     setRecognition(_recognition);
   }, [allowMicro, locale.recognizeNotSupport, locale.microNotPermitted, recognitionLang]);
 
-  const onStartRecognize = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onStartRecognize = () => {
     if (!recognitionLang) {
       return;
     }
     if (!recognition) {
-      log('warn', 'Recognition not found in onStartRecognize', e);
+      log('warn', 'Recognition not found in onStartRecognize');
       return;
     }
 
     if (!('webkitSpeechRecognition' in window)) {
-      log('warn', locale.recognizeNotSupport, e, true);
+      log('warn', locale.recognizeNotSupport, {}, true);
     } else {
       recognition.continuous = true;
       recognition.interimResults = true;
@@ -681,9 +681,9 @@ export const useSpeechRecognize = ({
     }
   };
 
-  const onStopRecognize = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onStopRecognize = () => {
     if (!recognition) {
-      log('warn', 'Recognition not found in onStopRecognize', e);
+      log('warn', 'Recognition not found in onStopRecognize');
       return;
     }
     recognition.stop();

@@ -215,7 +215,12 @@ function Translate({
           </div>
           {allowRecogn && (
             <div className={s.micro_button} title={locale.startRecognize}>
-              <IconButton onMouseUp={onStopRecognize} onMouseDown={onStartRecognize}>
+              <IconButton
+                onMouseUp={onStopRecognize}
+                onMouseDown={onStartRecognize}
+                onTouchStart={onStartRecognize}
+                onTouchEnd={onStopRecognize}
+              >
                 <MicrophoneIcon color={theme.text} />
               </IconButton>
             </div>
