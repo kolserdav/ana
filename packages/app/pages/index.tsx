@@ -1,21 +1,29 @@
-import Head from 'next/head';
 import { GetStaticPropsContext } from 'next';
-import Request from '../utils/request';
-import { Locale, LocaleValue } from '../types/interfaces';
-import { AppProps, PageFull } from '../types';
-import { prepagePage } from '../utils/lib';
-import s from '../styles/Page.module.scss';
-import Home from '../components/Home';
+import Head from 'next/head';
 import AppBar from '../components/AppBar';
+import { AppProps, PageFull } from '../types';
+import { Locale, LocaleValue } from '../types/interfaces';
+import { prepagePage } from '../utils/lib';
+import Request from '../utils/request';
+import s from '../styles/Page.module.scss';
+import Translate from '../components/Translate';
 
 const request = new Request();
 
-interface LoginProps extends AppProps {
-  page: PageFull;
+interface EmployerPageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
+  localeCommon: Locale['app']['common'];
+  localeTranslate: Locale['app']['translate'];
+  page: PageFull;
 }
 
-export default function HomePage({ page, app: { theme, user }, localeAppBar }: LoginProps) {
+export default function TranslatePage({
+  app: { user, theme },
+  localeAppBar,
+  page,
+  localeTranslate,
+  localeCommon,
+}: EmployerPageProps) {
   return (
     <>
       <Head>
@@ -23,9 +31,18 @@ export default function HomePage({ page, app: { theme, user }, localeAppBar }: L
         <meta name="description" content={page.description} />
         <meta name="keywords" content={page.keywords} />
       </Head>
-      <AppBar locale={localeAppBar} theme={theme} user={user} full />
+      <AppBar user={user} full theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Home />
+        <Translate
+          _edit={localeCommon.edit}
+          _delete={localeCommon.delete}
+          showHelp={localeCommon.showHelp}
+          save={localeCommon.save}
+          user={user}
+          theme={theme}
+          locale={localeTranslate}
+          cancel={localeCommon.cancel}
+        />
       </main>
     </>
   );
@@ -33,13 +50,15 @@ export default function HomePage({ page, app: { theme, user }, localeAppBar }: L
 
 export async function getStaticProps({
   locale,
-}: GetStaticPropsContext): Promise<{ props: Omit<LoginProps, 'app'> }> {
+}: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
+  const localeTranslate = await request.getLocale({ field: 'translate', locale });
+  const localeCommon = await request.getLocale({ field: 'common', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
         {
-          name: 'index',
+          name: 'translate',
         },
         {
           lang: locale as LocaleValue,
@@ -47,11 +66,12 @@ export async function getStaticProps({
       ],
     },
   });
-
   return {
     props: {
       page: prepagePage(page.data),
       localeAppBar: localeAppBar.data,
+      localeTranslate: localeTranslate.data,
+      localeCommon: localeCommon.data,
     },
   };
 }

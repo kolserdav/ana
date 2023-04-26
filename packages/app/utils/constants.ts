@@ -22,7 +22,7 @@ export enum Pages {
   // eslint-disable-next-line no-unused-vars
   restorePassword = '/account/restore-password',
   // eslint-disable-next-line no-unused-vars
-  translate = '/translate',
+  translate = '/',
   // eslint-disable-next-line no-unused-vars
   myDictionary = '/my',
 }
