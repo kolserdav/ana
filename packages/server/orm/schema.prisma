@@ -44,7 +44,7 @@ model User {
   name        String?       @db.VarChar(24)
   email       String        @unique @db.VarChar(255)
   confirm     Boolean       @default(false)
-  password    String        @db.VarChar(64)
+  password    String
   salt        String        @db.VarChar(32)
   updated     DateTime      @default(now())
   created     DateTime      @default(now())

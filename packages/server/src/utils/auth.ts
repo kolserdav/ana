@@ -67,7 +67,7 @@ export function createPasswordHash({ password, salt }: { password: string; salt:
     PASSWORD_ITERATIONS,
     PASWWORD_HASH_LENGTH,
     PASSWORD_ALGORITHM
-  ).toString();
+  ).toString('base64');
 }
 
 export const checkToken = async (token: string) => {
