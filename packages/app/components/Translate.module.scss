@@ -159,16 +159,8 @@ $textare-button-indent: 4px;
     .input {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: flex-start;
-
-      .field {
-        margin: 0;
-      }
-
-      .field_wrapper {
-        margin: 0;
-      }
     }
 
     .box {

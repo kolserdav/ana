@@ -102,6 +102,7 @@ $app-bar-transition: 0.2s;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 
   &.active {
     cursor: pointer;

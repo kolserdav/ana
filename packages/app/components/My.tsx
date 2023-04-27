@@ -215,9 +215,15 @@ function My({
               );
             })
           ) : (
-            <Typography variant="p" theme={theme} align="center">
-              {load ? <LoadIcon color={theme.blue} /> : locale.emptyPhrases}
-            </Typography>
+            <span>
+              {load ? (
+                <LoadIcon color={theme.blue} />
+              ) : (
+                <Typography variant="p" theme={theme} align="center">
+                  {locale.emptyPhrases}
+                </Typography>
+              )}
+            </span>
           )}
           {phrases.length !== 0 && phrases.length === count && (
             <div className={s.pagination}>

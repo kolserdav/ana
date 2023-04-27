@@ -14,7 +14,6 @@ import Link from './ui/Link';
 import Menu from './ui/Menu';
 import Switch from './ui/Switch';
 import l from './ui/Link.module.scss';
-import IconButton from './ui/IconButton';
 import TranslateIcon from './icons/Translate';
 import Select from './ui/Select';
 
@@ -102,17 +101,24 @@ function AppBar({
                 </Link>
               )}
             </div>
-            <div className={s.actions}>
-              <TranslateIcon color={theme.text} />
-
-              <Select ref={localeRef} onChange={onChangeLang} active theme={theme} value={language}>
-                {(locales as LocaleValue[])?.map((item) => (
-                  <option value={item} key={item}>
-                    {LOCALE_NAMES[item]}
-                  </option>
-                ))}
-              </Select>
-            </div>
+            {!isMobile && (
+              <div className={s.actions}>
+                <TranslateIcon color={theme.text} />
+                <Select
+                  ref={localeRef}
+                  onChange={onChangeLang}
+                  active
+                  theme={theme}
+                  value={language}
+                >
+                  {(locales as LocaleValue[])?.map((item) => (
+                    <option value={item} key={item}>
+                      {LOCALE_NAMES[item]}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+            )}
           </div>
         )}
         <Menu openMenu={menuOpen ? locale.closeMenu : locale.openMenu} theme={theme}>
@@ -134,6 +140,18 @@ function AppBar({
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
+          {isMobile && (
+            <div className={s.menu__item}>
+              <TranslateIcon color={theme.text} />
+              <Select ref={localeRef} onChange={onChangeLang} active theme={theme} value={language}>
+                {(locales as LocaleValue[])?.map((item) => (
+                  <option value={item} key={item}>
+                    {LOCALE_NAMES[item]}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          )}
           {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
             <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>

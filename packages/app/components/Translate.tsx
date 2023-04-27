@@ -274,8 +274,6 @@ function Translate({
                     </Typography>
                     <div className={s.input}>
                       <Input
-                        classWrapper={s.field_wrapper}
-                        className={s.field}
                         type="text"
                         id="add-new-tag"
                         onChange={onChangeNewTag}

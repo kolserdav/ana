@@ -571,7 +571,7 @@ export const useSpeechRecognize = ({
   learnLang: string | undefined;
 }) => {
   const [allowRecogn, setAllowRecogn] = useState<boolean>(false);
-  const [allowMicro, setAllowMicro] = useState<boolean>(false);
+  const [allowMicro, setAllowMicro] = useState<boolean>();
   const [recognition, setRecognition] = useState<webkitSpeechRecognition>();
 
   const recognitionLang = useMemo(() => {
@@ -616,7 +616,7 @@ export const useSpeechRecognize = ({
    * Set recognition
    */
   useEffect(() => {
-    if (!allowMicro) {
+    if (typeof allowMicro === 'boolean' && !allowMicro) {
       log('warn', locale.microNotPermitted, {}, true);
       return;
     }
@@ -651,7 +651,8 @@ export const useSpeechRecognize = ({
       };
 
       recognition.onerror = (event) => {
-        log('error', locale.errorSpeechRecog, event, true);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        log('error', `${locale.errorSpeechRecog}: ${(event as any)?.error}`, event, true);
       };
 
       recognition.onend = () => {

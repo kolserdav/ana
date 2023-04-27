@@ -15,6 +15,7 @@ export default function useTags({
 }) {
   const [tags, setTags] = useState<TagFindManyResult>([]);
   const [allTags, setAllTags] = useState<TagFindManyResult>([]);
+  const [tagsIsSet, setTagsIsSet] = useState<boolean>(false);
 
   /**
    * Set all tags
@@ -23,6 +24,7 @@ export default function useTags({
     (async () => {
       const _allTags = await request.tagFindMany();
       setAllTags(_allTags.data);
+      setTagsIsSet(true);
     })();
   }, [restart]);
 
@@ -52,5 +54,5 @@ export default function useTags({
     setTags(_tags);
   };
 
-  return { tags, setTags, onClickTagCheepWrapper, allTags };
+  return { tags, setTags, onClickTagCheepWrapper, allTags, tagsIsSet };
 }

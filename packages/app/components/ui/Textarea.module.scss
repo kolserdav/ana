@@ -1,5 +1,8 @@
 @import '../../styles/constants';
 
+$textarea-padding: 0.6rem;
+$textarea-padding-right: 30px;
+
 .wrapper {
   position: relative;
   width: 100%;
@@ -7,7 +10,7 @@
   textarea {
     width: 100%;
     font-size: large;
-    padding: 0.6rem;
+    padding: $textarea-padding $textarea-padding-right $textarea-padding $textarea-padding;
     border-radius: $input-border-radius;
 
     &:focus {

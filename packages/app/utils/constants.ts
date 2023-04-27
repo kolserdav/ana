@@ -59,7 +59,7 @@ export const LOAD_PAGE_DURATION = 900;
 export const LABEL_TRANSITION = '0.2s';
 export const PROJECT_TITLE_MAX = 255;
 export const IMAGE_PREVIEW_WIDTH = 140;
-export const TEXTAREA_ROWS_DEFAULT = 1;
+export const TEXTAREA_ROWS_DEFAULT = 3;
 export const TEXTAREA_MAX_ROWS = 8;
 export const FONT_SUBSETS: (
   | 'cyrillic'

@@ -235,7 +235,6 @@ export const usePhraseUpdate = () => {
 
 export const useTags = () => {
   const [filterTags, setFilterTags] = useState<boolean>(false);
-  const [tagsIsSet, setTagsIsSet] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [strongTags, setStrongTags] = useState<boolean>(false);
 
@@ -251,7 +250,7 @@ export const useTags = () => {
     }
   }, []);
 
-  const { tags, onClickTagCheepWrapper, setTags, allTags } = useTagsGlobal({
+  const { tags, onClickTagCheepWrapper, setTags, allTags, tagsIsSet } = useTagsGlobal({
     onChangeTags: (_tags) => {
       setSkip(0);
       setLocalStorage(
@@ -284,7 +283,7 @@ export const useTags = () => {
    * Set filter tags
    */
   useEffect(() => {
-    if (allTags.length === 0) {
+    if (!tagsIsSet) {
       return;
     }
 
@@ -299,9 +298,7 @@ export const useTags = () => {
         setFilterTags(true);
       }
     }
-
-    setTagsIsSet(true);
-  }, [allTags, setTags]);
+  }, [allTags, setTags, tagsIsSet]);
 
   const changeStrongCb = () => {
     setSkip(0);
