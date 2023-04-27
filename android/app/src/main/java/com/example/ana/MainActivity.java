@@ -2,12 +2,18 @@
 package com.example.ana;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.webkit.PermissionRequest;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends Activity {
     private WebView mWebView;
@@ -27,16 +33,24 @@ public class MainActivity extends Activity {
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
         webSettings.setSupportZoom(false);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setDefaultTextEncodingName("utf-8");
 
-        mWebView.loadUrl("https://kbm-rsa.ru/");
-        mWebView.setWebViewClient(new WebViewClient() {
+
+        mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+            public void onPermissionRequest(final PermissionRequest request) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        request.grant(request.getResources());
+                    }
+                });
+
             }
         });
+
+        mWebView.loadUrl("https://uyem.ru/");
 
         this.setContentView(mWebView);
     }
