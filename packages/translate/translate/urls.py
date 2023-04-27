@@ -17,13 +17,11 @@ Including another URLconf
 
 from django.urls import path
 import translate.api as api
-from translate.core.translate import Translate
 
-translate = Translate()
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path("test/", api.test.handler, name="index"),
-    path("translate", api.translate.wrapper(translate), name="translate"),
-    path("languages", api.languages.wrapper(translate), name="languages")
+    path("translate", api.translate.handler, name="translate"),
+    path("languages", api.languages.handler, name="languages")
 ]
