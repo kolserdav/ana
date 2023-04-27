@@ -3,4 +3,4 @@ from django.http import HttpRequest
 
 
 def handler(request: HttpRequest):
-    return HttpResponse("Testing query string is: \"%s\"" % request.GET.get('test'))
+    return HttpResponse("Testing query string is: %s" % request.GET.get('test'))

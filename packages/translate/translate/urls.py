@@ -21,7 +21,7 @@ import translate.api as api
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path("test/", api.test.handler, name="index"),
+    path("test", api.test.handler, name="test"),
     path("translate", api.translate.handler, name="translate"),
     path("languages", api.languages.handler, name="languages")
 ]
