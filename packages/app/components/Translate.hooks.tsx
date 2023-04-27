@@ -79,24 +79,34 @@ export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] })
    * Set suitable voice
    */
   useEffect(() => {
-    const synth = window.speechSynthesis;
-    if (!learnLang) {
-      return;
-    }
-    if (!synth) {
-      log('warn', 'Speech synth is not support', { synth });
-      setSynthAllow(false);
-      return;
-    }
-    const voices = synth.getVoices();
-    const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
-    if (!_voice) {
-      log('warn', locale.voiceNotFound, voices, true);
-      setSynthAllow(false);
-      return;
-    }
-    setSynthAllow(true);
-    setVoice(_voice);
+    (async () => {
+      const synth = window.speechSynthesis;
+      if (!learnLang) {
+        return;
+      }
+      if (!synth) {
+        log('warn', 'Speech synth is not support', { synth });
+        setSynthAllow(false);
+        return;
+      }
+      let voices = synth.getVoices();
+      if (voices.length === 0) {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(0);
+          }, 1000);
+        });
+        voices = synth.getVoices();
+      }
+      const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
+      if (!_voice) {
+        log('warn', locale.voiceNotFound, voices, true);
+        setSynthAllow(false);
+        return;
+      }
+      setSynthAllow(true);
+      setVoice(_voice);
+    })();
   }, [locale.voiceNotFound, learnLang]);
 
   return {
