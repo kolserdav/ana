@@ -22,6 +22,28 @@ declare global {
 
     public stop: () => void;
   }
+
+  interface AndroidTextToSpeech {
+    speak: (text: string) => void;
+
+    setLanguage: (lang: string) => void;
+
+    /**
+     *
+     * @returns {string} Like Record<0, 'ru'>
+     */
+    getAvailableLocales: () => string;
+
+    setAvailableLocales: () => void;
+
+    /**
+     *
+     * @param rate {string} Like "0.5"
+     */
+    setSpeechRate: (rate: string) => void;
+  }
+
+  const androidTextToSpeech: AndroidTextToSpeech | undefined;
 }
 
 export {};

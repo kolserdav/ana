@@ -80,34 +80,50 @@ export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] })
    */
   useEffect(() => {
     (async () => {
-      const synth = window.speechSynthesis;
-      if (!learnLang) {
-        return;
+      if (typeof androidTextToSpeech === 'undefined') {
+        const synth = window.speechSynthesis;
+        if (!learnLang) {
+          return;
+        }
+        if (!synth) {
+          log('warn', 'Speech synth is not support', { synth });
+          setSynthAllow(false);
+          return;
+        }
+        let voices = synth.getVoices();
+        if (voices.length === 0) {
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(0);
+            }, 1000);
+          });
+          voices = synth.getVoices();
+        }
+        const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
+        if (!_voice) {
+          log('warn', locale.voiceNotFound, voices, true);
+          setSynthAllow(false);
+          return;
+        }
+        setSynthAllow(true);
+        setVoice(_voice);
       }
-      if (!synth) {
-        log('warn', 'Speech synth is not support', { synth });
-        setSynthAllow(false);
-        return;
-      }
-      let voices = synth.getVoices();
-      if (voices.length === 0) {
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(0);
-          }, 1000);
-        });
-        voices = synth.getVoices();
-      }
-      const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
-      if (!_voice) {
-        log('warn', locale.voiceNotFound, voices, true);
-        setSynthAllow(false);
-        return;
-      }
-      setSynthAllow(true);
-      setVoice(_voice);
     })();
   }, [locale.voiceNotFound, learnLang]);
+
+  /**
+   * Set android voice
+   */
+  useEffect(() => {
+    if (!learnLang) {
+      return;
+    }
+    if (typeof androidTextToSpeech !== 'undefined') {
+      androidTextToSpeech.setLanguage(learnLang);
+
+      setSynthAllow(true);
+    }
+  }, [learnLang]);
 
   return {
     learnLang,
@@ -346,19 +362,23 @@ export const useSpeechSynth = ({
     if (!learnLang) {
       return;
     }
-    const synth = window.speechSynthesis;
-    if (!synth || !voice) {
-      return;
-    }
-
     if (!textToSpeech) {
       return;
     }
 
-    const utterThis = new SpeechSynthesisUtterance(textToSpeech);
+    if (typeof androidTextToSpeech !== 'undefined') {
+      androidTextToSpeech.speak(textToSpeech);
+    } else {
+      const synth = window.speechSynthesis;
+      if (!synth || !voice) {
+        return;
+      }
 
-    utterThis.lang = voice.lang;
-    synth.speak(utterThis);
+      const utterThis = new SpeechSynthesisUtterance(textToSpeech);
+
+      utterThis.lang = voice.lang;
+      synth.speak(utterThis);
+    }
 
     setTextToSpeech('');
   }, [textToSpeech, locale, learnLang, voice]);

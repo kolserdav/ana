@@ -8,6 +8,16 @@
 
      <WebView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+          <Button
+              android:visibility="gone"
+              android:id="@+id/button"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_x="2dp"
+              android:layout_y="674dp"
+              android:text="Button" />
+     </WebView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
