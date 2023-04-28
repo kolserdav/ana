@@ -16,7 +16,7 @@ export const useAppBar = () => {
   const [showAppBar, setShowAppBar] = useState<boolean>(true);
   const [showExpandLess, setShowExpandLess] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>();
 
   /**
    * Set is mobile

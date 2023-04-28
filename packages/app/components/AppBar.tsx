@@ -101,7 +101,7 @@ function AppBar({
                 </Link>
               )}
             </div>
-            {!isMobile && (
+            {typeof isMobile === 'boolean' && !isMobile && (
               <div className={s.actions}>
                 <TranslateIcon color={theme.text} />
                 <Select
