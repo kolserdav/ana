@@ -98,7 +98,7 @@ $search-input-wudth-coeff: 1.5;
       .filters_tags {
         margin: 1rem;
         display: flex;
-        flex-wrap: row wrap;
+        flex-flow: row wrap;
         align-items: center;
       }
     }
