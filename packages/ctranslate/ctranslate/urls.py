@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.urls import path
 import ctranslate.api as api
+from django.views.decorators.cache import never_cache
 
 urlpatterns = [
-    path("translate", api.translate.handler),
-    path("languages", api.languages.handler, name="languages")
+    path("translate", never_cache(api.translate.handler)),
+    path("languages", never_cache(api.languages.handler), name="languages")
 ]
