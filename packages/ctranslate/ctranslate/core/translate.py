@@ -89,7 +89,6 @@ class Translate:
             f"{package_path}/model", device="cpu")
         paragraphs = self.tokenize(text)
         for paragraph in paragraphs:
-            print(paragraph)
             translate_result = translator.translate_batch(
                 [paragraph],
                 num_hypotheses=1,
