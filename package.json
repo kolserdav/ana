@@ -23,7 +23,7 @@
     "studio": "prisma studio",
     "generate": "prisma generate",
     "format": "prisma format",
-    "translate": "python packages/translate/manage.py runserver 8000",
+    "translate": "python packages/ctranslate/manage.py runserver 8000",
     "postinstall": "npm run install:server && npm run install:app && npm run scripts && npm run install:translate",
     "dev:server": "cd packages/server && npm run dev",
     "dev:app": "cd packages/app && npm run dev",

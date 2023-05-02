@@ -2,10 +2,11 @@ import ctranslate2
 import argostranslate.package as package
 import argostranslate.translate
 from argostranslate.translate import Language, Package
-from ctranslate.utils.constants import UPDATE_MODELS
+from ctranslate.utils.constants import UPDATE_MODELS, NO_TRANSLATE_MESSAGE
 import ctranslate.utils.lib as lib
 from typing import List
 from pathlib import Path
+import re
 
 
 class CTranslator:
@@ -48,9 +49,9 @@ class Translate:
 
     translators: List[Translator] = []
 
-    def __init__(self):
-
-        self.install_models()
+    def __init__(self, install_models=False):
+        if install_models:
+            self.install_models()
 
     def install_models(self):
         package.update_package_index()
@@ -78,25 +79,31 @@ class Translate:
         # self.set_translators()
 
     def translate(self, text: str, from_code: str, to_code: str):
-        result = 'No translate'
+        result = ''
         package_path = self.get_package_path(
             from_code=from_code, to_code=to_code)
         if package_path is None:
             print("Package path is: %s" % (package_path))
-            return result
+            return NO_TRANSLATE_MESSAGE
         translator = ctranslate2.Translator(
             f"{package_path}/model", device="cpu")
-        translate_result = translator.translate_batch(
-            self.tokenize(text),
-            num_hypotheses=1,
-            max_batch_size=32,
-            beam_size=1,
-            length_penalty=0.2,
-            return_scores=True,
-            replace_unknowns=True,)
-        for v in translate_result:
-            result = ''.join(v[0]['tokens']).replace(
-                self.underline, ' ').strip()
+        paragraphs = self.tokenize(text)
+        for paragraph in paragraphs:
+            print(paragraph)
+            translate_result = translator.translate_batch(
+                [paragraph],
+                num_hypotheses=1,
+                max_batch_size=32,
+                beam_size=1,
+                length_penalty=0.2,
+                return_scores=True,
+                replace_unknowns=True,)
+            _paragraph = ''
+            for v in translate_result:
+                _paragraph = ''.join(v[0]['tokens']).replace(
+                    self.underline, ' ').strip()
+            result += f"{_paragraph}\n"
+
         return result
 
     def get_translator(self, from_code: str, to_code: str):
@@ -110,10 +117,19 @@ class Translate:
 
     def tokenize(self, text: str):
         result = []
-        words = text.split(' ')
-        for word in words:
-            result.append(f"{self.underline}{word}")
-        return [result]
+        paragraphs = text.split('\n')
+        for paragraph in paragraphs:
+            _para = paragraph.replace(',', ' , ').replace('.', ' . ').replace(
+                '!', ' ! ').replace('?', ' ? ').replace(':', ' : ')
+            words = filter(lambda x: x != '', _para.split(' '))
+            _paragraph = []
+            for word in words:
+                underline = ''
+                if re.match(r'^\w+$', word) != None:
+                    underline = self.underline
+                _paragraph.append(f"{underline}{word}")
+            result.append(_paragraph)
+        return result
 
     def get_package_path(self, from_code: str, to_code: str):
         package_path: Path | None = None

@@ -19,4 +19,5 @@ import ctranslate.api as api
 
 urlpatterns = [
     path("translate", api.translate.handler),
+    path("languages", api.languages.handler, name="languages")
 ]
