@@ -8,8 +8,8 @@ const destPath = resolve(__dirname, '../.env');
 const srcPathC = resolve(__dirname, '../packages/app/.env.example');
 const destPathC = resolve(__dirname, '../packages/app/.env');
 
-const srcPathT = resolve(__dirname, '../packages/translate/.env.example');
-const destPathT = resolve(__dirname, '../packages/translate/.env');
+const srcPathT = resolve(__dirname, '../packages/ctranslate/.env.example');
+const destPathT = resolve(__dirname, '../packages/ctranslate/.env');
 
 if (existsSync(destPath)) {
   console.info('Env copied:', destPath);
