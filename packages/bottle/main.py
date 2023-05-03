@@ -128,4 +128,4 @@ def get_languages():
     return json_dumps(langs)
 
 
-run(host='127.0.0.1', port=8000, reloader=True)
+run(host='127.0.0.1', port=8000, reloader=False, quiet=True)
