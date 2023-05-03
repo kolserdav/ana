@@ -3,7 +3,7 @@ import json
 import ctranslate2
 import argostranslate.package as package
 import argostranslate.translate
-from argostranslate.translate import Language, Package
+from argostranslate.translate import Language, Package, PackageTranslation, get_language_from_code
 from typing import List
 from pathlib import Path
 import re
@@ -49,31 +49,23 @@ class Translate:
         # self.set_translators()
 
     def translate(self, text: str, from_code: str, to_code: str):
-        result = ''
-        package_path = self.get_package_path(
-            from_code=from_code, to_code=to_code)
-        if package_path is None:
-            print("Package path is: %s" % (package_path))
+        package = self.get_package(from_code=from_code, to_code=to_code)
+        if package is None:
+            print("Package is None: (%s:%s)", (from_code, to_code))
             return NO_TRANSLATE_MESSAGE
-        translator = ctranslate2.Translator(
-            f"{package_path}/model", device="cpu")
-        paragraphs = self.tokenize(text)
-        for paragraph in paragraphs:
-            translate_result = translator.translate_batch(
-                [paragraph],
-                num_hypotheses=1,
-                max_batch_size=32,
-                beam_size=1,
-                length_penalty=0.2,
-                return_scores=True,
-                replace_unknowns=True,)
-            _paragraph = ''
-            for v in translate_result:
-                _paragraph = ''.join(v[0]['tokens']).replace(
-                    self.underline, ' ').strip()
-            result += f"{_paragraph}\n"
+        from_lang = get_language_from_code(from_code)
+        if from_lang is None:
+            print("From lang is None: %s", (from_code))
+            return NO_TRANSLATE_MESSAGE
+        to_lang = get_language_from_code(to_code)
+        if to_lang is None:
+            print("To lang is None: %s", (to_code))
+            return NO_TRANSLATE_MESSAGE
+        pt = PackageTranslation(
+            pkg=package, from_lang=from_lang, to_lang=to_lang)
 
-        return result
+        translate_result = pt.hypotheses(input_text=text, num_hypotheses=1)
+        return translate_result[0].value
 
     def tokenize(self, text: str):
         result = []
@@ -97,6 +89,13 @@ class Translate:
             if pack.from_code == from_code and pack.to_code == to_code:
                 package_path = pack.package_path
         return package_path
+
+    def get_package(self, from_code: str, to_code: str):
+        package: Package | None = None
+        for pack in self.installed_packages:
+            if pack.from_code == from_code and pack.to_code == to_code:
+                package = pack
+        return package
 
     def get_languages(self):
         return self.languages
