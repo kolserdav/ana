@@ -1,8 +1,8 @@
 import { GetStaticPropsContext } from 'next';
 import { PageName } from '@prisma/client';
-import { LoginProps } from '../types';
+import { DocumentProps, LoginProps } from '../types';
 import { LocaleValue } from '../types/interfaces';
-import { prepagePage } from './lib';
+import { getDocLocale, prepagePage } from './lib';
 import Request from './request';
 
 const request = new Request();
@@ -34,6 +34,32 @@ export function getStaticPropsLogin(
         localeLogin: localeLogin.data,
         page: prepagePage(page.data),
         localeCommon: localeCommon.data,
+      },
+    };
+  };
+}
+
+export function getStaticPropsDocument(name: PageName) {
+  return async ({
+    locale,
+  }: GetStaticPropsContext): Promise<{ props: Omit<DocumentProps, 'app'> }> => {
+    const localeAppBar = await request.getLocale({ field: 'appBar', locale });
+    const page = await request.pageFindMany({
+      where: {
+        AND: [
+          {
+            name,
+          },
+          {
+            lang: getDocLocale(locale),
+          },
+        ],
+      },
+    });
+    return {
+      props: {
+        page: prepagePage(page.data),
+        localeAppBar: localeAppBar.data,
       },
     };
   };

@@ -53,4 +53,5 @@ export interface ServerLanguage {
 
 export interface DocumentProps extends AppProps {
   page: PageFull;
+  localeAppBar: Locale['app']['appBar'];
 }

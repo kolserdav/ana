@@ -150,3 +150,5 @@ export async function copyToClipboard(textToCopy: string, message: string) {
   }
   log('info', message, {}, true);
 }
+
+export const getDocLocale = (locale: string | undefined) => (locale === 'ru' ? locale : 'en');
