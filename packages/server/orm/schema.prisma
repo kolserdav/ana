@@ -17,6 +17,9 @@ enum PageName {
   confirmEmail
   translate
   my
+  policy
+  rules
+  contacts
 }
 
 enum PageField {

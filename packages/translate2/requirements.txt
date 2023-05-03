@@ -1,4 +1,4 @@
+bottle==0.12.25
 argostranslate==1.8.0
-django==4.2
 python-dotenv==1.0.0
-ctranslate2==3.13.0
+ctranslate2==2.24.0

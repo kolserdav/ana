@@ -1,6 +1,0 @@
-translate/__pycache__
-translate/utils/__pycache__
-translate/api/__pycache__
-translate/core/__pycache__
-db.sqlite3
-.env

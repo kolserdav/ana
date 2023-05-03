@@ -1,3 +1,0 @@
-argostranslate==1.8.0
-django==4.2
-python-dotenv==1.0.0

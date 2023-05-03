@@ -50,3 +50,7 @@ export interface ServerLanguage {
   code: string;
   name: string;
 }
+
+export interface DocumentProps extends AppProps {
+  page: PageFull;
+}

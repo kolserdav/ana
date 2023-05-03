@@ -21,5 +21,8 @@ UPDATE_MODELS = os.getenv('UPDATE_MODELS') == '1'
 
 NO_TRANSLATE_MESSAGE = 'No translate'
 
+# Range(1 - 4)
+NUM_HYPOTHESES = 1
+
 logging.basicConfig(level=LOG_LEVEL)
 logger = logging.getLogger(APP_NAME)

@@ -7,6 +7,7 @@ export const LOCALE_NAMES: Record<LocaleValue, string> = {
   ru: 'Русский',
 };
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
+export const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN as string;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const LOG_LEVEL = parseInt(process.env.NEXT_PUBLIC_LOG_LEVEL as string, 10);
 export const ERUDA = (process.env.NEXT_PUBLIC_ERUDA as string) === 'true';

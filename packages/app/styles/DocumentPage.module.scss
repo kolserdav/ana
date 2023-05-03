@@ -1,0 +1,45 @@
+@import "./constants";
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: $container-max-width;
+  padding: 1rem;
+}
+
+.title {
+  text-align: center;
+}
+
+.page__text {
+  b {
+    color: $color-black;
+  }
+
+  table {
+    margin: auto;
+
+    td {
+      padding: 0.5rem;
+
+      &:first-child {
+        text-decoration: underline;
+      }
+
+      @media (max-width: $mobile-width) {
+        font-size: small;
+      }
+    }
+  }
+}
