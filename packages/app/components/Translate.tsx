@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { createRef, useRef } from 'react';
+import { createRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';

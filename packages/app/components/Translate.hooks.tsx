@@ -631,15 +631,22 @@ export const useSpeechRecognize = ({
       return;
     }
 
-    navigator.mediaDevices
-      .getUserMedia({ video: false, audio: true })
-      .then(() => {
-        setAllowMicro(true);
-      })
-      .catch((err) => {
-        log('error', 'Error get user media', err);
-        setAllowMicro(false);
+    const checkMicro = async () =>
+      new Promise<boolean>((resolve) => {
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then(() => {
+            resolve(true);
+          })
+          .catch((err) => {
+            log('error', 'Error get user media', err);
+            resolve(false);
+          });
       });
+
+    (async () => {
+      setAllowMicro(await checkMicro());
+    })();
   }, []);
 
   /**
@@ -651,7 +658,7 @@ export const useSpeechRecognize = ({
       return;
     }
     if (!('webkitSpeechRecognition' in window)) {
-      log('warn', locale.recognizeNotSupport, {}, true);
+      log('warn', locale.recognizeNotSupport, {}, allowMicro);
       return;
     }
 
