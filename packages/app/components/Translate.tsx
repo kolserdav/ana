@@ -39,6 +39,8 @@ function Translate({
   _edit,
   _delete,
   cancel,
+  connId,
+  missingCSRF,
 }: {
   theme: Theme;
   locale: Locale['app']['translate'];
@@ -48,6 +50,8 @@ function Translate({
   _edit: string;
   _delete: string;
   cancel: string;
+  connId: string | null;
+  missingCSRF: string;
 }) {
   const helpTagRef = createRef<HTMLButtonElement>();
   const { load, setLoad } = useLoad();
@@ -116,6 +120,8 @@ function Translate({
     setText,
     translate,
     setTranslate,
+    connId,
+    missingCSRF,
   });
 
   const { speechRetranslate } = useSpeechSynth({

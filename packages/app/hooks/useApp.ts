@@ -1,20 +1,68 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import useTheme from './useTheme';
 import storeClick, { changeClick } from '../store/click';
 import storeLoad from '../store/load';
 import storeScroll, { changeScroll } from '../store/scroll';
-import { setBodyScroll } from '../utils/lib';
-import { LocaleValue, UserCleanResult } from '../types/interfaces';
+import { log, setBodyScroll } from '../utils/lib';
+import {
+  LocaleValue,
+  UserCleanResult,
+  WSMessage,
+  WS_MESSAGE_CONN_ID,
+  parseMessage,
+} from '../types/interfaces';
 import storeTouchEvent, { changeTouchEvent } from '../store/touchEvent';
 import { CookieName, setCookie } from '../utils/cookies';
+import { WS_ADDRESS } from '../utils/constants';
 
 export default function useApp({ user }: { user: UserCleanResult | null }) {
   const router = useRouter();
   const [load, setLoad] = useState<boolean>(true);
+  const [connId, setConnId] = useState<string | null>(null);
   const [touchpad, setTouchpad] = useState<boolean>(false);
+  const ws = useMemo(
+    () => (typeof WebSocket !== 'undefined' ? new WebSocket(WS_ADDRESS) : null),
+    []
+  );
 
   const { theme } = useTheme();
+
+  /**
+   * Listen server messages
+   */
+  useEffect(() => {
+    if (!ws) {
+      return;
+    }
+
+    ws.onmessage = ({
+      data,
+    }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    MessageEvent<string>) => {
+      const parsed = parseMessage(data);
+      if (!parsed) {
+        return;
+      }
+      const { type, message, data: _data, forUser, infinity } = parsed;
+
+      switch (message) {
+        case WS_MESSAGE_CONN_ID:
+          setConnId(_data);
+          break;
+        default:
+          log(type, message, _data, forUser, infinity);
+      }
+    };
+
+    ws.onerror = (e) => {
+      log('error', 'Error ws', e);
+    };
+
+    ws.onclose = (e) => {
+      log('warn', 'Conn is closeed', e);
+    };
+  }, [ws]);
 
   /**
    * Set lang cookie
@@ -110,5 +158,5 @@ export default function useApp({ user }: { user: UserCleanResult | null }) {
     };
   }, []);
 
-  return { load, setLoad, theme, touchpad };
+  return { load, setLoad, theme, touchpad, connId };
 }

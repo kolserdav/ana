@@ -161,6 +161,8 @@ export const useTranslate = ({
   translate,
   setText,
   setTranslate,
+  connId,
+  missingCSRF,
 }: {
   learnLang: string | undefined;
   nativeLang: string | undefined;
@@ -174,6 +176,8 @@ export const useTranslate = ({
   setLearnLang: React.Dispatch<React.SetStateAction<string | undefined>>;
   setTags: React.Dispatch<React.SetStateAction<TagFindManyResult>>;
   setAddTags: React.Dispatch<React.SetStateAction<boolean>>;
+  connId: string | null;
+  missingCSRF: string;
 }) => {
   const router = useRouter();
 
@@ -225,12 +229,16 @@ export const useTranslate = ({
     if (!text || !learnLang || !nativeLang) {
       return;
     }
-
+    if (!connId) {
+      log('warn', missingCSRF, connId, true);
+      return;
+    }
     const runTranslate = async (q: string) => {
       const data = await request.translate({
         q,
         source: learnLang,
         target: nativeLang,
+        connId,
       });
 
       if (data.status === 'error' || !data.translatedText) {
@@ -255,7 +263,7 @@ export const useTranslate = ({
       },
       changeLang ? 0 : TRANSLATE_DELAY
     );
-  }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate]);
+  }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate, connId]);
 
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const {
@@ -289,11 +297,16 @@ export const useTranslate = ({
     if (!translate || !nativeLang || !learnLang) {
       return;
     }
+    if (!connId) {
+      log('warn', missingCSRF, connId, true);
+      return;
+    }
     const runRetranslate = async (q: string) => {
       const data = await request.translate({
         q,
         source: nativeLang,
         target: learnLang,
+        connId,
       });
 
       if (data.status === 'error' || !data.translatedText) {
@@ -311,7 +324,7 @@ export const useTranslate = ({
       setRetranslate(data.translatedText);
     };
     runRetranslate(translate);
-  }, [translate, learnLang, nativeLang]);
+  }, [translate, learnLang, nativeLang, connId]);
 
   const setRightText = () => {
     setText(reTranslate);

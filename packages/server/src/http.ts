@@ -5,7 +5,7 @@ import proxy from '@fastify/http-proxy';
 import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT, TRANSLATE_URL } from './utils/constants';
 import { createDir, log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
-import { Api, CLOUD_PREFIX, PhraseDeleteBody } from './types/interfaces';
+import { Api, CLOUD_PREFIX, TRANSLATE_PREFIX } from './types/interfaces';
 import getLocaleHandler from './api/v1/get-locale';
 import checkTokenMiddleware from './api/middlewares/checkToken';
 import pageFindManyHandler from './api/v1/page/find-many';
@@ -28,6 +28,7 @@ import phraseUpdate from './api/v1/phrase/update';
 import phraseFindFirst from './api/v1/phrase/findFirst';
 import tagDelete from './api/v1/tag/delete';
 import tagUpdate from './api/v1/tag/update';
+import checkCSRFMiddlewareWrapper from './api/middlewares/checkCSRF';
 
 const prisma = new PrismaClient();
 
@@ -50,7 +51,7 @@ process.on('unhandledRejection', (err: Error) => {
 
   fastify.register(proxy, {
     upstream: TRANSLATE_URL,
-    prefix: '/libre',
+    prefix: TRANSLATE_PREFIX,
     http2: false,
   });
 
@@ -71,6 +72,9 @@ process.on('unhandledRejection', (err: Error) => {
     ],
     checkTokenMiddleware
   );
+
+  await fastify.use([Api.translate], checkCSRFMiddlewareWrapper(prisma));
+
   await fastify.use(
     [Api.deletePhrase, Api.putPhrase, Api.getPhrase],
     checkAccessMiddlewareWrapper(prisma, {

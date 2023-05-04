@@ -5,8 +5,6 @@ import { IncomingHttpHeaders } from 'http';
 import path from 'path';
 
 import {
-  Locale,
-  LOCALE_DEFAULT,
   LANGUAGE_HEADER,
   LocaleValue,
   USER_ID_HEADER,
@@ -14,6 +12,7 @@ import {
   AUTHORIZATION_HEADER,
   TIMEOUT_HEADER,
   IMAGE_EXT,
+  CSRF_HEADER,
 } from '../types/interfaces';
 import { APP_URL, CLOUD_PATH, IS_DEV, LOG_LEVEL } from './constants';
 
@@ -64,12 +63,14 @@ export const parseHeaders = (headers: IncomingHttpHeaders) => {
     [USER_ID_HEADER]: uuid,
     [AUTHORIZATION_HEADER]: authorization,
     [TIMEOUT_HEADER]: timeout,
+    [CSRF_HEADER]: csrf,
   } = headers;
   return {
     lang: lang as LocaleValue,
     id: uuid as string,
     token: authorization as string,
     timeout: timeout as string,
+    csrf: csrf as string,
   };
 };
 

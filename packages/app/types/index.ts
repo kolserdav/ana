@@ -29,6 +29,7 @@ export interface AppProps {
     user: UserCleanResult;
     userLoad: boolean;
     touchpad: boolean;
+    connId: string | null;
   };
 }
 

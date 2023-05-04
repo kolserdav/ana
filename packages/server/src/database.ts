@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Prisma, User, Page, Phrase, Tag } from '@prisma/client';
+import { Prisma, User, Page, Phrase, Tag, Online } from '@prisma/client';
 import { Result } from './types/interfaces';
 
 abstract class Database {
@@ -13,6 +13,30 @@ abstract class Database {
     args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>
   ): Promise<
     Prisma.CheckSelect<T, Result<User | null>, Promise<Result<Prisma.UserGetPayload<T> | null>>>
+  >;
+
+  public abstract onlineCreate<T extends Prisma.OnlineCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Online | null>, Promise<Result<Prisma.OnlineGetPayload<T> | null>>>
+  >;
+
+  public abstract onlineDelete<T extends Prisma.OnlineDeleteArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineDeleteArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Online | null>, Promise<Result<Prisma.OnlineGetPayload<T> | null>>>
+  >;
+
+  public abstract onlineFindFirst<T extends Prisma.OnlineFindFirstArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineFindFirstArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Online | null>, Promise<Result<Prisma.OnlineGetPayload<T> | null>>>
+  >;
+
+  public abstract onlineFindMany<T extends Prisma.OnlineFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Array<Online>>, Promise<Result<Array<Prisma.OnlineGetPayload<T>>>>>
   >;
 
   public abstract userUpdate<T extends Prisma.UserUpdateArgs>(

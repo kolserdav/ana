@@ -18,7 +18,7 @@ interface EmployerPageProps extends AppProps {
 }
 
 export default function TranslatePage({
-  app: { user, theme },
+  app: { user, theme, connId },
   localeAppBar,
   page,
   localeTranslate,
@@ -34,6 +34,8 @@ export default function TranslatePage({
       <AppBar user={user} full theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Translate
+          missingCSRF={localeCommon.missingCSRF}
+          connId={connId}
           _edit={localeCommon.edit}
           _delete={localeCommon.delete}
           showHelp={localeCommon.showHelp}

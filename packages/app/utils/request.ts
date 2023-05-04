@@ -41,6 +41,7 @@ import {
   TagDeleteResult,
   TagUpdateBody,
   TagUpdateResult,
+  CSRF_HEADER,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -60,6 +61,7 @@ class Request {
     url,
     locale,
     method,
+    connId,
     contentType = APPLICATION_JSON,
   }: {
     url: string;
@@ -67,6 +69,7 @@ class Request {
     body?: any;
     locale?: string;
     contentType?: string | null;
+    connId?: string;
     method: 'GET' | 'POST' | 'PUT' | 'DELETE';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }): Promise<any> {
@@ -77,6 +80,7 @@ class Request {
         [USER_ID_HEADER]: getCookie(CookieName._uuid) || '',
         [AUTHORIZATION_HEADER]: getCookie(CookieName._utoken) || '',
         [TIMEOUT_HEADER]: new Date().getTime().toString(),
+        [CSRF_HEADER]: connId || '',
       };
       if (contentType !== null) {
         headers['Content-Type'] = contentType || APPLICATION_JSON;
@@ -276,14 +280,17 @@ class Request {
     q,
     source,
     target,
+    connId,
   }: {
     q: string;
     source: string;
     target: string;
+    connId: string;
   }): Promise<TranslateResult> {
     return this.send({
-      url: '/libre/translate',
+      url: Api.translate,
       method: 'POST',
+      connId,
       body: {
         q,
         source,
@@ -295,7 +302,7 @@ class Request {
 
   public async getLanguages(): Promise<ServerLanguage[]> {
     return this.send({
-      url: '/libre/languages',
+      url: Api.languages,
       method: 'GET',
     });
   }

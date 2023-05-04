@@ -123,6 +123,38 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public onlineCreate: Database['onlineCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'online',
+      command: 'create',
+    });
+  };
+
+  public onlineDelete: Database['onlineDelete'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'online',
+      command: 'delete',
+    });
+  };
+
+  public onlineFindFirst: Database['onlineFindFirst'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'online',
+      command: 'findFirst',
+    });
+  };
+
+  public onlineFindMany: Database['onlineFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'online',
+      command: 'findMany',
+    });
+  };
+
   public pageFindMany: Database['pageFindMany'] = async (args) => {
     return this.runFromWorker({
       args,

@@ -10,7 +10,7 @@ import { ERUDA } from '../utils/constants';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { user, userLoad } = useUser();
-  const { load, theme, touchpad } = useApp({ user });
+  const { load, theme, touchpad, connId } = useApp({ user });
 
   return (
     <>
@@ -33,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
       )}
       <LoaderLine open={load} />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <Component {...pageProps} app={{ theme, user, userLoad, touchpad }} />
+      <Component {...pageProps} app={{ theme, user, userLoad, touchpad, connId }} />
       <Alert theme={theme} />
     </>
   );

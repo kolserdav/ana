@@ -102,3 +102,21 @@ model Tag {
   created   DateTime    @default(now())
   PhraseTag PhraseTag[]
 }
+
+enum MessageType {
+  info
+  warn
+  error
+}
+
+model ServerMessages {
+  id      String      @id @default(uuid())
+  type    MessageType
+  text    String
+  created DateTime    @default(now())
+}
+
+model Online {
+  id      String   @id
+  created DateTime @default(now())
+}

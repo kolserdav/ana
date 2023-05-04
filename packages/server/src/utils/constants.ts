@@ -7,6 +7,7 @@ export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
 export const HOST = process.env.HOST as string;
 export const SMTP_EMAIL = process.env.SMTP_EMAIL as string;
+export const WS_PORT = parseInt(process.env.WS_PORT as string, 10);
 export const SMTP_HOST = process.env.SMTP_HOST as string;
 export const SMTP_PORT = parseInt(process.env.SMTP_PORT as string, 10);
 export const SMTP_PASSWORD = process.env.SMTP_PASSWORD as string;

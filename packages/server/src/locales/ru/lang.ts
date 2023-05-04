@@ -83,6 +83,7 @@ const lang: Locale = {
       edit: 'Изменить',
       delete: 'Удалить',
       cancel: 'Отмена',
+      missingCSRF: 'Токен безопасности не найден',
     },
     translate: {
       title: 'Перевод предложений',

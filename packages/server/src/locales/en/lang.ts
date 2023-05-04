@@ -84,6 +84,7 @@ const lang: Locale = {
       edit: 'Edit',
       delete: 'delete',
       cancel: 'Cancel',
+      missingCSRF: 'CSRF Token is missing',
     },
     translate: {
       title: 'Sentence Translation',

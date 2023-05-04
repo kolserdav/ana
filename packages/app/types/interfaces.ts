@@ -2,6 +2,8 @@
 
 import { Phrase, PhraseTag, Prisma, PrismaClient, Tag, User } from '@prisma/client';
 
+export const TRANSLATE_PREFIX = '/libre';
+
 // eslint-disable-next-line no-shadow
 export enum Api {
   testV1 = '/v1/test',
@@ -25,6 +27,8 @@ export enum Api {
   postUserLogin = '/v1/user-login',
   getCheckEmail = '/v1/check-email',
   getLanguages = '/v1/languages',
+  translate = '/libre/translate',
+  languages = '/libre/languages',
 }
 
 // eslint-disable-next-line no-shadow
@@ -41,6 +45,7 @@ export enum LocaleVars {
 }
 
 export type LocaleValue = 'ru' | 'en';
+export const WS_MESSAGE_CONN_ID = 'conn_id';
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
 export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
 export const EMAIL_QS = 'e';
@@ -52,6 +57,7 @@ export type WSProtocol = 'test' | 'login' | 'confirm-email' | 'app';
 export const LOCALE_DEFAULT: LocaleValue = 'ru';
 export const LANGUAGE_HEADER = 'lang';
 export const USER_ID_HEADER = 'uuid';
+export const CSRF_HEADER = 'X-CSRF-Token';
 export const AUTHORIZATION_HEADER = 'authorization';
 export const TIMEOUT_HEADER = 'timeout';
 export const APPLICATION_JSON = 'application/json';
@@ -80,6 +86,14 @@ export interface DBCommandProps {
   args: Prisma.SelectSubset<any, any>;
 }
 export type Status = 'error' | 'warn' | 'info';
+export interface WSMessage {
+  type: Status;
+  message: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+  forUser?: boolean;
+  infinity?: boolean;
+}
 export interface Result<T> {
   status: Status;
   message: string;
@@ -298,6 +312,7 @@ export interface Locale {
       edit: string;
       delete: string;
       cancel: string;
+      missingCSRF: string;
     };
     translate: {
       title: string;
@@ -398,4 +413,17 @@ export const firstCapitalize = (word: string) => {
     }
   }
   return res;
+};
+
+export const parseMessage = (message: string): WSMessage | null => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let data: any;
+  try {
+    data = JSON.parse(message);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('error', 'parseMessage', err);
+    return null;
+  }
+  return data;
 };
