@@ -4,13 +4,18 @@ import argostranslate.translate
 from argostranslate.translate import Language, Package
 from typing import List
 from pathlib import Path
+import sentencepiece as sp
 import re
 from utils.constants import UPDATE_MODELS, NUM_HYPOTHESES, logger
 
 
 class Translate:
 
-    underline = '▁'
+    sentence_sym_reg = r'[!.?]'
+
+    eol = '\n'
+
+    underline = "▁"
 
     languages: List[Language]
 
@@ -47,16 +52,16 @@ class Translate:
         package_path = self.get_package_path(
             from_code=from_code, to_code=to_code)
         if package_path is None:
-            logger.info("Package path is: %s" % (package_path))
             en_translate = self.translate(
                 text=text, from_code=from_code, to_code='en')
             return self.translate(text=en_translate, from_code='en', to_code=to_code)
         translator = ctranslate2.Translator(
             f"{package_path}/model", device="cpu")
-        paragraphs = self.tokenize(text)
+        paragraphs = text.split(self.eol)
         for paragraph in paragraphs:
+            tokenized = self.tokenize(package_path, paragraph)
             translate_result = translator.translate_batch(
-                [paragraph],
+                tokenized,
                 num_hypotheses=NUM_HYPOTHESES,
                 max_batch_size=32,
                 beam_size=4,
@@ -65,34 +70,30 @@ class Translate:
                 replace_unknowns=True,)
             _paragraph = ''
             for v in translate_result:
-                _paragraph = ''.join(v[0]['tokens']).replace(
-                    self.underline, ' ').strip()
-            result += f"{_paragraph}\n"
-        return result
+                logger.info(v)
+                _paragraph += ''.join(v[0]['tokens'])
+            result += f"{_paragraph}"
+        return result.replace(self.underline, " ")
 
-    def tokenize(self, text: str):
-        result = []
-        paragraphs = text.split('\n')
-        for paragraph in paragraphs:
-            _para = paragraph.replace(',', ' , ').replace('.', ' . ').replace(
-                '!', ' ! ').replace('?', ' ? ').replace(':', ' : ')
-            words = filter(lambda x: x != '', _para.split(' '))
-            _paragraph = []
-            for word in words:
-                underline = ''
-                _word: str | None = word
-                if re.match(r'^\w+$', word) != None:
-                    underline = self.underline
-                elif re.match(r"^\w+'\w+$", word) != None:
-                    _word = None
-                    spl_word = word.split("'")
-                    _paragraph.append(f"{self.underline}{spl_word[0]}")
-                    _paragraph.append("'")
-                    _paragraph.append(spl_word[1])
-                if _word != None:
-                    _paragraph.append(f"{underline}{_word}")
-            result.append(_paragraph)
-        return result
+    def get_sentences(self, text: str):
+        matches = re.findall(self.sentence_sym_reg, text)
+        if matches is None:
+            return [text]
+        sentences = list(
+            filter(lambda x: x != '', re.split(self.sentence_sym_reg, text)))
+        logger.info(matches)
+        for i in range(0, len(matches)):
+            sentences[i] += matches[i]
+        return sentences
+
+    def tokenize(self, package_path: Path, text: str):
+        sentences = self.get_sentences(text=text)
+        sp_model_path = str(package_path / "sentencepiece.model")
+        sp_processor = sp.SentencePieceProcessor(
+            model_file=sp_model_path)  # type: ignore
+        tokenized = [sp_processor.encode(  # type: ignore
+            sentence, out_type=str) for sentence in sentences]
+        return tokenized
 
     def get_package_path(self, from_code: str, to_code: str):
         package_path: Path | None = None

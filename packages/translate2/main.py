@@ -11,7 +11,7 @@ def parse_body():
     return body
 
 
-translate = Translate()
+translate = Translate(True)
 
 
 @route('/translate', method='POST')
