@@ -25,6 +25,7 @@ const lang: Locale = {
     tagDeleteConflict: 'A tag cannot be deleted while it is associated with a phrase',
     tagDeleted: 'Tag deleted',
     tagUpdated: 'Tag updated for all phrases',
+    serverReload: 'Server rebooting. This may take several minutes.',
   },
   app: {
     login: {

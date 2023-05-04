@@ -33,7 +33,20 @@ const locales: Record<string, Locale> = {
 };
 ```
 
-7. Add the locale value in `packages/server/orm/schema.prisma`;
+7. Add the locale in `scripts/server-reload-messages.js`
+
+```typescript
+const en = require('../packages/server/dist/locales/en/lang.js').default;
+const ru = require('../packages/server/dist/locales/ru/lang.js').default;
+const [new locale] = require('../packages/server/dist/locales/[new locale]/lang.js').default;
+const langs = {
+  en,
+  ru,
+  [new locale]
+};
+```
+
+8. Add the locale value in `packages/server/orm/schema.prisma`;
 
 ```prisma
 enum Lang {

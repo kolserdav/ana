@@ -1,4 +1,4 @@
-import { Phrase, Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import cluster, { Worker } from 'cluster';
 import { v4 } from 'uuid';
 import Service from './service';
@@ -151,6 +151,14 @@ export class ORM extends Service implements Database {
     return this.runFromWorker({
       args,
       model: 'online',
+      command: 'findMany',
+    });
+  };
+
+  public serverMessageFindMany: Database['serverMessageFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'serverMessage',
       command: 'findMany',
     });
   };

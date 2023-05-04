@@ -109,10 +109,12 @@ enum MessageType {
   error
 }
 
-model ServerMessages {
+model ServerMessage {
   id      String      @id @default(uuid())
   type    MessageType
+  lang    Lang
   text    String
+  comment String?
   created DateTime    @default(now())
 }
 

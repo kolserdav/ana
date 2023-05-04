@@ -45,7 +45,9 @@ export enum LocaleVars {
 }
 
 export type LocaleValue = 'ru' | 'en';
+export const WS_MESSAGE_COMMENT_SERVER_RELOAD = 'server_reload';
 export const WS_MESSAGE_CONN_ID = 'conn_id';
+export const WS_MESSAGE_LOCALE = 'locale';
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
 export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
 export const EMAIL_QS = 'e';
@@ -254,6 +256,7 @@ export interface Locale {
     tagDeleteConflict: string;
     tagDeleted: string;
     tagUpdated: string;
+    serverReload: string;
   };
   app: {
     login: {

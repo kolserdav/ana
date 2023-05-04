@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Prisma, User, Page, Phrase, Tag, Online } from '@prisma/client';
+import { Prisma, User, Page, Phrase, Tag, Online, ServerMessage } from '@prisma/client';
 import { Result } from './types/interfaces';
 
 abstract class Database {
@@ -7,6 +7,16 @@ abstract class Database {
     args: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>
   ): Promise<
     Prisma.CheckSelect<T, Result<User | null>, Promise<Result<Prisma.UserGetPayload<T> | null>>>
+  >;
+
+  public abstract serverMessageFindMany<T extends Prisma.ServerMessageFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.ServerMessageFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<ServerMessage>>,
+      Promise<Result<Array<Prisma.ServerMessageGetPayload<T>>>>
+    >
   >;
 
   public abstract userCreate<T extends Prisma.UserCreateArgs>(

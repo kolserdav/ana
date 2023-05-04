@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: [process.env.NEXT_PUBLIC_SERVER.replace(/^https?:\/\//, '').replace(/:\d+$/, '')],
+    domains: [process.env.NEXT_PUBLIC_SERVER?.replace(/^https?:\/\//, '').replace(/:\d+$/, '')],
     formats: ['image/avif'],
   },
   i18n: {

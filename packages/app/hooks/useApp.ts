@@ -6,10 +6,11 @@ import storeLoad from '../store/load';
 import storeScroll, { changeScroll } from '../store/scroll';
 import { log, setBodyScroll } from '../utils/lib';
 import {
+  LOCALE_DEFAULT,
   LocaleValue,
   UserCleanResult,
-  WSMessage,
   WS_MESSAGE_CONN_ID,
+  WS_MESSAGE_LOCALE,
   parseMessage,
 } from '../types/interfaces';
 import storeTouchEvent, { changeTouchEvent } from '../store/touchEvent';
@@ -35,6 +36,16 @@ export default function useApp({ user }: { user: UserCleanResult | null }) {
     if (!ws) {
       return;
     }
+
+    ws.onopen = () => {
+      ws.send(
+        JSON.stringify({
+          type: 'info',
+          message: WS_MESSAGE_LOCALE,
+          data: router.locale || LOCALE_DEFAULT,
+        })
+      );
+    };
 
     ws.onmessage = ({
       data,
