@@ -163,6 +163,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public serverMessageDeleteMany: Database['serverMessageDeleteMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'serverMessage',
+      command: 'deleteMany',
+    });
+  };
+
   public pageFindMany: Database['pageFindMany'] = async (args) => {
     return this.runFromWorker({
       args,

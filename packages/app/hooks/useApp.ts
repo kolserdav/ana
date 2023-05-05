@@ -18,6 +18,8 @@ import { CookieName, setCookie } from '../utils/cookies';
 import { WS_ADDRESS } from '../utils/constants';
 import useLoad from './useLoad';
 
+let quiet = false;
+
 export default function useApp({
   user,
   connectionReOpened,
@@ -51,7 +53,9 @@ export default function useApp({
 
     ws.onopen = () => {
       if (!loadConnect) {
-        log('info', connectionReOpened, {}, true);
+        if (!quiet) {
+          log('info', connectionReOpened, {}, true);
+        }
       }
 
       ws.send(
@@ -91,9 +95,10 @@ export default function useApp({
 
     ws.onclose = (e) => {
       if (!error) {
-        log('warn', connectionRefused, e, true, true);
+        log('warn', connectionRefused, e, true);
       }
       setLoad(true);
+      quiet = false;
       setRestart(loadConnect ? true : !restart);
     };
   }, [ws, router.locale, loadConnect, restart, setLoad, connectionReOpened, connectionRefused]);
@@ -121,6 +126,28 @@ export default function useApp({
       window.removeEventListener('scroll', scrollHandler);
     };
   }, []);
+
+  /**
+   * Listen focus
+   */
+  useEffect(() => {
+    if (!ws) {
+      return () => {
+        /** */
+      };
+    }
+    const onFocusHandler = () => {
+      if (ws.readyState !== 1) {
+        quiet = true;
+        setRestart(loadConnect ? true : !restart);
+      }
+    };
+    window.addEventListener('focus', onFocusHandler);
+
+    return () => {
+      window.removeEventListener('focus', onFocusHandler);
+    };
+  }, [loadConnect, restart, ws]);
 
   /**
    * Touch start handler

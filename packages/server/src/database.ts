@@ -19,6 +19,16 @@ abstract class Database {
     >
   >;
 
+  public abstract serverMessageDeleteMany<T extends Prisma.ServerMessageDeleteManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.ServerMessageDeleteManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<ServerMessage>>,
+      Promise<Result<Array<Prisma.ServerMessageGetPayload<any>>>>
+    >
+  >;
+
   public abstract userCreate<T extends Prisma.UserCreateArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>
   ): Promise<

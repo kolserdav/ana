@@ -27,6 +27,7 @@ switch (_arg) {
     createNotifications();
     break;
   case ARGS[1]:
+    console.log('DEPRECATED', 'Server reboot messages are cleared on server startup');
     deleteNotifications();
     break;
   default:
@@ -64,6 +65,10 @@ function createNotifications() {
   });
 }
 
+/**
+ * @deprecated
+ * Server reboot messages are cleared on server startup
+ */
 async function deleteNotifications() {
   const sm = await prisma.serverMessage.findMany({
     where: {

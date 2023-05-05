@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { log } from '../utils/lib';
 import { ORM } from './orm';
 import { CHECK_SERVER_MESSAGES_INTERVAL, WS_PORT } from '../utils/constants';
-import { WSMessage } from '../types/interfaces';
+import { WSMessage, WS_MESSAGE_COMMENT_SERVER_RELOAD } from '../types/interfaces';
 
 const server = createServer();
 const orm = new ORM();
@@ -19,6 +19,7 @@ class WS {
 
   constructor() {
     this.deleteAllOnline();
+    this.deleteServerRebootMessages();
 
     server.listen(WS_PORT, () => {
       log('info', 'WS server listen at port', WS_PORT, true);
@@ -43,6 +44,28 @@ class WS {
       locale,
       socket: ws,
     };
+  }
+
+  private async deleteServerRebootMessages() {
+    const sm = await orm.serverMessageFindMany({
+      where: {
+        comment: WS_MESSAGE_COMMENT_SERVER_RELOAD,
+      },
+    });
+
+    const res = await orm.serverMessageDeleteMany({
+      where: {
+        OR: sm.data.map((item) => ({
+          id: item.id,
+        })),
+      },
+    });
+    if (res === null) {
+      return;
+    }
+    if (res.data.length) {
+      log('info', 'Notifications to reload deleted:', res.data, true);
+    }
   }
 
   public async deleteSocket(id: string) {
