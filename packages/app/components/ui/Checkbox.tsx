@@ -9,6 +9,7 @@ function Checkbox({
   theme,
   onChange,
   cb,
+  disabled,
 }: {
   checked: boolean;
   id: string;
@@ -17,10 +18,12 @@ function Checkbox({
   onChange: React.Dispatch<React.SetStateAction<boolean>>;
   // eslint-disable-next-line no-unused-vars
   cb?: (che: boolean) => void;
+  disabled?: boolean;
 }) {
   return (
     <div className={s.wrapper}>
       <input
+        disabled={disabled}
         onChange={(e) => {
           const val = e.target.checked;
           onChange(val);
@@ -43,6 +46,7 @@ function Checkbox({
 
 Checkbox.defaultProps = {
   cb: undefined,
+  disabled: undefined,
 };
 
 export default Checkbox;

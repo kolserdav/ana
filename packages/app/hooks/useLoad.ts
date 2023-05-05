@@ -18,6 +18,21 @@ const useLoad = () => {
     storeLoad.dispatch(changeLoad({ load }));
   }, [load]);
 
+  /**
+   * Listen store load
+   */
+  useEffect(() => {
+    const cleanSubs = storeLoad.subscribe(() => {
+      const { load: _load } = storeLoad.getState();
+      if (_load !== load) {
+        setLoad(_load);
+      }
+    });
+    return () => {
+      cleanSubs();
+    };
+  }, [load]);
+
   return { load, setLoad };
 };
 

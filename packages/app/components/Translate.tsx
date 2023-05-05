@@ -213,15 +213,21 @@ function Translate({
             onInput={changeText}
             rows={rows}
             theme={theme}
+            disabled={load}
           />
           <div className={s.close_button}>
-            <IconButton onClick={cleanText} title={edit ? locale.quitEdit : locale.cleanField}>
+            <IconButton
+              onClick={cleanText}
+              title={edit ? locale.quitEdit : locale.cleanField}
+              disabled={load}
+            >
               <CloseIcon color={theme.text} />
             </IconButton>
           </div>
           {allowRecogn && (
             <div className={s.micro_button} title={locale.startRecognize}>
               <IconButton
+                disabled={load}
                 onMouseUp={onStopRecognize}
                 onMouseDown={onStartRecognize}
                 onTouchStart={onStartRecognize}
@@ -266,6 +272,7 @@ function Translate({
               <>
                 <div className={s.check_item}>
                   <Checkbox
+                    disabled={load}
                     theme={theme}
                     label={locale.addTags}
                     id="add-tags"
@@ -342,7 +349,7 @@ function Translate({
             <Button
               className={s.save_button}
               title={!user ? locale.needLogin : ''}
-              disabled={!user}
+              disabled={!user || load}
               theme={theme}
               onClick={onClickSavePhrase}
             >

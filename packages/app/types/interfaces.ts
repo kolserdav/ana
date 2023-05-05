@@ -347,6 +347,7 @@ export interface Locale {
       errorSpeechRecog: string;
       recognizeNotSupport: string;
       microNotPermitted: string;
+      serverIsNotConnected: string;
     };
     my: {
       title: string;
@@ -362,6 +363,10 @@ export interface Locale {
        */
       pagination: string;
       minimalSearchLenght: string;
+    };
+    app: {
+      connectionRefused: string;
+      connectionReOpened: string;
     };
   };
 }

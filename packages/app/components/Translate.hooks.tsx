@@ -99,6 +99,7 @@ export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] })
           });
           voices = synth.getVoices();
         }
+
         const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
         if (!_voice) {
           log('warn', locale.voiceNotFound, voices, true);

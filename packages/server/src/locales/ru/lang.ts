@@ -116,6 +116,7 @@ const lang: Locale = {
       errorSpeechRecog: 'Ошибка при распознании речи',
       recognizeNotSupport: 'Распознание речи не поддерживается',
       microNotPermitted: 'Разрешение на использование микрофона не получено',
+      serverIsNotConnected: 'Сервер недоступен или клиент не поддерживает протокол',
     },
     my: {
       title: 'Мои фразы',
@@ -127,6 +128,10 @@ const lang: Locale = {
       emptyPhrases: 'По заданному фильтру фразы не найдены',
       pagination: `Показано: ${LocaleVars.show} из ${LocaleVars.all}`,
       minimalSearchLenght: `Минимум ${SEARCH_MIN_LENGTH} символa в слове`,
+    },
+    app: {
+      connectionRefused: 'Соединение с сервером потеряно',
+      connectionReOpened: 'Соединение с сервером восстановлено',
     },
   },
 };

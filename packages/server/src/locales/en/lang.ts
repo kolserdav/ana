@@ -117,6 +117,8 @@ const lang: Locale = {
       errorSpeechRecog: 'Speech recognition error',
       recognizeNotSupport: 'Speech recognition not supported',
       microNotPermitted: 'Microphone permission not received',
+      serverIsNotConnected:
+        'The server is not available or the client does not support the protocol',
     },
     my: {
       title: 'My Phrases',
@@ -128,6 +130,10 @@ const lang: Locale = {
       emptyPhrases: 'No phrases found for the specified filter',
       pagination: `Showing: ${LocaleVars.show} of ${LocaleVars.all}`,
       minimalSearchLenght: `Minimum ${SEARCH_MIN_LENGTH} character per word`,
+    },
+    app: {
+      connectionRefused: 'Connection to server lost',
+      connectionReOpened: 'Server connection reopened',
     },
   },
 };

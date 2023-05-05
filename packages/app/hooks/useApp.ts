@@ -16,18 +16,30 @@ import {
 import storeTouchEvent, { changeTouchEvent } from '../store/touchEvent';
 import { CookieName, setCookie } from '../utils/cookies';
 import { WS_ADDRESS } from '../utils/constants';
+import useLoad from './useLoad';
 
-export default function useApp({ user }: { user: UserCleanResult | null }) {
+export default function useApp({
+  user,
+  connectionReOpened,
+  connectionRefused,
+}: {
+  user: UserCleanResult | null;
+  connectionRefused: string;
+  connectionReOpened: string;
+}) {
   const router = useRouter();
-  const [load, setLoad] = useState<boolean>(true);
+  const { load, setLoad } = useLoad();
   const [connId, setConnId] = useState<string | null>(null);
   const [touchpad, setTouchpad] = useState<boolean>(false);
-  const ws = useMemo(
-    () => (typeof WebSocket !== 'undefined' ? new WebSocket(WS_ADDRESS) : null),
-    []
-  );
+  const [restart, setRestart] = useState<boolean>();
+
+  const ws = useMemo(() => {
+    log('info', 'Creating WS connection', { restart });
+    return typeof WebSocket !== 'undefined' ? new WebSocket(WS_ADDRESS) : null;
+  }, [restart]);
 
   const { theme } = useTheme();
+  const loadConnect = typeof restart === 'undefined';
 
   /**
    * Listen server messages
@@ -38,6 +50,10 @@ export default function useApp({ user }: { user: UserCleanResult | null }) {
     }
 
     ws.onopen = () => {
+      if (!loadConnect) {
+        log('info', connectionReOpened, {}, true);
+      }
+
       ws.send(
         JSON.stringify({
           type: 'info',
@@ -59,6 +75,7 @@ export default function useApp({ user }: { user: UserCleanResult | null }) {
 
       switch (message) {
         case WS_MESSAGE_CONN_ID:
+          setLoad(false);
           setConnId(_data);
           break;
         default:
@@ -66,14 +83,20 @@ export default function useApp({ user }: { user: UserCleanResult | null }) {
       }
     };
 
+    let error = false;
     ws.onerror = (e) => {
       log('error', 'Error ws', e);
+      error = true;
     };
 
     ws.onclose = (e) => {
-      log('warn', 'Conn is closeed', e);
+      if (!error) {
+        log('warn', connectionRefused, e, true, true);
+      }
+      setLoad(true);
+      setRestart(loadConnect ? true : !restart);
     };
-  }, [ws]);
+  }, [ws, router.locale, loadConnect, restart, setLoad, connectionReOpened, connectionRefused]);
 
   /**
    * Set lang cookie

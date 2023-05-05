@@ -1,3 +1,5 @@
+$disabled-opacity: 0.5;
+
 .wrapper {
   cursor: pointer;
   position: relative;
@@ -9,6 +11,11 @@
   background-color: transparent;
 
   &:active {
-    opacity: 0.5;
+    opacity: $disabled-opacity;
+  }
+
+  &:disabled {
+    opacity: $disabled-opacity;
+    cursor: default;
   }
 }

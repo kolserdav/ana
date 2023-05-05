@@ -7,10 +7,18 @@ import useApp from '../hooks/useApp';
 import useUser from '../hooks/useUser';
 import '../styles/globals.scss';
 import { ERUDA } from '../utils/constants';
+import useLocale from '../hooks/useLocale';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { user, userLoad } = useUser();
-  const { load, theme, touchpad, connId } = useApp({ user });
+
+  const { locale } = useLocale();
+
+  const { load, theme, touchpad, connId } = useApp({
+    user,
+    connectionRefused: locale?.connectionRefused || 'Connection refused',
+    connectionReOpened: locale?.connectionReOpened || 'Connection re-established',
+  });
 
   return (
     <>
