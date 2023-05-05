@@ -84,7 +84,7 @@ export const HTML_EDITOR_HEIGHT = 300;
 export const MOBILE_WIDTH = 760;
 
 export const TRANSLATE_DELAY = 1000;
-export const TEXTAREA_ROWS = 2;
+export const TEXTAREA_ROWS = 4;
 export const ORDER_BY_DEFAULT: OrderBy = 'asc';
 export const TAKE_PHRASES_DEFAULT = 10;
 export const LEARN_LANG_DEFAULT = 'en';

@@ -42,7 +42,7 @@ const Select = forwardRef<
         style={{
           backgroundColor: active ? theme.active : theme.paper,
           color: theme.text,
-          borderColor: active ? theme.active : theme.paper,
+          borderColor: theme.active,
         }}
         className={ubuntu500.className}
         {...props}

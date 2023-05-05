@@ -105,8 +105,6 @@ function Translate({
     edit,
     restart,
     setRestart,
-
-    phraseToUpdate,
   } = useTranslate({
     nativeLang,
     learnLang,
@@ -207,7 +205,7 @@ function Translate({
         </div>
         <div className={s.textarea}>
           <Textarea
-            placeholder={locale.textareaPlaceholder}
+            placeholder={load ? locale.serverIsNotConnected : locale.textareaPlaceholder}
             value={text}
             spellCheck={false}
             onInput={changeText}
