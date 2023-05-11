@@ -39,12 +39,12 @@
     }
 
     &:focus + label {
-      top: calc(($label-shift + $label-top) * -1);
+      top: calc($label-top * -1);
       padding-top: 0;
     }
 
     &:not(:placeholder-shown) + label {
-      top: calc(($label-top + $label-shift) * -1);
+      top: calc($label-top * -1);
       padding-top: 0;
     }
 
