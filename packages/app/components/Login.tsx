@@ -241,9 +241,8 @@ function Login({
               label={
                 <div className={s.accept}>
                   <Typography theme={theme} variant="span">
-                    {locale.acceptPolicyAndRules}
+                    {`${locale.acceptPolicyAndRules}:`}
                   </Typography>
-                  :
                   <Link theme={theme} href={Pages.policy}>
                     {policyTitle}
                   </Link>
