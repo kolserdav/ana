@@ -16,6 +16,8 @@ export enum LocalStorageName {
   LEARN_LANG = 'LEARN_LANG',
   // eslint-disable-next-line no-unused-vars
   NATIVE_LANG = 'NATIVE_LANG',
+  // eslint-disable-next-line no-unused-vars
+  ACCEPT_POLICY = 'ACCEPT_POLICY',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
@@ -30,6 +32,8 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   ? string
   : T extends LocalStorageName.NATIVE_LANG
   ? string
+  : T extends LocalStorageName.ACCEPT_POLICY
+  ? boolean
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(

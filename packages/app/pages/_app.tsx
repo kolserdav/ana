@@ -8,17 +8,19 @@ import useUser from '../hooks/useUser';
 import '../styles/globals.scss';
 import { ERUDA } from '../utils/constants';
 import useLocale from '../hooks/useLocale';
+import AcceptCookies from '../components/AcceptCookies';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { user, userLoad } = useUser();
 
   const { locale } = useLocale();
 
-  const { load, theme, touchpad, connId } = useApp({
-    user,
-    connectionRefused: locale?.connectionRefused || 'Connection refused',
-    connectionReOpened: locale?.connectionReOpened || 'Connection re-established',
-  });
+  const { load, theme, touchpad, connId, acceptCookies, onClickAcceptCookies, showAcceptCookies } =
+    useApp({
+      user,
+      connectionRefused: locale?.connectionRefused || 'Connection refused',
+      connectionReOpened: locale?.connectionReOpened || 'Connection re-established',
+    });
 
   return (
     <>
@@ -42,6 +44,16 @@ export default function App({ Component, pageProps }: AppProps) {
       <LoaderLine open={load} />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Component {...pageProps} app={{ theme, user, userLoad, touchpad, connId }} />
+      {showAcceptCookies && (
+        <AcceptCookies
+          open={!acceptCookies}
+          theme={theme}
+          policyTitle={locale?.withPolicy || ''}
+          text={locale?.acceptCookies || ''}
+          button={locale?.ok || ''}
+          onClick={onClickAcceptCookies}
+        />
+      )}
       <Alert theme={theme} />
     </>
   );

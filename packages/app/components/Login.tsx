@@ -12,10 +12,12 @@ import {
   useClean,
   useErrorDialog,
   useRedirect,
+  useAcceptRules,
 } from './Login.hooks';
 import s from './Login.module.scss';
 import Button from './ui/Button';
 import Card from './ui/Card';
+import Checkbox from './ui/Checkbox';
 import Dialog from './ui/Dialog';
 import Input from './ui/Input';
 import Link from './ui/Link';
@@ -28,6 +30,9 @@ function Login({
   user,
   fieldMustBeNotEmpty,
   eliminateRemarks,
+  policyTitle,
+  rulesTitle,
+  and,
 }: {
   theme: Theme;
   locale: Locale['app']['login'];
@@ -35,6 +40,9 @@ function Login({
   user: UserCleanResult;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
+  policyTitle: string;
+  rulesTitle: string;
+  and: string;
 }) {
   const { load, setLoad } = useLoad();
 
@@ -131,6 +139,8 @@ function Login({
 
   useRedirect({ user });
 
+  const { acceptRules, setAcceptRules } = useAcceptRules();
+
   return (
     <div className={s.wrapper}>
       <Typography align="center" theme={theme} variant="h1">
@@ -222,10 +232,33 @@ function Login({
               fullWidth
             />
           )}
+          {isSignUp && (
+            <Checkbox
+              checked={acceptRules}
+              onChange={setAcceptRules}
+              theme={theme}
+              id="accept-rules"
+              label={
+                <div className={s.accept}>
+                  <Typography theme={theme} variant="span">
+                    {locale.acceptPolicyAndRules}
+                  </Typography>
+                  :
+                  <Link theme={theme} href={Pages.policy}>
+                    {policyTitle}
+                  </Link>
+                  {and}
+                  <Link theme={theme} href={Pages.rules}>
+                    {rulesTitle}
+                  </Link>
+                </div>
+              }
+            />
+          )}
           <div className={s.actives}>
             <Button
               error={buttonError}
-              disabled={load}
+              disabled={load || (isSignUp && !acceptRules)}
               theme={theme}
               onClick={
                 isSignUp

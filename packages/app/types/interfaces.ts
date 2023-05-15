@@ -289,6 +289,7 @@ export interface Locale {
       save: string;
       wrongParameters: string;
       sendNewLetter: string;
+      acceptPolicyAndRules: string;
     };
     appBar: {
       darkTheme: string;
@@ -300,6 +301,7 @@ export interface Locale {
       openMenu: string;
       closeMenu: string;
       changeInterfaceLang: string;
+      about: string;
     };
     confirmEmail: {
       title: string;
@@ -316,6 +318,9 @@ export interface Locale {
       delete: string;
       cancel: string;
       missingCSRF: string;
+      policyTitle: string;
+      rulesTitle: string;
+      and: string;
     };
     translate: {
       title: string;
@@ -367,6 +372,16 @@ export interface Locale {
     app: {
       connectionRefused: string;
       connectionReOpened: string;
+      acceptCookies: string;
+      ok: string;
+      withPolicy: string;
+    };
+    about: {
+      aboutProgram: string;
+      licenseTitle: string;
+      repoTitle: string;
+      aboutSite: string;
+      contactsTitle: string;
     };
   };
 }

@@ -8,6 +8,7 @@ export const LOCALE_NAMES: Record<LocaleValue, string> = {
 };
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
 export const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN as string;
+export const REPOSITORY_LINK = process.env.NEXT_PUBLIC_REPOSITORY_LINK as string;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const LOG_LEVEL = parseInt(process.env.NEXT_PUBLIC_LOG_LEVEL as string, 10);
 export const ERUDA = (process.env.NEXT_PUBLIC_ERUDA as string) === 'true';
@@ -27,6 +28,14 @@ export enum Pages {
   translate = '/',
   // eslint-disable-next-line no-unused-vars
   myDictionary = '/my',
+  // eslint-disable-next-line no-unused-vars
+  about = '/about',
+  // eslint-disable-next-line no-unused-vars
+  policy = '/policy',
+  // eslint-disable-next-line no-unused-vars
+  rules = '/rules',
+  // eslint-disable-next-line no-unused-vars
+  contacts = '/contacts',
 }
 
 const now = new Date();
@@ -89,3 +98,7 @@ export const ORDER_BY_DEFAULT: OrderBy = 'asc';
 export const TAKE_PHRASES_DEFAULT = 10;
 export const LEARN_LANG_DEFAULT = 'en';
 export const NATIVE_LANG_DEFAULT = 'ru';
+export const LICENSE = {
+  title: 'AGPL-3.0 license ',
+  link: 'https://www.gnu.org/licenses/agpl-3.0.html',
+};

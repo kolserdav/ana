@@ -12,12 +12,14 @@ function Button({
   children,
   title,
   className,
+  colorReverse,
 }: {
   children: React.ReactNode | string;
   theme: Theme;
   title?: string;
   disabled?: boolean;
   error?: string;
+  colorReverse?: boolean;
   // eslint-disable-next-line no-unused-vars
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   className?: string;
@@ -43,8 +45,8 @@ function Button({
           isHover
             ? { borderColor: theme.active }
             : {
-                background: theme.text,
-                color: theme.paper,
+                background: colorReverse ? theme.paper : theme.text,
+                color: colorReverse ? theme.text : theme.paper,
               }
         }
         onMouseEnter={handleMouseEnter}
@@ -64,6 +66,7 @@ Button.defaultProps = {
   disabled: false,
   error: '',
   title: '',
+  colorReverse: false,
 };
 
 export default Button;

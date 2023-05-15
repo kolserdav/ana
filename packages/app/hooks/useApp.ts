@@ -17,6 +17,7 @@ import storeTouchEvent, { changeTouchEvent } from '../store/touchEvent';
 import { CookieName, setCookie } from '../utils/cookies';
 import { WS_ADDRESS } from '../utils/constants';
 import useLoad from './useLoad';
+import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 let quiet = false;
 
@@ -34,6 +35,25 @@ export default function useApp({
   const [connId, setConnId] = useState<string | null>(null);
   const [touchpad, setTouchpad] = useState<boolean>(false);
   const [restart, setRestart] = useState<boolean>();
+  const [acceptCookies, setAcceptCookies] = useState<boolean>(
+    getLocalStorage(LocalStorageName.ACCEPT_POLICY) || false
+  );
+  const [showAcceptCookies, setShowAcceptCookeis] = useState<boolean>(false);
+
+  const onClickAcceptCookies = () => {
+    setAcceptCookies(true);
+    setLocalStorage(LocalStorageName.ACCEPT_POLICY, true);
+  };
+
+  /**
+   * Set show accept cookeis
+   */
+  useEffect(() => {
+    const isApp = typeof window !== 'undefined';
+    if (isApp) {
+      setShowAcceptCookeis(true);
+    }
+  }, []);
 
   const ws = useMemo(() => {
     log('info', 'Creating WS connection', { restart });
@@ -219,5 +239,14 @@ export default function useApp({
     };
   }, []);
 
-  return { load, setLoad, theme, touchpad, connId };
+  return {
+    load,
+    setLoad,
+    theme,
+    touchpad,
+    connId,
+    acceptCookies,
+    onClickAcceptCookies,
+    showAcceptCookies,
+  };
 }

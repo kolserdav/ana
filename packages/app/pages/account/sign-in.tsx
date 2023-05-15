@@ -30,6 +30,9 @@ export default function HomePage({
           theme={theme}
           locale={localeLogin}
           user={user}
+          policyTitle={localeCommon.policyTitle}
+          rulesTitle={localeCommon.rulesTitle}
+          and={localeCommon.and}
         />
       </main>
       <LoaderFull open={!userLoad} noOpacity />

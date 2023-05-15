@@ -1,0 +1,44 @@
+@import '../styles/constants';
+
+.wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+  animation: 0.3s ease-in start;
+
+  .container {
+    position: relative;
+    width: 100%;
+    max-width: $translate-container-max;
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+    }
+  }
+
+  @keyframes start {
+    0% {
+      bottom: -100px;
+    }
+
+    100% {
+      bottom: 0
+    }
+  }
+
+  &.hide {
+    display: none;
+  }
+
+}
+

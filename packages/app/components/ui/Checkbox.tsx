@@ -13,7 +13,7 @@ function Checkbox({
 }: {
   checked: boolean;
   id: string;
-  label: string;
+  label: string | React.ReactNode;
   theme: Theme;
   onChange: React.Dispatch<React.SetStateAction<boolean>>;
   // eslint-disable-next-line no-unused-vars
@@ -32,14 +32,18 @@ function Checkbox({
           }
         }}
         id={id}
-        aria-label={label}
+        aria-label={typeof label === 'string' ? label : undefined}
         type="checkbox"
         checked={checked}
         style={{ accentColor: theme.blue }}
       />
-      <Typography variant="label" theme={theme} small>
-        {label}
-      </Typography>
+      {typeof label === 'string' ? (
+        <Typography variant="label" theme={theme} small>
+          {label}
+        </Typography>
+      ) : (
+        label
+      )}
     </div>
   );
 }

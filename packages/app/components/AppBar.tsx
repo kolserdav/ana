@@ -140,7 +140,7 @@ function AppBar({
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
           </div>
-          {isMobile && (
+          {(isMobile || !full) && (
             <div className={s.menu__item}>
               <TranslateIcon color={theme.text} />
               <Select ref={localeRef} onChange={onChangeLang} active theme={theme} value={language}>
@@ -156,6 +156,13 @@ function AppBar({
             <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.login}</div>
+              </div>
+            </Link>
+          )}
+          {!checkRouterPath(router.asPath, [Pages.about]) && (
+            <Link withoutHover fullWidth theme={theme} href={Pages.about}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.about}</div>
               </div>
             </Link>
           )}

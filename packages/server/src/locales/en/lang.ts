@@ -59,17 +59,19 @@ const lang: Locale = {
       save: 'Save',
       wrongParameters: 'Invalid page parameters',
       sendNewLetter: 'Request new password reset email',
+      acceptPolicyAndRules: 'I have read and accept before continuing',
     },
     appBar: {
       darkTheme: 'Dark Theme',
       homePage: 'Home',
-      login: 'Login',
-      logout: 'Logout',
+      login: 'Sign in',
+      logout: 'Sign out',
       translate: 'Translate',
       myDictionary: 'My phrases',
       openMenu: 'Open menu',
       closeMenu: 'Close Menu',
       changeInterfaceLang: 'Change the interface language',
+      about: 'About us',
     },
     confirmEmail: {
       title: 'Mail Confirmation',
@@ -86,6 +88,9 @@ const lang: Locale = {
       delete: 'delete',
       cancel: 'Cancel',
       missingCSRF: 'CSRF Token is missing',
+      policyTitle: 'Privacy Policy',
+      rulesTitle: 'Service Rules',
+      and: 'and',
     },
     translate: {
       title: 'Sentence Translation',
@@ -134,6 +139,17 @@ const lang: Locale = {
     app: {
       connectionRefused: 'Connection to server lost',
       connectionReOpened: 'Server connection reopened',
+      acceptCookies:
+        'We use cookies by continuing to use the application you acknowledge that you have read and accept our',
+      ok: 'Okay',
+      withPolicy: 'Privacy Policy',
+    },
+    about: {
+      aboutProgram: 'About the program',
+      licenseTitle: 'Distributed under license',
+      repoTitle: 'Source code',
+      aboutSite: 'About this application',
+      contactsTitle: 'Contacts',
     },
   },
 };

@@ -596,3 +596,9 @@ export const useRedirect = ({ user }: { user: UserCleanResult }) => {
     }
   }, [user, router, r]);
 };
+
+export const useAcceptRules = () => {
+  const [acceptRules, setAcceptRules] = useState<boolean>(false);
+
+  return { acceptRules, setAcceptRules };
+};

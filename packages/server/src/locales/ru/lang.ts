@@ -58,17 +58,19 @@ const lang: Locale = {
       save: 'Сохранить',
       wrongParameters: 'Неверные параметры страницы',
       sendNewLetter: 'Запросить новое письмо для восстановления пароля',
+      acceptPolicyAndRules: 'Перед тем как продолжить я ознакомился и принимаю',
     },
     appBar: {
       darkTheme: 'Темная тема',
       homePage: 'Главная',
       login: 'Вход',
-      logout: 'Выход',
+      logout: 'Выход из аккаунта',
       translate: 'Перевод',
       myDictionary: 'Мои фразы',
       openMenu: 'Открыть меню',
       closeMenu: 'Закрыть меню',
       changeInterfaceLang: 'Сменить язык интерфейса',
+      about: 'О нас',
     },
     confirmEmail: {
       title: 'Подтверждение почты',
@@ -85,6 +87,9 @@ const lang: Locale = {
       delete: 'Удалить',
       cancel: 'Отмена',
       missingCSRF: 'Токен безопасности не найден',
+      policyTitle: 'Политика конфиденциальности',
+      rulesTitle: 'Правила сервиса',
+      and: 'и',
     },
     translate: {
       title: 'Перевод предложений',
@@ -132,6 +137,17 @@ const lang: Locale = {
     app: {
       connectionRefused: 'Соединение с сервером потеряно',
       connectionReOpened: 'Соединение с сервером восстановлено',
+      acceptCookies:
+        'Мы используем файлы куки продолжая использовать приложение вы подтверждаете что ознакомились и принимаете нашу',
+      ok: 'Ладно',
+      withPolicy: 'Политику конфиденциальности',
+    },
+    about: {
+      aboutProgram: 'О программе',
+      licenseTitle: 'Распостраняется по лицензии',
+      repoTitle: 'Исходный код',
+      aboutSite: 'Об этом приложении',
+      contactsTitle: 'Контакты',
     },
   },
 };
