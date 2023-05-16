@@ -39,9 +39,11 @@ function DocumentPage({
       </HeadNext>
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <div className={s.container}>
-        <Typography theme={theme} variant="h1" className={s.title}>
-          {title}
-        </Typography>
+        <div className={s.title}>
+          <Typography theme={theme} variant="h1" align="center">
+            {title}
+          </Typography>
+        </div>
         <div className={s.page__text} dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     </div>

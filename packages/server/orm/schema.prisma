@@ -39,7 +39,7 @@ model Page {
   id    Int       @id @default(autoincrement())
   name  PageName
   field PageField
-  value String    @db.VarChar(1000)
+  value String    @db.Text
   lang  Lang
 }
 

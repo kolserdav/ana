@@ -19,11 +19,14 @@
   min-height: 90vh;
   max-width: $translate-container-max;
   padding: 1rem;
+
+  .title {
+    position: relative;
+    width: 100%;
+    text-align: center;
+  }
 }
 
-.title {
-  text-align: center;
-}
 
 .page__text {
   b {
