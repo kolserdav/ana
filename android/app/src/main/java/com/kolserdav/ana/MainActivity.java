@@ -1,7 +1,9 @@
 
-package com.example.ana;
+package com.kolserdav.ana;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,6 +16,10 @@ import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import org.json.JSONObject;
 
 import java.util.Locale;
@@ -59,6 +65,14 @@ public class MainActivity extends Activity {
         mWebView.loadUrl("https://uyem.ru/");
 
         this.setContentView(mWebView);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            // Permission has not been granted, request permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+        } else {
+            // Permission has already been granted
+            // Setup audio recording
+        }
     }
 
     @Override

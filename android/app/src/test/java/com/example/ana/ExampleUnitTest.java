@@ -1,4 +1,4 @@
-package com.example.ana;
+package com.kolserdav.ana;
 
 import org.junit.Test;
 

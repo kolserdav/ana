@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.ana'
+    namespace 'com.kolserdav.ana'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.ana"
+        applicationId "com.kolserdav.ana"
         minSdk 21
         targetSdk 33
         versionCode 1
