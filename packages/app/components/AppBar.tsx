@@ -16,6 +16,7 @@ import Switch from './ui/Switch';
 import l from './ui/Link.module.scss';
 import TranslateIcon from './icons/Translate';
 import Select from './ui/Select';
+import Hr from './ui/Hr';
 
 function AppBar({
   theme,
@@ -152,17 +153,18 @@ function AppBar({
               </Select>
             </div>
           )}
-          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
-            <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
-              <div className={clsx(s.menu__item, s.active)}>
-                <div style={{ color: theme.text }}>{locale.login}</div>
-              </div>
-            </Link>
-          )}
           {!checkRouterPath(router.asPath, [Pages.about]) && (
             <Link withoutHover fullWidth theme={theme} href={Pages.about}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.about}</div>
+              </div>
+            </Link>
+          )}
+          <Hr theme={theme} />
+          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
+            <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.login}</div>
               </div>
             </Link>
           )}

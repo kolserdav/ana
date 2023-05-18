@@ -3,11 +3,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
-import { cleanPath, log } from '../utils/lib';
+import { cleanPath, log, shortenString } from '../utils/lib';
 import {
   FOCUS_TEXTAREA_TIMEOUT,
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
+  PHRASE_MAX_LENGTH,
   TEXTAREA_ROWS,
   TRANSLATE_DELAY,
 } from '../utils/constants';
@@ -311,7 +312,11 @@ export const useTranslate = ({
     if (undo) {
       setUndo(false);
     }
-    setText(value);
+    let _value = value;
+    if (value.length > PHRASE_MAX_LENGTH) {
+      _value = shortenString(value, PHRASE_MAX_LENGTH);
+    }
+    setText(_value);
   };
 
   const cleanText = () => {

@@ -103,3 +103,5 @@ export const LICENSE = {
   link: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };
 export const FOCUS_TEXTAREA_TIMEOUT = 500;
+// deps packages/server/orm/schema.prisma.Phrase.text
+export const PHRASE_MAX_LENGTH = 1000;

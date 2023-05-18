@@ -152,3 +152,11 @@ export async function copyToClipboard(textToCopy: string, message: string) {
 }
 
 export const getDocLocale = (locale: string | undefined) => (locale === 'ru' ? locale : 'en');
+
+export const shortenString = (str: string, len: number) => {
+  let res = '';
+  for (let i = 0; str[i] && i <= len - 1; i++) {
+    res += str[i];
+  }
+  return res;
+};

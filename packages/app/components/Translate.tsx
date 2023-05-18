@@ -31,6 +31,7 @@ import DeleteIcon from './icons/Delete';
 import SwapHorizontalIcon from './icons/SwapHorisontal';
 import MicrophoneIcon from './icons/Microphone';
 import UndoIcon from './icons/Undo';
+import { PHRASE_MAX_LENGTH } from '../utils/constants';
 
 function Translate({
   theme,
@@ -221,6 +222,7 @@ function Translate({
             rows={rows}
             theme={theme}
             disabled={load}
+            maxLength={PHRASE_MAX_LENGTH}
           />
           <div className={s.close_button}>
             <IconButton

@@ -74,6 +74,7 @@ model ConfirmLink {
 
 model Phrase {
   id         String      @id @default(uuid())
+  // deps package/app/utils/constants.PHRASE_MAX_LENGTH
   text       String      @db.VarChar(1000)
   translate  String?     @db.VarChar(1500)
   userId     String
