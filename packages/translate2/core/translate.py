@@ -73,7 +73,7 @@ class Translate:
                 logger.info(v)
                 _paragraph += ''.join(v[0]['tokens'])
             result += f"{_paragraph}"
-        return result.replace(self.underline, " ")
+        return result.replace(self.underline, " ").strip()
 
     def get_sentences(self, text: str):
         matches = re.findall(self.sentence_sym_reg, text)

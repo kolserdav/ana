@@ -17,7 +17,15 @@ import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/loc
 
 const request = new Request();
 
-export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] }) => {
+export const useLanguages = ({
+  locale,
+  undo,
+  setUndo,
+}: {
+  locale: Locale['app']['translate'];
+  setUndo: React.Dispatch<React.SetStateAction<boolean>>;
+  undo: boolean;
+}) => {
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
   const [nativeLang, setNativeLang] = useState<string>();
@@ -54,6 +62,9 @@ export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] })
           break;
         default:
       }
+      if (undo) {
+        setUndo(false);
+      }
       setChangeLang(true);
     };
 
@@ -73,6 +84,9 @@ export const useLanguages = ({ locale }: { locale: Locale['app']['translate'] })
     setNativeLang(learnLang);
     setLearnLang(nativeLang);
     setText(translate);
+    if (undo) {
+      setUndo(false);
+    }
   };
 
   /**
@@ -149,6 +163,8 @@ let timeout = setTimeout(() => {
   /**/
 }, 0);
 
+let oldText = '';
+
 export const useTranslate = ({
   learnLang,
   nativeLang,
@@ -164,13 +180,17 @@ export const useTranslate = ({
   setTranslate,
   connId,
   missingCSRF,
+  setUndo,
+  undo,
 }: {
   learnLang: string | undefined;
   nativeLang: string | undefined;
   changeLang: boolean;
   translate: string;
   setTranslate: React.Dispatch<React.SetStateAction<string>>;
+  setUndo: React.Dispatch<React.SetStateAction<boolean>>;
   text: string;
+  undo: boolean;
   setText: React.Dispatch<React.SetStateAction<string>>;
   setChangeLang: React.Dispatch<React.SetStateAction<boolean>>;
   setNativeLang: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -264,7 +284,7 @@ export const useTranslate = ({
       },
       changeLang ? 0 : TRANSLATE_DELAY
     );
-  }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate, connId]);
+  }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate, connId, missingCSRF]);
 
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const {
@@ -274,21 +294,30 @@ export const useTranslate = ({
     if (scrollHeight > clientHeight) {
       setRows(rows + 1);
     }
-
+    if (undo) {
+      setUndo(false);
+    }
     setText(value);
   };
 
   const cleanText = () => {
+    oldText = text;
     setText('');
     setRows(TEXTAREA_ROWS);
     setTranslate('');
     setRetranslate('');
     setAddTags(false);
     setTags([]);
+    setUndo(true);
     if (edit) {
       setEdit(null);
       router.push(cleanPath(router.asPath));
     }
+  };
+
+  const revertText = () => {
+    setText(oldText);
+    setUndo(false);
   };
 
   /**
@@ -325,9 +354,11 @@ export const useTranslate = ({
       setRetranslate(data.translatedText);
     };
     runRetranslate(translate);
-  }, [translate, learnLang, nativeLang, connId]);
+  }, [translate, learnLang, nativeLang, connId, missingCSRF]);
 
   const setRightText = () => {
+    oldText = text;
+    setUndo(true);
     setText(reTranslate);
   };
 
@@ -353,6 +384,7 @@ export const useTranslate = ({
     restart,
     setRestart,
     phraseToUpdate,
+    revertText,
   };
 };
 
@@ -742,4 +774,10 @@ export const useSpeechRecognize = ({
   };
 
   return { onStartRecognize, onStopRecognize, allowRecogn };
+};
+
+export const useUndo = () => {
+  const [undo, setUndo] = useState<boolean>(false);
+
+  return { undo, setUndo };
 };

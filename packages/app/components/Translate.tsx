@@ -10,6 +10,7 @@ import {
   useSpeechSynth,
   useTags,
   useTranslate,
+  useUndo,
 } from './Translate.hooks';
 import s from './Translate.module.scss';
 import CloseIcon from './icons/Close';
@@ -29,6 +30,7 @@ import EditIcon from './icons/Edit';
 import DeleteIcon from './icons/Delete';
 import SwapHorizontalIcon from './icons/SwapHorisontal';
 import MicrophoneIcon from './icons/Microphone';
+import UndoIcon from './icons/Undo';
 
 function Translate({
   theme,
@@ -77,6 +79,8 @@ function Translate({
     setTagRestart,
   } = useTags({ setLoad });
 
+  const { undo, setUndo } = useUndo();
+
   const {
     langs,
     nativeLang,
@@ -93,19 +97,21 @@ function Translate({
     setTranslate,
     synthAllow,
     voice,
-  } = useLanguages({ locale });
+  } = useLanguages({ locale, undo, setUndo });
 
   const {
     reTranslate,
     changeText,
     rows,
     cleanText,
+    revertText,
     onKeyDownReTranslate,
     onClickRetranslate,
     edit,
     restart,
     setRestart,
   } = useTranslate({
+    undo,
     nativeLang,
     learnLang,
     changeLang,
@@ -120,6 +126,7 @@ function Translate({
     setTranslate,
     connId,
     missingCSRF,
+    setUndo,
   });
 
   const { speechRetranslate } = useSpeechSynth({
@@ -215,11 +222,11 @@ function Translate({
           />
           <div className={s.close_button}>
             <IconButton
-              onClick={cleanText}
+              onClick={undo ? revertText : cleanText}
               title={edit ? locale.quitEdit : locale.cleanField}
               disabled={load}
             >
-              <CloseIcon color={theme.text} />
+              {undo ? <UndoIcon color={theme.text} /> : <CloseIcon color={theme.text} />}
             </IconButton>
           </div>
           {allowRecogn && (
