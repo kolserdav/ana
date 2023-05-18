@@ -140,7 +140,7 @@ export const useAndroid = () => {
    * Set android
    */
   useEffect(() => {
-    if (typeof androidTextToSpeech === 'undefined') {
+    if (typeof androidTextToSpeech !== 'undefined') {
       setAndroid(true);
     }
   }, []);
