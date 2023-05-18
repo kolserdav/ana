@@ -8,7 +8,7 @@ import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
 import { Pages, PAGE_LOGIN_IN_MENU, MENU_TRANSITION, LOCALE_NAMES } from '../utils/constants';
 import { checkRouterPath, scrollToTop } from '../utils/lib';
 import ChevronUpIcon from './icons/ChevronUp';
-import { useAppBar, useChangeTheme, useLogout } from './AppBar.hooks';
+import { useAndroid, useAppBar, useChangeTheme, useLogout } from './AppBar.hooks';
 import s from './AppBar.module.scss';
 import Link from './ui/Link';
 import Menu from './ui/Menu';
@@ -68,6 +68,8 @@ function AppBar({
       router.push(router.asPath, router.asPath, { locale: language });
     }
   }, [router, lang, language]);
+
+  const { android } = useAndroid();
 
   return (
     <header>
@@ -165,6 +167,13 @@ function AppBar({
             <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.login}</div>
+              </div>
+            </Link>
+          )}
+          {android && (
+            <Link withoutHover fullWidth theme={theme} href={Pages.about}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>close app</div>
               </div>
             </Link>
           )}

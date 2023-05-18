@@ -132,3 +132,18 @@ export const useLogout = () => {
 
   return { onClickLogout, onKeyDownLogout };
 };
+
+export const useAndroid = () => {
+  const [android, setAndroid] = useState<boolean>(false);
+
+  /**
+   * Set android
+   */
+  useEffect(() => {
+    if (typeof androidTextToSpeech === 'undefined') {
+      setAndroid(true);
+    }
+  }, []);
+
+  return { android };
+};
