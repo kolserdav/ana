@@ -102,3 +102,4 @@ export const LICENSE = {
   title: 'AGPL-3.0 license ',
   link: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };
+export const FOCUS_TEXTAREA_TIMEOUT = 500;

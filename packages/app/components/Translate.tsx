@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { createRef } from 'react';
+import { createRef, useRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
@@ -56,6 +56,7 @@ function Translate({
   missingCSRF: string;
 }) {
   const helpTagRef = createRef<HTMLButtonElement>();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { load, setLoad } = useLoad();
 
   const {
@@ -97,7 +98,7 @@ function Translate({
     setTranslate,
     synthAllow,
     voice,
-  } = useLanguages({ locale, undo, setUndo });
+  } = useLanguages({ locale, undo, setUndo, textareaRef });
 
   const {
     reTranslate,
@@ -212,6 +213,7 @@ function Translate({
         </div>
         <div className={s.textarea}>
           <Textarea
+            ref={textareaRef}
             placeholder={load ? locale.serverIsNotConnected : locale.textareaPlaceholder}
             value={text}
             spellCheck={false}

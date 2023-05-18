@@ -5,6 +5,7 @@ import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { cleanPath, log } from '../utils/lib';
 import {
+  FOCUS_TEXTAREA_TIMEOUT,
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
   TEXTAREA_ROWS,
@@ -21,10 +22,12 @@ export const useLanguages = ({
   locale,
   undo,
   setUndo,
+  textareaRef,
 }: {
   locale: Locale['app']['translate'];
   setUndo: React.Dispatch<React.SetStateAction<boolean>>;
   undo: boolean;
+  textareaRef: React.RefObject<HTMLTextAreaElement>;
 }) => {
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
@@ -80,6 +83,16 @@ export const useLanguages = ({
     })();
   }, []);
 
+  const focusTextArea = () => {
+    const { current } = textareaRef;
+    if (!current) {
+      return;
+    }
+    setTimeout(() => {
+      current.focus();
+    }, FOCUS_TEXTAREA_TIMEOUT);
+  };
+
   const onClickChangeLangs = () => {
     setNativeLang(learnLang);
     setLearnLang(nativeLang);
@@ -87,6 +100,7 @@ export const useLanguages = ({
     if (undo) {
       setUndo(false);
     }
+    focusTextArea();
   };
 
   /**
