@@ -9,13 +9,19 @@ import {
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
   PHRASE_MAX_LENGTH,
+  Pages,
   TEXTAREA_ROWS,
   TRANSLATE_DELAY,
 } from '../utils/constants';
 import { Locale, PhraseUpdateResult, TagFindManyResult } from '../types/interfaces';
 import useTagsGlobal from '../hooks/useTags';
 import { RECOGNITION_LANGS } from './Translate.lib';
-import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
+import {
+  LocalStorageName,
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+} from '../utils/localStorage';
 
 const request = new Request();
 
@@ -38,6 +44,17 @@ export const useLanguages = ({
   const [changeLang, setChangeLang] = useState<boolean>(false);
   const [synthAllow, setSynthAllow] = useState<boolean>(false);
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
+
+  /**
+   * Set saved text
+   */
+  useEffect(() => {
+    const _text = getLocalStorage(LocalStorageName.TEXT);
+    if (!_text) {
+      return;
+    }
+    setText(_text);
+  }, []);
 
   /**
    * Set default langs
@@ -316,6 +333,7 @@ export const useTranslate = ({
     if (value.length > PHRASE_MAX_LENGTH) {
       _value = shortenString(value, PHRASE_MAX_LENGTH);
     }
+    setLocalStorage(LocalStorageName.TEXT, _value);
     setText(_value);
   };
 
@@ -328,6 +346,7 @@ export const useTranslate = ({
     setAddTags(false);
     setTags([]);
     setUndo(true);
+    removeLocalStorage(LocalStorageName.TEXT);
     if (edit) {
       setEdit(null);
       router.push(cleanPath(router.asPath));
@@ -799,4 +818,14 @@ export const useUndo = () => {
   const [undo, setUndo] = useState<boolean>(false);
 
   return { undo, setUndo };
+};
+
+export const useRedirect = () => {
+  const router = useRouter();
+
+  const loginRedirect = () => {
+    router.push(`${Pages.signIn}?r=${router.asPath}`);
+  };
+
+  return { loginRedirect };
 };

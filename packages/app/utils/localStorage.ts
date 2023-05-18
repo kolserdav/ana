@@ -18,6 +18,8 @@ export enum LocalStorageName {
   NATIVE_LANG = 'NATIVE_LANG',
   // eslint-disable-next-line no-unused-vars
   ACCEPT_POLICY = 'ACCEPT_POLICY',
+  // eslint-disable-next-line no-unused-vars
+  TEXT = 'TEXT',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
@@ -31,6 +33,8 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   : T extends LocalStorageName.LEARN_LANG
   ? string
   : T extends LocalStorageName.NATIVE_LANG
+  ? string
+  : T extends LocalStorageName.TEXT
   ? string
   : T extends LocalStorageName.ACCEPT_POLICY
   ? boolean
@@ -63,4 +67,8 @@ export function setLocalStorage<T extends keyof typeof LocalStorageName>(
     return;
   }
   localStorage.setItem(name, JSON.stringify(value));
+}
+
+export function removeLocalStorage(name: LocalStorageName) {
+  localStorage.removeItem(name);
 }

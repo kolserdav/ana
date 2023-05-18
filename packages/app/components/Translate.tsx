@@ -5,6 +5,7 @@ import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
 import {
   useLanguages,
+  useRedirect,
   useSavePhrase,
   useSpeechRecognize,
   useSpeechSynth,
@@ -168,6 +169,8 @@ function Translate({
     learnLang,
   });
 
+  const { loginRedirect } = useRedirect();
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
@@ -233,7 +236,7 @@ function Translate({
               {undo ? <UndoIcon color={theme.text} /> : <CloseIcon color={theme.text} />}
             </IconButton>
           </div>
-          {allowRecogn && (
+          {!allowRecogn && (
             <div className={s.micro_button} title={locale.startRecognize}>
               <IconButton
                 disabled={load}
@@ -358,9 +361,9 @@ function Translate({
             <Button
               className={s.save_button}
               title={!user ? locale.needLogin : ''}
-              disabled={!user || load}
+              disabled={load}
               theme={theme}
-              onClick={onClickSavePhrase}
+              onClick={user ? onClickSavePhrase : loginRedirect}
             >
               {edit ? locale.savePhrase : locale.createPhrase}
             </Button>

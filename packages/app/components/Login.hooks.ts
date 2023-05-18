@@ -15,6 +15,7 @@ import { CookieName, setCookie } from '../utils/cookies';
 import { checkRouterPath, log } from '../utils/lib';
 import { checkName, checkPasswordError } from './Login.lib';
 import Request from '../utils/request';
+import { QueryString } from '../types';
 
 const request = new Request();
 
@@ -581,7 +582,7 @@ export const useErrorDialog = () => {
 
 export const useRedirect = ({ user }: { user: UserCleanResult }) => {
   const router = useRouter();
-  const { r } = useQueryString<{ r?: string }>();
+  const { r } = useQueryString<QueryString>();
 
   /**
    * Check is logged

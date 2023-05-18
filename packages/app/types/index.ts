@@ -23,6 +23,13 @@ export interface AlertProps {
   infinity: boolean;
 }
 
+export interface QueryString {
+  /**
+   * Redirect
+   */
+  r?: string;
+}
+
 export interface AppProps {
   app: {
     theme: Theme;
