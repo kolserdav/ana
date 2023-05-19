@@ -1,5 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { Prisma, User, Page, Phrase, Tag, Online, ServerMessage } from '@prisma/client';
+import {
+  Prisma,
+  User,
+  Page,
+  Phrase,
+  Tag,
+  Online,
+  ServerMessage,
+  RestoreLink,
+} from '@prisma/client';
 import { Result } from './types/interfaces';
 
 abstract class Database {
@@ -26,6 +35,16 @@ abstract class Database {
       T,
       Result<Array<ServerMessage>>,
       Promise<Result<Array<Prisma.ServerMessageGetPayload<any>>>>
+    >
+  >;
+
+  public abstract restoreLinkCreate<T extends Prisma.RestoreLinkCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.RestoreLinkCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<RestoreLink | null>,
+      Promise<Result<Prisma.RestoreLinkGetPayload<T> | null>>
     >
   >;
 

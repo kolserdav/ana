@@ -75,6 +75,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public restoreLinkCreate: Database['restoreLinkCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'restoreLink',
+      command: 'create',
+    });
+  };
+
   public tagFindFirst: Database['tagFindFirst'] = async (args) => {
     return this.runFromWorker({
       args,

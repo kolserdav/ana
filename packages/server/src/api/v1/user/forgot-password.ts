@@ -44,18 +44,12 @@ const forgotPassword: RequestHandler<
     };
   }
 
-  const restore = await orm.userUpdate({
-    where: { id: user.data.id },
+  const restore = await orm.restoreLinkCreate({
     data: {
-      RestoreLink: {
-        create: {},
-      },
-    },
-    include: {
-      RestoreLink: true,
+      userId: user.data.id,
     },
   });
-  if (restore.status === 'error' || !restore.data || !restore.data?.RestoreLink?.[0]) {
+  if (restore.status === 'error' || !restore.data) {
     reply.type(APPLICATION_JSON).code(500);
     return {
       status: 'error',
@@ -71,7 +65,7 @@ const forgotPassword: RequestHandler<
     subject: locale.mailSubjects.resetPassword,
     data: {
       name: user.data.name || '',
-      link: `${APP_URL}${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restore.data.RestoreLink[0].id}`,
+      link: `${APP_URL}${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restore.data.id}`,
       expire: RESTORE_LINK_TIMEOUT_IN_HOURS,
     },
   });

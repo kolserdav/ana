@@ -13,6 +13,11 @@
   form {
     padding-top: 1px;
   }
+
+  .dialog_error {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .container {

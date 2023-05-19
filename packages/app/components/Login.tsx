@@ -302,12 +302,14 @@ function Login({
         </form>
       </div>
       <Dialog theme={theme} open={errorDialogOpen}>
-        <Typography align="center" theme={theme} variant="h4">
-          {pageError}
-        </Typography>
-        <Link theme={theme} href={Pages.restorePassword}>
-          {locale.sendNewLetter}
-        </Link>
+        <div className={s.dialog_error}>
+          <Typography align="center" theme={theme} variant="h4">
+            {pageError}
+          </Typography>
+          <Link theme={theme} href={Pages.restorePassword}>
+            {locale.sendNewLetter}
+          </Link>
+        </div>
       </Dialog>
     </div>
   );
