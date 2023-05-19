@@ -44,6 +44,12 @@ declare global {
   }
 
   const androidTextToSpeech: AndroidTextToSpeech | undefined;
+
+  interface AndroidCommon {
+    closeApp: () => void;
+  }
+
+  const androidCommon: AndroidCommon | undefined;
 }
 
 export {};

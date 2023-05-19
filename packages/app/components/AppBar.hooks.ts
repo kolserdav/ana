@@ -140,10 +140,17 @@ export const useAndroid = () => {
    * Set android
    */
   useEffect(() => {
-    if (typeof androidTextToSpeech !== 'undefined') {
+    if (typeof androidCommon !== 'undefined') {
       setAndroid(true);
     }
   }, []);
 
-  return { android };
+  const closeApp = () => {
+    if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    androidCommon.closeApp();
+  };
+
+  return { android, closeApp };
 };

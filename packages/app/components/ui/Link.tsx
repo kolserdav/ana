@@ -16,6 +16,7 @@ interface LinkProps {
   noWrap?: boolean;
   style?: React.CSSProperties;
   locale?: string;
+  onClick?: () => void;
 }
 
 function Link({
@@ -29,6 +30,7 @@ function Link({
   noWrap,
   style,
   locale,
+  onClick,
 }: LinkProps) {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
@@ -38,6 +40,7 @@ function Link({
       </span>
     ) : (
       <NextLink
+        onClick={onClick}
         locale={locale}
         href={href}
         className={clsx(
@@ -66,6 +69,7 @@ Link.defaultProps = {
   noWrap: false,
   style: undefined,
   locale: undefined,
+  onClick: undefined,
 };
 
 export default Link;

@@ -22,7 +22,6 @@ import {
   removeLocalStorage,
   setLocalStorage,
 } from '../utils/localStorage';
-import storeAndroid, { changeAndroid } from '../store/android';
 
 const request = new Request();
 
@@ -45,7 +44,6 @@ export const useLanguages = ({
   const [changeLang, setChangeLang] = useState<boolean>(false);
   const [synthAllow, setSynthAllow] = useState<boolean>(false);
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
-  const [android, setAndroid] = useState<boolean>(false);
 
   /**
    * Set saved text
@@ -159,13 +157,6 @@ export const useLanguages = ({
       }
     })();
   }, [locale.voiceNotFound, learnLang]);
-
-  /**
-   * Set android
-   */
-  useEffect(() => {
-    storeAndroid.dispatch(changeAndroid({ android: typeof androidTextToSpeech !== 'undefined' }));
-  }, []);
 
   /**
    * Set android voice

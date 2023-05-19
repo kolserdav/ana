@@ -33,7 +33,6 @@ public class MainActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         mWebView = new WebView(this);
-
         WebSettings webSettings = this.mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
@@ -46,8 +45,8 @@ public class MainActivity extends Activity {
         webSettings.setDefaultTextEncodingName("utf-8");
 
         TTS tts = new TTS(this);
-
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
+        mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -129,6 +128,24 @@ class TTS {
 
     public void setSpeechRate(String val) {
         textToSpeech.setSpeechRate(Float.valueOf(val));
+    }
+}
+
+class AndroidCommon {
+
+    MainActivity main;
+    AndroidCommon(MainActivity main) {
+        this.main = main;
+    }
+    @JavascriptInterface
+    public void closeApp() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                main.finishAffinity();
+                System.exit(0);
+            }
+        });
     }
 }
 

@@ -69,7 +69,7 @@ function AppBar({
     }
   }, [router, lang, language]);
 
-  const { android } = useAndroid();
+  const { android, closeApp } = useAndroid();
 
   return (
     <header>
@@ -171,9 +171,9 @@ function AppBar({
             </Link>
           )}
           {android && (
-            <Link withoutHover fullWidth theme={theme} href={Pages.about}>
+            <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">
               <div className={clsx(s.menu__item, s.active)}>
-                <div style={{ color: theme.text }}>close app</div>
+                <div style={{ color: theme.text }}>{locale.closeApp}</div>
               </div>
             </Link>
           )}

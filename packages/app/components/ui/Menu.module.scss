@@ -59,6 +59,7 @@ $container-top: calc($app-bar-height / 2 - 6px);
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    overflow: auto;
 
     @media (max-width: $small-width) {
       width: $x-small-width;

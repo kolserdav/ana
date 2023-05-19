@@ -75,6 +75,7 @@ const lang: Locale = {
       closeMenu: 'Закрыть меню',
       changeInterfaceLang: 'Сменить язык интерфейса',
       about: 'О нас',
+      closeApp: 'Закрыть приложениe',
     },
     confirmEmail: {
       title: 'Подтверждение почты',

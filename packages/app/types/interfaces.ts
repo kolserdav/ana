@@ -306,6 +306,7 @@ export interface Locale {
       closeMenu: string;
       changeInterfaceLang: string;
       about: string;
+      closeApp: string;
     };
     confirmEmail: {
       title: string;
