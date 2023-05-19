@@ -28,8 +28,15 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <data
+                    android:host="uyem.ru"
+                    android:path="/account/restore-callback"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
     </application>
