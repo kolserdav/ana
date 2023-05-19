@@ -30,11 +30,11 @@ function replaceVariables<T extends EmailType>(
 }
 
 export async function sendEmail<T extends EmailType>(params: SendEmailParams<T>): Promise<1 | 0> {
-  const { email, type, locale } = params;
+  const { email, type, locale, subject } = params;
   const transporter = nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
-    secure: false,
+    secure: true,
     auth: {
       user: SMTP_EMAIL,
       pass: SMTP_PASSWORD,
@@ -68,7 +68,7 @@ export async function sendEmail<T extends EmailType>(params: SendEmailParams<T>)
     const options = {
       from: SMTP_EMAIL,
       to: email,
-      subject: SMTP_EMAIL,
+      subject,
       text,
       html,
     };

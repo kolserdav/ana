@@ -24,6 +24,7 @@ export interface SendEmailParams<T extends EmailType> {
   type: T;
   locale: LocaleValue;
   email: string;
+  subject: string;
   data: T extends 'restore-password'
     ? {
         name: string;

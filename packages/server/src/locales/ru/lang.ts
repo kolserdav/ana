@@ -26,6 +26,10 @@ const lang: Locale = {
     tagDeleted: 'Метка удалена',
     tagUpdated: 'Метка изменена для всех фраз',
     serverReload: 'Перезагрузка сервера. Это может занять несколько минут.',
+    mailSubjects: {
+      confirmEmail: 'Подтверждение почты',
+      resetPassword: 'Сброс пароля',
+    },
   },
   app: {
     login: {

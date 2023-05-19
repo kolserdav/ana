@@ -257,6 +257,10 @@ export interface Locale {
     tagDeleted: string;
     tagUpdated: string;
     serverReload: string;
+    mailSubjects: {
+      confirmEmail: string;
+      resetPassword: string;
+    };
   };
   app: {
     login: {

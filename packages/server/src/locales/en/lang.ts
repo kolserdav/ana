@@ -26,6 +26,10 @@ const lang: Locale = {
     tagDeleted: 'Tag deleted',
     tagUpdated: 'Tag updated for all phrases',
     serverReload: 'Server rebooting. This may take several minutes.',
+    mailSubjects: {
+      confirmEmail: 'Confirm email',
+      resetPassword: 'Reset password',
+    },
   },
   app: {
     login: {

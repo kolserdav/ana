@@ -69,6 +69,7 @@ const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResul
     email,
     type: 'confirm-email',
     locale: lang,
+    subject: locale.mailSubjects.confirmEmail,
     data: {
       name: user.data.name || '',
       link: `${APP_URL}${PAGE_CONFIRM_EMAIL}?${EMAIL_QS}=${user.data.email}&${KEY_QS}=${user.data.ConfirmLink[0].id}`,

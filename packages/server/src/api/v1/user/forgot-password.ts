@@ -68,6 +68,7 @@ const forgotPassword: RequestHandler<
     email,
     locale: lang,
     type: 'restore-password',
+    subject: locale.mailSubjects.resetPassword,
     data: {
       name: user.data.name || '',
       link: `${APP_URL}/${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restore.data.RestoreLink[0].id}`,
