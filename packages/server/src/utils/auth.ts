@@ -87,5 +87,5 @@ export const checkToken = async (token: string) => {
   if (!user.data) {
     return 1;
   }
-  return parsedToken;
+  return 0;
 };

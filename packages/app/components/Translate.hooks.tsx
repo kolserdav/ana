@@ -24,17 +24,20 @@ import {
 } from '../utils/localStorage';
 
 const request = new Request();
+let oldText = '';
 
 export const useLanguages = ({
   locale,
   undo,
   setUndo,
   textareaRef,
+  connId,
 }: {
   locale: Locale['app']['translate'];
   setUndo: React.Dispatch<React.SetStateAction<boolean>>;
   undo: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
+  connId: string | null;
 }) => {
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
@@ -49,12 +52,15 @@ export const useLanguages = ({
    * Set saved text
    */
   useEffect(() => {
+    if (!connId) {
+      return;
+    }
     const _text = getLocalStorage(LocalStorageName.TEXT);
     if (!_text) {
       return;
     }
     setText(_text);
-  }, []);
+  }, [connId]);
 
   /**
    * Set default langs
@@ -108,6 +114,7 @@ export const useLanguages = ({
     }
     setTimeout(() => {
       current.focus();
+      current.selectionEnd = oldText.length;
     }, FOCUS_TEXTAREA_TIMEOUT);
   };
 
@@ -115,6 +122,7 @@ export const useLanguages = ({
     setNativeLang(learnLang);
     setLearnLang(nativeLang);
     setText(translate);
+    oldText = translate;
     if (undo) {
       setUndo(false);
     }
@@ -194,8 +202,6 @@ export const useLanguages = ({
 let timeout = setTimeout(() => {
   /**/
 }, 0);
-
-let oldText = '';
 
 export const useTranslate = ({
   learnLang,

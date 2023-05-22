@@ -170,13 +170,6 @@ function AppBar({
               </div>
             </Link>
           )}
-          {android && (
-            <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">
-              <div className={clsx(s.menu__item, s.active)}>
-                <div style={{ color: theme.text }}>{locale.closeApp}</div>
-              </div>
-            </Link>
-          )}
           {user && (
             <div
               role="button"
@@ -188,6 +181,15 @@ function AppBar({
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.logout}</div>
               </div>
+            </div>
+          )}
+          {android && (
+            <div className={s.bottom}>
+              <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">
+                <div className={clsx(s.menu__item, s.active)}>
+                  <div style={{ color: theme.text }}>{locale.closeApp}</div>
+                </div>
+              </Link>
             </div>
           )}
         </Menu>

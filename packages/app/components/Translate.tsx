@@ -100,7 +100,7 @@ function Translate({
     setTranslate,
     synthAllow,
     voice,
-  } = useLanguages({ locale, undo, setUndo, textareaRef });
+  } = useLanguages({ locale, undo, setUndo, textareaRef, connId });
 
   const {
     reTranslate,

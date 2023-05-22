@@ -120,6 +120,7 @@ export default function useApp({
       setLoad(true);
       quiet = false;
       setRestart(loadConnect ? true : !restart);
+      setConnId(null);
     };
   }, [ws, router.locale, loadConnect, restart, setLoad, connectionReOpened, connectionRefused]);
 
