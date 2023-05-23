@@ -37,7 +37,7 @@ function Login({
   theme: Theme;
   locale: Locale['app']['login'];
   formDesc: string;
-  user: UserCleanResult;
+  user: UserCleanResult | null;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
   policyTitle: string;
@@ -46,7 +46,7 @@ function Login({
 }) {
   const { load, setLoad } = useLoad();
 
-  const { isSignUp, isRestore, isChangePass } = useCheckPage();
+  const { isSignUp, isRestore, isChangePass, isSignIn } = useCheckPage();
 
   const { name, nameError, onChangeName, onBlurName, setNameError, setName } = useNameInput({
     locale,
@@ -152,6 +152,11 @@ function Login({
           ? locale.changePassword
           : locale.signIn}
       </Typography>
+      {isSignIn && (
+        <Typography variant="p" theme={theme}>
+          {locale.subtitle}
+        </Typography>
+      )}
       <div className={s.container}>
         {isRestore && (
           <div className={s.restore__desc}>

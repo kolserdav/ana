@@ -27,13 +27,11 @@ const request = new Request();
 let oldText = '';
 
 export const useLanguages = ({
-  locale,
   undo,
   setUndo,
   textareaRef,
   connId,
 }: {
-  locale: Locale['app']['translate'];
   setUndo: React.Dispatch<React.SetStateAction<boolean>>;
   undo: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
@@ -45,8 +43,6 @@ export const useLanguages = ({
   const [learnLang, setLearnLang] = useState<string>();
   const [langs, setLangs] = useState<ServerLanguage[]>([]);
   const [changeLang, setChangeLang] = useState<boolean>(false);
-  const [synthAllow, setSynthAllow] = useState<boolean>(false);
-  const [voice, setVoice] = useState<SpeechSynthesisVoice>();
 
   /**
    * Set saved text
@@ -140,57 +136,6 @@ export const useLanguages = ({
     focusTextArea();
   };
 
-  /**
-   * Set suitable voice
-   */
-  useEffect(() => {
-    (async () => {
-      if (typeof androidTextToSpeech === 'undefined') {
-        const synth = window.speechSynthesis;
-        if (!learnLang) {
-          return;
-        }
-        if (!synth) {
-          log('warn', 'Speech synth is not support', { synth });
-          setSynthAllow(false);
-          return;
-        }
-        let voices = synth.getVoices();
-        if (voices.length === 0) {
-          await new Promise((resolve) => {
-            setTimeout(() => {
-              resolve(0);
-            }, 1000);
-          });
-          voices = synth.getVoices();
-        }
-
-        const _voice = voices.find((item) => new RegExp(`${learnLang}`).test(item.lang));
-        if (!_voice) {
-          log('warn', locale.voiceNotFound, voices, true);
-          setSynthAllow(false);
-          return;
-        }
-        setSynthAllow(true);
-        setVoice(_voice);
-      }
-    })();
-  }, [locale.voiceNotFound, learnLang]);
-
-  /**
-   * Set android voice
-   */
-  useEffect(() => {
-    if (!learnLang) {
-      return;
-    }
-    if (typeof androidTextToSpeech !== 'undefined') {
-      androidTextToSpeech.setLanguage(learnLang);
-
-      setSynthAllow(true);
-    }
-  }, [learnLang]);
-
   return {
     learnLang,
     nativeLang,
@@ -205,8 +150,6 @@ export const useLanguages = ({
     translate,
     setText,
     setTranslate,
-    voice,
-    synthAllow,
   };
 };
 
@@ -441,54 +384,6 @@ export const useTranslate = ({
     phraseToUpdate,
     revertText,
   };
-};
-
-export const useSpeechSynth = ({
-  reTranslate,
-  locale,
-  learnLang,
-  voice,
-}: {
-  reTranslate: string;
-  learnLang: string | undefined;
-  locale: Locale['app']['translate'];
-  voice: SpeechSynthesisVoice | undefined;
-}) => {
-  const [textToSpeech, setTextToSpeech] = useState<string>();
-
-  /**
-   * Speech text
-   */
-  useEffect(() => {
-    if (!learnLang) {
-      return;
-    }
-    if (!textToSpeech) {
-      return;
-    }
-
-    if (typeof androidTextToSpeech !== 'undefined') {
-      androidTextToSpeech.speak(textToSpeech);
-    } else {
-      const synth = window.speechSynthesis;
-      if (!synth || !voice) {
-        return;
-      }
-
-      const utterThis = new SpeechSynthesisUtterance(textToSpeech);
-
-      utterThis.lang = voice.lang;
-      synth.speak(utterThis);
-    }
-
-    setTextToSpeech('');
-  }, [textToSpeech, locale, learnLang, voice]);
-
-  const speechRetranslate = () => {
-    setTextToSpeech(reTranslate);
-  };
-
-  return { speechRetranslate };
 };
 
 export const useSavePhrase = ({

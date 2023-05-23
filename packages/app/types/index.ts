@@ -33,7 +33,7 @@ export interface QueryString {
 export interface AppProps {
   app: {
     theme: Theme;
-    user: UserCleanResult;
+    user: UserCleanResult | null;
     userLoad: boolean;
     touchpad: boolean;
     connId: string | null;

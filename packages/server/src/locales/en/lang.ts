@@ -64,6 +64,7 @@ const lang: Locale = {
       wrongParameters: 'Invalid page parameters',
       sendNewLetter: 'Request new password reset email',
       acceptPolicyAndRules: 'I have read and accept before continuing',
+      subtitle: 'To save phrases, you must log in to the service',
     },
     appBar: {
       darkTheme: 'Dark Theme',
@@ -77,6 +78,7 @@ const lang: Locale = {
       changeInterfaceLang: 'Change the interface language',
       about: 'About us',
       closeApp: 'Close app',
+      settings: 'Settings',
     },
     confirmEmail: {
       title: 'Mail Confirmation',
@@ -155,6 +157,11 @@ const lang: Locale = {
       repoTitle: 'Source code',
       aboutSite: 'About this application',
       contactsTitle: 'Contacts',
+    },
+    settings: {
+      title: 'Settings',
+      speechSpeed: 'Speech speed',
+      speechTest: 'Speech test',
     },
   },
 };

@@ -246,9 +246,10 @@ export const useCheckPage = () => {
 
   const isSignUp = checkRouterPath(router.asPath, Pages.signUp);
   const isRestore = checkRouterPath(router.asPath, Pages.restorePassword);
+  const isSignIn = checkRouterPath(router.asPath, Pages.signIn);
   const isChangePass = checkRouterPath(router.asPath, PAGE_RESTORE_PASSWORD_CALLBACK);
 
-  return { isSignUp, isRestore, isChangePass };
+  return { isSignUp, isRestore, isChangePass, isSignIn };
 };
 
 export const useButton = ({
@@ -580,7 +581,7 @@ export const useErrorDialog = () => {
   return { errorDialogOpen, setErrorDialogOpen };
 };
 
-export const useRedirect = ({ user }: { user: UserCleanResult }) => {
+export const useRedirect = ({ user }: { user: UserCleanResult | null }) => {
   const router = useRouter();
   const { r } = useQueryString<QueryString>();
 

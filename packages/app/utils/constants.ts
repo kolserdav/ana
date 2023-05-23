@@ -36,6 +36,8 @@ export enum Pages {
   rules = '/rules',
   // eslint-disable-next-line no-unused-vars
   contacts = '/contacts',
+  // eslint-disable-next-line no-unused-vars
+  settings = '/settings',
 }
 
 const now = new Date();
@@ -105,3 +107,4 @@ export const LICENSE = {
 export const FOCUS_TEXTAREA_TIMEOUT = 500;
 // deps packages/server/orm/schema.prisma.Phrase.text
 export const PHRASE_MAX_LENGTH = 1000;
+export const TEST_TEXT_DEFAULT = 'Test';

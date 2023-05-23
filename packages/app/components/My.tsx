@@ -34,7 +34,7 @@ function My({
   edit: string;
   _delete: string;
   cancel: string;
-  user: UserCleanResult;
+  user: UserCleanResult | null;
 }) {
   const { load, setLoad } = useLoad();
 

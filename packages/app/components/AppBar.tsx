@@ -28,7 +28,7 @@ function AppBar({
   theme: Theme;
   locale: Locale['app']['appBar'];
   withoutExpandLess?: boolean;
-  user: UserCleanResult;
+  user: UserCleanResult | null;
   full?: boolean;
 }) {
   const router = useRouter();
@@ -155,10 +155,10 @@ function AppBar({
               </Select>
             </div>
           )}
-          {!checkRouterPath(router.asPath, [Pages.about]) && (
-            <Link withoutHover fullWidth theme={theme} href={Pages.about}>
+          {!checkRouterPath(router.asPath, [Pages.settings]) && (
+            <Link withoutHover fullWidth theme={theme} href={Pages.settings}>
               <div className={clsx(s.menu__item, s.active)}>
-                <div style={{ color: theme.text }}>{locale.about}</div>
+                <div style={{ color: theme.text }}>{locale.settings}</div>
               </div>
             </Link>
           )}
@@ -183,15 +183,23 @@ function AppBar({
               </div>
             </div>
           )}
-          {android && (
-            <div className={s.bottom}>
+
+          <div className={s.bottom}>
+            {!checkRouterPath(router.asPath, [Pages.about]) && (
+              <Link withoutHover fullWidth theme={theme} href={Pages.about}>
+                <div className={clsx(s.menu__item, s.active)}>
+                  <div style={{ color: theme.text }}>{locale.about}</div>
+                </div>
+              </Link>
+            )}
+            {android && (
               <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">
                 <div className={clsx(s.menu__item, s.active)}>
                   <div style={{ color: theme.text }}>{locale.closeApp}</div>
                 </div>
               </Link>
-            </div>
-          )}
+            )}
+          </div>
         </Menu>
       </div>
       {!withoutExpandLess && (

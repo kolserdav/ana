@@ -54,7 +54,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
-    "prisma": "^4.14.0",
+    "prisma": "^4.14.1",
     "puppeteer": "^19.6.0",
     "react-draft-wysiwyg": "^1.15.0",
     "rimraf": "^4.1.1",
@@ -63,7 +63,7 @@
   "dependencies": {
     "@fastify/cors": "^8.2.0",
     "@fastify/http-proxy": "^9.0.0",
-    "@prisma/client": "^4.14.0",
+    "@prisma/client": "^4.14.1",
     "@tinymce/tinymce-react": "^4.3.0",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",

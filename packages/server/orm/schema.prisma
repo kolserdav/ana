@@ -21,6 +21,7 @@ enum PageName {
   rules
   contacts
   about
+  settings
 }
 
 enum PageField {

@@ -63,6 +63,7 @@ const lang: Locale = {
       wrongParameters: 'Неверные параметры страницы',
       sendNewLetter: 'Запросить новое письмо для восстановления пароля',
       acceptPolicyAndRules: 'Перед тем как продолжить я ознакомился и принимаю',
+      subtitle: 'Для сохранения фраз необходимо авторизоваться на сервисе',
     },
     appBar: {
       darkTheme: 'Темная тема',
@@ -76,6 +77,7 @@ const lang: Locale = {
       changeInterfaceLang: 'Сменить язык интерфейса',
       about: 'О нас',
       closeApp: 'Закрыть приложениe',
+      settings: 'Настройки',
     },
     confirmEmail: {
       title: 'Подтверждение почты',
@@ -153,6 +155,11 @@ const lang: Locale = {
       repoTitle: 'Исходный код',
       aboutSite: 'Об этом приложении',
       contactsTitle: 'Контакты',
+    },
+    settings: {
+      title: 'Настройки',
+      speechSpeed: 'Скорость озвучивания',
+      speechTest: 'Тест озвучивания',
     },
   },
 };

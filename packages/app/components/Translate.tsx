@@ -8,7 +8,6 @@ import {
   useRedirect,
   useSavePhrase,
   useSpeechRecognize,
-  useSpeechSynth,
   useTags,
   useTranslate,
   useUndo,
@@ -33,6 +32,7 @@ import SwapHorizontalIcon from './icons/SwapHorisontal';
 import MicrophoneIcon from './icons/Microphone';
 import UndoIcon from './icons/Undo';
 import { PHRASE_MAX_LENGTH } from '../utils/constants';
+import useSpeechSynth from '../hooks/useSpeechSynth';
 
 function Translate({
   theme,
@@ -48,7 +48,7 @@ function Translate({
 }: {
   theme: Theme;
   locale: Locale['app']['translate'];
-  user: UserCleanResult;
+  user: UserCleanResult | null;
   save: string;
   showHelp: string;
   _edit: string;
@@ -98,9 +98,7 @@ function Translate({
     setText,
     translate,
     setTranslate,
-    synthAllow,
-    voice,
-  } = useLanguages({ locale, undo, setUndo, textareaRef, connId });
+  } = useLanguages({ undo, setUndo, textareaRef, connId });
 
   const {
     reTranslate,
@@ -132,11 +130,10 @@ function Translate({
     setUndo,
   });
 
-  const { speechRetranslate } = useSpeechSynth({
-    reTranslate,
+  const { speechText, synthAllow } = useSpeechSynth({
+    text: reTranslate,
     locale,
-    learnLang,
-    voice,
+    lang: learnLang,
   });
 
   const {
@@ -271,7 +268,7 @@ function Translate({
           </div>
           {reTranslate && synthAllow && (
             <div className={s.sound_button}>
-              <IconButton onClick={speechRetranslate} title={locale.playSound}>
+              <IconButton onClick={speechText} title={locale.playSound}>
                 <VolumeHighIcon color={theme.text} />
               </IconButton>
             </div>

@@ -9,7 +9,7 @@ const Input = forwardRef<
   HTMLInputElement,
   {
     disabled?: boolean;
-    value: string | readonly string[];
+    value?: string | readonly string[];
     name: string | React.ReactNode;
     // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -32,6 +32,7 @@ const Input = forwardRef<
     desc?: string;
     accept?: string;
     classWrapper?: string;
+    defaultValue?: string;
   }
 >(
   (
@@ -58,6 +59,7 @@ const Input = forwardRef<
       hidden,
       desc,
       classWrapper,
+      defaultValue,
     },
     ref
   ) => {
@@ -80,7 +82,7 @@ const Input = forwardRef<
 
     const _onBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
       if (colorActive) {
-        setGradient(value.length !== 0);
+        setGradient(value?.length !== 0 || defaultValue?.length !== 0);
       }
     };
 
@@ -103,6 +105,7 @@ const Input = forwardRef<
           title={title}
           min={min}
           max={max}
+          defaultValue={defaultValue}
           onChange={onChange}
           onBlur={(e) => {
             _onBlur(e);
@@ -175,6 +178,8 @@ Input.defaultProps = {
   desc: undefined,
   accept: undefined,
   classWrapper: undefined,
+  defaultValue: undefined,
+  value: undefined,
 };
 
 export default Input;

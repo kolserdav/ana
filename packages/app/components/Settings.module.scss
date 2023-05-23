@@ -1,0 +1,27 @@
+@import '../styles/constants';
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  .container {
+    position: relative;
+    width: 100%;
+    max-width: $translate-container-max;
+
+    .test_input {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .speech_button {
+        margin-left: 1rem;
+      }
+    }
+  }
+}

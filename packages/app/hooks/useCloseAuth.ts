@@ -7,7 +7,7 @@ export default function useCloseAuth({
   user,
   userLoad,
 }: {
-  user: UserCleanResult;
+  user: UserCleanResult | null;
   userLoad: boolean;
 }) {
   const router = useRouter();

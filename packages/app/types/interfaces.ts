@@ -294,6 +294,7 @@ export interface Locale {
       wrongParameters: string;
       sendNewLetter: string;
       acceptPolicyAndRules: string;
+      subtitle: string;
     };
     appBar: {
       darkTheme: string;
@@ -307,6 +308,7 @@ export interface Locale {
       changeInterfaceLang: string;
       about: string;
       closeApp: string;
+      settings: string;
     };
     confirmEmail: {
       title: string;
@@ -387,6 +389,11 @@ export interface Locale {
       repoTitle: string;
       aboutSite: string;
       contactsTitle: string;
+    };
+    settings: {
+      title: string;
+      speechSpeed: string;
+      speechTest: string;
     };
   };
 }
