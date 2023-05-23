@@ -115,6 +115,17 @@ export const useLanguages = ({
     setTimeout(() => {
       current.focus();
       current.selectionEnd = oldText.length;
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.setStart(current.childNodes[0], oldText.length);
+      range.collapse(true);
+
+      if (!sel) {
+        return;
+      }
+
+      sel.removeAllRanges();
+      sel.addRange(range);
     }, FOCUS_TEXTAREA_TIMEOUT);
   };
 
