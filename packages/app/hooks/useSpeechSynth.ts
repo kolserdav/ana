@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Locale } from '../types/interfaces';
 import { log } from '../utils/lib';
 
 const useSpeechSynth = ({
   text,
-  locale,
+  voiceNotFound,
   lang,
 }: {
   text: string;
   lang: string | undefined;
-  locale: Locale['app']['translate'];
+  voiceNotFound: string;
 }) => {
   const [textToSpeech, setTextToSpeech] = useState<string>();
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
@@ -55,7 +54,7 @@ const useSpeechSynth = ({
 
         const _voice = voices.find((item) => new RegExp(`${lang}`).test(item.lang));
         if (!_voice) {
-          log('warn', locale.voiceNotFound, voices, true);
+          log('warn', voiceNotFound, voices, true);
           setSynthAllow(false);
           return;
         }
@@ -63,7 +62,7 @@ const useSpeechSynth = ({
         setVoice(_voice);
       }
     })();
-  }, [locale.voiceNotFound, lang]);
+  }, [voiceNotFound, lang]);
 
   /**
    * Speech text
@@ -87,11 +86,12 @@ const useSpeechSynth = ({
       const utterThis = new SpeechSynthesisUtterance(textToSpeech);
 
       utterThis.lang = voice.lang;
+      utterThis.rate = 0.5;
       synth.speak(utterThis);
     }
 
     setTextToSpeech('');
-  }, [textToSpeech, locale, lang, voice]);
+  }, [textToSpeech, lang, voice]);
 
   const speechText = () => {
     setTextToSpeech(text);

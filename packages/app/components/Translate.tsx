@@ -45,6 +45,8 @@ function Translate({
   cancel,
   connId,
   missingCSRF,
+  voiceNotFound,
+  playSound,
 }: {
   theme: Theme;
   locale: Locale['app']['translate'];
@@ -56,6 +58,8 @@ function Translate({
   cancel: string;
   connId: string | null;
   missingCSRF: string;
+  voiceNotFound: string;
+  playSound: string;
 }) {
   const helpTagRef = createRef<HTMLButtonElement>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -132,7 +136,7 @@ function Translate({
 
   const { speechText, synthAllow } = useSpeechSynth({
     text: reTranslate,
-    locale,
+    voiceNotFound,
     lang: learnLang,
   });
 
@@ -268,7 +272,7 @@ function Translate({
           </div>
           {reTranslate && synthAllow && (
             <div className={s.sound_button}>
-              <IconButton onClick={speechText} title={locale.playSound}>
+              <IconButton onClick={speechText} title={playSound}>
                 <VolumeHighIcon color={theme.text} />
               </IconButton>
             </div>

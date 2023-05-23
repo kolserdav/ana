@@ -16,11 +16,16 @@
 
     .test_input {
       display: flex;
-      flex-direction: row;
+      flex-flow: row wrap;
       align-items: center;
 
       .speech_button {
         margin-left: 1rem;
+      }
+
+      .lang_select {
+        margin-left: 1rem;
+        margin-bottom: 8px;
       }
     }
   }

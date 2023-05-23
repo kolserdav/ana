@@ -328,6 +328,8 @@ export interface Locale {
       policyTitle: string;
       rulesTitle: string;
       and: string;
+      voiceNotFound: string;
+      playSound: string;
     };
     translate: {
       title: string;
@@ -335,7 +337,6 @@ export interface Locale {
       nativeLang: string;
       learnLang: string;
       allowRecomend: string;
-      voiceNotFound: string;
       savePhrase: string;
       needLogin: string;
       savePhraseDesc: string;
@@ -355,7 +356,6 @@ export interface Locale {
       cleanField: string;
       quitEdit: string;
       startRecognize: string;
-      playSound: string;
       errorSpeechRecog: string;
       recognizeNotSupport: string;
       microNotPermitted: string;
@@ -394,6 +394,7 @@ export interface Locale {
       title: string;
       speechSpeed: string;
       speechTest: string;
+      speechLang: string;
     };
   };
 }

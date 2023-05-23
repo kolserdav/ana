@@ -10,9 +10,10 @@ import Settings from '../components/Settings';
 
 const request = new Request();
 
-interface EmployerPageProps extends AppProps {
+interface SettingsPageProps extends AppProps {
   localeSettings: Locale['app']['settings'];
   localeAppBar: Locale['app']['appBar'];
+  localeCommon: Locale['app']['common'];
   page: PageFull;
 }
 
@@ -20,14 +21,21 @@ export default function SettingsPage({
   app: { user, theme },
   localeSettings,
   localeAppBar,
+  localeCommon,
   page,
-}: EmployerPageProps) {
+}: SettingsPageProps) {
   return (
     <>
       <Head title={page.title} description={page.description} keywords={page.keywords} />
       <AppBar user={user} theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Settings user={user} locale={localeSettings} theme={theme} />
+        <Settings
+          voiceNotFound={localeCommon.voiceNotFound}
+          user={user}
+          locale={localeSettings}
+          theme={theme}
+          playSound={localeCommon.playSound}
+        />
       </main>
     </>
   );
@@ -35,8 +43,9 @@ export default function SettingsPage({
 
 export async function getStaticProps({
   locale,
-}: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
+}: GetStaticPropsContext): Promise<{ props: Omit<SettingsPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
+  const localeCommon = await request.getLocale({ field: 'common', locale });
   const localeSettings = await request.getLocale({ field: 'settings', locale });
   const page = await request.pageFindMany({
     where: {
@@ -55,6 +64,7 @@ export async function getStaticProps({
       page: prepagePage(page.data),
       localeAppBar: localeAppBar.data,
       localeSettings: localeSettings.data,
+      localeCommon: localeCommon.data,
     },
   };
 }

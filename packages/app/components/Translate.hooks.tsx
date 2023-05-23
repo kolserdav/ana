@@ -45,6 +45,18 @@ export const useLanguages = ({
   const [changeLang, setChangeLang] = useState<boolean>(false);
 
   /**
+   * Set langs
+   */
+  useEffect(() => {
+    (async () => {
+      const _langs = await request.getLanguages();
+      if (typeof _langs.map === 'function') {
+        setLangs(_langs);
+      }
+    })();
+  }, []);
+
+  /**
    * Set saved text
    */
   useEffect(() => {

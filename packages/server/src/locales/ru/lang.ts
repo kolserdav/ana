@@ -97,6 +97,8 @@ const lang: Locale = {
       policyTitle: 'Политика конфиденциальности',
       rulesTitle: 'Правила сервиса',
       and: 'и',
+      voiceNotFound: 'Голос для озвучивания не найден',
+      playSound: 'Озвучить текст',
     },
     translate: {
       title: 'Перевод предложений',
@@ -104,7 +106,6 @@ const lang: Locale = {
       nativeLang: 'Знаю',
       learnLang: 'Изучаю',
       allowRecomend: 'Применить предложенный вариант',
-      voiceNotFound: 'Голос для озвучивания не найден',
       savePhrase: 'Сохранить фразу',
       createPhrase: 'Создать фразу',
       needLogin: 'Необходим вход в учетную запись',
@@ -124,7 +125,6 @@ const lang: Locale = {
       cleanField: 'Очистить поле',
       quitEdit: 'Выйти из режима редактирования',
       startRecognize: 'Удерживать для распознания речи',
-      playSound: 'Озвучить текст',
       errorSpeechRecog: 'Ошибка при распознании речи',
       recognizeNotSupport: 'Распознание речи не поддерживается',
       microNotPermitted: 'Разрешение на использование микрофона не получено',
@@ -160,6 +160,7 @@ const lang: Locale = {
       title: 'Настройки',
       speechSpeed: 'Скорость озвучивания',
       speechTest: 'Тест озвучивания',
+      speechLang: 'Язык озвучивания',
     },
   },
 };

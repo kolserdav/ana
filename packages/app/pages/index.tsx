@@ -34,6 +34,7 @@ export default function TranslatePage({
       <AppBar user={user} full theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Translate
+          voiceNotFound={localeCommon.voiceNotFound}
           missingCSRF={localeCommon.missingCSRF}
           connId={connId}
           _edit={localeCommon.edit}
@@ -44,6 +45,7 @@ export default function TranslatePage({
           theme={theme}
           locale={localeTranslate}
           cancel={localeCommon.cancel}
+          playSound={localeCommon.playSound}
         />
       </main>
     </>

@@ -98,6 +98,8 @@ const lang: Locale = {
       policyTitle: 'Privacy Policy',
       rulesTitle: 'Service Rules',
       and: 'and',
+      voiceNotFound: 'No voice found',
+      playSound: 'Play text',
     },
     translate: {
       title: 'Sentence Translation',
@@ -105,7 +107,6 @@ const lang: Locale = {
       nativeLang: 'I know',
       learnLang: 'Learning',
       allowRecomend: 'Apply suggested option',
-      voiceNotFound: 'No voice found',
       savePhrase: 'Save Phrase',
       createPhrase: 'Create Phrase',
       needLogin: 'Login required',
@@ -125,7 +126,6 @@ const lang: Locale = {
       cleanField: 'Clear field',
       quitEdit: 'Quit edit mode',
       startRecognize: 'Hold to recognize speech',
-      playSound: 'Play text',
       errorSpeechRecog: 'Speech recognition error',
       recognizeNotSupport: 'Speech recognition not supported',
       microNotPermitted: 'Microphone permission not received',
@@ -162,6 +162,7 @@ const lang: Locale = {
       title: 'Settings',
       speechSpeed: 'Speech speed',
       speechTest: 'Speech test',
+      speechLang: 'Speech Language',
     },
   },
 };
