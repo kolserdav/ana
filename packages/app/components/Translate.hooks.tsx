@@ -427,6 +427,7 @@ export const useSavePhrase = ({
   addTags: boolean;
   translate?: string;
 }) => {
+  const router = useRouter();
   const [saveDialog, setSaveDialog] = useState<boolean>(false);
   const [saveTranslate, setSaveTranslate] = useState<boolean>(true);
 
@@ -449,11 +450,12 @@ export const useSavePhrase = ({
     });
     setLoad(false);
     log(saveRes.status, saveRes.message, saveRes, true);
-    if (saveRes.status === 'info') {
+    if (saveRes.status === 'info' && saveRes.data) {
       setSaveDialog(false);
       setTags([]);
       setRestart(!restart);
       setTagRestart(!tagRestart);
+      router.push(`${router.asPath}?edit=${saveRes.data.id}`);
     }
   };
 
