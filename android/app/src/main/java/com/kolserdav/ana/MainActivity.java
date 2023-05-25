@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
+
 public class MainActivity extends Activity {
     private WebView mWebView;
 
@@ -196,7 +197,7 @@ class AndroidTextToSpeech {
     }
 
     @JavascriptInterface
-    public void setSpeechRete(String rate) {
+    public void setSpeechRate(String rate) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
