@@ -158,7 +158,7 @@ const lang: Locale = {
     },
     settings: {
       title: 'Настройки',
-      speechSpeed: 'Скорость озвучивания',
+      speechSpeed: 'Скорость речи',
       speechTest: 'Тест озвучивания',
       speechLang: 'Язык озвучивания',
     },

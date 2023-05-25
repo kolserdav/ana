@@ -1,5 +1,7 @@
 @import '../styles/constants';
 
+$speech-select-shift: 8px;
+
 .wrapper {
   position: relative;
   width: 100%;
@@ -13,6 +15,7 @@
     position: relative;
     width: 100%;
     max-width: $translate-container-max;
+    padding: 1rem;
 
     .test_input {
       display: flex;
@@ -25,7 +28,14 @@
 
       .lang_select {
         margin-left: 1rem;
-        margin-bottom: 8px;
+        margin-bottom: $speech-select-shift;
+      }
+
+      .speed_select {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: $speech-select-shift;
+        margin-left: 1rem;
       }
     }
   }

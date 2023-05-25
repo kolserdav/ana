@@ -3,6 +3,7 @@ import { LEARN_LANG_DEFAULT, TEST_TEXT_DEFAULT } from '../utils/constants';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { LocalStorageName, getLocalStorage } from '../utils/localStorage';
+import { getSpeechSpeeds } from './Settings.lib';
 
 const request = new Request();
 

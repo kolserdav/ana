@@ -12,6 +12,7 @@
     display: inline-block;
     margin-left: $label-left;
     font-size: $input-font-size;
+    white-space: nowrap;
     top: calc(($label-shift + $label-top) * -1);
   }
 
@@ -20,6 +21,7 @@
     padding-left: $input-padding;
     border-radius: $input-border-radius;
     border-width: 1px;
+    max-width: calc($small-width - 2rem);
     appearance: none;
 
     &:disabled {

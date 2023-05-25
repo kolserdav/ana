@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { log } from '../utils/lib';
+import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
+import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 const useSpeechSynth = ({
   text,
@@ -13,6 +15,37 @@ const useSpeechSynth = ({
   const [textToSpeech, setTextToSpeech] = useState<string>();
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
   const [synthAllow, setSynthAllow] = useState<boolean>(false);
+  const [speechSpeed, setSpeechSpeed] = useState<number>(SPEECH_SPEED_DEFAULT);
+
+  const changeSpeechSpeed = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    const _value = parseFloat(value);
+    setLocalStorage(LocalStorageName.SPEECH_SPEED, _value);
+    setSpeechSpeed(_value);
+  };
+
+  /**
+   * Set android speech speed
+   */
+  useEffect(() => {
+    if (typeof androidTextToSpeech !== 'undefined') {
+      androidTextToSpeech.setSpeechRate(speechSpeed.toString());
+    }
+  }, [speechSpeed]);
+
+  /**
+   * Set speed of speech
+   */
+  useEffect(() => {
+    const _speechSpeed = getLocalStorage(LocalStorageName.SPEECH_SPEED);
+    if (!_speechSpeed) {
+      return;
+    }
+    setSpeechSpeed(_speechSpeed);
+  }, []);
+
   /**
    * Set android voice
    */
@@ -86,18 +119,18 @@ const useSpeechSynth = ({
       const utterThis = new SpeechSynthesisUtterance(textToSpeech);
 
       utterThis.lang = voice.lang;
-      utterThis.rate = 0.5;
+      utterThis.rate = speechSpeed;
       synth.speak(utterThis);
     }
 
     setTextToSpeech('');
-  }, [textToSpeech, lang, voice]);
+  }, [textToSpeech, lang, voice, speechSpeed]);
 
   const speechText = () => {
     setTextToSpeech(text);
   };
 
-  return { speechText, synthAllow };
+  return { speechText, synthAllow, speechSpeed, changeSpeechSpeed };
 };
 
 export default useSpeechSynth;
