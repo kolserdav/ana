@@ -242,7 +242,7 @@ function Settings({
               onChange={onChangeOldPassword}
               onBlur={onBlurOldPassword}
               value={oldPassword}
-              id="password"
+              id="old-password"
               type="password"
               required
               colorActive
