@@ -219,7 +219,6 @@ class AndroidTextToSpeech {
 
     @JavascriptInterface
     public boolean isSpeaking() {
-        Log.d("speak", speaking.toString());
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

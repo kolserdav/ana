@@ -7,13 +7,10 @@ function Icon({ width, height, children, color, animate, className }: IconProps)
       xmlns="http://www.w3.org/2000/svg"
       width={width}
       height={height}
+      viewBox={`0 0 ${width} ${height}`}
       fill={color}
       className={className}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-      }}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
       <path d={children}>{animate}</path>
     </svg>
