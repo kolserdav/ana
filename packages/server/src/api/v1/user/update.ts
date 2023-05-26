@@ -6,7 +6,7 @@ import {
   UserCleanResult,
   UserUpdateBody,
 } from '../../../types/interfaces';
-import { getHttpCode, log, parseHeaders } from '../../../utils/lib';
+import { getHttpCode, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
 import { createPasswordHash, createRandomSalt } from '../../../utils/auth';
 import { cleanUserFields } from '../../../components/lib';

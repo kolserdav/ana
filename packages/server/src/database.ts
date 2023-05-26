@@ -34,6 +34,7 @@ abstract class Database {
     Prisma.CheckSelect<
       T,
       Result<Array<ServerMessage>>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       Promise<Result<Array<Prisma.ServerMessageGetPayload<any>>>>
     >
   >;

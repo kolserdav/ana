@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import useQueryString from '../hooks/useQueryString';
-import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import {
   checkEmail,
   Locale,
@@ -11,7 +10,6 @@ import {
   UserCleanResult,
 } from '../types/interfaces';
 import { EMAIL_MAX_LENGTH, NAME_MAX_LENGTH, Pages, PASSWORD_MIN_LENGTH } from '../utils/constants';
-import { CookieName, setCookie } from '../utils/cookies';
 import { checkRouterPath, log } from '../utils/lib';
 import { checkName, checkPasswordError } from './Login.lib';
 import Request from '../utils/request';
