@@ -34,7 +34,16 @@ const forgotPassword: RequestHandler<
       data: null,
     };
   }
-  const user = await orm.userFindFirst({ where: { email } });
+  const user = await orm.userFindFirst({
+    where: { email },
+    include: {
+      RestoreLink: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
   if (user.status !== 'info' || !user.data) {
     reply.type(APPLICATION_JSON).code(getHttpCode(user.status));
     return {
@@ -42,6 +51,19 @@ const forgotPassword: RequestHandler<
       message: user.status === 'error' ? locale.error : locale.notFound,
       data: null,
     };
+  }
+
+  for (let i = 0; user.data.RestoreLink[i]; i++) {
+    const delLink = user.data.RestoreLink[i];
+
+    if (!delLink) {
+      continue;
+    }
+    await orm.restoreLinkDelete({
+      where: {
+        id: delLink.id,
+      },
+    });
   }
 
   const restore = await orm.restoreLinkCreate({

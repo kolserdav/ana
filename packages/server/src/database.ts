@@ -48,6 +48,16 @@ abstract class Database {
     >
   >;
 
+  public abstract restoreLinkDelete<T extends Prisma.RestoreLinkDeleteArgs>(
+    args: Prisma.SelectSubset<T, Prisma.RestoreLinkDeleteArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<RestoreLink | null>,
+      Promise<Result<Prisma.RestoreLinkGetPayload<T> | null>>
+    >
+  >;
+
   public abstract userCreate<T extends Prisma.UserCreateArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>
   ): Promise<
