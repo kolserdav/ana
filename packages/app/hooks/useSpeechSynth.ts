@@ -183,12 +183,7 @@ const useSpeechSynth = ({
     let interval = setInterval(() => {
       /** */
     }, Infinity);
-    if (!synth) {
-      return () => {
-        /** */
-      };
-    }
-    if (synth.speaking || androidSpeaking) {
+    if (synth?.speaking || androidSpeaking) {
       interval = setInterval(() => {
         switch (volumeIcon) {
           case 'high':
@@ -214,7 +209,7 @@ const useSpeechSynth = ({
     return () => {
       clearInterval(interval);
     };
-  }, [volumeIcon, volumeIconUp, synth, synth?.speaking, androidSpeaking]);
+  }, [volumeIcon, volumeIconUp, synth?.speaking, androidSpeaking]);
 
   return { speechText, synthAllow, speechSpeed, changeSpeechSpeed, volumeIcon };
 };
