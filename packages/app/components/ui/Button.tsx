@@ -13,6 +13,7 @@ function Button({
   title,
   className,
   colorReverse,
+  classNameWrapper,
 }: {
   children: React.ReactNode | string;
   theme: Theme;
@@ -23,6 +24,7 @@ function Button({
   // eslint-disable-next-line no-unused-vars
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   className?: string;
+  classNameWrapper?: string;
 }) {
   const [isHover, setIsHover] = useState(false);
 
@@ -34,7 +36,7 @@ function Button({
   };
 
   return (
-    <div className={clsx(s.wrapper, ubuntu500.className)}>
+    <div className={clsx(s.wrapper, ubuntu500.className, classNameWrapper || '')}>
       <button
         title={title}
         disabled={disabled}
@@ -67,6 +69,7 @@ Button.defaultProps = {
   error: '',
   title: '',
   colorReverse: false,
+  classNameWrapper: undefined,
 };
 
 export default Button;

@@ -14,6 +14,7 @@ function Typography({
   align,
   styleName,
   disabled,
+  blur,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | React.ReactNode;
@@ -24,6 +25,7 @@ function Typography({
   align?: 'center' | 'right' | 'justify';
   styleName?: Status;
   disabled?: boolean;
+  blur?: boolean;
 }) {
   return (
     <div
@@ -41,6 +43,7 @@ function Typography({
             ? s.justify
             : ''
           : '',
+        blur ? s.blur : '',
         disabled ? s.disabled : ''
       )}
       style={{
@@ -84,6 +87,7 @@ Typography.defaultProps = {
   styleName: undefined,
   htmlFor: undefined,
   disabled: false,
+  blur: undefined,
 };
 
 export default Typography;

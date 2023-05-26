@@ -21,13 +21,17 @@ $speech-select-shift: 8px;
       display: flex;
       flex-flow: row wrap;
       align-items: center;
+      margin-top: 2rem;
 
       .speech_button {
         margin-left: 1rem;
       }
 
-      .lang_select {
+      .test_input__item {
         margin-left: 1rem;
+      }
+
+      .lang_select {
         margin-bottom: $speech-select-shift;
       }
 
@@ -39,4 +43,8 @@ $speech-select-shift: 8px;
       }
     }
   }
+}
+
+.button {
+  align-items: flex-start !important;
 }

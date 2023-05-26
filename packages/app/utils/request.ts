@@ -42,6 +42,7 @@ import {
   TagUpdateBody,
   TagUpdateResult,
   CSRF_HEADER,
+  UserUpdateBody,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -184,6 +185,14 @@ class Request {
     return this.send({
       url: Api.postUserCreateV1,
       method: 'POST',
+      body,
+    });
+  }
+
+  public async userUpdate(body: UserUpdateBody): Promise<Result<UserCleanResult | null>> {
+    return this.send({
+      url: Api.putUserUpdate,
+      method: 'PUT',
       body,
     });
   }

@@ -14,6 +14,7 @@ interface SettingsPageProps extends AppProps {
   localeSettings: Locale['app']['settings'];
   localeAppBar: Locale['app']['appBar'];
   localeCommon: Locale['app']['common'];
+  localeLogin: Locale['app']['login'];
   page: PageFull;
 }
 
@@ -22,6 +23,7 @@ export default function SettingsPage({
   localeSettings,
   localeAppBar,
   localeCommon,
+  localeLogin,
   page,
 }: SettingsPageProps) {
   return (
@@ -35,6 +37,9 @@ export default function SettingsPage({
           locale={localeSettings}
           theme={theme}
           playSound={localeCommon.playSound}
+          localeLogin={localeLogin}
+          eliminateRemarks={localeCommon.eliminateRemarks}
+          fieldMustBeNotEmpty={localeCommon.fieldMustBeNotEmpty}
         />
       </main>
     </>
@@ -46,6 +51,7 @@ export async function getStaticProps({
 }: GetStaticPropsContext): Promise<{ props: Omit<SettingsPageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const localeCommon = await request.getLocale({ field: 'common', locale });
+  const localeLogin = await request.getLocale({ field: 'login', locale });
   const localeSettings = await request.getLocale({ field: 'settings', locale });
   const page = await request.pageFindMany({
     where: {
@@ -65,6 +71,7 @@ export async function getStaticProps({
       localeAppBar: localeAppBar.data,
       localeSettings: localeSettings.data,
       localeCommon: localeCommon.data,
+      localeLogin: localeLogin.data,
     },
   };
 }

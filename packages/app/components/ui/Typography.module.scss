@@ -6,6 +6,10 @@
   label {
     font-size: small;
   }
+  
+  &.blur {
+    opacity: 0.5;
+  }
 
   b {
     font-family: monospace;

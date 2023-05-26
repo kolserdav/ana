@@ -3,11 +3,14 @@ import useLoad from '../hooks/useLoad';
 import useSpeechSynth from '../hooks/useSpeechSynth';
 import { Locale, UserCleanResult } from '../types/interfaces';
 import { SPEECH_SPEED_MAX } from '../utils/constants';
-import { useLanguage, useTestSpeech } from './Settings.hooks';
+import { useEmailInput, useNameInput, usePasswordInput } from './Login.hooks';
+import { useClean, useLanguage, usePersonalData, useTestSpeech } from './Settings.hooks';
 import s from './Settings.module.scss';
 import VolumeHighIcon from './icons/VolumeHigh';
 import VolumeLowIcon from './icons/VolumeLow';
 import VolumeMediumIcon from './icons/VolumeMedium';
+import Button from './ui/Button';
+import Hr from './ui/Hr';
 import IconButton from './ui/IconButton';
 import Input from './ui/Input';
 import Select from './ui/Select';
@@ -19,14 +22,20 @@ function Settings({
   user,
   voiceNotFound,
   playSound,
+  localeLogin,
+  fieldMustBeNotEmpty,
+  eliminateRemarks,
 }: {
   locale: Locale['app']['settings'];
+  localeLogin: Locale['app']['login'];
   theme: Theme;
   user: UserCleanResult | null;
   voiceNotFound: string;
   playSound: string;
+  fieldMustBeNotEmpty: string;
+  eliminateRemarks: string;
 }) {
-  const { load } = useLoad();
+  const { load, setLoad } = useLoad();
   const { testText, onChangeTestText } = useTestSpeech();
 
   const { lang, langs, changeLang } = useLanguage();
@@ -37,23 +46,104 @@ function Settings({
     lang,
   });
 
+  const { name, nameError, onChangeName, onBlurName, setNameError, setName } = useNameInput({
+    locale: localeLogin,
+  });
+
+  const {
+    email,
+    emailError,
+    emailSuccess,
+    onChangeEmail,
+    onBlurEmail,
+    setEmailError,
+    setEmail,
+    setEmailSuccess,
+  } = useEmailInput({
+    locale: localeLogin,
+    isSignUp: true,
+    user,
+  });
+
+  const {
+    password: oldPassword,
+    passwordError: oldPasswordError,
+    passwordSuccess: oldPasswordSuccess,
+    onChangePassword: onChangeOldPassword,
+    setPasswordError: setOldPasswordError,
+    onBlurPassword: onBlurOldPassword,
+    setPasswordSuccess: setOldPasswordSuccess,
+    setPassword: setOldPassword,
+  } = usePasswordInput({ locale: localeLogin, isSignUp: false, fieldMustBeNotEmpty });
+
+  const {
+    password,
+    passwordError,
+    passwordSuccess,
+    setPassword,
+    setPasswordRepeat,
+    onChangePassword,
+    onBlurPassword,
+    onChangePasswordRepeat,
+    onBlurPasswordRepeat,
+    passwordRepeat,
+    passwordRepeatError,
+    passwordRepeatSuccess,
+    setPasswordError,
+    setPasswordRepeatError,
+    setPasswordRepeatSuccess,
+    setPasswordSuccess,
+  } = usePasswordInput({ locale: localeLogin, isSignUp: true, fieldMustBeNotEmpty });
+
+  const { buttonError, onClickSaveButton, setButtonError, needClean } = usePersonalData({
+    setEmail,
+    setName,
+    user,
+    setEmailError,
+    setLoad,
+    setPasswordError,
+    email,
+    emailError,
+    password,
+    passwordError,
+    passwordRepeatError,
+    fieldMustBeNotEmpty,
+    eliminateRemarks,
+    oldPassword,
+    setOldPasswordError,
+    oldPasswordError,
+    name,
+    localeLogin,
+  });
+
+  useClean({
+    setButtonError,
+    setEmailError,
+    setEmailSuccess,
+    setPassword,
+    setNameError,
+    setOldPassword,
+    setOldPasswordError,
+    setOldPasswordSuccess,
+    setPasswordError,
+    setPasswordRepeat,
+    setPasswordRepeatError,
+    setPasswordRepeatSuccess,
+    setPasswordSuccess,
+    needClean,
+  });
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
-
+        <Hr theme={theme} />
+        <Typography variant="h4" theme={theme}>
+          {locale.speechSpeed}
+        </Typography>
         <div className={s.test_input}>
-          <Input
-            type="text"
-            id="test-speech"
-            theme={theme}
-            value={testText}
-            name={locale.speechTest}
-            onChange={onChangeTestText}
-            disabled={load}
-          />
           <div className={s.lang_select}>
             <Select onChange={changeLang} value={lang} aria-label={locale.speechLang} theme={theme}>
               {langs.map((item) => (
@@ -63,6 +153,26 @@ function Settings({
               ))}
             </Select>
           </div>
+          {!synthAllow && (
+            <div className={s.test_input__item}>
+              <Typography blur variant="p" theme={theme}>
+                {voiceNotFound}
+              </Typography>
+            </div>
+          )}
+          {synthAllow && (
+            <div className={s.test_input__item}>
+              <Input
+                type="text"
+                id="test-speech"
+                theme={theme}
+                value={testText}
+                name={locale.speechTest}
+                onChange={onChangeTestText}
+                disabled={load}
+              />
+            </div>
+          )}
           {synthAllow && (
             <div className={s.speed_select}>
               <Typography variant="label" theme={theme}>
@@ -94,6 +204,95 @@ function Settings({
             </div>
           )}
         </div>
+        {user !== null && (
+          <div className={s.personal_data}>
+            <Hr theme={theme} />
+            <Typography variant="h4" theme={theme}>
+              {locale.personalData}
+            </Typography>
+            <Input
+              theme={theme}
+              onChange={onChangeName}
+              onBlur={onBlurName}
+              value={name}
+              id="name"
+              type="text"
+              required
+              error={nameError}
+              disabled={load}
+              name={localeLogin.name}
+              fullWidth
+            />
+            <Input
+              theme={theme}
+              onChange={onChangeEmail}
+              onBlur={onBlurEmail}
+              value={email}
+              id="email"
+              type="email"
+              required
+              error={emailError}
+              success={emailSuccess}
+              disabled={load}
+              name={localeLogin.email}
+              fullWidth
+            />
+            <Input
+              theme={theme}
+              onChange={onChangeOldPassword}
+              onBlur={onBlurOldPassword}
+              value={oldPassword}
+              id="password"
+              type="password"
+              required
+              colorActive
+              error={oldPasswordError}
+              success={oldPasswordSuccess}
+              disabled={load}
+              name={localeLogin.password}
+              fullWidth
+            />
+            <Input
+              theme={theme}
+              onChange={onChangePassword}
+              onBlur={onBlurPassword}
+              value={password}
+              id="password"
+              type="password"
+              required
+              colorActive
+              error={passwordError}
+              success={passwordSuccess}
+              disabled={load}
+              name={localeLogin.newPassword}
+              fullWidth
+            />
+            <Input
+              theme={theme}
+              onChange={onChangePasswordRepeat}
+              onBlur={onBlurPasswordRepeat}
+              value={passwordRepeat}
+              id="password-repeat"
+              type="password"
+              required
+              colorActive
+              error={passwordRepeatError}
+              success={passwordRepeatSuccess}
+              disabled={load}
+              name={localeLogin.passwordRepeat}
+              fullWidth
+            />
+            <Button
+              classNameWrapper={s.button}
+              error={buttonError}
+              disabled={load}
+              theme={theme}
+              onClick={onClickSaveButton}
+            >
+              {localeLogin.save}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

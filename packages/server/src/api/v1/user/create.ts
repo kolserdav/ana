@@ -82,7 +82,7 @@ const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResul
 
   const cleanData = cleanUserFields(user.data);
 
-  reply.type(APPLICATION_JSON).code(200);
+  reply.type(APPLICATION_JSON).code(201);
   return {
     status: 'info',
     message: locale.success,

@@ -16,15 +16,18 @@ import { checkRouterPath, log } from '../utils/lib';
 import { checkName, checkPasswordError } from './Login.lib';
 import Request from '../utils/request';
 import { QueryString } from '../types';
+import useLogin from '../hooks/useLogin';
 
 const request = new Request();
 
 export const useEmailInput = ({
   locale,
   isSignUp,
+  user,
 }: {
   locale: Locale['app']['login'];
   isSignUp: boolean;
+  user: UserCleanResult | null;
 }) => {
   const [emailError, setEmailError] = useState<string>('');
   const [emailSuccess, setEmailSuccess] = useState<boolean>(false);
@@ -40,15 +43,20 @@ export const useEmailInput = ({
       if (check) {
         const checkRes = await request.checkEmail({ email: value });
         if (isSignUp && checkRes.data) {
-          setEmailError(locale.emailIsRegistered);
+          if (user?.email !== value) {
+            setEmailError(locale.emailIsRegistered);
+          }
           setEmailSuccess(false);
-        } else if (!isSignUp && !checkRes.data) {
+          return;
+        }
+        if (!isSignUp && !checkRes.data) {
           setEmailError(locale.emailIsNotRegistered);
           setEmailSuccess(false);
-        } else {
-          setEmailError('');
-          setEmailSuccess(true);
+          return;
         }
+        setEmailError('');
+        setEmailSuccess(true);
+        return;
       }
       setEmailSuccess(check);
       if (emailError) {
@@ -117,9 +125,11 @@ export const useNameInput = ({ locale }: { locale: Locale['app']['login'] }) => 
 export const usePasswordInput = ({
   locale,
   isSignUp,
+  fieldMustBeNotEmpty,
 }: {
   locale: Locale['app']['login'];
   isSignUp: boolean;
+  fieldMustBeNotEmpty: string;
 }) => {
   const [passwordError, setPasswordError] = useState<string>('');
   const [passwordSuccess, setPasswordSuccess] = useState<boolean>(false);
@@ -135,6 +145,9 @@ export const usePasswordInput = ({
     setPassword(value);
     if (passwordSuccess) {
       setPasswordSuccess(false);
+    }
+    if (passwordError === fieldMustBeNotEmpty) {
+      setPasswordError('');
     }
     if (
       passwordError &&
@@ -270,6 +283,7 @@ export const useButton = ({
   fieldMustBeNotEmpty,
   eliminateRemarks,
   isSignUp,
+  isChangePass,
 }: {
   name: string;
   email: string;
@@ -288,6 +302,7 @@ export const useButton = ({
   isSignUp: boolean;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
+  isChangePass: boolean;
 }) => {
   const router = useRouter();
   const [buttonError, setButtonError] = useState<string>('');
@@ -302,24 +317,6 @@ export const useButton = ({
       error = true;
       if (!email) {
         setEmailError(fieldMustBeNotEmpty);
-      }
-    }
-    setButtonError(error ? eliminateRemarks : '');
-    return error;
-  };
-
-  const checkLoginFields = () => {
-    let error = false;
-    if (!email || emailError) {
-      error = true;
-      if (!email) {
-        setEmailError(fieldMustBeNotEmpty);
-      }
-    }
-    if (!password || passwordError) {
-      error = true;
-      if (!password) {
-        setPasswordError(fieldMustBeNotEmpty);
       }
     }
     setButtonError(error ? eliminateRemarks : '');
@@ -376,36 +373,22 @@ export const useButton = ({
     return error;
   };
 
-  const onClickLoginButton = async () => {
-    const error = checkLoginFields();
-    if (error) {
-      return;
-    }
-    if (buttonError) {
-      setButtonError('');
-    }
-    setLoad(true);
-    const user = await request.userLogin({ email, password });
-    setLoad(false);
-    if (user.status !== 'info' || !user.data) {
-      if (user.code === 401) {
-        setPasswordError(user.message);
-      }
-      setButtonError(user.message);
-      return;
-    }
-    setCookie(CookieName._utoken, user.data.token);
-    setCookie(CookieName._uuid, user.data.userId);
-
-    const { userRenew } = storeUserRenew.getState();
-    storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
-    log('info', locale.successLogin, { token: user.data.token }, !isSignUp);
-
-    setNeedClean(true);
-    setTimeout(() => {
-      setNeedClean(false);
-    }, 1000);
-  };
+  const { onClickLoginButton } = useLogin({
+    email,
+    emailError,
+    password,
+    passwordError,
+    setEmailError,
+    setButtonError,
+    fieldMustBeNotEmpty,
+    locale,
+    setPasswordError,
+    buttonError,
+    eliminateRemarks,
+    setLoad,
+    setNeedClean,
+    isSignUp,
+  });
 
   const onClickRestoreButton = async () => {
     const error = checkRestoreFields();
@@ -418,7 +401,7 @@ export const useButton = ({
     setLoad(true);
     const forgotRes = await request.forgotPassword({ email });
     setLoad(false);
-    log(forgotRes.status, forgotRes.message, {}, true);
+    log(forgotRes.status, forgotRes.message, {}, true, true);
     if (forgotRes.status === 'info') {
       setNeedClean(true);
       setTimeout(() => {
@@ -446,6 +429,15 @@ export const useButton = ({
       }, 1000);
     }
   };
+
+  /**
+   * Set email if is change pass
+   */
+  useEffect(() => {
+    if (isChangePass && e) {
+      setEmail(e);
+    }
+  }, [isChangePass, setEmail, e]);
 
   const onClickRegisterButton = async () => {
     const error = checkRegisterFields();

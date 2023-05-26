@@ -7,7 +7,7 @@ $alert-indent: 1rem;
 .item {
   position: fixed;
   width: $alert-width;
-  height: $alert-height;
+  min-height: $alert-height;
   border-radius: $input-border-radius;
   left: calc(100vw + $alert-width + $alert-indent);
   background-color: wheat;
@@ -17,7 +17,7 @@ $alert-indent: 1rem;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0.5rem;
+  padding: 0.2rem 0.5rem;
   transition: left $alert-transition ease-out;
   user-select: all;
   word-wrap: break-word;

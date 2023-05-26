@@ -61,7 +61,7 @@ function Login({
     setEmailError,
     setEmail,
     setEmailSuccess,
-  } = useEmailInput({ locale, isSignUp });
+  } = useEmailInput({ locale, isSignUp, user });
 
   const {
     password,
@@ -80,7 +80,7 @@ function Login({
     setPasswordRepeat,
     setPasswordRepeatSuccess,
     setPasswordSuccess,
-  } = usePasswordInput({ locale, isSignUp: isSignUp || isChangePass });
+  } = usePasswordInput({ locale, isSignUp: isSignUp || isChangePass, fieldMustBeNotEmpty });
 
   const { errorDialogOpen, setErrorDialogOpen } = useErrorDialog();
 
@@ -112,6 +112,7 @@ function Login({
     fieldMustBeNotEmpty,
     eliminateRemarks,
     isSignUp,
+    isChangePass,
   });
 
   const { cleanAllFields } = useClean({
@@ -201,6 +202,16 @@ function Login({
               disabled={load}
               name={`${locale.email}*`}
               fullWidth
+            />
+          )}
+          {isChangePass && (
+            <input
+              type="email"
+              hidden
+              value={email}
+              onChange={() => {
+                /** */
+              }}
             />
           )}
           {!isRestore && (

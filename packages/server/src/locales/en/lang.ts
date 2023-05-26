@@ -7,7 +7,8 @@ const lang: Locale = {
     notFound: 'Not Found',
     success: 'Successful request',
     wrongPassword: 'Invalid username or password',
-    emailIsSend: 'An email with instructions has been sent to the specified email address',
+    emailIsSend:
+      'An email with instructions has been sent to the specified email address. If the letter does not arrive for a long time, then check the "Spam" folder',
     linkExpired: 'Link expired',
     linkUnaccepted: 'Invalid link',
     letterNotSend:
@@ -163,6 +164,7 @@ const lang: Locale = {
       speechSpeed: 'Speech speed',
       speechTest: 'Speech test',
       speechLang: 'Speech Language',
+      personalData: 'Personal data',
     },
   },
 };

@@ -29,6 +29,7 @@ export enum Api {
   getLanguages = '/v1/languages',
   translate = '/libre/translate',
   languages = '/libre/languages',
+  putUserUpdate = '/v1/user-update',
 }
 
 // eslint-disable-next-line no-shadow
@@ -144,6 +145,16 @@ export type CheckEmailResult = boolean;
 export interface UserCreateBody {
   email: string;
   password: string;
+  name?: string;
+}
+
+export interface UserUpdateBody {
+  userId: string;
+  email: string;
+  password?: {
+    oldPassword: string;
+    newPassword: string;
+  };
   name?: string;
 }
 
@@ -395,6 +406,7 @@ export interface Locale {
       speechSpeed: string;
       speechTest: string;
       speechLang: string;
+      personalData: string;
     };
   };
 }
