@@ -105,16 +105,6 @@ const useSpeechSynth = ({
   }, [voiceNotFound, lang, synth]);
 
   /**
-   * Cancel android speaking
-   */
-  useEffect(() => {
-    if (androidSpeaking && typeof androidTextToSpeech !== 'undefined') {
-      androidTextToSpeech.cancel();
-      setAndroidSpeaking(false);
-    }
-  }, [androidSpeaking]);
-
-  /**
    * set android speaking
    */
   useEffect(() => {
