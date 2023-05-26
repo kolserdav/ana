@@ -113,12 +113,17 @@ const useSpeechSynth = ({
         /** */
       };
     }
-    const interval = setInterval(() => {
-      const isSpeaking = androidTextToSpeech.isSpeaking();
-      if (isSpeaking !== androidSpeaking) {
-        setAndroidSpeaking(isSpeaking);
-      }
-    }, 200);
+    let interval = setInterval(() => {
+      /** */
+    }, Infinity);
+    if (androidSpeaking) {
+      interval = setInterval(() => {
+        const isSpeaking = androidTextToSpeech.isSpeaking();
+        if (!isSpeaking) {
+          setAndroidSpeaking(false);
+        }
+      }, 200);
+    }
 
     return () => {
       clearInterval(interval);
@@ -140,8 +145,10 @@ const useSpeechSynth = ({
       androidTextToSpeech.isSpeaking();
       if (androidTextToSpeech.isSpeaking()) {
         androidTextToSpeech.cancel();
+        setAndroidSpeaking(false);
         return;
       }
+      setAndroidSpeaking(true);
       androidTextToSpeech.speak(textToSpeech);
     } else {
       if (!synth || !voice) {
