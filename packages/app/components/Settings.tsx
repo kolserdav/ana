@@ -6,6 +6,8 @@ import { SPEECH_SPEED_MAX } from '../utils/constants';
 import { useLanguage, useTestSpeech } from './Settings.hooks';
 import s from './Settings.module.scss';
 import VolumeHighIcon from './icons/VolumeHigh';
+import VolumeLowIcon from './icons/VolumeLow';
+import VolumeMediumIcon from './icons/VolumeMedium';
 import IconButton from './ui/IconButton';
 import Input from './ui/Input';
 import Select from './ui/Select';
@@ -29,7 +31,7 @@ function Settings({
 
   const { lang, langs, changeLang } = useLanguage();
 
-  const { synthAllow, speechText, speechSpeed, changeSpeechSpeed } = useSpeechSynth({
+  const { synthAllow, speechText, speechSpeed, changeSpeechSpeed, volumeIcon } = useSpeechSynth({
     text: testText,
     voiceNotFound,
     lang,
@@ -81,7 +83,13 @@ function Settings({
           {synthAllow && (
             <div className={s.speech_button}>
               <IconButton title={playSound} onClick={speechText}>
-                <VolumeHighIcon color={theme.text} />
+                {volumeIcon === 'high' ? (
+                  <VolumeHighIcon color={theme.text} />
+                ) : volumeIcon === 'medium' ? (
+                  <VolumeMediumIcon color={theme.text} />
+                ) : (
+                  <VolumeLowIcon color={theme.text} />
+                )}
               </IconButton>
             </div>
           )}
