@@ -146,6 +146,7 @@ const useSpeechSynth = ({
       if (androidTextToSpeech.isSpeaking()) {
         androidTextToSpeech.cancel();
         setAndroidSpeaking(false);
+        setTextToSpeech(undefined);
         return;
       }
       setAndroidSpeaking(true);
