@@ -36,6 +36,10 @@ declare global {
 
     setAvailableLocales: () => void;
 
+    cancel: () => void;
+
+    isSpeaking: () => boolean;
+
     /**
      *
      * @param rate {string} Like "0.5"

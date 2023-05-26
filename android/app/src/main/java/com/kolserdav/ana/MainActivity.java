@@ -105,6 +105,10 @@ class TTS {
         locales = Locale.getAvailableLocales();
     }
 
+    public Boolean getSpeechState() {
+        return textToSpeech.isSpeaking();
+    }
+
     public String getAvailableLocales() {
         Locale[] _locales = textToSpeech.getAvailableLanguages().toArray(new Locale[0]);
         JSONObject json = new JSONObject();
@@ -120,6 +124,10 @@ class TTS {
     }
     public void textToSpeak(String text) {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    public void stopSpeak() {
+        textToSpeech.stop();
     }
 
     public void setLanguage(String locale) {
@@ -157,6 +165,8 @@ class AndroidTextToSpeech {
 
     String locales;
 
+    Boolean speaking = false;
+
 
     AndroidTextToSpeech(TTS tts) {
         this.tts = tts;
@@ -181,6 +191,7 @@ class AndroidTextToSpeech {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                speaking = true;
                 tts.textToSpeak(text);
             }
         });
@@ -202,6 +213,30 @@ class AndroidTextToSpeech {
             @Override
             public void run() {
                 tts.setSpeechRate(rate);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public boolean isSpeaking() {
+        Log.d("speak", speaking.toString());
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                speaking = tts.getSpeechState();
+
+            }
+        });
+        return speaking;
+    }
+
+    @JavascriptInterface
+    public void cancel() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                speaking = false;
+                tts.stopSpeak();
             }
         });
     }

@@ -9,7 +9,11 @@ function Icon({ width, height, children, color, animate, className }: IconProps)
       height={height}
       fill={color}
       className={className}
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+      }}
     >
       <path d={children}>{animate}</path>
     </svg>

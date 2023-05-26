@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { log } from '../utils/lib';
 import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
@@ -16,6 +16,14 @@ const useSpeechSynth = ({
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
   const [synthAllow, setSynthAllow] = useState<boolean>(false);
   const [speechSpeed, setSpeechSpeed] = useState<number>(SPEECH_SPEED_DEFAULT);
+  const [volumeIcon, setVolumeIcon] = useState<'high' | 'medium' | 'low'>('high');
+  const [volumeIconUp, setVolumeIconUp] = useState<boolean>(true);
+  const [androidSpeaking, setAndroidSpeaking] = useState<boolean>(false);
+
+  const synth: null | SpeechSynthesis = useMemo(
+    () => (typeof window === 'undefined' ? null : window.speechSynthesis),
+    []
+  );
 
   const changeSpeechSpeed = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -66,7 +74,6 @@ const useSpeechSynth = ({
   useEffect(() => {
     (async () => {
       if (typeof androidTextToSpeech === 'undefined') {
-        const synth = window.speechSynthesis;
         if (!lang) {
           return;
         }
@@ -95,7 +102,38 @@ const useSpeechSynth = ({
         setVoice(_voice);
       }
     })();
-  }, [voiceNotFound, lang]);
+  }, [voiceNotFound, lang, synth]);
+
+  /**
+   * Cancel android speaking
+   */
+  useEffect(() => {
+    if (androidSpeaking && typeof androidTextToSpeech !== 'undefined') {
+      androidTextToSpeech.cancel();
+      setAndroidSpeaking(false);
+    }
+  }, [androidSpeaking]);
+
+  /**
+   * set android speaking
+   */
+  useEffect(() => {
+    if (typeof androidTextToSpeech === 'undefined') {
+      return () => {
+        /** */
+      };
+    }
+    const interval = setInterval(() => {
+      const isSpeaking = androidTextToSpeech.isSpeaking();
+      if (isSpeaking !== androidSpeaking) {
+        setAndroidSpeaking(isSpeaking);
+      }
+    }, 200);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [androidSpeaking]);
 
   /**
    * Speech text
@@ -109,14 +147,24 @@ const useSpeechSynth = ({
     }
 
     if (typeof androidTextToSpeech !== 'undefined') {
+      androidTextToSpeech.isSpeaking();
+      if (androidTextToSpeech.isSpeaking()) {
+        androidTextToSpeech.cancel();
+        return;
+      }
       androidTextToSpeech.speak(textToSpeech);
     } else {
-      const synth = window.speechSynthesis;
       if (!synth || !voice) {
         return;
       }
 
       const utterThis = new SpeechSynthesisUtterance(textToSpeech);
+
+      if (synth.speaking) {
+        synth.cancel();
+        setTextToSpeech(undefined);
+        return;
+      }
 
       utterThis.lang = voice.lang;
       utterThis.rate = speechSpeed;
@@ -124,13 +172,53 @@ const useSpeechSynth = ({
     }
 
     setTextToSpeech('');
-  }, [textToSpeech, lang, voice, speechSpeed]);
+  }, [textToSpeech, lang, voice, speechSpeed, synth]);
 
   const speechText = () => {
     setTextToSpeech(text);
   };
 
-  return { speechText, synthAllow, speechSpeed, changeSpeechSpeed };
+  /**
+   * set folume icon
+   */
+  useEffect(() => {
+    let interval = setInterval(() => {
+      /** */
+    }, Infinity);
+    if (!synth) {
+      return () => {
+        /** */
+      };
+    }
+    if (synth.speaking || androidSpeaking) {
+      interval = setInterval(() => {
+        switch (volumeIcon) {
+          case 'high':
+            setVolumeIcon('medium');
+            break;
+          case 'medium':
+            if (volumeIconUp) {
+              setVolumeIcon('low');
+            } else {
+              setVolumeIcon('high');
+            }
+            setVolumeIconUp(!volumeIconUp);
+            break;
+          case 'low':
+            setVolumeIcon('medium');
+            break;
+          default:
+        }
+      }, 500);
+    } else {
+      setVolumeIcon('high');
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [volumeIcon, volumeIconUp, synth, synth?.speaking, androidSpeaking]);
+
+  return { speechText, synthAllow, speechSpeed, changeSpeechSpeed, volumeIcon };
 };
 
 export default useSpeechSynth;
