@@ -17,8 +17,6 @@ PORT = int(os.getenv('PORT') or '8000')
 
 LOG_LEVEL = int(os.getenv('LOG_LEVEL') or '20')
 
-UPDATE_MODELS = os.getenv('UPDATE_MODELS') == '1'
-
 NO_TRANSLATE_MESSAGE = 'No translate'
 
 # Range(1 - 4)

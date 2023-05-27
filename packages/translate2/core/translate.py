@@ -6,7 +6,7 @@ from typing import List
 from pathlib import Path
 import sentencepiece as sp
 import re
-from utils.constants import UPDATE_MODELS, NUM_HYPOTHESES, logger
+from utils.constants import NUM_HYPOTHESES, logger
 
 
 class Translate:
@@ -40,7 +40,11 @@ class Translate:
                 index = installed_packages.index(available_package)
             except:
                 logger.warn("Package %s, not found" % (available_package))
-            if index == -1 or UPDATE_MODELS:
+
+            need_update = False
+            if index != -1:
+                need_update = installed_packages[index].package_version != available_package.package_version
+            if index == -1 or need_update:
                 logger.warn(
                     "Downloading %s: version %s ..."
                     % (available_package, available_package.package_version)
