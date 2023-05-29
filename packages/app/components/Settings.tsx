@@ -4,12 +4,20 @@ import useSpeechSynth from '../hooks/useSpeechSynth';
 import { Locale, UserCleanResult } from '../types/interfaces';
 import { SPEECH_SPEED_MAX } from '../utils/constants';
 import { useEmailInput, useNameInput, usePasswordInput } from './Login.hooks';
-import { useClean, useLanguage, usePersonalData, useTestSpeech } from './Settings.hooks';
+import {
+  useClean,
+  useDeleteAccount,
+  useLanguage,
+  usePersonalData,
+  useTestSpeech,
+} from './Settings.hooks';
 import s from './Settings.module.scss';
+import p from '../styles/Page.module.scss';
 import VolumeHighIcon from './icons/VolumeHigh';
 import VolumeLowIcon from './icons/VolumeLow';
 import VolumeMediumIcon from './icons/VolumeMedium';
 import Button from './ui/Button';
+import Dialog from './ui/Dialog';
 import Hr from './ui/Hr';
 import IconButton from './ui/IconButton';
 import Input from './ui/Input';
@@ -25,6 +33,8 @@ function Settings({
   localeLogin,
   fieldMustBeNotEmpty,
   eliminateRemarks,
+  cancel,
+  _delete,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -34,6 +44,8 @@ function Settings({
   playSound: string;
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
+  cancel: string;
+  _delete: string;
 }) {
   const { load, setLoad } = useLoad();
   const { testText, onChangeTestText } = useTestSpeech();
@@ -74,7 +86,11 @@ function Settings({
     onBlurPassword: onBlurOldPassword,
     setPasswordSuccess: setOldPasswordSuccess,
     setPassword: setOldPassword,
-  } = usePasswordInput({ locale: localeLogin, isSignUp: false, fieldMustBeNotEmpty });
+  } = usePasswordInput({
+    locale: localeLogin,
+    isSignUp: false,
+    fieldMustBeNotEmpty,
+  });
 
   const {
     password,
@@ -93,7 +109,11 @@ function Settings({
     setPasswordRepeatError,
     setPasswordRepeatSuccess,
     setPasswordSuccess,
-  } = usePasswordInput({ locale: localeLogin, isSignUp: true, fieldMustBeNotEmpty });
+  } = usePasswordInput({
+    locale: localeLogin,
+    isSignUp: true,
+    fieldMustBeNotEmpty,
+  });
 
   const { buttonError, onClickSaveButton, setButtonError, needClean } = usePersonalData({
     setEmail,
@@ -114,6 +134,9 @@ function Settings({
     oldPasswordError,
     name,
     localeLogin,
+    passwordsDoNotMatch: localeLogin.passwordsDoNotMatch,
+    setPasswordRepeatError,
+    passwordRepeat,
   });
 
   useClean({
@@ -132,6 +155,18 @@ function Settings({
     setPasswordSuccess,
     needClean,
   });
+
+  const {
+    onClickDeleteAccount,
+    onClickCloseDelete,
+    onClickOpenDeleteAccount,
+    deleteAccount,
+    setDeleteAccount,
+    onKeyDownDeleteAccount,
+    deleteSecure,
+    onChangeDeleteSecure,
+    canDeleteAccount,
+  } = useDeleteAccount({ user, setLoad, locale });
 
   return (
     <div className={s.wrapper}>
@@ -291,9 +326,51 @@ function Settings({
             >
               {localeLogin.save}
             </Button>
+            <span
+              role="button"
+              tabIndex={-1}
+              onKeyDown={onKeyDownDeleteAccount}
+              onClick={onClickOpenDeleteAccount}
+              className={s.delete_button}
+              style={{ color: theme.red }}
+            >
+              {locale.deleteAccountTitle}
+            </span>
           </div>
         )}
       </div>
+      <Dialog className={p.dialog} theme={theme} onClose={setDeleteAccount} open={deleteAccount}>
+        <Typography variant="h3" theme={theme} align="center">
+          {`${locale.deleteAccountTitle}?`}
+        </Typography>
+        <Typography variant="p" theme={theme}>
+          {locale.deleteAccountDesc}
+        </Typography>
+        <Typography variant="p" theme={theme}>
+          {`<b>${locale.deleteAccountSecure}:</b> <span style="color:${theme.yellow};">${locale.deleteMyAccount}</span>`}
+        </Typography>
+        <Input
+          type="text"
+          value={deleteSecure}
+          name={locale.deleteVerifying}
+          onChange={onChangeDeleteSecure}
+          theme={theme}
+          id="delete-secure"
+        />
+        <div className={p.dialog__actions}>
+          <Button className={s.button} disabled={load} onClick={onClickCloseDelete} theme={theme}>
+            {cancel}
+          </Button>
+          <Button
+            disabled={load || !canDeleteAccount}
+            className={s.button}
+            onClick={onClickDeleteAccount}
+            theme={theme}
+          >
+            {_delete}
+          </Button>
+        </div>
+      </Dialog>
     </div>
   );
 }

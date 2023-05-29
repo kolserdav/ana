@@ -4,6 +4,7 @@ import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
 import { usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
 import s from './My.module.scss';
+import p from '../styles/Page.module.scss';
 import DeleteIcon from './icons/Delete';
 import DotsHorisontalIcon from './icons/DotsHorisontal';
 import EditIcon from './icons/Edit';
@@ -234,14 +235,14 @@ function My({
           )}
         </div>
       </div>
-      <Dialog className={s.dialog} theme={theme} onClose={setDeletePhrase} open={deletePhrase}>
+      <Dialog className={p.dialog} theme={theme} onClose={setDeletePhrase} open={deletePhrase}>
         <Typography variant="h3" theme={theme} align="center">
-          {locale.deletePhrase}?
+          {`${locale.deletePhrase}?`}
         </Typography>
         <Typography variant="p" theme={theme}>
           {phraseToDelete?.text || ''}
         </Typography>
-        <div className={s.dialog__actions}>
+        <div className={p.dialog__actions}>
           <Button className={s.button} onClick={onClickCloseDelete} theme={theme}>
             {cancel}
           </Button>

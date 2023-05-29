@@ -82,7 +82,9 @@ const Input = forwardRef<
 
     const _onBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
       if (colorActive) {
-        setGradient(value?.length !== 0 || defaultValue?.length !== 0);
+        setGradient(
+          value?.length !== 0 || (defaultValue !== undefined && defaultValue?.length !== 0)
+        );
       }
     };
 

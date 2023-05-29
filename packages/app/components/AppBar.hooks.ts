@@ -33,7 +33,7 @@ export const useAppBar = () => {
       const rects = document.body.getBoundingClientRect();
       const { y } = rects;
       if (mayChange) {
-        if (y > oldY || oldY === 0) {
+        if (y > oldY || oldY === 0 || y === 0) {
           setShowAppBar(true);
         } else if (!menuOpen) {
           setShowAppBar(false);
@@ -51,6 +51,14 @@ export const useAppBar = () => {
       cleanSubs();
     };
   }, [menuOpen]);
+
+  /**
+   * Set show app bar
+   */
+  useEffect(() => {
+    const { y } = document.body.getBoundingClientRect();
+    setShowAppBar(y === 0);
+  }, []);
 
   /**
    * Listen touch events

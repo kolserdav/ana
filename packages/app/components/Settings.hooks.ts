@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { LEARN_LANG_DEFAULT, TEST_TEXT_DEFAULT } from '../utils/constants';
+import { useRouter } from 'next/router';
+import { LEARN_LANG_DEFAULT, Pages, TEST_TEXT_DEFAULT } from '../utils/constants';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { LocalStorageName, getLocalStorage } from '../utils/localStorage';
 import { Locale, UserCleanResult } from '../types/interfaces';
 import { log } from '../utils/lib';
 import useLogin from '../hooks/useLogin';
+import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 
 const request = new Request();
 
@@ -75,10 +77,14 @@ export const usePersonalData = ({
   fieldMustBeNotEmpty,
   eliminateRemarks,
   localeLogin,
+  passwordRepeat,
+  passwordsDoNotMatch,
+  setPasswordRepeatError,
 }: {
   setName: React.Dispatch<React.SetStateAction<string>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   user: UserCleanResult | null;
+  passwordRepeat: string;
   name: string;
   email: string;
   emailError: string;
@@ -90,8 +96,10 @@ export const usePersonalData = ({
   setEmailError: React.Dispatch<React.SetStateAction<string>>;
   setPasswordError: React.Dispatch<React.SetStateAction<string>>;
   setOldPasswordError: React.Dispatch<React.SetStateAction<string>>;
+  setPasswordRepeatError: React.Dispatch<React.SetStateAction<string>>;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   fieldMustBeNotEmpty: string;
+  passwordsDoNotMatch: string;
   eliminateRemarks: string;
   localeLogin: Locale['app']['login'];
 }) => {
@@ -137,6 +145,10 @@ export const usePersonalData = ({
         setOldPasswordError(fieldMustBeNotEmpty);
         res = 1;
       }
+      if (password !== passwordRepeat) {
+        setPasswordRepeatError(passwordsDoNotMatch);
+        res = 1;
+      }
     }
     return res;
   };
@@ -158,6 +170,7 @@ export const usePersonalData = ({
       email,
       password: { newPassword: password, oldPassword },
     });
+
     setLoad(false);
     log(res.status, res.message, { res }, true);
     if (res.code === 401) {
@@ -167,7 +180,9 @@ export const usePersonalData = ({
       return;
     }
 
-    onClickLoginButton();
+    if (password) {
+      onClickLoginButton();
+    }
   };
 
   return { buttonError, onClickSaveButton, needClean, setButtonError };
@@ -245,4 +260,78 @@ export const useClean = ({
       cleanAllFields();
     }
   }, [needClean, cleanAllFields]);
+};
+
+export const useDeleteAccount = ({
+  user,
+  setLoad,
+  locale,
+}: {
+  user: UserCleanResult | null;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  locale: Locale['app']['settings'];
+}) => {
+  const router = useRouter();
+  const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
+  const [deleteSecure, setDeleteSecure] = useState<string>('');
+  const [canDeleteAccount, setCanDeleteAccount] = useState<boolean>(false);
+
+  const onChangeDeleteSecure = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setDeleteSecure(value);
+  };
+
+  const onClickOpenDeleteAccount = () => {
+    setDeleteAccount(true);
+  };
+
+  const onClickCloseDelete = () => {
+    setDeleteAccount(false);
+  };
+
+  const onClickDeleteAccount = async () => {
+    if (!canDeleteAccount || !user) {
+      return;
+    }
+    setLoad(true);
+    const res = await request.userDelete({ userId: user.id });
+    setLoad(false);
+    log(res.status, res.message, { res }, true);
+    if (res.status === 'info') {
+      setDeleteSecure('');
+      const { userRenew } = storeUserRenew.getState();
+      storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
+      setTimeout(() => {
+        router.push(Pages.signIn);
+      }, 1000);
+    }
+  };
+
+  const onKeyDownDeleteAccount = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    const { key } = e;
+    if (key === 'Enter') {
+      setDeleteAccount(true);
+    }
+  };
+
+  /**
+   * Set can delete account
+   */
+  useEffect(() => {
+    setCanDeleteAccount(deleteSecure === locale.deleteMyAccount);
+  }, [deleteSecure, locale.deleteMyAccount]);
+
+  return {
+    deleteAccount,
+    setDeleteAccount,
+    onClickOpenDeleteAccount,
+    onClickCloseDelete,
+    onClickDeleteAccount,
+    onKeyDownDeleteAccount,
+    deleteSecure,
+    onChangeDeleteSecure,
+    canDeleteAccount,
+  };
 };

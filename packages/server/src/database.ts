@@ -95,6 +95,12 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<User | null>, Promise<Result<Prisma.UserGetPayload<T> | null>>>
   >;
 
+  public abstract userDelete<T extends Prisma.UserDeleteArgs>(
+    args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<User | null>, Promise<Result<Prisma.UserGetPayload<T> | null>>>
+  >;
+
   public abstract pageFindMany<T extends Prisma.PageFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.PageFindManyArgs>
   ): Promise<
@@ -105,6 +111,17 @@ abstract class Database {
     args: Prisma.SelectSubset<T, Prisma.PhraseFindManyArgs>
   ): Promise<
     Prisma.CheckSelect<T, Result<Array<Phrase>>, Promise<Result<Array<Prisma.PhraseGetPayload<T>>>>>
+  >;
+
+  public abstract phraseTagDeleteMany<T extends Prisma.PhraseTagDeleteManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PhraseTagDeleteManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<Phrase>>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Promise<Result<Array<Prisma.PhraseGetPayload<any>>>>
+    >
   >;
 
   public abstract phraseFindFirst<T extends Prisma.PhraseFindFirstArgs>(

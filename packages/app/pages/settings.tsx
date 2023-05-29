@@ -40,6 +40,8 @@ export default function SettingsPage({
           localeLogin={localeLogin}
           eliminateRemarks={localeCommon.eliminateRemarks}
           fieldMustBeNotEmpty={localeCommon.fieldMustBeNotEmpty}
+          cancel={localeCommon.cancel}
+          _delete={localeCommon.delete}
         />
       </main>
     </>

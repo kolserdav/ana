@@ -11,3 +11,22 @@
   justify-content: flex-start;
   padding: $app-bar-height 0;
 }
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .dialog__actions {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+
+    .button {
+      min-width: 100px;
+      padding: 0.5rem;
+    }
+  }
+}

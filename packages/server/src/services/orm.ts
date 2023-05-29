@@ -59,6 +59,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public phraseTagDeleteMany: Database['phraseTagDeleteMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phraseTag',
+      command: 'deleteMany',
+    });
+  };
+
   public tagFindMany: Database['tagFindMany'] = async (args) => {
     return this.runFromWorker({
       args,
@@ -136,6 +144,14 @@ export class ORM extends Service implements Database {
       args,
       model: 'user',
       command: 'update',
+    });
+  };
+
+  public userDelete: Database['userDelete'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'user',
+      command: 'delete',
     });
   };
 

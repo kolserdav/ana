@@ -30,6 +30,7 @@ import tagDelete from './api/v1/tag/delete';
 import tagUpdate from './api/v1/tag/update';
 import checkCSRFMiddlewareWrapper from './api/middlewares/checkCSRF';
 import userUpdate from './api/v1/user/update';
+import userDelete from './api/v1/user/delete';
 
 const prisma = new PrismaClient();
 
@@ -97,6 +98,16 @@ process.on('unhandledRejection', (err: Error) => {
   );
 
   await fastify.use(
+    [Api.deleteUserDelete],
+    checkAccessMiddlewareWrapper(prisma, {
+      model: 'User',
+      bodyField: 'id',
+      key: 'UserScalarFieldEnum',
+      fieldId: 'userId',
+    })
+  );
+
+  await fastify.use(
     [Api.deleteTag, Api.putTag],
     checkAccessMiddlewareWrapper(prisma, {
       model: 'Phrase',
@@ -142,6 +153,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.delete(Api.deleteTag, tagDelete);
   fastify.put(Api.putTag, tagUpdate);
   fastify.put(Api.putUserUpdate, userUpdate);
+  fastify.delete(Api.deleteUserDelete, userDelete);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

@@ -43,6 +43,7 @@ import {
   TagUpdateResult,
   CSRF_HEADER,
   UserUpdateBody,
+  UserDeleteBody,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -193,6 +194,14 @@ class Request {
     return this.send({
       url: Api.putUserUpdate,
       method: 'PUT',
+      body,
+    });
+  }
+
+  public async userDelete(body: UserDeleteBody): Promise<Result<UserCleanResult | null>> {
+    return this.send({
+      url: Api.deleteUserDelete,
+      method: 'DELETE',
       body,
     });
   }

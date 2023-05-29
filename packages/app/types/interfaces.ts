@@ -30,6 +30,7 @@ export enum Api {
   translate = '/libre/translate',
   languages = '/libre/languages',
   putUserUpdate = '/v1/user-update',
+  deleteUserDelete = '/v1/user-delete',
 }
 
 // eslint-disable-next-line no-shadow
@@ -158,6 +159,10 @@ export interface UserUpdateBody {
   name?: string;
 }
 
+export interface UserDeleteBody {
+  userId: string;
+}
+
 export interface ForgotPasswordBody {
   email: string;
 }
@@ -271,6 +276,7 @@ export interface Locale {
     mailSubjects: {
       confirmEmail: string;
       resetPassword: string;
+      deletedAccount: string;
     };
   };
   app: {
@@ -407,6 +413,11 @@ export interface Locale {
       speechTest: string;
       speechLang: string;
       personalData: string;
+      deleteAccountTitle: string;
+      deleteAccountDesc: string;
+      deleteAccountSecure: string;
+      deleteVerifying: string;
+      deleteMyAccount: string;
     };
   };
 }

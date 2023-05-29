@@ -30,6 +30,7 @@ const lang: Locale = {
     mailSubjects: {
       confirmEmail: 'Confirm email',
       resetPassword: 'Reset password',
+      deletedAccount: 'Account deleted',
     },
   },
   app: {
@@ -165,6 +166,12 @@ const lang: Locale = {
       speechTest: 'Speech test',
       speechLang: 'Speech Language',
       personalData: 'Personal data',
+      deleteAccountTitle: 'Delete account',
+      deleteAccountDesc:
+        'Attention! Deleting your account will delete all the phrases and tags you created, and you will no longer be able to log in to our service.',
+      deleteAccountSecure: 'To confirm account deletion, enter',
+      deleteVerifying: 'Deletion confirmation',
+      deleteMyAccount: 'delete my account',
     },
   },
 };

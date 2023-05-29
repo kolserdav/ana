@@ -77,7 +77,7 @@ const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResul
   });
 
   if (sendRes === 1) {
-    log('warn', 'Not send email to user', { user });
+    log('warn', 'Not send email to user', { user: user.data });
   }
 
   const cleanData = cleanUserFields(user.data);

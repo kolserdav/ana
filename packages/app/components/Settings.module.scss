@@ -42,6 +42,17 @@ $speech-select-shift: 8px;
         margin-left: 1rem;
       }
     }
+
+    .personal_data {
+      margin-top: 2rem;
+
+      .delete_button {
+        display: block;
+        margin-top: 2rem;
+        cursor: pointer;
+        
+      }
+    }
   }
 }
 

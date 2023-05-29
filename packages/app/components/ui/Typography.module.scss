@@ -16,6 +16,10 @@
     font-size: large;
   }
 
+  i {
+    font-family: monospace;
+  }
+
   &.disabled {
     opacity: 0.5;
   }
