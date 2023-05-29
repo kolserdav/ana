@@ -18,7 +18,6 @@ import IconButton from './ui/IconButton';
 import Select from './ui/Select';
 import Textarea from './ui/Textarea';
 import Typography from './ui/Typography';
-import VolumeHighIcon from './icons/VolumeHigh';
 import Button from './ui/Button';
 import Dialog from './ui/Dialog';
 import Checkbox from './ui/Checkbox';
@@ -33,8 +32,7 @@ import MicrophoneIcon from './icons/Microphone';
 import UndoIcon from './icons/Undo';
 import { PHRASE_MAX_LENGTH } from '../utils/constants';
 import useSpeechSynth from '../hooks/useSpeechSynth';
-import VolumeLowIcon from './icons/VolumeLow';
-import VolumeMediumIcon from './icons/VolumeMedium';
+import SpeakIcon from './ui/SpeakIcon';
 
 function Translate({
   theme,
@@ -274,15 +272,12 @@ function Translate({
           </div>
           {reTranslate && synthAllow && (
             <div className={s.sound_button}>
-              <IconButton onClick={speechText} title={playSound}>
-                {volumeIcon === 'high' ? (
-                  <VolumeHighIcon color={theme.text} />
-                ) : volumeIcon === 'medium' ? (
-                  <VolumeMediumIcon color={theme.text} />
-                ) : (
-                  <VolumeLowIcon color={theme.text} />
-                )}
-              </IconButton>
+              <SpeakIcon
+                onClick={speechText}
+                title={playSound}
+                volumeIcon={volumeIcon}
+                theme={theme}
+              />
             </div>
           )}
         </div>

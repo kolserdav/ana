@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { log } from '../utils/lib';
 import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
+import { VolumeIcon } from '../types';
 
 const useSpeechSynth = ({
   text,
@@ -16,7 +17,7 @@ const useSpeechSynth = ({
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
   const [synthAllow, setSynthAllow] = useState<boolean>(false);
   const [speechSpeed, setSpeechSpeed] = useState<number>(SPEECH_SPEED_DEFAULT);
-  const [volumeIcon, setVolumeIcon] = useState<'high' | 'medium' | 'low'>('high');
+  const [volumeIcon, setVolumeIcon] = useState<VolumeIcon>('high');
   const [volumeIconUp, setVolumeIconUp] = useState<boolean>(true);
   const [androidSpeaking, setAndroidSpeaking] = useState<boolean>(false);
 

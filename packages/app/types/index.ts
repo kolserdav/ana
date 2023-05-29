@@ -3,6 +3,8 @@ import { PageField } from '@prisma/client';
 import { Theme } from '../Theme';
 import { Locale, Result, Status, UserCleanResult } from './interfaces';
 
+export type VolumeIcon = 'high' | 'medium' | 'low';
+
 export type PageFull = {
   // eslint-disable-next-line no-unused-vars
   [K in PageField]: string;
