@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        mWebView.loadUrl("https://uyem.ru/");
+        mWebView.loadUrl("https://uyem.ru/en");
 
         this.setContentView(mWebView);
 
