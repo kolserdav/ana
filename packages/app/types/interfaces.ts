@@ -31,6 +31,7 @@ export enum Api {
   languages = '/libre/languages',
   putUserUpdate = '/v1/user-update',
   deleteUserDelete = '/v1/user-delete',
+  getPhraseFindByText = '/v1/phrase-find-by-text',
 }
 
 // eslint-disable-next-line no-shadow
@@ -225,6 +226,11 @@ export interface PhraseFindFirstQuery {
   phraseId: string;
 }
 export type PhraseFindFirstResult = PhraseFull | null;
+
+export interface PhraseFindByTextQuery {
+  text: string;
+}
+export type PhraseFindByTextResult = { id: string } | null;
 
 export interface PhraseFindManyQuery {
   orderBy: OrderBy;

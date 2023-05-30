@@ -102,7 +102,7 @@ function Translate({
     setText,
     translate,
     setTranslate,
-  } = useLanguages({ undo, setUndo, textareaRef, connId });
+  } = useLanguages({ undo, setUndo, textareaRef, connId, user });
 
   const {
     reTranslate,
@@ -403,7 +403,15 @@ function Translate({
               </Typography>
             </div>
           )}
-
+          <div className={s.tags_created}>
+            {tags.map((tag) => (
+              <div key={tag.id} className={s.tag_item}>
+                <Typography variant="span" theme={theme} small disabled>
+                  {`#${tag.text}`}
+                </Typography>
+              </div>
+            ))}
+          </div>
           <div className={s.dialog_actions}>
             <Button theme={theme} onClick={edit ? onClickUpdate : onClickSave} disabled={load}>
               {save}
@@ -419,7 +427,7 @@ function Translate({
           open={deleteTagDialog}
         >
           <Typography theme={theme} variant="h3">
-            {locale.deleteTag}?
+            {`${locale.deleteTag}?`}
           </Typography>
           <Typography variant="p" theme={theme}>
             {tagToDelete?.text || ''}

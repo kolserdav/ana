@@ -44,6 +44,8 @@ import {
   CSRF_HEADER,
   UserUpdateBody,
   UserDeleteBody,
+  PhraseFindByTextQuery,
+  PhraseFindByTextResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -237,6 +239,15 @@ class Request {
   }: PhraseFindFirstQuery): Promise<Result<PhraseFindFirstResult>> {
     return this.send({
       url: `${Api.getPhrase}?phraseId=${phraseId}`,
+      method: 'GET',
+    });
+  }
+
+  public async phraseFindByText({
+    text,
+  }: PhraseFindByTextQuery): Promise<Result<PhraseFindByTextResult>> {
+    return this.send({
+      url: `${Api.getPhraseFindByText}?text=${text}`,
       method: 'GET',
     });
   }

@@ -73,7 +73,7 @@ export default function useApp({
 
     ws.onopen = () => {
       if (!loadConnect) {
-        if (!quiet) {
+        if (!quiet && document.hasFocus()) {
           log('info', connectionReOpened, {}, true);
         }
       }
@@ -114,7 +114,7 @@ export default function useApp({
     };
 
     ws.onclose = (e) => {
-      if (!error) {
+      if (!error && document.hasFocus()) {
         log('warn', connectionRefused, e, true);
       }
       setLoad(true);

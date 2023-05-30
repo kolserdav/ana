@@ -13,7 +13,12 @@ import {
   TEXTAREA_ROWS,
   TRANSLATE_DELAY,
 } from '../utils/constants';
-import { Locale, PhraseUpdateResult, TagFindManyResult } from '../types/interfaces';
+import {
+  Locale,
+  PhraseUpdateResult,
+  TagFindManyResult,
+  UserCleanResult,
+} from '../types/interfaces';
 import useTagsGlobal from '../hooks/useTags';
 import { RECOGNITION_LANGS } from './Translate.lib';
 import {
@@ -31,12 +36,18 @@ export const useLanguages = ({
   setUndo,
   textareaRef,
   connId,
+  user,
 }: {
   setUndo: React.Dispatch<React.SetStateAction<boolean>>;
   undo: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
   connId: string | null;
+  user: UserCleanResult | null;
 }) => {
+  const router = useRouter();
+
+  const { edit } = router.query;
+
   const [text, setText] = useState<string>('');
   const [translate, setTranslate] = useState<string>('');
   const [nativeLang, setNativeLang] = useState<string>();
@@ -68,7 +79,19 @@ export const useLanguages = ({
       return;
     }
     setText(_text);
-  }, [connId]);
+    if (!user) {
+      return;
+    }
+    (async () => {
+      const phrase = await request.phraseFindByText({ text: _text });
+      if (phrase.status !== 'info' || !phrase.data) {
+        return;
+      }
+      if (!edit) {
+        router.push(`${router.asPath}?edit=${phrase.data.id}`);
+      }
+    })();
+  }, [connId, user, router, edit]);
 
   /**
    * Set default langs

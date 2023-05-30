@@ -22,6 +22,15 @@ $textare-button-indent-right: 8px;
       justify-content: space-around;
     }
 
+    .tags_created {
+      display: flex;
+      flex-flow: row wrap;
+
+      .tag_item {
+        margin-right: 0.2rem; 
+      }
+    }
+
     .button {
       min-width: 90px;
     }

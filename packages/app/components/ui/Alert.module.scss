@@ -1,8 +1,8 @@
 @import '../../styles/constants';
 
-$alert-width: 320px;
 $alert-height: 50px;
 $alert-indent: 1rem;
+$alert-width: calc(320px - $alert-indent * 2);
 
 .item {
   position: fixed;
