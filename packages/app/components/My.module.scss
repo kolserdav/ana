@@ -87,6 +87,10 @@ $search-input-wudth-coeff: 1.5;
         display: flex;
         justify-content: flex-end;
         opacity: 0.6;
+
+        &.bottom {
+          margin-top: 1rem;
+        }
       }
     }
 
@@ -140,14 +144,20 @@ $search-input-wudth-coeff: 1.5;
         }
       }
 
-      .tags {
+      .info {
         display: flex;
-        flex-flow: row wrap;
+        flex-direction: row;
+        justify-content: space-between;
 
-        .tag_item {
-          position: relative;
-          display: inline-block;
-          margin: 0 4px;
+        .tags {
+          display: flex;
+          flex-flow: row wrap;
+
+          .tag_item {
+            position: relative;
+            display: inline-block;
+            margin: 0 4px;
+          }
         }
       }
     }

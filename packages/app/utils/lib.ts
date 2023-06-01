@@ -1,10 +1,15 @@
 import { format, formatDistance } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { ru, enUS as en } from 'date-fns/locale';
 import { Page } from '@prisma/client';
 import storeAlert, { changeAlert } from '../store/alert';
-import { LogLevel } from '../types/interfaces';
+import { LocaleValue, LogLevel } from '../types/interfaces';
 import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from './constants';
 import { PageFull } from '../types';
+
+const DATE_LOCALE = {
+  ru,
+  en,
+};
 
 export const isDev = () => process.env.NODE_ENV === 'development';
 
@@ -123,8 +128,17 @@ export const getWindowDimensions = () => {
 
 export const cleanPath = (asPath: string) => asPath.replace(/(\?|#)?.*$/, '');
 
-export const getFormatDistance = (dateFrom: Date) =>
-  formatDistance(dateFrom, new Date(), { addSuffix: true, locale: ru });
+export function getUTCDate(date: Date): Date {
+  const dt = new Date(date);
+  dt.setTime(dt.getTime() + dt.getTimezoneOffset() * 60 * 1000);
+  return dt;
+}
+
+export const getFormatDistance = (dateFrom: Date, locale: LocaleValue) =>
+  formatDistance(new Date(dateFrom), getUTCDate(new Date()), {
+    addSuffix: true,
+    locale: DATE_LOCALE[locale],
+  });
 
 export async function copyToClipboard(textToCopy: string, message: string) {
   // Navigator clipboard api needs a secure context (https)

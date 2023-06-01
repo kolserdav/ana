@@ -9,7 +9,7 @@
 export type LocaleValue = 'ru' | 'en' | '[new locale]';
 ```
 
-5. Add a locale name in `packages/app/utils/constants.ts`:
+5. Add a locale name to `LOCALE_NAMES` in `packages/app/utils/constants.ts`:
 
 ```typescript
 export const LOCALE_NAMES: Record<LocaleValue, string> = {
@@ -19,7 +19,19 @@ export const LOCALE_NAMES: Record<LocaleValue, string> = {
 };
 ```
 
-6. Add the locale in `packages/server/src/utils/getLocale.ts`;
+6. Add a locale name to `DATE_LOCALE` in `packages/app/utils/lib.ts`:
+
+```typescript
+import { ru, enUS as en, [new locale] } from 'date-fns/locale';
+
+const DATE_LOCALE = {
+  ru,
+  en,
+  [new locale]
+};
+```
+
+7. Add the locale in `packages/server/src/utils/getLocale.ts`;
 
 ```typescript
 import ru from '../locales/ru/lang';
@@ -33,7 +45,7 @@ const locales: Record<string, Locale> = {
 };
 ```
 
-7. Add the locale in `scripts/server-reload-messages.js`
+8. Add the locale in `scripts/server-reload-messages.js`
 
 ```typescript
 const en = require('../packages/server/dist/locales/en/lang.js').default;
@@ -46,7 +58,7 @@ const langs = {
 };
 ```
 
-8. Add the locale value in `packages/server/orm/schema.prisma`;
+9. Add the locale value in `packages/server/orm/schema.prisma`;
 
 ```prisma
 enum Lang {
@@ -56,7 +68,7 @@ enum Lang {
 }
 ```
 
-8. Create a migration:
+10. Create a migration:
 
 ```sh
 npm run migrate:dev

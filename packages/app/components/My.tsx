@@ -1,7 +1,9 @@
 import { createRef } from 'react';
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale, UserCleanResult } from '../types/interfaces';
+import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
 import { usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
 import s from './My.module.scss';
 import p from '../styles/Page.module.scss';
@@ -21,6 +23,7 @@ import { TAKE_PHRASES_DEFAULT } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
 import { setMatchesBold } from './Me.lib';
+import { getFormatDistance } from '../utils/lib';
 
 function My({
   locale,
@@ -37,6 +40,7 @@ function My({
   cancel: string;
   user: UserCleanResult | null;
 }) {
+  const router = useRouter();
   const { load, setLoad } = useLoad();
 
   const { onClickPhraseUpdateWraper } = usePhraseUpdate();
@@ -203,14 +207,21 @@ function My({
                       </Typography>
                     )}
                   </div>
-                  <div className={s.tags}>
-                    {item.PhraseTag.map((tag) => (
-                      <div key={tag.id} className={s.tag_item}>
-                        <Typography variant="span" theme={theme} small disabled>
-                          {`#${tag.Tag.text}`}
-                        </Typography>
-                      </div>
-                    ))}
+                  <div className={s.info}>
+                    <div className={s.tags}>
+                      {item.PhraseTag.map((tag) => (
+                        <div key={tag.id} className={s.tag_item}>
+                          <Typography variant="span" theme={theme} small disabled>
+                            {`#${tag.Tag.text}`}
+                          </Typography>
+                        </div>
+                      ))}
+                    </div>
+                    <div className={s.date}>
+                      <Typography variant="span" theme={theme} small disabled>
+                        {getFormatDistance(item.updated, router.locale as LocaleValue)}
+                      </Typography>
+                    </div>
                   </div>
                 </div>
               );
@@ -227,7 +238,7 @@ function My({
             </span>
           )}
           {phrases.length !== 0 && phrases.length === count && (
-            <div className={s.pagination}>
+            <div className={clsx(s.pagination, s.bottom)}>
               <Typography small theme={theme} variant="span">
                 {pagination}
               </Typography>
