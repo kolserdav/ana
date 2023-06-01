@@ -128,6 +128,12 @@ export const getWindowDimensions = () => {
 
 export const cleanPath = (asPath: string) => asPath.replace(/(\?|#)?.*$/, '');
 
+export function getUTCDate(date: Date): Date {
+  const dt = new Date(date);
+  dt.setTime(dt.getTime() + dt.getTimezoneOffset() * 60 * 1000);
+  return dt;
+}
+
 export const getFormatDistance = (dateFrom: Date, locale: LocaleValue) =>
   formatDistance(new Date(dateFrom), new Date(), {
     addSuffix: true,

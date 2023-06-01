@@ -26,6 +26,7 @@ const phraseFindMany: RequestHandler<
     tags: _tags,
     strongTags: _strongTags,
     search: _search,
+    gt: _gt,
   } = query;
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
@@ -34,7 +35,10 @@ const phraseFindMany: RequestHandler<
   if (_tags) {
     tags = _tags.split(',');
   }
-
+  let gt: Date | undefined = new Date(_gt);
+  if (Number.isNaN(gt.getTime())) {
+    gt = undefined;
+  }
   const strongTags = _strongTags === '1';
   const tagsFilter = strongTags ? 'AND' : 'OR';
   const search =
@@ -106,6 +110,11 @@ const phraseFindMany: RequestHandler<
               },
             },
           ],
+        },
+        {
+          updated: {
+            gt,
+          },
         },
       ],
       NOT: strongTags

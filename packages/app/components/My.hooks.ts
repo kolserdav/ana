@@ -15,6 +15,8 @@ import { ORDER_BY_DEFAULT, Pages, TAKE_PHRASES_DEFAULT } from '../utils/constant
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
+import { DateFilter } from '../types';
+import { getGTDate } from './Me.lib';
 
 const request = new Request();
 
@@ -28,6 +30,7 @@ export const usePhrases = ({
   locale,
   tagsIsSet,
   strongTags,
+  gt,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tags: TagFindManyResult;
@@ -36,6 +39,7 @@ export const usePhrases = ({
   locale: Locale['app']['my'];
   tagsIsSet: boolean;
   strongTags: boolean;
+  gt: string;
 }) => {
   const lastRef = useRef<HTMLDivElement>(null);
 
@@ -102,6 +106,7 @@ export const usePhrases = ({
         tags: tags.map((item) => item.id).join(','),
         strongTags: strongTags ? '1' : '0',
         search: _search,
+        gt,
       });
       setLoad(false);
       if (_phrases.status !== 'info') {
@@ -120,7 +125,7 @@ export const usePhrases = ({
         _load = false;
       }, 0);
     })();
-  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search]);
+  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search, gt]);
 
   const onClickSortByDate = () => {
     const _orderBy = orderBy === 'asc' ? 'desc' : 'asc';
@@ -317,4 +322,25 @@ export const useTags = () => {
     strongTags,
     setStrongTags,
   };
+};
+
+export const useFilterByDate = () => {
+  const [date, setDate] = useState<DateFilter>('all-time');
+  const [gt, setGT] = useState<string>('');
+
+  const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setDate(value as DateFilter);
+  };
+
+  /**
+   * Set lt
+   */
+  useEffect(() => {
+    setGT(getGTDate(date));
+  }, [date]);
+
+  return { gt, onChangeDateFilter, date };
 };

@@ -144,6 +144,13 @@ const lang: Locale = {
       emptyPhrases: 'No phrases found for the specified filter',
       pagination: `Showing: ${LocaleVars.show} of ${LocaleVars.all}`,
       minimalSearchLenght: `Minimum ${SEARCH_MIN_LENGTH} character per word`,
+      forDay: 'per day',
+      forWeek: 'for the week',
+      forMonth: 'per month',
+      forThreeMoths: 'for three months',
+      forSixMonths: 'half a year',
+      forYear: 'for the year',
+      forAllTime: 'for all time',
     },
     app: {
       connectionRefused: 'Connection to server lost',

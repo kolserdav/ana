@@ -298,9 +298,10 @@ class Request {
     tags,
     strongTags,
     search,
+    gt,
   }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
     return this.send({
-      url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}`,
+      url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}&gt=${gt}`,
       method: 'GET',
     });
   }

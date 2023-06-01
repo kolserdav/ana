@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
-import { usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
+import { useFilterByDate, usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
 import s from './My.module.scss';
 import p from '../styles/Page.module.scss';
 import DeleteIcon from './icons/Delete';
@@ -24,6 +24,7 @@ import Input from './ui/Input';
 import SearchIcon from './icons/Search';
 import { setMatchesBold } from './Me.lib';
 import { getFormatDistance } from '../utils/lib';
+import Select from './ui/Select';
 
 function My({
   locale,
@@ -59,6 +60,8 @@ function My({
     setStrongTags,
   } = useTags();
 
+  const { onChangeDateFilter, gt, date } = useFilterByDate();
+
   const {
     phrases,
     restart,
@@ -66,7 +69,6 @@ function My({
     orderBy,
     onClickSortByDate,
     lastRef,
-
     pagination,
     count,
     search,
@@ -79,6 +81,7 @@ function My({
     locale,
     tagsIsSet,
     strongTags,
+    gt,
   });
 
   const {
@@ -98,7 +101,15 @@ function My({
         <Typography theme={theme} variant="h1" align="center">
           {locale.title}
         </Typography>
-
+        <Select onChange={onChangeDateFilter} value={date} theme={theme}>
+          <option value="all-time">{locale.forAllTime}</option>
+          <option value="day">{locale.forDay}</option>
+          <option value="week">{locale.forWeek}</option>
+          <option value="month">{locale.forMonth}</option>
+          <option value="three-months">{locale.forThreeMoths}</option>
+          <option value="six-months">{locale.forSixMonths}</option>
+          <option value="year">{locale.forYear}</option>
+        </Select>
         <div className={s.filters} style={{ backgroundColor: theme.active }}>
           <Checkbox
             theme={theme}

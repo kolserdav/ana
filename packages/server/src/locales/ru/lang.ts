@@ -142,6 +142,13 @@ const lang: Locale = {
       emptyPhrases: 'По заданному фильтру фразы не найдены',
       pagination: `Показано: ${LocaleVars.show} из ${LocaleVars.all}`,
       minimalSearchLenght: `Минимум ${SEARCH_MIN_LENGTH} символa в слове`,
+      forDay: 'за день',
+      forWeek: 'за неделю',
+      forMonth: 'за месяц',
+      forThreeMoths: 'за три месяца',
+      forSixMonths: 'за полгода',
+      forYear: 'за год',
+      forAllTime: 'за всё время',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',

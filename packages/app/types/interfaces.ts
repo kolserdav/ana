@@ -239,6 +239,7 @@ export interface PhraseFindManyQuery {
   tags: string;
   strongTags: Bool;
   search: string;
+  gt: string;
 }
 export type PhraseFindManyResult = PhraseFull[];
 
@@ -398,6 +399,13 @@ export interface Locale {
        */
       pagination: string;
       minimalSearchLenght: string;
+      forDay: string;
+      forWeek: string;
+      forMonth: string;
+      forThreeMoths: string;
+      forSixMonths: string;
+      forYear: string;
+      forAllTime: string;
     };
     app: {
       connectionRefused: string;
