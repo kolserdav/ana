@@ -60,7 +60,7 @@ function My({
     setStrongTags,
   } = useTags();
 
-  const { onChangeDateFilter, gt, date } = useFilterByDate();
+  const { onChangeDateFilter, gt, date } = useFilterByDate({ setSkip });
 
   const {
     phrases,

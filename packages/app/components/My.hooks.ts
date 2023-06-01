@@ -324,7 +324,11 @@ export const useTags = () => {
   };
 };
 
-export const useFilterByDate = () => {
+export const useFilterByDate = ({
+  setSkip,
+}: {
+  setSkip: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const [date, setDate] = useState<DateFilter>('all-time');
   const [gt, setGT] = useState<string>('');
 
@@ -333,6 +337,7 @@ export const useFilterByDate = () => {
       target: { value },
     } = e;
     setDate(value as DateFilter);
+    setSkip(0);
   };
 
   /**
