@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
+import { Locale, LocaleValue, UNDEFINED_QUERY_STRING, UserCleanResult } from '../types/interfaces';
 import {
   useFilterByDate,
   useLangFilter,
@@ -125,7 +125,7 @@ function My({
           </div>
           <div className={s.global_filters__item}>
             <Select onChange={onChangeLangsFilter} value={langFilter} theme={theme}>
-              <option value="">{locale.allLangs}</option>
+              <option value={UNDEFINED_QUERY_STRING}>{locale.allLangs}</option>
               {langs.map((item) => (
                 <option key={item.code} value={item.code}>
                   {item.name}
