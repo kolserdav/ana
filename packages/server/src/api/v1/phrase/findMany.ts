@@ -4,6 +4,7 @@ import {
   APPLICATION_JSON,
   PhraseFindManyQuery,
   PhraseFindManyResult,
+  QUERY_STRING_ARRAY_SPLITTER,
   Result,
   SEARCH_MIN_LENGTH,
   firstCapitalize,
@@ -27,13 +28,15 @@ const phraseFindMany: RequestHandler<
     strongTags: _strongTags,
     search: _search,
     gt: _gt,
+    learnLang: _learnLang,
   } = query;
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
   const take = _skip ? parseInt(_take, 10) : undefined;
+  const learnLang = _learnLang || undefined;
   let tags: string[] = [];
   if (_tags) {
-    tags = _tags.split(',');
+    tags = _tags.split(QUERY_STRING_ARRAY_SPLITTER);
   }
   let gt: Date | undefined = new Date(_gt);
   if (Number.isNaN(gt.getTime())) {
@@ -115,6 +118,9 @@ const phraseFindMany: RequestHandler<
           updated: {
             gt,
           },
+        },
+        {
+          learnLang,
         },
       ],
       NOT: strongTags

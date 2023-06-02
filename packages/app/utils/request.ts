@@ -46,6 +46,9 @@ import {
   UserDeleteBody,
   PhraseFindByTextQuery,
   PhraseFindByTextResult,
+  PhraseDistinctQuery,
+  PhraseDistinctResult,
+  QUERY_STRING_ARRAY_SPLITTER,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -243,6 +246,17 @@ class Request {
     });
   }
 
+  public async phraseDistinct({
+    distinct,
+  }: PhraseDistinctQuery): Promise<Result<PhraseDistinctResult>> {
+    return this.send({
+      url: `${Api.getPhraseDistinct}?distinct=${(distinct as string[]).join(
+        QUERY_STRING_ARRAY_SPLITTER
+      )}`,
+      method: 'GET',
+    });
+  }
+
   public async phraseFindByText({
     text,
   }: PhraseFindByTextQuery): Promise<Result<PhraseFindByTextResult>> {
@@ -299,9 +313,10 @@ class Request {
     strongTags,
     search,
     gt,
+    learnLang,
   }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
     return this.send({
-      url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}&gt=${gt}`,
+      url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}&gt=${gt}&learnLang=${learnLang}`,
       method: 'GET',
     });
   }

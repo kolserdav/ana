@@ -32,6 +32,7 @@ export enum Api {
   putUserUpdate = '/v1/user-update',
   deleteUserDelete = '/v1/user-delete',
   getPhraseFindByText = '/v1/phrase-find-by-text',
+  getPhraseDistinct = '/v1/phrase-distinct',
 }
 
 // eslint-disable-next-line no-shadow
@@ -47,6 +48,7 @@ export enum LocaleVars {
   all = '%all',
 }
 
+export const QUERY_STRING_ARRAY_SPLITTER = ',';
 export type LocaleValue = 'ru' | 'en';
 export const WS_MESSAGE_COMMENT_SERVER_RELOAD = 'server_reload';
 export const WS_MESSAGE_CONN_ID = 'conn_id';
@@ -227,6 +229,11 @@ export interface PhraseFindFirstQuery {
 }
 export type PhraseFindFirstResult = PhraseFull | null;
 
+export interface PhraseDistinctQuery {
+  distinct: Prisma.Enumerable<Prisma.PhraseScalarFieldEnum>;
+}
+export type PhraseDistinctResult = string[];
+
 export interface PhraseFindByTextQuery {
   text: string;
 }
@@ -240,6 +247,7 @@ export interface PhraseFindManyQuery {
   strongTags: Bool;
   search: string;
   gt: string;
+  learnLang: string;
 }
 export type PhraseFindManyResult = PhraseFull[];
 

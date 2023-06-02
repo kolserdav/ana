@@ -6,6 +6,7 @@ import {
   LocaleVars,
   OrderBy,
   PhraseFindManyResult,
+  QUERY_STRING_ARRAY_SPLITTER,
   SEARCH_MIN_LENGTH,
   TagFindManyResult,
 } from '../types/interfaces';
@@ -17,6 +18,7 @@ import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
 import { DateFilter } from '../types';
 import { getGTDate } from './Me.lib';
+import useLangs from '../hooks/useLangs';
 
 const request = new Request();
 
@@ -31,6 +33,7 @@ export const usePhrases = ({
   tagsIsSet,
   strongTags,
   gt,
+  learnLang,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tags: TagFindManyResult;
@@ -40,6 +43,7 @@ export const usePhrases = ({
   tagsIsSet: boolean;
   strongTags: boolean;
   gt: string;
+  learnLang: string;
 }) => {
   const lastRef = useRef<HTMLDivElement>(null);
 
@@ -103,10 +107,11 @@ export const usePhrases = ({
         orderBy,
         skip: skip.toString(),
         take: TAKE_PHRASES_DEFAULT.toString(),
-        tags: tags.map((item) => item.id).join(','),
+        tags: tags.map((item) => item.id).join(QUERY_STRING_ARRAY_SPLITTER),
         strongTags: strongTags ? '1' : '0',
         search: _search,
         gt,
+        learnLang,
       });
       setLoad(false);
       if (_phrases.status !== 'info') {
@@ -125,7 +130,7 @@ export const usePhrases = ({
         _load = false;
       }, 0);
     })();
-  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search, gt]);
+  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search, gt, learnLang]);
 
   const onClickSortByDate = () => {
     const _orderBy = orderBy === 'asc' ? 'desc' : 'asc';
@@ -348,4 +353,44 @@ export const useFilterByDate = ({
   }, [date]);
 
   return { gt, onChangeDateFilter, date };
+};
+
+export const useLangFilter = ({
+  setSkip,
+}: {
+  setSkip: React.Dispatch<React.SetStateAction<number>>;
+}) => {
+  const [learnLangs, setLearnLangs] = useState<string[]>([]);
+  const [langFilter, setLangFilter] = useState<string>('');
+
+  const { langs: _langs } = useLangs();
+
+  /**
+   * Set learn langs
+   */
+  useEffect(() => {
+    (async () => {
+      const res = await request.phraseDistinct({ distinct: ['learnLang'] });
+      log(res.status, res.message, { res });
+      if (res.status !== 'info') {
+        return;
+      }
+      setLearnLangs(res.data);
+    })();
+  }, []);
+
+  const langs = useMemo(
+    () => _langs.filter((item) => learnLangs.includes(item.code)),
+    [learnLangs, _langs]
+  );
+
+  const onChangeLangsFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setLangFilter(value);
+    setSkip(0);
+  };
+
+  return { langs, langFilter, onChangeLangsFilter };
 };

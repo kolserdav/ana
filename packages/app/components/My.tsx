@@ -1,10 +1,17 @@
-import { createRef } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
-import { useFilterByDate, usePhraseDelete, usePhraseUpdate, usePhrases, useTags } from './My.hooks';
+import {
+  useFilterByDate,
+  useLangFilter,
+  usePhraseDelete,
+  usePhraseUpdate,
+  usePhrases,
+  useTags,
+} from './My.hooks';
 import s from './My.module.scss';
 import p from '../styles/Page.module.scss';
 import DeleteIcon from './icons/Delete';
@@ -62,6 +69,8 @@ function My({
 
   const { onChangeDateFilter, gt, date } = useFilterByDate({ setSkip });
 
+  const { langs, langFilter, onChangeLangsFilter } = useLangFilter({ setSkip });
+
   const {
     phrases,
     restart,
@@ -82,6 +91,7 @@ function My({
     tagsIsSet,
     strongTags,
     gt,
+    learnLang: langFilter,
   });
 
   const {
@@ -101,15 +111,28 @@ function My({
         <Typography theme={theme} variant="h1" align="center">
           {locale.title}
         </Typography>
-        <Select onChange={onChangeDateFilter} value={date} theme={theme}>
-          <option value="all-time">{locale.forAllTime}</option>
-          <option value="day">{locale.forDay}</option>
-          <option value="week">{locale.forWeek}</option>
-          <option value="month">{locale.forMonth}</option>
-          <option value="three-months">{locale.forThreeMoths}</option>
-          <option value="six-months">{locale.forSixMonths}</option>
-          <option value="year">{locale.forYear}</option>
-        </Select>
+        <div className={s.global_filters}>
+          <div className={s.global_filters__item}>
+            <Select onChange={onChangeDateFilter} value={date} theme={theme}>
+              <option value="all-time">{locale.forAllTime}</option>
+              <option value="day">{locale.forDay}</option>
+              <option value="week">{locale.forWeek}</option>
+              <option value="month">{locale.forMonth}</option>
+              <option value="three-months">{locale.forThreeMoths}</option>
+              <option value="six-months">{locale.forSixMonths}</option>
+              <option value="year">{locale.forYear}</option>
+            </Select>
+          </div>
+          <div className={s.global_filters__item}>
+            <Select onChange={onChangeLangsFilter} value={langFilter} theme={theme}>
+              {langs.map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+        </div>
         <div className={s.filters} style={{ backgroundColor: theme.active }}>
           <Checkbox
             theme={theme}

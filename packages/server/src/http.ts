@@ -32,6 +32,7 @@ import checkCSRFMiddlewareWrapper from './api/middlewares/checkCSRF';
 import userUpdate from './api/v1/user/update';
 import userDelete from './api/v1/user/delete';
 import phraseFindByText from './api/v1/phrase/findByText';
+import phraseDistinct from './api/v1/phrase/distinct';
 
 const prisma = new PrismaClient();
 
@@ -73,6 +74,7 @@ process.on('unhandledRejection', (err: Error) => {
       Api.deleteTag,
       Api.putTag,
       Api.getPhraseFindByText,
+      Api.getPhraseDistinct,
     ],
     checkTokenMiddleware
   );
@@ -157,6 +159,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.put(Api.putUserUpdate, userUpdate);
   fastify.delete(Api.deleteUserDelete, userDelete);
   fastify.get(Api.getPhraseFindByText, phraseFindByText);
+  fastify.get(Api.getPhraseDistinct, phraseDistinct);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

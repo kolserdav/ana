@@ -19,6 +19,16 @@ $search-input-wudth-coeff: 1.5;
     padding: 0 1rem;
     margin-top: 2rem;
 
+    .global_filters {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+
+      .global_filters__item {
+        margin-right: 0.5rem;
+      }
+    }
+
     .search {
       position: relative;
       display: flex;

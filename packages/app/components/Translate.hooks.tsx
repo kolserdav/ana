@@ -27,6 +27,7 @@ import {
   removeLocalStorage,
   setLocalStorage,
 } from '../utils/localStorage';
+import useLangs from '../hooks/useLangs';
 
 const request = new Request();
 let oldText = '';
@@ -52,20 +53,9 @@ export const useLanguages = ({
   const [translate, setTranslate] = useState<string>('');
   const [nativeLang, setNativeLang] = useState<string>();
   const [learnLang, setLearnLang] = useState<string>();
-  const [langs, setLangs] = useState<ServerLanguage[]>([]);
   const [changeLang, setChangeLang] = useState<boolean>(false);
 
-  /**
-   * Set langs
-   */
-  useEffect(() => {
-    (async () => {
-      const _langs = await request.getLanguages();
-      if (typeof _langs.map === 'function') {
-        setLangs(_langs);
-      }
-    })();
-  }, []);
+  const { langs } = useLangs();
 
   /**
    * Set saved text
@@ -125,18 +115,6 @@ export const useLanguages = ({
       }
       setChangeLang(true);
     };
-
-  /**
-   * Set langs
-   */
-  useEffect(() => {
-    (async () => {
-      const _langs = await request.getLanguages();
-      if (typeof _langs.map === 'function') {
-        setLangs(_langs);
-      }
-    })();
-  }, []);
 
   const focusTextArea = () => {
     const { current } = textareaRef;
