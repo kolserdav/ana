@@ -48,6 +48,7 @@ export enum LocaleVars {
   all = '%all',
 }
 
+export const UNDEFINED_QUERY_STRING = 'undefined';
 export const QUERY_STRING_ARRAY_SPLITTER = ',';
 export type LocaleValue = 'ru' | 'en';
 export const WS_MESSAGE_COMMENT_SERVER_RELOAD = 'server_reload';
@@ -414,6 +415,7 @@ export interface Locale {
       forSixMonths: string;
       forYear: string;
       forAllTime: string;
+      allLangs: string;
     };
     app: {
       connectionRefused: string;

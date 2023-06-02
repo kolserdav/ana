@@ -7,6 +7,7 @@ import {
   QUERY_STRING_ARRAY_SPLITTER,
   Result,
   SEARCH_MIN_LENGTH,
+  UNDEFINED_QUERY_STRING,
   firstCapitalize,
 } from '../../../types/interfaces';
 import getLocale from '../../../utils/getLocale';
@@ -33,7 +34,7 @@ const phraseFindMany: RequestHandler<
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
   const take = _skip ? parseInt(_take, 10) : undefined;
-  const learnLang = _learnLang || undefined;
+  const learnLang = _learnLang && _learnLang !== UNDEFINED_QUERY_STRING ? _learnLang : undefined;
   let tags: string[] = [];
   if (_tags) {
     tags = _tags.split(QUERY_STRING_ARRAY_SPLITTER);

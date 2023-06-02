@@ -1,5 +1,6 @@
 import { ThemeType } from '../Theme';
-import { OrderBy } from '../types/interfaces';
+import { DateFilter } from '../types';
+import { LocaleValue, OrderBy } from '../types/interfaces';
 import { log } from './lib';
 
 // eslint-disable-next-line no-shadow
@@ -22,6 +23,12 @@ export enum LocalStorageName {
   TEXT = 'TEXT',
   // eslint-disable-next-line no-unused-vars
   SPEECH_SPEED = 'SPEECH_SPEED',
+  // eslint-disable-next-line no-unused-vars
+  INTERFACE_LANGUAGE = 'INTERFACE_LANGUAGE',
+  // eslint-disable-next-line no-unused-vars
+  FILTER_BY_DATE = 'FILTER_BY_DATE',
+  // eslint-disable-next-line no-unused-vars
+  FILTER_BY_LANG = 'FILTER_BY_LANG',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
@@ -42,6 +49,12 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   ? boolean
   : T extends LocalStorageName.SPEECH_SPEED
   ? number
+  : T extends LocalStorageName.INTERFACE_LANGUAGE
+  ? LocaleValue
+  : T extends LocalStorageName.FILTER_BY_LANG
+  ? string
+  : T extends LocalStorageName.FILTER_BY_DATE
+  ? DateFilter
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(

@@ -151,6 +151,7 @@ const lang: Locale = {
       forSixMonths: 'half a year',
       forYear: 'for the year',
       forAllTime: 'for all time',
+      allLangs: 'all languages',
     },
     app: {
       connectionRefused: 'Connection to server lost',

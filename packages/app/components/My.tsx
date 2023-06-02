@@ -125,6 +125,7 @@ function My({
           </div>
           <div className={s.global_filters__item}>
             <Select onChange={onChangeLangsFilter} value={langFilter} theme={theme}>
+              <option value="">{locale.allLangs}</option>
               {langs.map((item) => (
                 <option key={item.code} value={item.code}>
                   {item.name}

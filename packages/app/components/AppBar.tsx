@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { ubuntu500 } from '../fonts/ubuntu';
 import { Theme } from '../Theme';
 import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
 import { Pages, PAGE_LOGIN_IN_MENU, MENU_TRANSITION, LOCALE_NAMES } from '../utils/constants';
 import { checkRouterPath, scrollToTop } from '../utils/lib';
 import ChevronUpIcon from './icons/ChevronUp';
-import { useAndroid, useAppBar, useChangeTheme, useLogout } from './AppBar.hooks';
+import { useAndroid, useAppBar, useChangeTheme, useLanguage, useLogout } from './AppBar.hooks';
 import s from './AppBar.module.scss';
 import Link from './ui/Link';
 import Menu from './ui/Menu';
@@ -32,10 +32,6 @@ function AppBar({
   full?: boolean;
 }) {
   const router = useRouter();
-  const { locales, locale: lang } = router;
-
-  const [language, setLanguage] = useState<LocaleValue>(lang as LocaleValue);
-
   const localeRef = useRef<HTMLSelectElement>(null);
 
   const { showAppBar, showExpandLess, menuOpen, isMobile } = useAppBar();
@@ -53,23 +49,9 @@ function AppBar({
         }
       : { color: theme.text, transition: `all ${MENU_TRANSITION / 1000}s ease-in` };
 
-  const onChangeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {
-      target: { value },
-    } = e;
-    setLanguage(value as LocaleValue);
-  };
-
-  /**
-   * Change lang
-   */
-  useEffect(() => {
-    if (lang !== language) {
-      router.push(router.asPath, router.asPath, { locale: language });
-    }
-  }, [router, lang, language]);
-
   const { android, closeApp } = useAndroid();
+
+  const { locales, language, onChangeLang } = useLanguage();
 
   return (
     <header>

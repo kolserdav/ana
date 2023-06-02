@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import storeMenuOpen from '../store/menuOpen';
 import storeScroll from '../store/scroll';
 import storeTheme, { changeTheme } from '../store/theme';
@@ -7,6 +8,7 @@ import { DEFAULT_THEME, EXPAND_LESS_SHOW_FROM, MOBILE_WIDTH } from '../utils/con
 import { CookieName, setCookie } from '../utils/cookies';
 import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
 import storeTouchEvent from '../store/touchEvent';
+import { LocaleValue } from '../types/interfaces';
 
 let oldY = 0;
 let mayChange = true;
@@ -161,4 +163,40 @@ export const useAndroid = () => {
   };
 
   return { android, closeApp };
+};
+
+export const useLanguage = () => {
+  const router = useRouter();
+  const { locales, locale: lang } = router;
+
+  const [language, setLanguage] = useState<LocaleValue>(lang as LocaleValue);
+
+  const onChangeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setLanguage(value as LocaleValue);
+  };
+
+  /**
+   * Change lang
+   */
+  useEffect(() => {
+    if (lang !== language) {
+      router.push(router.asPath, router.asPath, { locale: language });
+      setLocalStorage(LocalStorageName.INTERFACE_LANGUAGE, language);
+    }
+  }, [router, lang, language]);
+
+  /**
+   * Set lang
+   */
+  useEffect(() => {
+    const savedLang = getLocalStorage(LocalStorageName.INTERFACE_LANGUAGE);
+    if (savedLang && savedLang !== lang) {
+      setLanguage(savedLang);
+    }
+  }, [lang]);
+
+  return { onChangeLang, language, locales };
 };

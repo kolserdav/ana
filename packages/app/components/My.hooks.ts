@@ -9,6 +9,7 @@ import {
   QUERY_STRING_ARRAY_SPLITTER,
   SEARCH_MIN_LENGTH,
   TagFindManyResult,
+  UNDEFINED_QUERY_STRING,
 } from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
@@ -43,7 +44,7 @@ export const usePhrases = ({
   tagsIsSet: boolean;
   strongTags: boolean;
   gt: string;
-  learnLang: string;
+  learnLang: string | undefined;
 }) => {
   const lastRef = useRef<HTMLDivElement>(null);
 
@@ -98,7 +99,7 @@ export const usePhrases = ({
    */
   useEffect(() => {
     const _search = search?.trim();
-    if (!orderBy || !tagsIsSet || (_search && _search.length < SEARCH_MIN_LENGTH)) {
+    if (!orderBy || !tagsIsSet || (_search && _search.length < SEARCH_MIN_LENGTH) || !learnLang) {
       return;
     }
     (async () => {
@@ -334,7 +335,7 @@ export const useFilterByDate = ({
 }: {
   setSkip: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const [date, setDate] = useState<DateFilter>('all-time');
+  const [date, setDate] = useState<DateFilter>();
   const [gt, setGT] = useState<string>('');
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -342,13 +343,25 @@ export const useFilterByDate = ({
       target: { value },
     } = e;
     setDate(value as DateFilter);
+    setLocalStorage(LocalStorageName.FILTER_BY_DATE, value as DateFilter);
     setSkip(0);
   };
+
+  /**
+   * Set date
+   */
+  useEffect(() => {
+    const savedDate = getLocalStorage(LocalStorageName.FILTER_BY_DATE);
+    setDate(savedDate || 'all-time');
+  }, []);
 
   /**
    * Set lt
    */
   useEffect(() => {
+    if (!date) {
+      return;
+    }
     setGT(getGTDate(date));
   }, [date]);
 
@@ -361,9 +374,17 @@ export const useLangFilter = ({
   setSkip: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const [learnLangs, setLearnLangs] = useState<string[]>([]);
-  const [langFilter, setLangFilter] = useState<string>('');
+  const [langFilter, setLangFilter] = useState<string>();
 
   const { langs: _langs } = useLangs();
+
+  /**
+   * Set lang filter
+   */
+  useEffect(() => {
+    const savedLang = getLocalStorage(LocalStorageName.FILTER_BY_LANG);
+    setLangFilter(savedLang || UNDEFINED_QUERY_STRING);
+  }, []);
 
   /**
    * Set learn langs
@@ -371,8 +392,8 @@ export const useLangFilter = ({
   useEffect(() => {
     (async () => {
       const res = await request.phraseDistinct({ distinct: ['learnLang'] });
-      log(res.status, res.message, { res });
       if (res.status !== 'info') {
+        log(res.status, res.message, res);
         return;
       }
       setLearnLangs(res.data);
@@ -389,6 +410,7 @@ export const useLangFilter = ({
       target: { value },
     } = e;
     setLangFilter(value);
+    setLocalStorage(LocalStorageName.FILTER_BY_LANG, value);
     setSkip(0);
   };
 

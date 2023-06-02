@@ -149,6 +149,7 @@ const lang: Locale = {
       forSixMonths: 'за полгода',
       forYear: 'за год',
       forAllTime: 'за всё время',
+      allLangs: 'все языки',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',
