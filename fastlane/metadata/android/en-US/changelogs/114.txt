@@ -1,0 +1,1 @@
+- Auto detect language interface when aplication is loading

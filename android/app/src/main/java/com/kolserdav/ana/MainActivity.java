@@ -1,4 +1,3 @@
-
 package com.kolserdav.ana;
 
 import android.Manifest;
@@ -33,6 +32,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
+        this.setContentView(R.layout.activity_main);
+
         mWebView = new WebView(this);
         WebSettings webSettings = this.mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -49,7 +50,9 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
 
+
         mWebView.setWebChromeClient(new WebChromeClient() {
+
             @Override
             public void onPermissionRequest(final PermissionRequest request) {
                 runOnUiThread(new Runnable() {
@@ -60,9 +63,10 @@ public class MainActivity extends Activity {
                 });
 
             }
+
         });
 
-        mWebView.loadUrl("https://uyem.ru/en");
+        mWebView.loadUrl("https://uyem.ru" );
 
         this.setContentView(mWebView);
 
