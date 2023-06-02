@@ -94,7 +94,7 @@ const lang: Locale = {
       eliminateRemarks: 'Eliminate form remarks',
       save: 'Save',
       edit: 'Edit',
-      delete: 'delete',
+      delete: 'Delete',
       cancel: 'Cancel',
       missingCSRF: 'CSRF Token is missing',
       policyTitle: 'Privacy Policy',

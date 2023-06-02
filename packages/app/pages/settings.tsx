@@ -29,7 +29,7 @@ export default function SettingsPage({
   return (
     <>
       <Head title={page.title} description={page.description} keywords={page.keywords} />
-      <AppBar user={user} theme={theme} locale={localeAppBar} />
+      <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Settings
           voiceNotFound={localeCommon.voiceNotFound}
