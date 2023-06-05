@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import { useEffect, useRef } from 'react';
 import { Theme } from '../../Theme';
 import s from './Checkbox.module.scss';
 import Typography from './Typography';
@@ -10,18 +12,35 @@ function Checkbox({
   onChange,
   cb,
   disabled,
+  className,
+  indeterminate,
 }: {
   checked: boolean;
   id: string;
-  label: string | React.ReactNode;
+  label?: string | React.ReactNode;
   theme: Theme;
-  onChange: React.Dispatch<React.SetStateAction<boolean>>;
+  onChange: (val: boolean) => void;
   // eslint-disable-next-line no-unused-vars
   cb?: (che: boolean) => void;
   disabled?: boolean;
+  className?: string;
+  indeterminate?: boolean;
 }) {
+  const ref = useRef<HTMLInputElement>(null);
+
+  /**
+   * Set indeterminate
+   */
+  useEffect(() => {
+    const { current } = ref;
+    if (!current) {
+      return;
+    }
+    current.indeterminate = indeterminate || false;
+  }, [indeterminate]);
+
   return (
-    <div className={s.wrapper}>
+    <div className={clsx(s.wrapper, className || '')}>
       <input
         disabled={disabled}
         onChange={(e) => {
@@ -32,6 +51,7 @@ function Checkbox({
           }
         }}
         id={id}
+        ref={ref}
         aria-label={typeof label === 'string' ? label : undefined}
         type="checkbox"
         checked={checked}
@@ -42,7 +62,7 @@ function Checkbox({
           {label}
         </Typography>
       ) : (
-        label
+        label || undefined
       )}
     </div>
   );
@@ -51,6 +71,9 @@ function Checkbox({
 Checkbox.defaultProps = {
   cb: undefined,
   disabled: undefined,
+  label: undefined,
+  className: undefined,
+  indeterminate: undefined,
 };
 
 export default Checkbox;

@@ -16,12 +16,15 @@ $input-padding: 12px;
 $input-margin-bottom: 2rem;
 $form-item-margin-top: 1.5rem;
 $doc-margin-bottom: 3px;
+$container-padding: 1rem;
 $input-border-width: 2px;
 $input-height: 50px;
 $input-font-size: 14px;
 $label-shift: 1px;
 $label-top: calc($input-height / 2 - $input-font-size - $label-shift);
 $input-border-radius: 5px;
+
+// Deps APP_BAR_HEIGHT
 $app-bar-height: 60px;
 $color-black: black;
 $label-padding: calc($input-font-size / 2.2);
@@ -41,3 +44,6 @@ $icon-width-default: 24px;
 
 // Deps LOAD_PAGE_DURATION
 $load-page-duration: 1s;
+
+// Deps APP_BAR_TRANSITION
+$app-bar-transition: 0.2s;

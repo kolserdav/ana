@@ -3,6 +3,7 @@
 $phrase-item-margin: 1.5rem;
 $search-input-wudth-coeff: 1.5;
 
+
 .wrapper {
   position: relative;
   width: 100%;
@@ -11,12 +12,16 @@ $search-input-wudth-coeff: 1.5;
   align-items: center;
   justify-content: center;
 
+  .button_margin {
+    width: 1rem;
+  }
+
   .container {
     position: relative;
     width: 100%;
     height: 100%;
     max-width: $translate-container-max;
-    padding: 0 1rem;
+    padding: 0 $container-padding;
     margin-top: 2rem;
 
     .global_filters {
@@ -91,6 +96,39 @@ $search-input-wudth-coeff: 1.5;
       justify-content: center;
       margin-top: 1rem;
 
+      .selected_container {
+        position: relative;
+          width: 100%;
+          max-width: $translate-container-max;
+
+        .selected_items {
+          position: relative;
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 0.5rem;
+          border-style: groove;
+          border-width: 1px;
+          border-radius: 4px;
+
+          .selected_items__button {
+            cursor: pointer;
+          }
+  
+          &.selected_items__fixed {
+            position: fixed;
+            z-index: 12;
+            max-width: $translate-container-max;
+            left: calc((100vw - ($translate-container-max - ($container-padding * 2))) / 2);
+  
+           @media (max-width: $translate-container-max) {
+              left: 0;
+           }
+          }
+        }
+      }
+
       .pagination {
         position: relative;
         width: 100%;
@@ -140,14 +178,25 @@ $search-input-wudth-coeff: 1.5;
 
       .item {
         display: flex;
-        flex-flow: row wrap;
+        flex-flow: row nowrap;
         align-items: center;
-        justify-content: space-between;
         border-width: 1px;
         border-style: groove;
         border-radius: 4px;
         margin: $phrase-item-margin 0 0 0;
         padding: 0 1rem;
+
+        .item__content {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-flow: row wrap;
+        }
+
+        .item__selector {
+          margin-left: 0.8rem;
+        }
 
         .translate {
           margin-left: 1rem;

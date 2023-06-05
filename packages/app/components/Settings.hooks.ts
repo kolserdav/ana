@@ -105,6 +105,7 @@ export const usePersonalData = ({
 }) => {
   const [buttonError, setButtonError] = useState<string>('');
   const [needClean, setNeedClean] = useState<boolean>(false);
+  const [changePassword, setChangePassword] = useState<boolean>(false);
 
   const { onClickLoginButton } = useLogin({
     email,
@@ -185,7 +186,14 @@ export const usePersonalData = ({
     }
   };
 
-  return { buttonError, onClickSaveButton, needClean, setButtonError };
+  return {
+    buttonError,
+    onClickSaveButton,
+    needClean,
+    setButtonError,
+    changePassword,
+    setChangePassword,
+  };
 };
 
 export const useClean = ({
@@ -275,6 +283,7 @@ export const useDeleteAccount = ({
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
   const [deleteSecure, setDeleteSecure] = useState<string>('');
   const [canDeleteAccount, setCanDeleteAccount] = useState<boolean>(false);
+  const [acceptDeleteWarning, setAcceptDeleteWarning] = useState<boolean>(false);
 
   const onChangeDeleteSecure = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -289,6 +298,8 @@ export const useDeleteAccount = ({
 
   const onClickCloseDelete = () => {
     setDeleteAccount(false);
+    setDeleteSecure('');
+    setAcceptDeleteWarning(false);
   };
 
   const onClickDeleteAccount = async () => {
@@ -333,5 +344,7 @@ export const useDeleteAccount = ({
     deleteSecure,
     onChangeDeleteSecure,
     canDeleteAccount,
+    acceptDeleteWarning,
+    setAcceptDeleteWarning,
   };
 };

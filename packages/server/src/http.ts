@@ -33,6 +33,7 @@ import userUpdate from './api/v1/user/update';
 import userDelete from './api/v1/user/delete';
 import phraseFindByText from './api/v1/phrase/findByText';
 import phraseDistinct from './api/v1/phrase/distinct';
+import phraseDeleteMany from './api/v1/phrase/deleteMany';
 
 const prisma = new PrismaClient();
 
@@ -75,6 +76,7 @@ process.on('unhandledRejection', (err: Error) => {
       Api.putTag,
       Api.getPhraseFindByText,
       Api.getPhraseDistinct,
+      Api.deletePhraseDeleteMany,
     ],
     checkTokenMiddleware
   );
@@ -88,6 +90,17 @@ process.on('unhandledRejection', (err: Error) => {
       bodyField: 'userId',
       key: 'PhraseScalarFieldEnum',
       fieldId: 'phraseId',
+    })
+  );
+
+  await fastify.use(
+    [Api.deletePhraseDeleteMany],
+    checkAccessMiddlewareWrapper(prisma, {
+      model: 'Phrase',
+      bodyField: 'userId',
+      key: 'PhraseScalarFieldEnum',
+      fieldId: 'phrases',
+      many: true,
     })
   );
 
@@ -160,6 +173,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.delete(Api.deleteUserDelete, userDelete);
   fastify.get(Api.getPhraseFindByText, phraseFindByText);
   fastify.get(Api.getPhraseDistinct, phraseDistinct);
+  fastify.delete(Api.deletePhraseDeleteMany, phraseDeleteMany);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

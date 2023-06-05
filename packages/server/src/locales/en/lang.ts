@@ -21,7 +21,7 @@ const lang: Locale = {
     phraseSaved: 'Phrase Saved',
     tagExists: 'The tag was previously created',
     tagSaved: 'Tag Saved',
-    phraseDeleted: 'Phrase deleted',
+    phraseDeleted: 'Phrase(s) deleted',
     phraseLoad: 'Phrase loaded from database',
     tagDeleteConflict: 'A tag cannot be deleted while it is associated with a phrase',
     tagDeleted: 'Tag deleted',
@@ -152,6 +152,10 @@ const lang: Locale = {
       forYear: 'for the year',
       forAllTime: 'for all time',
       allLangs: 'all languages',
+      selectAll: 'Select All',
+      unselectAll: 'Unselect all',
+      deleteSelected: 'Delete selected',
+      willDelete: `${LocaleVars.count} phrase(s) will be deleted`,
     },
     app: {
       connectionRefused: 'Connection to server lost',
@@ -180,6 +184,9 @@ const lang: Locale = {
       deleteAccountSecure: 'To confirm account deletion, enter',
       deleteVerifying: 'Deletion confirmation',
       deleteMyAccount: 'delete my account',
+      deleteAccountWarning:
+        'I understand that this operation cannot be undone. The account will be deleted immediately and permanently.',
+      changePassword: 'Change password',
     },
   },
 };

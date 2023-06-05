@@ -49,6 +49,8 @@ import {
   PhraseDistinctQuery,
   PhraseDistinctResult,
   QUERY_STRING_ARRAY_SPLITTER,
+  PhraseDeleteManyBody,
+  PhraseDeleteManyResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -232,6 +234,16 @@ class Request {
   public async phraseDelete(body: PhraseDeleteBody): Promise<Result<PhraseDeleteResult>> {
     return this.send({
       url: Api.deletePhrase,
+      method: 'DELETE',
+      body,
+    });
+  }
+
+  public async phraseDeleteMany(
+    body: PhraseDeleteManyBody
+  ): Promise<Result<PhraseDeleteManyResult>> {
+    return this.send({
+      url: Api.deletePhraseDeleteMany,
       method: 'DELETE',
       body,
     });

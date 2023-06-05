@@ -59,6 +59,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public phraseDeleteMany: Database['phraseDeleteMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'deleteMany',
+    });
+  };
+
   public phraseTagDeleteMany: Database['phraseTagDeleteMany'] = async (args) => {
     return this.runFromWorker({
       args,

@@ -113,6 +113,16 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<Array<Phrase>>, Promise<Result<Array<Prisma.PhraseGetPayload<T>>>>>
   >;
 
+  public abstract phraseDeleteMany<T extends Prisma.PhraseDeleteManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PhraseDeleteManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<Phrase>>,
+      Promise<Result<Array<Prisma.PhraseGetPayload<any>>>>
+    >
+  >;
+
   public abstract phraseTagDeleteMany<T extends Prisma.PhraseTagDeleteManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.PhraseTagDeleteManyArgs>
   ): Promise<

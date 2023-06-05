@@ -9,6 +9,7 @@ import { CookieName, setCookie } from '../utils/cookies';
 import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
 import storeTouchEvent from '../store/touchEvent';
 import { LocaleValue } from '../types/interfaces';
+import storeShowAppBar, { changeShowAppBar } from '../store/showAppBar';
 
 let oldY = 0;
 let mayChange = true;
@@ -61,6 +62,13 @@ export const useAppBar = () => {
     const { y } = document.body.getBoundingClientRect();
     setShowAppBar(y === 0);
   }, []);
+
+  /**
+   * Send show app bar
+   */
+  useEffect(() => {
+    storeShowAppBar.dispatch(changeShowAppBar({ showAppBar }));
+  }, [showAppBar]);
 
   /**
    * Listen touch events

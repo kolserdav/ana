@@ -17,6 +17,8 @@ $speech-select-shift: 8px;
     max-width: $translate-container-max;
     padding: 1rem;
 
+    
+
     .test_input {
       display: flex;
       flex-flow: row wrap;
@@ -46,6 +48,7 @@ $speech-select-shift: 8px;
     .personal_data {
       margin-top: 2rem;
 
+      
       .delete_button {
         display: block;
         margin-top: 2rem;
@@ -58,4 +61,8 @@ $speech-select-shift: 8px;
 
 .button {
   align-items: flex-start !important;
+}
+
+.warning_delete {
+  width: 80%;
 }

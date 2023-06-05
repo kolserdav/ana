@@ -110,3 +110,7 @@ export const PHRASE_MAX_LENGTH = 1000;
 export const TEST_TEXT_DEFAULT = 'Test';
 export const SPEECH_SPEED_DEFAULT = 1;
 export const SPEECH_SPEED_MAX = 1.5;
+// deps $app-bar-transition
+export const APP_BAR_TRANSITION = 0.2;
+// deps $app-bar-height
+export const APP_BAR_HEIGHT = 60;

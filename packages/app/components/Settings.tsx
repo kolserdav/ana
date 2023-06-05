@@ -20,6 +20,7 @@ import Input from './ui/Input';
 import Select from './ui/Select';
 import Typography from './ui/Typography';
 import SpeakIcon from './ui/SpeakIcon';
+import Checkbox from './ui/Checkbox';
 
 function Settings({
   locale,
@@ -112,7 +113,14 @@ function Settings({
     fieldMustBeNotEmpty,
   });
 
-  const { buttonError, onClickSaveButton, setButtonError, needClean } = usePersonalData({
+  const {
+    buttonError,
+    onClickSaveButton,
+    setButtonError,
+    needClean,
+    changePassword,
+    setChangePassword,
+  } = usePersonalData({
     setEmail,
     setName,
     user,
@@ -163,6 +171,8 @@ function Settings({
     deleteSecure,
     onChangeDeleteSecure,
     canDeleteAccount,
+    acceptDeleteWarning,
+    setAcceptDeleteWarning,
   } = useDeleteAccount({ user, setLoad, locale });
 
   return (
@@ -266,51 +276,62 @@ function Settings({
               name={localeLogin.email}
               fullWidth
             />
-            <Input
+            <Checkbox
+              label={locale.changePassword}
+              onChange={setChangePassword}
+              checked={changePassword}
               theme={theme}
-              onChange={onChangeOldPassword}
-              onBlur={onBlurOldPassword}
-              value={oldPassword}
-              id="old-password"
-              type="password"
-              required
-              colorActive
-              error={oldPasswordError}
-              success={oldPasswordSuccess}
-              disabled={load}
-              name={localeLogin.password}
-              fullWidth
+              id="change-password"
             />
-            <Input
-              theme={theme}
-              onChange={onChangePassword}
-              onBlur={onBlurPassword}
-              value={password}
-              id="password"
-              type="password"
-              required
-              colorActive
-              error={passwordError}
-              success={passwordSuccess}
-              disabled={load}
-              name={localeLogin.newPassword}
-              fullWidth
-            />
-            <Input
-              theme={theme}
-              onChange={onChangePasswordRepeat}
-              onBlur={onBlurPasswordRepeat}
-              value={passwordRepeat}
-              id="password-repeat"
-              type="password"
-              required
-              colorActive
-              error={passwordRepeatError}
-              success={passwordRepeatSuccess}
-              disabled={load}
-              name={localeLogin.passwordRepeat}
-              fullWidth
-            />
+            {changePassword && (
+              <>
+                <Input
+                  theme={theme}
+                  onChange={onChangeOldPassword}
+                  onBlur={onBlurOldPassword}
+                  value={oldPassword}
+                  id="old-password"
+                  type="password"
+                  required
+                  colorActive
+                  error={oldPasswordError}
+                  success={oldPasswordSuccess}
+                  disabled={load}
+                  name={localeLogin.password}
+                  fullWidth
+                />
+                <Input
+                  theme={theme}
+                  onChange={onChangePassword}
+                  onBlur={onBlurPassword}
+                  value={password}
+                  id="password"
+                  type="password"
+                  required
+                  colorActive
+                  error={passwordError}
+                  success={passwordSuccess}
+                  disabled={load}
+                  name={localeLogin.newPassword}
+                  fullWidth
+                />
+                <Input
+                  theme={theme}
+                  onChange={onChangePasswordRepeat}
+                  onBlur={onBlurPasswordRepeat}
+                  value={passwordRepeat}
+                  id="password-repeat"
+                  type="password"
+                  required
+                  colorActive
+                  error={passwordRepeatError}
+                  success={passwordRepeatSuccess}
+                  disabled={load}
+                  name={localeLogin.passwordRepeat}
+                  fullWidth
+                />
+              </>
+            )}
             <Button
               classNameWrapper={s.button}
               error={buttonError}
@@ -351,12 +372,20 @@ function Settings({
           theme={theme}
           id="delete-secure"
         />
+        <Checkbox
+          label={locale.deleteAccountWarning}
+          onChange={setAcceptDeleteWarning}
+          checked={acceptDeleteWarning}
+          theme={theme}
+          className={s.warning_delete}
+          id="accept-delete-warning"
+        />
         <div className={p.dialog__actions}>
           <Button className={s.button} disabled={load} onClick={onClickCloseDelete} theme={theme}>
             {cancel}
           </Button>
           <Button
-            disabled={load || !canDeleteAccount}
+            disabled={load || !canDeleteAccount || !acceptDeleteWarning}
             className={s.button}
             onClick={onClickDeleteAccount}
             theme={theme}

@@ -21,7 +21,7 @@ const lang: Locale = {
     phraseSaved: 'Фраза сохранена',
     tagExists: 'Метка была создана ранее',
     tagSaved: 'Метка сохранена',
-    phraseDeleted: 'Фраза удалена',
+    phraseDeleted: 'Фраза(ы) удалена(ы)',
     phraseLoad: 'Фраза загружена из базы данных',
     tagDeleteConflict: 'Метка не может быть удалена, пока она привязана к фразе',
     tagDeleted: 'Метка удалена',
@@ -150,6 +150,10 @@ const lang: Locale = {
       forYear: 'за год',
       forAllTime: 'за всё время',
       allLangs: 'все языки',
+      selectAll: 'Выбрать все',
+      unselectAll: 'Снять все выделения',
+      deleteSelected: 'Удалить выбранные',
+      willDelete: `Будет удалено ${LocaleVars.count} фраз(а)`,
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',
@@ -178,6 +182,9 @@ const lang: Locale = {
       deleteAccountSecure: 'Для подтверждения удаления аккаунта введите',
       deleteVerifying: 'Подверждение удаления',
       deleteMyAccount: 'удалить мой аккаунт',
+      deleteAccountWarning:
+        'Я понимаю, что данную операцию нельзя будет отменить. Аккаунт будет удален сразу и навсегда.',
+      changePassword: 'Сменить пароль',
     },
   },
 };

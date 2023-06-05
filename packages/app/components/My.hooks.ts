@@ -13,13 +13,14 @@ import {
 } from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
-import { ORDER_BY_DEFAULT, Pages, TAKE_PHRASES_DEFAULT } from '../utils/constants';
+import { APP_BAR_HEIGHT, ORDER_BY_DEFAULT, Pages, TAKE_PHRASES_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
 import { DateFilter } from '../types';
 import { getGTDate } from './Me.lib';
 import useLangs from '../hooks/useLangs';
+import storeShowAppBar from '../store/showAppBar';
 
 const request = new Request();
 
@@ -104,6 +105,7 @@ export const usePhrases = ({
     }
     (async () => {
       setLoad(true);
+      log('info', 'Phrase find many', { restart });
       const _phrases = await request.phraseFindMany({
         orderBy,
         skip: skip.toString(),
@@ -131,7 +133,7 @@ export const usePhrases = ({
         _load = false;
       }, 0);
     })();
-  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search, gt, learnLang]);
+  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search, gt, learnLang, restart]);
 
   const onClickSortByDate = () => {
     const _orderBy = orderBy === 'asc' ? 'desc' : 'asc';
@@ -189,13 +191,20 @@ export const usePhraseDelete = ({
   setLoad,
   setRestart,
   restart,
+  setSkip,
+  selectedPhrases,
+  setSelected,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setRestart: React.Dispatch<React.SetStateAction<boolean>>;
+  setSkip: React.Dispatch<React.SetStateAction<number>>;
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
   restart: boolean;
+  selectedPhrases: string[];
 }) => {
   const [deletePhrase, setDeletePhrase] = useState<boolean>(false);
   const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[0] | null>(null);
+  const [deleteSelectedPhrases, setDeleteSelectedPhrases] = useState<boolean>(false);
 
   const onClickDeletePhraseWrapper = (phrase: PhraseFindManyResult[0]) => () => {
     setPhraseToDelete(phrase);
@@ -205,6 +214,14 @@ export const usePhraseDelete = ({
   const onClickCloseDelete = () => {
     setPhraseToDelete(null);
     setDeletePhrase(false);
+  };
+
+  const onClickOpenDeleteSeleted = () => {
+    setDeleteSelectedPhrases(true);
+  };
+
+  const onClickCloseDeleteSelected = () => {
+    setDeleteSelectedPhrases(false);
   };
 
   const onClickDeletePhrase = async () => {
@@ -222,6 +239,21 @@ export const usePhraseDelete = ({
     setPhraseToDelete(null);
     setDeletePhrase(false);
     setRestart(!restart);
+    setSkip(0);
+  };
+
+  const onClickDeleteSelectedPhrases = async () => {
+    setLoad(true);
+    const delRes = await request.phraseDeleteMany({ phrases: selectedPhrases });
+    setLoad(false);
+    log(delRes.status, delRes.message, delRes, true);
+    if (delRes.status !== 'info') {
+      return;
+    }
+    setRestart(!restart);
+    setDeleteSelectedPhrases(false);
+    setSelected([]);
+    setSkip(0);
   };
 
   return {
@@ -231,6 +263,11 @@ export const usePhraseDelete = ({
     phraseToDelete,
     onClickCloseDelete,
     onClickDeletePhrase,
+    deleteSelectedPhrases,
+    setDeleteSelectedPhrases,
+    onClickDeleteSelectedPhrases,
+    onClickCloseDeleteSelected,
+    onClickOpenDeleteSeleted,
   };
 };
 
@@ -415,4 +452,103 @@ export const useLangFilter = ({
   };
 
   return { langs, langFilter, onChangeLangsFilter };
+};
+
+let firstYselected = 0;
+
+export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) => {
+  const selectedRef = useRef<HTMLDivElement>(null);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [selectedFixed, setSelectedFixed] = useState<boolean>(false);
+  const [showAppBar, setShowAppBar] = useState<boolean>(storeShowAppBar.getState().showAppBar);
+
+  const onChangeSelectedWrapper = (phraseId: string) => (checked: boolean) => {
+    const _selected = selected.slice();
+    if (checked) {
+      if (selected.indexOf(phraseId) === -1) {
+        _selected.push(phraseId);
+      } else {
+        log('warn', 'Duplicate selected phrase', { selected, phraseId });
+      }
+    } else {
+      const index = _selected.indexOf(phraseId);
+      if (index !== -1) {
+        _selected.splice(index, 1);
+      } else {
+        log('warn', 'Deleted selected phrase is missing', { selected, phraseId });
+      }
+    }
+    setSelected(_selected);
+  };
+
+  /**
+   * Listen show app bar
+   */
+  useEffect(() => {
+    const cleanSubs = storeShowAppBar.subscribe(() => {
+      const { showAppBar: _showAppBar } = storeShowAppBar.getState();
+      setShowAppBar(_showAppBar);
+    });
+    return () => {
+      cleanSubs();
+    };
+  }, []);
+
+  /**
+   * Listen scroll
+   */
+  useEffect(() => {
+    const clearSubs = storeScroll.subscribe(() => {
+      const { current } = selectedRef;
+      if (!current) {
+        return;
+      }
+      const { y } = current.getBoundingClientRect();
+      const { scrollY } = window;
+
+      const _selectedFixed = y < APP_BAR_HEIGHT;
+      if (_selectedFixed && !selectedFixed) {
+        setSelectedFixed(true);
+      }
+      if (selectedFixed && scrollY < firstYselected) {
+        setSelectedFixed(false);
+      }
+    });
+
+    return () => {
+      clearSubs();
+    };
+  }, [selectedRef, showAppBar, selectedFixed]);
+
+  /**
+   * Set first y
+   */
+  useEffect(() => {
+    const { current } = selectedRef;
+    if (!current) {
+      return;
+    }
+    const { y } = current.getBoundingClientRect();
+    firstYselected = y;
+  }, []);
+
+  const selectAll = () => {
+    const _selected = phrases.map((item) => item.id);
+    setSelected(_selected);
+  };
+
+  const unSelectAll = () => {
+    setSelected([]);
+  };
+
+  return {
+    selected,
+    onChangeSelectedWrapper,
+    selectedRef,
+    selectedFixed,
+    showAppBar,
+    selectAll,
+    unSelectAll,
+    setSelected,
+  };
 };

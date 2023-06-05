@@ -33,6 +33,7 @@ export enum Api {
   deleteUserDelete = '/v1/user-delete',
   getPhraseFindByText = '/v1/phrase-find-by-text',
   getPhraseDistinct = '/v1/phrase-distinct',
+  deletePhraseDeleteMany = '/v1/phrase-delete-many',
 }
 
 // eslint-disable-next-line no-shadow
@@ -46,6 +47,7 @@ export enum LogLevel {
 export enum LocaleVars {
   show = '%show',
   all = '%all',
+  count = '%count',
 }
 
 export const UNDEFINED_QUERY_STRING = 'undefined';
@@ -199,6 +201,11 @@ export interface PhraseDeleteBody {
   phraseId: string;
 }
 export type PhraseDeleteResult = Phrase | null;
+
+export interface PhraseDeleteManyBody {
+  phrases: string[];
+}
+export type PhraseDeleteManyResult = Phrase[];
 
 export interface PhraseUpdateBody {
   phraseId: string;
@@ -416,6 +423,14 @@ export interface Locale {
       forYear: string;
       forAllTime: string;
       allLangs: string;
+      selectAll: string;
+      unselectAll: string;
+      deleteSelected: string;
+      /**
+       * @description
+       * Required to change LocaleVars.count
+       */
+      willDelete: string;
     };
     app: {
       connectionRefused: string;
@@ -442,6 +457,8 @@ export interface Locale {
       deleteAccountSecure: string;
       deleteVerifying: string;
       deleteMyAccount: string;
+      deleteAccountWarning: string;
+      changePassword: string;
     };
   };
 }

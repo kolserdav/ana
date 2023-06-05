@@ -15,14 +15,14 @@ const phraseDelete: RequestHandler<{ Body: PhraseDeleteBody }, Result<PhraseDele
   { headers, body },
   reply
 ) => {
-  const { lang } = parseHeaders(headers);
+  const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
   const { phraseId } = body;
 
   const getRes = await orm.phraseFindFirst({
     where: {
-      id: phraseId,
+      AND: [{ id: phraseId }, { userId: id }],
     },
     include: {
       PhraseTag: {

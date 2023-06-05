@@ -1,12 +1,19 @@
-import { createRef, useEffect, useState } from 'react';
+import { createRef, useRef } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale, LocaleValue, UNDEFINED_QUERY_STRING, UserCleanResult } from '../types/interfaces';
+import {
+  Locale,
+  LocaleValue,
+  LocaleVars,
+  UNDEFINED_QUERY_STRING,
+  UserCleanResult,
+} from '../types/interfaces';
 import {
   useFilterByDate,
   useLangFilter,
+  useMultiSelect,
   usePhraseDelete,
   usePhraseUpdate,
   usePhrases,
@@ -26,7 +33,7 @@ import FilterIcon from './icons/Filter';
 import Checkbox from './ui/Checkbox';
 import Cheep from './ui/Cheep';
 import LoadIcon from './icons/LoadIcon';
-import { TAKE_PHRASES_DEFAULT } from '../utils/constants';
+import { APP_BAR_TRANSITION, TAKE_PHRASES_DEFAULT } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
 import { setMatchesBold } from './Me.lib';
@@ -94,6 +101,19 @@ function My({
     learnLang: langFilter,
   });
 
+  const sePieces = search.split(' ');
+
+  const {
+    selected,
+    onChangeSelectedWrapper,
+    selectedRef,
+    selectedFixed,
+    showAppBar,
+    selectAll,
+    unSelectAll,
+    setSelected,
+  } = useMultiSelect({ phrases });
+
   const {
     deletePhrase,
     setDeletePhrase,
@@ -101,9 +121,19 @@ function My({
     phraseToDelete,
     onClickCloseDelete,
     onClickDeletePhrase,
-  } = usePhraseDelete({ setLoad, restart, setRestart });
-
-  const sePieces = search.split(' ');
+    deleteSelectedPhrases,
+    setDeleteSelectedPhrases,
+    onClickCloseDeleteSelected,
+    onClickOpenDeleteSeleted,
+    onClickDeleteSelectedPhrases,
+  } = usePhraseDelete({
+    setLoad,
+    restart,
+    setRestart,
+    setSkip,
+    selectedPhrases: selected,
+    setSelected,
+  });
 
   return (
     <div className={s.wrapper}>
@@ -123,16 +153,18 @@ function My({
               <option value="year">{locale.forYear}</option>
             </Select>
           </div>
-          <div className={s.global_filters__item}>
-            <Select onChange={onChangeLangsFilter} value={langFilter} theme={theme}>
-              <option value={UNDEFINED_QUERY_STRING}>{locale.allLangs}</option>
-              {langs.map((item) => (
-                <option key={item.code} value={item.code}>
-                  {item.name}
-                </option>
-              ))}
-            </Select>
-          </div>
+          {langs.length > 1 && (
+            <div className={s.global_filters__item}>
+              <Select onChange={onChangeLangsFilter} value={langFilter} theme={theme}>
+                <option value={UNDEFINED_QUERY_STRING}>{locale.allLangs}</option>
+                {langs.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          )}
         </div>
         <div className={s.filters} style={{ backgroundColor: theme.active }}>
           <Checkbox
@@ -203,6 +235,41 @@ function My({
               </Typography>
             </div>
           )}
+          <div ref={selectedRef} className={s.selected_container}>
+            {selected.length !== 0 && (
+              <div
+                className={clsx(s.selected_items, selectedFixed ? s.selected_items__fixed : '')}
+                style={{
+                  backgroundColor: theme.active,
+                  top: selectedFixed && showAppBar ? '60px' : 0,
+                  transition:
+                    selectedFixed && showAppBar
+                      ? `top ${APP_BAR_TRANSITION}s ease-out`
+                      : `top ${APP_BAR_TRANSITION}s  ease-in`,
+                  borderColor: theme.text,
+                }}
+              >
+                <Checkbox
+                  id="select-all"
+                  theme={theme}
+                  checked={phrases.length === selected.length}
+                  onChange={selectAll}
+                  label={`${locale.selectAll}: ${phrases.length - selected.length}`}
+                />
+                <Checkbox
+                  id="unselect-all"
+                  theme={theme}
+                  checked={phrases.length === selected.length}
+                  onChange={unSelectAll}
+                  indeterminate
+                  label={`${locale.unselectAll}: ${selected.length}`}
+                />
+                <IconButton onClick={onClickOpenDeleteSeleted} title={locale.deleteSelected}>
+                  <DeleteIcon color={theme.red} />
+                </IconButton>
+              </div>
+            )}
+          </div>
           {phrases.length !== 0 ? (
             phrases.map((item, index) => {
               const ref = createRef<HTMLButtonElement>();
@@ -225,23 +292,45 @@ function My({
                         <IconButton onClick={onClickDeletePhraseWrapper(item)} title={_delete}>
                           <DeleteIcon color={theme.red} />
                         </IconButton>
+                        {selected.length === 0 && (
+                          <Checkbox
+                            theme={theme}
+                            id={`tooltip-check-${item.id}`}
+                            onChange={onChangeSelectedWrapper(item.id)}
+                            checked={selected.indexOf(item.id) !== -1}
+                          />
+                        )}
                       </div>
                     </Tooltip>
                   </div>
+
                   <div className={s.item} style={{ borderColor: theme.active }}>
-                    <Typography variant="p" theme={theme}>
-                      {sePieces.length === 0
-                        ? item.text
-                        : setMatchesBold({ text: item.text, matches: sePieces })}
-                    </Typography>
-                    {item.translate && (
-                      <Typography className={s.translate} variant="p" theme={theme} small>
+                    <div className={s.item__content}>
+                      <Typography variant="p" theme={theme}>
                         {sePieces.length === 0
-                          ? item.translate
-                          : setMatchesBold({ text: item.translate, matches: sePieces })}
+                          ? item.text
+                          : setMatchesBold({ text: item.text, matches: sePieces })}
                       </Typography>
+                      {item.translate && (
+                        <Typography className={s.translate} variant="p" theme={theme} small>
+                          {sePieces.length === 0
+                            ? item.translate
+                            : setMatchesBold({ text: item.translate, matches: sePieces })}
+                        </Typography>
+                      )}
+                    </div>
+                    {selected.length !== 0 && (
+                      <div className={s.item__selector}>
+                        <Checkbox
+                          theme={theme}
+                          id={`card-check-${item.id}`}
+                          onChange={onChangeSelectedWrapper(item.id)}
+                          checked={selected.indexOf(item.id) !== -1}
+                        />
+                      </div>
                     )}
                   </div>
+
                   <div className={s.info}>
                     <div className={s.tags}>
                       {item.PhraseTag.map((tag) => (
@@ -292,7 +381,30 @@ function My({
           <Button className={s.button} onClick={onClickCloseDelete} theme={theme}>
             {cancel}
           </Button>
+          <div className={s.button_margin} />
           <Button className={s.button} onClick={onClickDeletePhrase} theme={theme}>
+            {_delete}
+          </Button>
+        </div>
+      </Dialog>
+      <Dialog
+        className={p.dialog}
+        theme={theme}
+        onClose={setDeleteSelectedPhrases}
+        open={deleteSelectedPhrases}
+      >
+        <Typography variant="h3" theme={theme} align="center">
+          {`${locale.deleteSelected}?`}
+        </Typography>
+        <Typography variant="p" theme={theme}>
+          {locale.willDelete.replace(LocaleVars.count, selected.length.toString())}
+        </Typography>
+        <div className={p.dialog__actions}>
+          <Button className={s.button} onClick={onClickCloseDeleteSelected} theme={theme}>
+            {cancel}
+          </Button>
+          <div className={s.button_margin} />
+          <Button className={s.button} onClick={onClickDeleteSelectedPhrases} theme={theme}>
             {_delete}
           </Button>
         </div>
