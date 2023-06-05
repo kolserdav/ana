@@ -27,6 +27,7 @@ import { DateFilter } from '../types';
 import { getGTDate } from './Me.lib';
 import useLangs from '../hooks/useLangs';
 import storeShowAppBar from '../store/showAppBar';
+import storeTouchEvent from '../store/touchEvent';
 
 const request = new Request();
 
@@ -367,7 +368,6 @@ export const useTags = () => {
     setTags([]);
     setLocalStorage(LocalStorageName.FILTER_TAGS, []);
     setStrongTags(false);
-    setLocalStorage(LocalStorageName.STRONG_FILTER, false);
     setFilterTags(false);
   };
 
@@ -543,8 +543,8 @@ export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) =
       }
       const { y } = current.getBoundingClientRect();
       const { scrollY } = window;
-
-      const _selectedFixed = y < APP_BAR_HEIGHT;
+      const zero = 0;
+      const _selectedFixed = y < zero;
       if (_selectedFixed && !selectedFixed) {
         setSelectedFixed(true);
       }
