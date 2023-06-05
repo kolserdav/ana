@@ -119,7 +119,7 @@ $search-input-wudth-coeff: 1.5;
           &.selected_items__fixed {
             position: fixed;
             z-index: 12;
-            max-width: $translate-container-max;
+            max-width: calc($translate-container-max - ($container-padding * 2));
             left: calc((100vw - ($translate-container-max - ($container-padding * 2))) / 2);
   
            @media (max-width: $translate-container-max) {
