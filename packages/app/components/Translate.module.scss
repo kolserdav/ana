@@ -25,6 +25,7 @@ $textare-button-indent-right: 8px;
     .tags_created {
       display: flex;
       flex-flow: row wrap;
+      margin-top: 1rem;
 
       .tag_item {
         margin-right: 0.2rem; 
@@ -151,6 +152,7 @@ $textare-button-indent-right: 8px;
     width: 100%;
     border-radius: 4px;
   }
+
 
   .tags {
     border-width: 1px;

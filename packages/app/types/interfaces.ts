@@ -431,6 +431,7 @@ export interface Locale {
        * Required to change LocaleVars.count
        */
       willDelete: string;
+      resetAllFilters: string;
     };
     app: {
       connectionRefused: string;

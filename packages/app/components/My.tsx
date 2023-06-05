@@ -17,6 +17,7 @@ import {
   usePhraseDelete,
   usePhraseUpdate,
   usePhrases,
+  useResetAllFilters,
   useTags,
 } from './My.hooks';
 import s from './My.module.scss';
@@ -62,7 +63,7 @@ function My({
 
   const {
     filterTags,
-    setFilterTags,
+    onChangeFilterTags,
     tags,
     onClickTagCheepWrapper,
     allTags,
@@ -72,11 +73,12 @@ function My({
     tagsIsSet,
     strongTags,
     setStrongTags,
+    resetTags,
   } = useTags();
 
-  const { onChangeDateFilter, gt, date } = useFilterByDate({ setSkip });
+  const { onChangeDateFilter, gt, date, resetFilterByDate } = useFilterByDate({ setSkip });
 
-  const { langs, langFilter, onChangeLangsFilter } = useLangFilter({ setSkip });
+  const { langs, langFilter, onChangeLangsFilter, resetLangFilter } = useLangFilter({ setSkip });
 
   const {
     phrases,
@@ -89,6 +91,7 @@ function My({
     count,
     search,
     changeSearch,
+    resetSearch,
   } = usePhrases({
     setLoad,
     tags,
@@ -135,6 +138,18 @@ function My({
     setSelected,
   });
 
+  const { resetAllFilters, showResetFilters } = useResetAllFilters({
+    resetTags,
+    tags,
+    strongTags,
+    langFilter,
+    date,
+    search,
+    resetLangFilter,
+    resetFilterByDate,
+    resetSearch,
+  });
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
@@ -172,7 +187,7 @@ function My({
             label={locale.filterByTags}
             id="filter-tags"
             checked={filterTags}
-            onChange={setFilterTags}
+            onChange={onChangeFilterTags}
           />
           {filterTags && (
             <div className={s.filters_tags}>
@@ -228,6 +243,11 @@ function My({
           </div>
         </div>
         <div className={s.phrases}>
+          {showResetFilters && (
+            <Button onClick={resetAllFilters} theme={theme}>
+              {locale.resetAllFilters}
+            </Button>
+          )}
           {phrases.length !== 0 && count > TAKE_PHRASES_DEFAULT && (
             <div className={s.pagination}>
               <Typography small theme={theme} variant="span">

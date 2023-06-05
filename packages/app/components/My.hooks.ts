@@ -13,7 +13,13 @@ import {
 } from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
-import { APP_BAR_HEIGHT, ORDER_BY_DEFAULT, Pages, TAKE_PHRASES_DEFAULT } from '../utils/constants';
+import {
+  APP_BAR_HEIGHT,
+  DATE_FILTER_ALL,
+  ORDER_BY_DEFAULT,
+  Pages,
+  TAKE_PHRASES_DEFAULT,
+} from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
@@ -173,6 +179,10 @@ export const usePhrases = ({
     [locale.pagination, phrases, count]
   );
 
+  const resetSearch = () => {
+    setSearch('');
+  };
+
   return {
     phrases,
     setRestart,
@@ -184,6 +194,7 @@ export const usePhrases = ({
     count,
     search,
     changeSearch,
+    resetSearch,
   };
 };
 
@@ -352,9 +363,25 @@ export const useTags = () => {
     setSkip(0);
   };
 
+  const resetTags = () => {
+    setTags([]);
+    setLocalStorage(LocalStorageName.FILTER_TAGS, []);
+    setStrongTags(false);
+    setLocalStorage(LocalStorageName.STRONG_FILTER, false);
+    setFilterTags(false);
+  };
+
+  const onChangeFilterTags = (value: boolean) => {
+    setFilterTags(value);
+    if (strongTags && !value) {
+      setStrongTags(false);
+      setLocalStorage(LocalStorageName.STRONG_FILTER, false);
+    }
+  };
+
   return {
+    onChangeFilterTags,
     filterTags,
-    setFilterTags,
     tags,
     onClickTagCheepWrapper,
     allTags,
@@ -364,6 +391,7 @@ export const useTags = () => {
     tagsIsSet,
     strongTags,
     setStrongTags,
+    resetTags,
   };
 };
 
@@ -389,7 +417,7 @@ export const useFilterByDate = ({
    */
   useEffect(() => {
     const savedDate = getLocalStorage(LocalStorageName.FILTER_BY_DATE);
-    setDate(savedDate || 'all-time');
+    setDate(savedDate || DATE_FILTER_ALL);
   }, []);
 
   /**
@@ -402,7 +430,12 @@ export const useFilterByDate = ({
     setGT(getGTDate(date));
   }, [date]);
 
-  return { gt, onChangeDateFilter, date };
+  const resetFilterByDate = () => {
+    setDate(DATE_FILTER_ALL);
+    setLocalStorage(LocalStorageName.FILTER_BY_DATE, DATE_FILTER_ALL);
+  };
+
+  return { gt, onChangeDateFilter, date, resetFilterByDate };
 };
 
 export const useLangFilter = ({
@@ -451,7 +484,12 @@ export const useLangFilter = ({
     setSkip(0);
   };
 
-  return { langs, langFilter, onChangeLangsFilter };
+  const resetLangFilter = () => {
+    setLangFilter(UNDEFINED_QUERY_STRING);
+    setLocalStorage(LocalStorageName.FILTER_BY_LANG, UNDEFINED_QUERY_STRING);
+  };
+
+  return { langs, langFilter, onChangeLangsFilter, resetLangFilter };
 };
 
 let firstYselected = 0;
@@ -551,4 +589,60 @@ export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) =
     unSelectAll,
     setSelected,
   };
+};
+
+export const useResetAllFilters = ({
+  resetTags,
+  tags,
+  strongTags,
+  langFilter,
+  resetLangFilter,
+  date,
+  resetFilterByDate,
+  search,
+  resetSearch,
+}: {
+  resetTags: () => void;
+  resetLangFilter: () => void;
+  tags: TagFindManyResult;
+  strongTags: boolean;
+  langFilter: string | undefined;
+  date: DateFilter | undefined;
+  search: string;
+  resetFilterByDate: () => void;
+  resetSearch: () => void;
+}) => {
+  const [showResetFilters, setShowResetFilters] = useState<boolean>(false);
+
+  const resetAllFilters = () => {
+    resetTags();
+    resetLangFilter();
+    resetFilterByDate();
+    resetSearch();
+  };
+
+  /**
+   * Set show reset filters
+   */
+  useEffect(() => {
+    let show = false;
+    if (tags.length !== 0) {
+      show = true;
+    }
+    if (strongTags) {
+      show = true;
+    }
+    if (langFilter && langFilter !== UNDEFINED_QUERY_STRING) {
+      show = true;
+    }
+    if (date && date !== DATE_FILTER_ALL) {
+      show = true;
+    }
+    if (search !== '') {
+      show = true;
+    }
+    setShowResetFilters(show);
+  }, [tags, langFilter, strongTags, date, search]);
+
+  return { resetAllFilters, showResetFilters };
 };

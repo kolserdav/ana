@@ -1,11 +1,13 @@
 import { format } from 'date-fns';
 import { ThemeType } from '../Theme';
 import { LocaleValue, OrderBy } from '../types/interfaces';
+import { DateFilter } from '../types';
 
 export const LOCALE_NAMES: Record<LocaleValue, string> = {
   en: 'English',
   ru: 'Русский',
 };
+export const DATE_FILTER_ALL: DateFilter = 'all-time';
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
 export const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN as string;
 export const REPOSITORY_LINK = process.env.NEXT_PUBLIC_REPOSITORY_LINK as string;
