@@ -116,3 +116,5 @@ export const SPEECH_SPEED_MAX = 1.5;
 export const APP_BAR_TRANSITION = 0.2;
 // deps $app-bar-height
 export const APP_BAR_HEIGHT = 60;
+// deps $spoiler-border-width
+export const SPOILER_BORDER_WIDTH = 1;

@@ -153,39 +153,43 @@ $textare-button-indent-right: 8px;
     border-radius: 4px;
   }
 
-
-  .tags {
-    border-width: 1px;
-    border-style: groove;
-    border-radius: 4px;
-    width: 100%;
-    padding: 1rem;
+  .tags_spoiler {
     margin-top: 0.5rem;
+    width: 100%;
 
-    .title {
-      h4 {
-        margin-bottom: 1rem;
+    .tags {
+      border-width: 1px;
+      border-style: groove;
+      border-radius: 4px;
+      width: 100%;
+      padding: 1rem;
+      
+
+      .title {
+        h4 {
+          margin-bottom: 1rem;
+        }
       }
-    }
 
-    .input {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-
-    .box {
-      flex-flow: row wrap;
-      margin-top: 1rem;
-
-      .menu_tooltip {
-        position: relative;
-        width: 100%;
+      .input {
         display: flex;
         flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+
+      .box {
+        flex-flow: row wrap;
+        margin-top: 1rem;
+
+        .menu_tooltip {
+          position: relative;
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-around;
+        }
       }
     }
   }

@@ -579,7 +579,16 @@ export const useTags = ({
     setDeleteTagDialog(false);
   };
 
+  const onClickAddTaggs = (val: boolean) => {
+    setAddTags(val);
+    if (!val && tags.length) {
+      setTags(allTags.concat(tags));
+      setTags([]);
+    }
+  };
+
   return {
+    onClickAddTaggs,
     allTags,
     newTag,
     onChangeNewTag,

@@ -33,6 +33,7 @@ import UndoIcon from './icons/Undo';
 import { PHRASE_MAX_LENGTH } from '../utils/constants';
 import useSpeechSynth from '../hooks/useSpeechSynth';
 import SpeakIcon from './ui/SpeakIcon';
+import Spoiler from './ui/Spoiler';
 
 function Translate({
   theme,
@@ -73,6 +74,7 @@ function Translate({
     tags,
     addTags,
     setAddTags,
+    onClickAddTaggs,
     setTags,
     onClickTagDeleteWrapper,
     onClickTagUpdateWrapper,
@@ -285,82 +287,76 @@ function Translate({
         {reTranslate && (
           <div className={s.actions}>
             {user && (
-              <>
-                <div className={s.check_item}>
-                  <Checkbox
-                    disabled={load}
-                    theme={theme}
-                    label={locale.addTags}
-                    id="add-tags"
-                    checked={addTags}
-                    onChange={setAddTags}
-                  />
-                </div>
-                {addTags && (
-                  <div className={s.tags} style={{ borderColor: theme.active }}>
-                    <Typography className={s.title} variant="h4" theme={theme}>
-                      {locale.tagsTitle}
-                    </Typography>
-                    <div className={s.input}>
-                      <Input
-                        type="text"
-                        id="add-new-tag"
-                        onChange={onChangeNewTag}
-                        value={newTag}
-                        name={tagToUpdate ? locale.changeTag : locale.newTag}
-                        theme={theme}
-                      />
-                      <IconButton title={showHelp} ref={helpTagRef}>
-                        <HelpIcon color={theme.text} />
-                      </IconButton>
-                    </div>
-                    <div className={s.box}>
-                      {tags.map((item) => (
-                        <Cheep
-                          postfix={item.PhraseTag.length.toString()}
-                          key={item.id}
-                          onClick={onClickTagCheepWrapper(item, 'del')}
-                          add={false}
-                          disabled={false}
-                          theme={theme}
-                        >
-                          {item.text}
-                        </Cheep>
-                      ))}
-                    </div>
-                    <div className={s.box}>
-                      {allTags.map((item) => (
-                        <span key={item.id}>
-                          {tags.findIndex((i) => i.id === item.id) === -1 && (
-                            <Cheep
-                              postfix={item.PhraseTag.length.toString()}
-                              menuChildren={
-                                <div className={s.menu_tooltip}>
-                                  <IconButton title={_edit} onClick={onClickTagUpdateWrapper(item)}>
-                                    <EditIcon color={theme.blue} />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={onClickTagDeleteWrapper(item)}
-                                    title={_delete}
-                                  >
-                                    <DeleteIcon color={theme.red} />
-                                  </IconButton>
-                                </div>
-                              }
-                              menuChildrenLength={30}
-                              onClick={onClickTagCheepWrapper(item, 'add')}
-                              add
-                              theme={theme}
-                            >
-                              {item.text}
-                            </Cheep>
-                          )}
-                        </span>
-                      ))}
-                    </div>
+              <Spoiler
+                className={s.tags_spoiler}
+                theme={theme}
+                summary={locale.addTags}
+                setOpen={onClickAddTaggs}
+                open={addTags}
+              >
+                <div className={s.tags} style={{ borderColor: theme.active }}>
+                  <Typography className={s.title} variant="h4" theme={theme}>
+                    {locale.tagsTitle}
+                  </Typography>
+                  <div className={s.input}>
+                    <Input
+                      type="text"
+                      id="add-new-tag"
+                      onChange={onChangeNewTag}
+                      value={newTag}
+                      name={tagToUpdate ? locale.changeTag : locale.newTag}
+                      theme={theme}
+                    />
+                    <IconButton title={showHelp} ref={helpTagRef}>
+                      <HelpIcon color={theme.text} />
+                    </IconButton>
                   </div>
-                )}
-              </>
+                  <div className={s.box}>
+                    {tags.map((item) => (
+                      <Cheep
+                        postfix={item.PhraseTag.length.toString()}
+                        key={item.id}
+                        onClick={onClickTagCheepWrapper(item, 'del')}
+                        add={false}
+                        disabled={false}
+                        theme={theme}
+                      >
+                        {item.text}
+                      </Cheep>
+                    ))}
+                  </div>
+                  <div className={s.box}>
+                    {allTags.map((item) => (
+                      <span key={item.id}>
+                        {tags.findIndex((i) => i.id === item.id) === -1 && (
+                          <Cheep
+                            postfix={item.PhraseTag.length.toString()}
+                            menuChildren={
+                              <div className={s.menu_tooltip}>
+                                <IconButton title={_edit} onClick={onClickTagUpdateWrapper(item)}>
+                                  <EditIcon color={theme.blue} />
+                                </IconButton>
+                                <IconButton onClick={onClickTagDeleteWrapper(item)} title={_delete}>
+                                  <DeleteIcon color={theme.red} />
+                                </IconButton>
+                              </div>
+                            }
+                            menuChildrenLength={30}
+                            onClick={onClickTagCheepWrapper(item, 'add')}
+                            add
+                            theme={theme}
+                          >
+                            {item.text}
+                          </Cheep>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                  <Tooltip theme={theme} parentRef={helpTagRef}>
+                    {locale.tagHelp}
+                  </Tooltip>
+                </div>
+              </Spoiler>
             )}
             <Button
               className={s.save_button}
@@ -442,9 +438,6 @@ function Translate({
           </div>
         </Dialog>
       )}
-      <Tooltip theme={theme} parentRef={helpTagRef}>
-        {locale.tagHelp}
-      </Tooltip>
     </div>
   );
 }

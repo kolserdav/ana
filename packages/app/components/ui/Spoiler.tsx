@@ -4,6 +4,7 @@ import s from './Spoiler.module.scss';
 import Typography from './Typography';
 import { Theme } from '../../Theme';
 import ChevronRightIcon from '../icons/ChevronRight';
+import { SPOILER_BORDER_WIDTH } from '../../utils/constants';
 
 function Spoiler({
   children,
@@ -34,7 +35,7 @@ function Spoiler({
     }
     const { clientHeight } = current;
     setContentHeight(clientHeight);
-  }, [open]);
+  }, [open, children]);
 
   const onClick = () => {
     const val = !open;
@@ -51,13 +52,16 @@ function Spoiler({
           {summary}
         </Typography>
       </summary>
-      <div
-        style={{ height: `${open ? contentHeight : 0}px`, transition: 'all 0.3s ease' }}
-        className={s.content}
-      >
+      <div className={s.hidden} ref={contentRef}>
         {children}
       </div>
-      <div className={s.hidden} ref={contentRef}>
+      <div
+        style={{
+          height: `${open ? contentHeight + SPOILER_BORDER_WIDTH * 2 : 0}px`,
+          transition: 'all 0.3s ease',
+        }}
+        className={s.content}
+      >
         {children}
       </div>
     </div>
