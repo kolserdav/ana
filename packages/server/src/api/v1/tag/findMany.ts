@@ -41,7 +41,13 @@ const tagFindMany: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(200);
 
-  return { status: 'info', message: locale.success, data: tags.data };
+  return {
+    status: 'info',
+    message: locale.success,
+    data: tags.data.sort((itemA, itemB) => {
+      return itemA.text.localeCompare(itemB.text);
+    }),
+  };
 };
 
 export default tagFindMany;

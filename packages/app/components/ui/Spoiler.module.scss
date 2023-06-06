@@ -1,0 +1,39 @@
+@import '../../styles/constants';
+
+.wrapper {
+  .summary {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-top-right-radius: $input-border-radius;
+    border-top-left-radius: $input-border-radius;
+    border-width: 1px;
+    border-style: groove;
+    display: flex;
+    flex-direction: row;
+
+    .summary__icon {
+      margin-right: 0.5rem;
+      transition: all 0.3s ease;
+
+      &.summary__icon__open {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  
+  .content {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: $translate-container-max;
+  }
+
+  .hidden {
+    position: absolute;
+    z-index: -100;
+    width: calc(100% - $container-padding * 2);
+    max-width: $translate-container-max;
+    left: calc(100vw * -2);
+  }
+}

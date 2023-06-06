@@ -9,6 +9,7 @@ import {
   LOCALE_DEFAULT,
   LocaleValue,
   UserCleanResult,
+  WS_MESSAGE_COMMENT_SERVER_RELOAD,
   WS_MESSAGE_CONN_ID,
   WS_MESSAGE_LOCALE,
   parseMessage,
@@ -18,8 +19,6 @@ import { CookieName, setCookie } from '../utils/cookies';
 import { WS_ADDRESS } from '../utils/constants';
 import useLoad from './useLoad';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
-
-let quiet = false;
 
 export default function useApp({
   user,
@@ -73,8 +72,9 @@ export default function useApp({
 
     ws.onopen = () => {
       if (!loadConnect) {
-        if (!quiet && document.hasFocus()) {
+        if (getLocalStorage(LocalStorageName.SERVER_RELOAD)) {
           log('info', connectionReOpened, {}, true);
+          setLocalStorage(LocalStorageName.SERVER_RELOAD, false);
         }
       }
 
@@ -104,21 +104,21 @@ export default function useApp({
           break;
         default:
           log(type, message, _data, forUser, infinity);
+          if (_data === WS_MESSAGE_COMMENT_SERVER_RELOAD) {
+            setLocalStorage(LocalStorageName.SERVER_RELOAD, true);
+          }
       }
     };
 
-    let error = false;
     ws.onerror = (e) => {
       log('error', 'Error ws', e);
-      error = true;
     };
 
     ws.onclose = (e) => {
-      if (!error && document.hasFocus()) {
+      if (getLocalStorage(LocalStorageName.SERVER_RELOAD)) {
         log('warn', connectionRefused, e, true);
       }
       setLoad(true);
-      quiet = false;
       setRestart(loadConnect ? true : !restart);
       setConnId(null);
     };
@@ -159,7 +159,6 @@ export default function useApp({
     }
     const onFocusHandler = () => {
       if (ws.readyState !== 1) {
-        quiet = true;
         setRestart(loadConnect ? true : !restart);
       }
     };

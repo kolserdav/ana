@@ -159,7 +159,7 @@ class WS {
             this.sendMessage(_item, {
               type: item.type,
               message: item.text,
-              data: {},
+              data: WS_MESSAGE_COMMENT_SERVER_RELOAD,
               forUser: true,
               infinity: true,
             });

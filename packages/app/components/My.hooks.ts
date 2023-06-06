@@ -361,6 +361,9 @@ export const useTags = () => {
   }, [allTags, setTags, tagsIsSet]);
 
   const changeStrongCb = () => {
+    const val = !strongTags;
+    setStrongTags(val);
+    setLocalStorage(LocalStorageName.STRONG_FILTER, val);
     setSkip(0);
   };
 
@@ -371,16 +374,17 @@ export const useTags = () => {
     setFilterTags(false);
   };
 
-  const onChangeFilterTags = (value: boolean) => {
-    setFilterTags(value);
-    if (strongTags && !value) {
+  const onClickFilterTags = (val: boolean) => {
+    setFilterTags(val);
+    if (!val) {
+      setLocalStorage(LocalStorageName.FILTER_TAGS, []);
+    }
+    if (strongTags && !val) {
       setStrongTags(false);
-      setLocalStorage(LocalStorageName.STRONG_FILTER, false);
     }
   };
 
   return {
-    onChangeFilterTags,
     filterTags,
     tags,
     onClickTagCheepWrapper,
@@ -392,6 +396,7 @@ export const useTags = () => {
     strongTags,
     setStrongTags,
     resetTags,
+    onClickFilterTags,
   };
 };
 

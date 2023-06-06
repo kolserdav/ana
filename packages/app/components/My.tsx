@@ -34,12 +34,13 @@ import FilterIcon from './icons/Filter';
 import Checkbox from './ui/Checkbox';
 import Cheep from './ui/Cheep';
 import LoadIcon from './icons/LoadIcon';
-import { APP_BAR_TRANSITION, TAKE_PHRASES_DEFAULT } from '../utils/constants';
+import { APP_BAR_TRANSITION } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
 import { setMatchesBold } from './Me.lib';
 import { getFormatDistance } from '../utils/lib';
 import Select from './ui/Select';
+import Spoiler from './ui/Spoiler';
 
 function My({
   locale,
@@ -63,7 +64,6 @@ function My({
 
   const {
     filterTags,
-    onChangeFilterTags,
     tags,
     onClickTagCheepWrapper,
     allTags,
@@ -74,6 +74,7 @@ function My({
     strongTags,
     setStrongTags,
     resetTags,
+    onClickFilterTags,
   } = useTags();
 
   const { onChangeDateFilter, gt, date, resetFilterByDate } = useFilterByDate({ setSkip });
@@ -181,15 +182,17 @@ function My({
             </div>
           )}
         </div>
-        <div className={s.filters} style={{ backgroundColor: theme.active }}>
-          <Checkbox
-            theme={theme}
-            label={locale.filterByTags}
-            id="filter-tags"
-            checked={filterTags}
-            onChange={onChangeFilterTags}
-          />
-          {filterTags && (
+        <Spoiler
+          theme={theme}
+          className={s.filters_spoiler}
+          setOpen={onClickFilterTags}
+          open={filterTags}
+          summary={locale.filterByTags}
+        >
+          <div
+            className={clsx(s.filters, filterTags ? s.filters__open : '')}
+            style={{ backgroundColor: theme.active }}
+          >
             <div className={s.filters_tags}>
               {allTags.map((item) => (
                 <span key={item.id}>
@@ -208,8 +211,6 @@ function My({
                 </span>
               ))}
             </div>
-          )}
-          {filterTags && (
             <Checkbox
               theme={theme}
               label={locale.strongAccord}
@@ -218,8 +219,8 @@ function My({
               onChange={setStrongTags}
               cb={changeStrongCb}
             />
-          )}
-        </div>
+          </div>
+        </Spoiler>
         <div className={s.search}>
           <Input
             type="text"
@@ -248,7 +249,7 @@ function My({
               {locale.resetAllFilters}
             </Button>
           )}
-          {phrases.length !== 0 && count > TAKE_PHRASES_DEFAULT && (
+          {phrases.length !== 0 && (
             <div className={s.pagination}>
               <Typography small theme={theme} variant="span">
                 {pagination}

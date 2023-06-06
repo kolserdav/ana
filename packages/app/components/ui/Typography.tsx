@@ -10,6 +10,7 @@ function Typography({
   theme,
   className,
   small,
+  large,
   htmlFor,
   align,
   styleName,
@@ -22,6 +23,7 @@ function Typography({
   htmlFor?: string;
   className?: string;
   small?: boolean;
+  large?: boolean;
   align?: 'center' | 'right' | 'justify';
   styleName?: Status;
   disabled?: boolean;
@@ -34,6 +36,7 @@ function Typography({
         ubuntu400.className,
         className,
         small ? s.small : '',
+        large ? s.large : '',
         align
           ? align === 'center'
             ? s.center
@@ -88,6 +91,7 @@ Typography.defaultProps = {
   htmlFor: undefined,
   disabled: false,
   blur: undefined,
+  large: undefined,
 };
 
 export default Typography;
