@@ -324,11 +324,11 @@ export const useTags = () => {
    * Clean tags
    */
   useEffect(() => {
-    if (!filterTags) {
+    if (!filterTags && tags.length > 0) {
       setSkip(0);
       setTags([]);
     }
-  }, [filterTags, setTags]);
+  }, [filterTags, setTags, tags]);
 
   /**
    * Check filter tags
