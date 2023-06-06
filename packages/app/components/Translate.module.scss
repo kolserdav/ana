@@ -160,9 +160,13 @@ $textare-button-indent-right: 8px;
     .tags {
       border-width: 1px;
       border-style: groove;
-      border-radius: 4px;
       width: 100%;
       padding: 1rem;
+
+      &.tags__open {
+        border-bottom-left-radius: $input-border-radius;
+        border-bottom-right-radius: $input-border-radius;
+      }
       
 
       .title {

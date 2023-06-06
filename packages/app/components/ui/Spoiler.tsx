@@ -44,7 +44,11 @@ function Spoiler({
 
   return (
     <div className={clsx(s.wrapper, className || '')}>
-      <summary style={{ borderColor: theme.active }} className={s.summary} onClick={onClick}>
+      <summary
+        style={{ borderColor: theme.active }}
+        className={clsx(s.summary, open ? s.summary__open : '')}
+        onClick={onClick}
+      >
         <div className={clsx(s.summary__icon, open ? s.summary__icon__open : '')}>
           <ChevronRightIcon color={theme.text} />
         </div>

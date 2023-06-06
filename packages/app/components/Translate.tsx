@@ -294,7 +294,10 @@ function Translate({
                 setOpen={onClickAddTaggs}
                 open={addTags}
               >
-                <div className={s.tags} style={{ borderColor: theme.active }}>
+                <div
+                  className={clsx(s.tags, addTags ? s.tags__open : '')}
+                  style={{ borderColor: theme.active }}
+                >
                   <Typography className={s.title} variant="h4" theme={theme}>
                     {locale.tagsTitle}
                   </Typography>

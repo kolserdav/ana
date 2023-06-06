@@ -4,12 +4,16 @@
   .summary {
     cursor: pointer;
     padding: 0.5rem;
-    border-top-right-radius: $input-border-radius;
-    border-top-left-radius: $input-border-radius;
+    border-radius: $input-border-radius;
     border-width: $spoiler-border-width;
     border-style: groove;
     display: flex;
     flex-direction: row;
+
+    &.summary__open {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
 
     .summary__icon {
       margin-right: 0.5rem;
