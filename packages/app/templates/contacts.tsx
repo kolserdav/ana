@@ -23,7 +23,7 @@ function Template() {
 
       <tr>
         <td>Почта:</td>
-        <td>serega12101983@gmail.com</td>
+        <td>kolserdav@uyem.ru</td>
       </tr>
 
       <tr>
