@@ -13,6 +13,7 @@ function Spoiler({
   open,
   setOpen,
   className,
+  height,
 }: {
   children: React.ReactNode;
   summary: string;
@@ -21,6 +22,7 @@ function Spoiler({
   // eslint-disable-next-line no-unused-vars
   setOpen: (val: boolean) => void;
   className?: string;
+  height?: number;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState<number>(0);
@@ -29,13 +31,19 @@ function Spoiler({
    * set block height
    */
   useEffect(() => {
+    if (height) {
+      if (contentHeight !== height) {
+        setContentHeight(height);
+      }
+      return;
+    }
     const { current } = contentRef;
     if (!current) {
       return;
     }
     const { clientHeight } = current;
     setContentHeight(clientHeight);
-  }, [open, children]);
+  }, [open, children, height, contentHeight]);
 
   const onClick = () => {
     const val = !open;
@@ -56,9 +64,11 @@ function Spoiler({
           {summary}
         </Typography>
       </summary>
-      <div className={s.hidden} ref={contentRef}>
-        {children}
-      </div>
+      {!height && (
+        <div className={s.hidden} ref={contentRef}>
+          {children}
+        </div>
+      )}
       <div
         style={{
           height: `${open ? contentHeight + SPOILER_BORDER_WIDTH * 2 : 0}px`,
@@ -74,6 +84,7 @@ function Spoiler({
 
 Spoiler.defaultProps = {
   className: undefined,
+  height: undefined,
 };
 
 export default Spoiler;

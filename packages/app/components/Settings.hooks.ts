@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { LEARN_LANG_DEFAULT, Pages, TEST_TEXT_DEFAULT } from '../utils/constants';
+import {
+  FORM_ITEM_MARGIN_TOP,
+  INPUT_HEIGHT,
+  INPUT_MARGIN_BOTTOM,
+  LEARN_LANG_DEFAULT,
+  Pages,
+  TEST_TEXT_DEFAULT,
+} from '../utils/constants';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { LocalStorageName, getLocalStorage } from '../utils/localStorage';
@@ -186,6 +193,11 @@ export const usePersonalData = ({
     }
   };
 
+  const changePasswordHeight = useMemo(
+    () => (INPUT_HEIGHT + INPUT_MARGIN_BOTTOM + FORM_ITEM_MARGIN_TOP) * 3,
+    []
+  );
+
   return {
     buttonError,
     onClickSaveButton,
@@ -193,6 +205,7 @@ export const usePersonalData = ({
     setButtonError,
     changePassword,
     setChangePassword,
+    changePasswordHeight,
   };
 };
 

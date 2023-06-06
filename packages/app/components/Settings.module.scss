@@ -50,10 +50,19 @@ $speech-select-shift: 8px;
 
       
       .delete_button {
-        display: block;
+        position: relative;
         margin-top: 2rem;
         cursor: pointer;
-        
+        opacity: 0.5;
+        display: inline-block;
+      }
+
+      .change_password_spoiler {
+        position: relative;
+        width: 100%;
+        max-width: $small-width;
+        margin-top: 1rem;
+        margin-bottom: 3rem;
       }
     }
   }

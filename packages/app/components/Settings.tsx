@@ -21,6 +21,7 @@ import Select from './ui/Select';
 import Typography from './ui/Typography';
 import SpeakIcon from './ui/SpeakIcon';
 import Checkbox from './ui/Checkbox';
+import Spoiler from './ui/Spoiler';
 
 function Settings({
   locale,
@@ -120,6 +121,7 @@ function Settings({
     needClean,
     changePassword,
     setChangePassword,
+    changePasswordHeight,
   } = usePersonalData({
     setEmail,
     setName,
@@ -276,14 +278,14 @@ function Settings({
               name={localeLogin.email}
               fullWidth
             />
-            <Checkbox
-              label={locale.changePassword}
-              onChange={setChangePassword}
-              checked={changePassword}
+            <Spoiler
+              height={changePasswordHeight}
               theme={theme}
-              id="change-password"
-            />
-            {changePassword && (
+              open={changePassword}
+              summary={locale.changePassword}
+              setOpen={setChangePassword}
+              className={s.change_password_spoiler}
+            >
               <>
                 <Input
                   theme={theme}
@@ -331,7 +333,7 @@ function Settings({
                   fullWidth
                 />
               </>
-            )}
+            </Spoiler>
             <Button
               classNameWrapper={s.button}
               error={buttonError}
