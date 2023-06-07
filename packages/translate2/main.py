@@ -30,4 +30,9 @@ def get_languages():
     return json_dumps(langs)
 
 
+@route('/check', method='GET')
+def check():
+    return 'success'
+
+
 run(host=HOST, port=PORT, reloader=DEBUG, quiet=DEBUG == False)

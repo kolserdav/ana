@@ -18,7 +18,7 @@ export interface JWTFull {
   iat: number;
 }
 
-export type EmailType = 'restore-password' | 'confirm-email' | 'account-deleted';
+export type EmailType = 'restore-password' | 'confirm-email' | 'account-deleted' | 'admin-message';
 
 export interface SendEmailParams<T extends EmailType> {
   type: T;
@@ -40,5 +40,14 @@ export interface SendEmailParams<T extends EmailType> {
     ? {
         name: string;
       }
+    : T extends 'admin-message'
+    ? {
+        message: string;
+      }
     : never;
 }
+
+/**
+ * Deps with scripts/server-messages.js ArgName
+ */
+export type ScriptServerMessagesArgName = 'reboot-create' | 'reboot-delete' | 'unavailable-create';

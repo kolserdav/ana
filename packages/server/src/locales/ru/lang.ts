@@ -32,6 +32,7 @@ const lang: Locale = {
       resetPassword: 'Сброс пароля',
       deletedAccount: 'Учетная запись удалена',
     },
+    translateServiceNotWorking: 'Извините, сервис перевода временно недоступен',
   },
   app: {
     login: {

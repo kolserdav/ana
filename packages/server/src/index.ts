@@ -4,6 +4,7 @@ import { ORM } from './services/orm';
 import WS from './services/ws';
 import { v4 } from 'uuid';
 import { WS_MESSAGE_CONN_ID, WS_MESSAGE_LOCALE, parseMessage } from './types/interfaces';
+import Tasks from './services/tasks';
 
 if (cluster.isPrimary) {
   process.setMaxListeners(0);
@@ -19,6 +20,8 @@ if (cluster.isPrimary) {
   new ORM(worker);
 } else {
   import('./http');
+
+  new Tasks();
 
   const ws = new WS();
   ws.server.on('connection', async (conn) => {

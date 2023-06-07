@@ -54,6 +54,7 @@ export const UNDEFINED_QUERY_STRING = 'undefined';
 export const QUERY_STRING_ARRAY_SPLITTER = ',';
 export type LocaleValue = 'ru' | 'en';
 export const WS_MESSAGE_COMMENT_SERVER_RELOAD = 'server_reload';
+export const TRANSLATE_SERVICE_UNAVAILABLE_COMMENT = 'translate_unavailable';
 export const WS_MESSAGE_CONN_ID = 'conn_id';
 export const WS_MESSAGE_LOCALE = 'locale';
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
@@ -301,6 +302,7 @@ export interface Locale {
       resetPassword: string;
       deletedAccount: string;
     };
+    translateServiceNotWorking: string;
   };
   app: {
     login: {

@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "tsc -p . -w",
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc -p .",
+    "compile": "tsc -p .",
+    "build": "npm run clean && npm run compile",
     "dev:server": "nodemon dist/index.js",
     "start:dev": "concurrently \"npm run dev:server\"",
     "start": "env-cmd -f ../../.env node dist/index.js",

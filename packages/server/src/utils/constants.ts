@@ -5,6 +5,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 
 export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
+export const ADMIN_EMAIL = process.env.ADMIN_EMAIL as string;
 export const HOST = process.env.HOST as string;
 export const SMTP_EMAIL = process.env.SMTP_EMAIL as string;
 export const WS_PORT = parseInt(process.env.WS_PORT as string, 10);
@@ -29,3 +30,4 @@ export const PASSWORD_ALGORITHM = 'sha512';
 export const RESTORE_LINK_TIMEOUT_IN_HOURS = 48;
 export const NULL_TIMEOUT = new Date(0, 0, 0, 0, 0, 0, 0);
 export const CHECK_SERVER_MESSAGES_INTERVAL = 3000;
+export const SCRIPT_FILE_SERVER_MESSAGES = 'server-messages.js';
