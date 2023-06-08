@@ -144,9 +144,12 @@ $textare-button-indent-right: 8px;
   }
 
   .tags_created {
+    position: relative;
+    width: 100%;
     display: flex;
     flex-flow: row wrap;
-    margin-top: 1rem;
+    justify-content: flex-start;
+    margin: 1rem 0;
 
     .tag_item {
       margin-right: 0.2rem; 
