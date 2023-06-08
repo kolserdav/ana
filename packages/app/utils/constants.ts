@@ -124,3 +124,9 @@ export const INPUT_MARGIN_BOTTOM = 30;
 export const FORM_ITEM_MARGIN_TOP = 25;
 // deps $input-height
 export const INPUT_HEIGHT = 50;
+export const DATA_TYPE_PLAY_BUTTON = 'play_button';
+export const DATA_TYPE_PHRASE = 'phrase';
+export const PLAY_ALL_ITEM_PAUSE = 1000;
+// deps $fixed-tools-hight
+export const FIXED_TOOLS_HIGHT = 44;
+export const PLAY_ALL_SCROLL_BY_TOP_SHIFT = 20;

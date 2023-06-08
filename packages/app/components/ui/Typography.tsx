@@ -16,6 +16,7 @@ function Typography({
   styleName,
   disabled,
   blur,
+  datatype,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | React.ReactNode;
@@ -28,9 +29,11 @@ function Typography({
   styleName?: Status;
   disabled?: boolean;
   blur?: boolean;
+  datatype?: string;
 }) {
   return (
     <div
+      datatype={datatype}
       className={clsx(
         s.wrapper,
         ubuntu400.className,
@@ -92,6 +95,7 @@ Typography.defaultProps = {
   disabled: false,
   blur: undefined,
   large: undefined,
+  datatype: undefined,
 };
 
 export default Typography;

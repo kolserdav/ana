@@ -4,14 +4,18 @@ import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import { VolumeIcon } from '../types';
 
+let speaking = false;
+
 const useSpeechSynth = ({
   text,
   voiceNotFound,
   lang,
+  onStop,
 }: {
   text: string;
   lang: string | undefined;
   voiceNotFound: string;
+  onStop?: () => void;
 }) => {
   const [textToSpeech, setTextToSpeech] = useState<string>();
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
@@ -185,6 +189,7 @@ const useSpeechSynth = ({
       /** */
     }, Infinity);
     if (synth?.speaking || androidSpeaking) {
+      speaking = true;
       interval = setInterval(() => {
         switch (volumeIcon) {
           case 'high':
@@ -206,11 +211,15 @@ const useSpeechSynth = ({
       }, 500);
     } else {
       setVolumeIcon('high');
+      if (speaking && onStop) {
+        onStop();
+        speaking = false;
+      }
     }
     return () => {
       clearInterval(interval);
     };
-  }, [volumeIcon, volumeIconUp, synth?.speaking, androidSpeaking]);
+  }, [volumeIcon, volumeIconUp, synth?.speaking, androidSpeaking, onStop]);
 
   return { speechText, synthAllow, speechSpeed, changeSpeechSpeed, volumeIcon };
 };

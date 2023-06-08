@@ -158,6 +158,7 @@ const lang: Locale = {
       deleteSelected: 'Delete selected',
       willDelete: `${LocaleVars.count} phrase(s) will be deleted`,
       resetAllFilters: 'Reset filters',
+      playAll: 'Play All',
     },
     app: {
       connectionRefused: 'Connection to server lost',

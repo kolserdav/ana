@@ -87,6 +87,60 @@ $search-input-wudth-coeff: 1.5;
       }
     }
 
+    .selected_container {
+      position: relative;
+      width: 100%;
+      max-width: $translate-container-max;
+    }
+
+    .selected_items {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem;
+      border-style: groove;
+      border-width: 1px;
+      border-radius: 4px;
+      height: $fixed-tools-hight;
+
+
+      .selected_items__button {
+        cursor: pointer;
+      }
+
+      &.selected_items__fixed {
+        position: fixed;
+        z-index: 12;
+        max-width: calc($translate-container-max - $container-padding * 2);
+        left: calc((100vw - ($translate-container-max - $container-padding)) / 2);
+
+        @media (max-width: $translate-container-max) {
+            left: 0;
+        }
+      }
+    }
+
+    .pagination {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      opacity: 0.6;
+      margin-bottom: 0.2rem;
+
+      &.bottom {
+        margin-top: 1rem;
+      }
+    }
+
+    .reset_filters {
+      display: flex;
+      justify-content: flex-start;
+    }
+
     .phrases {
       position: relative;
       width: 100%;
@@ -96,50 +150,6 @@ $search-input-wudth-coeff: 1.5;
       justify-content: center;
       margin-top: 1rem;
 
-      .selected_container {
-        position: relative;
-          width: 100%;
-          max-width: $translate-container-max;
-
-        .selected_items {
-          position: relative;
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          padding: 0.5rem;
-          border-style: groove;
-          border-width: 1px;
-          border-radius: 4px;
-
-          .selected_items__button {
-            cursor: pointer;
-          }
-  
-          &.selected_items__fixed {
-            position: fixed;
-            z-index: 12;
-            max-width: $translate-container-max;
-            left: calc((100vw - ($translate-container-max)) / 2);
-  
-           @media (max-width: $translate-container-max) {
-              left: 0;
-           }
-          }
-        }
-      }
-
-      .pagination {
-        position: relative;
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        opacity: 0.6;
-
-        &.bottom {
-          margin-top: 1rem;
-        }
-      }
     }
 
     .filters_spoiler {
@@ -249,5 +259,12 @@ $search-input-wudth-coeff: 1.5;
       justify-content: center;
       margin-top: 0.65em;
     }
+  }
+
+  .played_phrase {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    max-height: 100%;
   }
 }

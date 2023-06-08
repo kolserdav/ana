@@ -157,6 +157,7 @@ const lang: Locale = {
       deleteSelected: 'Удалить выбранные',
       willDelete: `Будет удалено ${LocaleVars.count} фраз(а)`,
       resetAllFilters: 'Сбросить фильтры',
+      playAll: 'Воспроизвести все',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',

@@ -17,6 +17,7 @@ import {
   usePhraseDelete,
   usePhraseUpdate,
   usePhrases,
+  usePlayAll,
   useResetAllFilters,
   useTags,
 } from './My.hooks';
@@ -34,7 +35,12 @@ import FilterIcon from './icons/Filter';
 import Checkbox from './ui/Checkbox';
 import Cheep from './ui/Cheep';
 import LoadIcon from './icons/LoadIcon';
-import { APP_BAR_TRANSITION } from '../utils/constants';
+import {
+  APP_BAR_HEIGHT,
+  APP_BAR_TRANSITION,
+  DATA_TYPE_PHRASE,
+  FIXED_TOOLS_HIGHT,
+} from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
 import { setMatchesBold } from './Me.lib';
@@ -42,6 +48,9 @@ import { getFormatDistance } from '../utils/lib';
 import Select from './ui/Select';
 import Spoiler from './ui/Spoiler';
 import PlaySoundButton from './PlaySoundButton';
+import PlayIcon from './icons/Play';
+import PauseIcon from './icons/Pause';
+import StopIcon from './icons/Stop';
 
 function My({
   locale,
@@ -63,6 +72,7 @@ function My({
   playSound: string;
 }) {
   const router = useRouter();
+  const phrasesRef = useRef<HTMLDivElement>(null);
   const { load, setLoad } = useLoad();
 
   const { onClickPhraseUpdateWraper } = usePhraseUpdate();
@@ -154,6 +164,20 @@ function My({
     resetLangFilter,
     resetFilterByDate,
     resetSearch,
+  });
+
+  const {
+    onClickPlayAll,
+    played,
+    onStopPlayItem,
+    onClickPauseAll,
+    playToolsFixed,
+    playToolsRef,
+    onClickStopAll,
+    playedText,
+    paused,
+  } = usePlayAll({
+    phrasesRef,
   });
 
   return (
@@ -248,54 +272,89 @@ function My({
             </div>
           </div>
         </div>
-        <div className={s.phrases}>
+        <div className={s.reset_filters}>
           {showResetFilters && (
             <Button onClick={resetAllFilters} theme={theme}>
               {locale.resetAllFilters}
             </Button>
           )}
-          {phrases.length !== 0 && (
-            <div className={s.pagination}>
-              <Typography small theme={theme} variant="span">
-                {pagination}
-              </Typography>
+        </div>
+        {phrases.length !== 0 && (
+          <div className={s.pagination}>
+            <Typography small theme={theme} variant="span">
+              {pagination}
+            </Typography>
+          </div>
+        )}
+        <div ref={selectedRef} className={s.selected_container}>
+          {selected.length !== 0 && (
+            <div
+              className={clsx(s.selected_items, selectedFixed ? s.selected_items__fixed : '')}
+              style={{
+                backgroundColor: theme.active,
+                top: selectedFixed && showAppBar ? `${APP_BAR_HEIGHT}px` : 0,
+                transition:
+                  selectedFixed && showAppBar
+                    ? `top ${APP_BAR_TRANSITION}s ease-out`
+                    : `top ${APP_BAR_TRANSITION}s  ease-in`,
+                borderColor: theme.text,
+              }}
+            >
+              <Checkbox
+                id="select-all"
+                theme={theme}
+                checked={phrases.length === selected.length}
+                onChange={selectAll}
+                label={`${locale.selectAll}: ${phrases.length - selected.length}`}
+              />
+              <Checkbox
+                id="unselect-all"
+                theme={theme}
+                checked={phrases.length === selected.length}
+                onChange={unSelectAll}
+                indeterminate
+                label={`${locale.unselectAll}: ${selected.length}`}
+              />
+              <IconButton onClick={onClickOpenDeleteSeleted} title={locale.deleteSelected}>
+                <DeleteIcon color={theme.red} />
+              </IconButton>
             </div>
           )}
-          <div ref={selectedRef} className={s.selected_container}>
-            {selected.length !== 0 && (
-              <div
-                className={clsx(s.selected_items, selectedFixed ? s.selected_items__fixed : '')}
-                style={{
-                  backgroundColor: theme.active,
-                  top: selectedFixed && showAppBar ? '60px' : 0,
-                  transition:
-                    selectedFixed && showAppBar
-                      ? `top ${APP_BAR_TRANSITION}s ease-out`
-                      : `top ${APP_BAR_TRANSITION}s  ease-in`,
-                  borderColor: theme.text,
-                }}
-              >
-                <Checkbox
-                  id="select-all"
-                  theme={theme}
-                  checked={phrases.length === selected.length}
-                  onChange={selectAll}
-                  label={`${locale.selectAll}: ${phrases.length - selected.length}`}
-                />
-                <Checkbox
-                  id="unselect-all"
-                  theme={theme}
-                  checked={phrases.length === selected.length}
-                  onChange={unSelectAll}
-                  indeterminate
-                  label={`${locale.unselectAll}: ${selected.length}`}
-                />
-                <IconButton onClick={onClickOpenDeleteSeleted} title={locale.deleteSelected}>
-                  <DeleteIcon color={theme.red} />
-                </IconButton>
-              </div>
-            )}
+        </div>
+        <div
+          ref={playToolsRef}
+          className={clsx(
+            s.selected_items,
+            playToolsFixed && (played || paused) ? s.selected_items__fixed : ''
+          )}
+          style={{
+            backgroundColor: theme.active,
+            top:
+              playToolsFixed && (played || paused) && showAppBar
+                ? `${selected.length !== 0 ? APP_BAR_HEIGHT + FIXED_TOOLS_HIGHT : APP_BAR_HEIGHT}px`
+                : `${selected.length !== 0 ? FIXED_TOOLS_HIGHT : 0}px`,
+            transition:
+              playToolsFixed && (played || paused) && showAppBar
+                ? `top ${APP_BAR_TRANSITION}s ease-out`
+                : `top ${APP_BAR_TRANSITION}s  ease-in`,
+            borderColor: theme.text,
+          }}
+        >
+          <IconButton onClick={played ? onClickPauseAll : onClickPlayAll}>
+            {played ? <PauseIcon color={theme.yellow} /> : <PlayIcon color={theme.green} />}
+          </IconButton>
+          <div className={s.played_phrase}>
+            <Typography theme={theme} variant="span" disabled>
+              {!played && !paused ? locale.playAll : playedText}
+            </Typography>
           </div>
+          {(played || paused) && (
+            <IconButton onClick={onClickStopAll}>
+              <StopIcon color={theme.red} />
+            </IconButton>
+          )}
+        </div>
+        <div ref={phrasesRef} className={s.phrases}>
           {phrases.length !== 0 ? (
             phrases.map((item, index) => {
               const ref = createRef<HTMLButtonElement>();
@@ -333,7 +392,7 @@ function My({
                   <div className={s.item} style={{ borderColor: theme.active }}>
                     <div className={s.item__content}>
                       <div className={s.item__translate}>
-                        <Typography variant="p" theme={theme}>
+                        <Typography datatype={DATA_TYPE_PHRASE} variant="p" theme={theme}>
                           {sePieces.length === 0
                             ? item.text
                             : setMatchesBold({ text: item.text, matches: sePieces })}
@@ -346,6 +405,7 @@ function My({
                               text={item.text}
                               lang={item.learnLang}
                               voiceNotFound={voiceNotFound}
+                              onStop={onStopPlayItem}
                             />
                           </div>
                         </div>

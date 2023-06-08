@@ -434,6 +434,7 @@ export interface Locale {
        */
       willDelete: string;
       resetAllFilters: string;
+      playAll: string;
     };
     app: {
       connectionRefused: string;

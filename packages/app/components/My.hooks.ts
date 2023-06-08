@@ -14,9 +14,9 @@ import {
 import Request from '../utils/request';
 import { log } from '../utils/lib';
 import {
-  APP_BAR_HEIGHT,
   DATE_FILTER_ALL,
   ORDER_BY_DEFAULT,
+  PLAY_ALL_ITEM_PAUSE,
   Pages,
   TAKE_PHRASES_DEFAULT,
 } from '../utils/constants';
@@ -24,10 +24,9 @@ import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/loc
 import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
 import { DateFilter } from '../types';
-import { getGTDate } from './Me.lib';
+import { getGTDate, getPlayButtonFromContainer, getPlayText, scrollTo } from './Me.lib';
 import useLangs from '../hooks/useLangs';
-import storeShowAppBar from '../store/showAppBar';
-import storeTouchEvent from '../store/touchEvent';
+import useFixedTools from '../hooks/useFixedTools';
 
 const request = new Request();
 
@@ -497,13 +496,9 @@ export const useLangFilter = ({
   return { langs, langFilter, onChangeLangsFilter, resetLangFilter };
 };
 
-let firstYselected = 0;
-
 export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) => {
   const selectedRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<string[]>([]);
-  const [selectedFixed, setSelectedFixed] = useState<boolean>(false);
-  const [showAppBar, setShowAppBar] = useState<boolean>(storeShowAppBar.getState().showAppBar);
 
   const onChangeSelectedWrapper = (phraseId: string) => (checked: boolean) => {
     const _selected = selected.slice();
@@ -524,56 +519,7 @@ export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) =
     setSelected(_selected);
   };
 
-  /**
-   * Listen show app bar
-   */
-  useEffect(() => {
-    const cleanSubs = storeShowAppBar.subscribe(() => {
-      const { showAppBar: _showAppBar } = storeShowAppBar.getState();
-      setShowAppBar(_showAppBar);
-    });
-    return () => {
-      cleanSubs();
-    };
-  }, []);
-
-  /**
-   * Listen scroll
-   */
-  useEffect(() => {
-    const clearSubs = storeScroll.subscribe(() => {
-      const { current } = selectedRef;
-      if (!current) {
-        return;
-      }
-      const { y } = current.getBoundingClientRect();
-      const { scrollY } = window;
-      const zero = 0;
-      const _selectedFixed = y < zero;
-      if (_selectedFixed && !selectedFixed) {
-        setSelectedFixed(true);
-      }
-      if (selectedFixed && scrollY < firstYselected) {
-        setSelectedFixed(false);
-      }
-    });
-
-    return () => {
-      clearSubs();
-    };
-  }, [selectedRef, showAppBar, selectedFixed]);
-
-  /**
-   * Set first y
-   */
-  useEffect(() => {
-    const { current } = selectedRef;
-    if (!current) {
-      return;
-    }
-    const { y } = current.getBoundingClientRect();
-    firstYselected = y;
-  }, []);
+  const { showAppBar, fixed: selectedFixed } = useFixedTools({ elementRef: selectedRef });
 
   const selectAll = () => {
     const _selected = phrases.map((item) => item.id);
@@ -650,4 +596,103 @@ export const useResetAllFilters = ({
   }, [tags, langFilter, strongTags, date, search]);
 
   return { resetAllFilters, showResetFilters };
+};
+
+export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDivElement> }) => {
+  const playToolsRef = useRef<HTMLDivElement>(null);
+  const [played, setPlayed] = useState<boolean>(false);
+  const [currentPlay, setCurrentPlay] = useState<number>(0);
+  const [playedText, setPlayedText] = useState<string>('');
+  const [paused, setPaused] = useState<boolean>(false);
+
+  const { fixed: playToolsFixed } = useFixedTools({ elementRef: playToolsRef });
+
+  const onStopPlayItem = useMemo(
+    () => () => {
+      const { current } = phrasesRef;
+      if (!current) {
+        return;
+      }
+      const nextPlay = currentPlay + 1;
+      if (!current.children[currentPlay]) {
+        setPlayed(false);
+        return;
+      }
+      setTimeout(() => {
+        setCurrentPlay(nextPlay);
+      }, PLAY_ALL_ITEM_PAUSE);
+    },
+    [currentPlay, phrasesRef]
+  );
+
+  /**
+   * Play current
+   */
+  useEffect(() => {
+    const { current } = phrasesRef;
+    if (!current || !played) {
+      return;
+    }
+    const button = getPlayButtonFromContainer({ current, currentPlay });
+    if (button) {
+      scrollTo({ element: button });
+      button.click();
+
+      const _playText = getPlayText({ current, currentPlay });
+      if (_playText) {
+        setPlayedText(_playText);
+      }
+    } else {
+      onStopPlayItem();
+    }
+  }, [played, phrasesRef, currentPlay, onStopPlayItem]);
+
+  const onClickPlayAll = () => {
+    setPlayed(true);
+    setPaused(false);
+  };
+
+  const stop = () => {
+    const { current } = phrasesRef;
+    if (!current) {
+      return;
+    }
+    const button = getPlayButtonFromContainer({ current, currentPlay });
+    if (button && played) {
+      button.click();
+    }
+    setPlayed(false);
+  };
+
+  const onClickPauseAll = () => {
+    stop();
+    setPaused(true);
+  };
+
+  const onClickStopAll = () => {
+    stop();
+    setPaused(false);
+    setCurrentPlay(0);
+
+    const { current } = phrasesRef;
+    if (!current) {
+      return;
+    }
+    const button = getPlayButtonFromContainer({ current, currentPlay: 0 });
+    if (button) {
+      scrollTo({ element: button });
+    }
+  };
+
+  return {
+    onClickPlayAll,
+    played,
+    onStopPlayItem,
+    onClickPauseAll,
+    playToolsFixed,
+    playToolsRef,
+    onClickStopAll,
+    playedText,
+    paused,
+  };
 };

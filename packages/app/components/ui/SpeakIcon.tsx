@@ -1,5 +1,6 @@
 import { Theme } from '../../Theme';
 import { VolumeIcon } from '../../types';
+import { DATA_TYPE_PLAY_BUTTON } from '../../utils/constants';
 import VolumeHighIcon from '../icons/VolumeHigh';
 import VolumeLowIcon from '../icons/VolumeLow';
 import VolumeMediumIcon from '../icons/VolumeMedium';
@@ -17,7 +18,7 @@ function SpeakIcon({
   volumeIcon: VolumeIcon;
 }) {
   return (
-    <IconButton onClick={onClick} title={title}>
+    <IconButton datatype={DATA_TYPE_PLAY_BUTTON} onClick={onClick} title={title}>
       {volumeIcon === 'high' ? (
         <VolumeHighIcon color={theme.text} />
       ) : volumeIcon === 'medium' ? (
