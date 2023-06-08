@@ -388,7 +388,7 @@ function Translate({
               {text}
             </Typography>
           </div>
-          <div className={p.check_item}>
+          <div className={s.check_item}>
             <Checkbox
               theme={theme}
               label={locale.saveTranlsate}
