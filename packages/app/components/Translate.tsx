@@ -32,9 +32,8 @@ import SwapHorizontalIcon from './icons/SwapHorisontal';
 import MicrophoneIcon from './icons/Microphone';
 import UndoIcon from './icons/Undo';
 import { PHRASE_MAX_LENGTH } from '../utils/constants';
-import useSpeechSynth from '../hooks/useSpeechSynth';
-import SpeakIcon from './ui/SpeakIcon';
 import Spoiler from './ui/Spoiler';
+import PlaySoundButton from './PlaySoundButton';
 
 function Translate({
   theme,
@@ -135,12 +134,6 @@ function Translate({
     connId,
     missingCSRF,
     setUndo,
-  });
-
-  const { speechText, synthAllow, volumeIcon } = useSpeechSynth({
-    text: reTranslate,
-    voiceNotFound,
-    lang: learnLang,
   });
 
   const {
@@ -274,13 +267,14 @@ function Translate({
               {reTranslate}
             </Typography>
           </div>
-          {reTranslate && synthAllow && (
+          {reTranslate && (
             <div className={s.sound_button}>
-              <SpeakIcon
-                onClick={speechText}
-                title={playSound}
-                volumeIcon={volumeIcon}
+              <PlaySoundButton
                 theme={theme}
+                title={playSound}
+                text={reTranslate}
+                lang={learnLang}
+                voiceNotFound={voiceNotFound}
               />
             </div>
           )}

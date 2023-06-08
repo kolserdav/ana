@@ -41,6 +41,7 @@ import { setMatchesBold } from './Me.lib';
 import { getFormatDistance } from '../utils/lib';
 import Select from './ui/Select';
 import Spoiler from './ui/Spoiler';
+import PlaySoundButton from './PlaySoundButton';
 
 function My({
   locale,
@@ -49,6 +50,8 @@ function My({
   _delete,
   cancel,
   user,
+  playSound,
+  voiceNotFound,
 }: {
   locale: Locale['app']['my'];
   theme: Theme;
@@ -56,6 +59,8 @@ function My({
   _delete: string;
   cancel: string;
   user: UserCleanResult | null;
+  voiceNotFound: string;
+  playSound: string;
 }) {
   const router = useRouter();
   const { load, setLoad } = useLoad();
@@ -327,11 +332,24 @@ function My({
 
                   <div className={s.item} style={{ borderColor: theme.active }}>
                     <div className={s.item__content}>
-                      <Typography variant="p" theme={theme}>
-                        {sePieces.length === 0
-                          ? item.text
-                          : setMatchesBold({ text: item.text, matches: sePieces })}
-                      </Typography>
+                      <div className={s.item__translate}>
+                        <Typography variant="p" theme={theme}>
+                          {sePieces.length === 0
+                            ? item.text
+                            : setMatchesBold({ text: item.text, matches: sePieces })}
+                        </Typography>
+                        <div className={s.play_button}>
+                          <div className={s.play_button__container}>
+                            <PlaySoundButton
+                              theme={theme}
+                              title={playSound}
+                              text={item.text}
+                              lang={item.learnLang}
+                              voiceNotFound={voiceNotFound}
+                            />
+                          </div>
+                        </div>
+                      </div>
                       {item.translate && (
                         <Typography className={s.translate} variant="p" theme={theme} small>
                           {sePieces.length === 0

@@ -196,9 +196,15 @@ $search-input-wudth-coeff: 1.5;
         .item__content {
           width: 100%;
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-flow: row wrap;
+          align-items: flex-start;
+          flex-direction: column;
+
+          .item__translate {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+          }
         }
 
         .item__selector {
@@ -230,6 +236,18 @@ $search-input-wudth-coeff: 1.5;
           margin-left: 0.5rem;
         }
       }
+    }
+  }
+
+  .play_button {
+    margin: 0.2em;
+    display: inline-block;
+
+    .play_button__container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.65em;
     }
   }
 }

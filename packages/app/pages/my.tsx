@@ -43,6 +43,8 @@ export default function MyPage({
           user={user}
           theme={theme}
           cancel={localeCommon.cancel}
+          playSound={localeCommon.playSound}
+          voiceNotFound={localeCommon.voiceNotFound}
         />
       </main>
     </>

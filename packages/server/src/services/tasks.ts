@@ -5,6 +5,7 @@ import {
   CHECK_TRANSLATE_SERVICE_TIMEOUT,
   SCRIPT_FILE_SERVER_MESSAGES,
   TRANSLATE_URL,
+  NODE_ENV,
 } from '../utils/constants';
 import { sendEmail } from '../utils/email';
 import { ORM } from './orm';
@@ -44,7 +45,9 @@ class Tasks {
             locale: 'en',
             type: 'admin-message',
             data: {
-              message: 'Server is not responding from checkTranslateService',
+              message: `Server is not responding from checkTranslateService ${JSON.stringify({
+                NODE_ENV,
+              })}`,
             },
           });
         }
@@ -75,7 +78,9 @@ class Tasks {
           locale: 'en',
           type: 'admin-message',
           data: {
-            message: 'Server is responding again from checkTranslateService',
+            message: `Server is responding again from checkTranslateService ${JSON.stringify({
+              NODE_ENV,
+            })}`,
           },
         });
         await orm.serverMessageDeleteMany({
