@@ -113,7 +113,7 @@ const lang: Locale = {
       savePhrase: 'Save Phrase',
       createPhrase: 'Create Phrase',
       needLogin: 'Login required',
-      savePhraseDesc: 'The saved phrase will only be available to you',
+      savePhraseDesc: 'Save the phrase as a memento. You can then change or delete it at any time.',
       saveTranlsate: 'Save with translation',
       newTag: 'New Tag',
       changeTag: 'Change Tag',

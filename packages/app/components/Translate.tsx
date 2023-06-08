@@ -13,6 +13,7 @@ import {
   useUndo,
 } from './Translate.hooks';
 import s from './Translate.module.scss';
+import p from '../styles/Page.module.scss';
 import CloseIcon from './icons/Close';
 import IconButton from './ui/IconButton';
 import Select from './ui/Select';
@@ -150,6 +151,7 @@ function Translate({
     setSaveTranslate,
     onClickSave,
     onClickUpdate,
+    onClickCancelSave,
   } = useSavePhrase({
     translate,
     text,
@@ -374,7 +376,7 @@ function Translate({
         )}
       </div>
       {user && (
-        <Dialog className={s.dialog} theme={theme} open={saveDialog} onClose={setSaveDialog}>
+        <Dialog className={p.dialog} theme={theme} open={saveDialog} onClose={setSaveDialog}>
           <Typography align="center" theme={theme} variant="h2">
             {locale.savePhrase}
           </Typography>
@@ -386,7 +388,7 @@ function Translate({
               {text}
             </Typography>
           </div>
-          <div className={s.check_item}>
+          <div className={p.check_item}>
             <Checkbox
               theme={theme}
               label={locale.saveTranlsate}
@@ -411,7 +413,10 @@ function Translate({
               </div>
             ))}
           </div>
-          <div className={s.dialog_actions}>
+          <div className={p.dialog__actions}>
+            <Button className={s.button} onClick={onClickCancelSave} theme={theme}>
+              {cancel}
+            </Button>
             <Button theme={theme} onClick={edit ? onClickUpdate : onClickSave} disabled={load}>
               {save}
             </Button>

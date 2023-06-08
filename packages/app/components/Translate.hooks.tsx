@@ -435,6 +435,10 @@ export const useSavePhrase = ({
     setSaveDialog(true);
   };
 
+  const onClickCancelSave = () => {
+    setSaveDialog(false);
+  };
+
   const onClickSave = async () => {
     if (!learnLang || !nativeLang) {
       return;
@@ -492,6 +496,7 @@ export const useSavePhrase = ({
     setSaveTranslate,
     onClickSave,
     onClickUpdate,
+    onClickCancelSave,
   };
 };
 
