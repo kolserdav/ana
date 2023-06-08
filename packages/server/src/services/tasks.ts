@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import { TRANSLATE_SERVICE_UNAVAILABLE_COMMENT } from '../types/interfaces';
 import {
   ADMIN_EMAIL,
-  CHECK_SERVER_MESSAGES_INTERVAL,
+  CHECK_TRANSLATE_SERVICE_TIMEOUT,
   SCRIPT_FILE_SERVER_MESSAGES,
   TRANSLATE_URL,
 } from '../utils/constants';
@@ -48,16 +48,45 @@ class Tasks {
             },
           });
         }
-      }, CHECK_SERVER_MESSAGES_INTERVAL / 2);
+      }, CHECK_TRANSLATE_SERVICE_TIMEOUT);
+      let error = false;
       await new Promise((resolve) => {
         fetch(`${TRANSLATE_URL}/check`)
           .then((r) => r.text())
           .then((d) => {
             resolve(d);
+          })
+          .catch((e) => {
+            log('error', 'Error check translate service', e);
+            error = true;
           });
       });
       clearTimeout(timeout);
-    }, CHECK_SERVER_MESSAGES_INTERVAL);
+
+      const d = await orm.serverMessageFindMany({
+        where: {
+          comment: TRANSLATE_SERVICE_UNAVAILABLE_COMMENT,
+        },
+      });
+      if (d.status === 'info' && !error) {
+        sendEmail({
+          email: ADMIN_EMAIL,
+          subject: 'Translate server is awailable now!',
+          locale: 'en',
+          type: 'admin-message',
+          data: {
+            message: 'Server is responding again from checkTranslateService',
+          },
+        });
+        await orm.serverMessageDeleteMany({
+          where: {
+            id: {
+              in: d.data.map((item) => item.id),
+            },
+          },
+        });
+      }
+    }, CHECK_TRANSLATE_SERVICE_TIMEOUT * 2);
   }
 
   private run(command: string, args: string[]) {

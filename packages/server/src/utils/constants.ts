@@ -30,4 +30,5 @@ export const PASSWORD_ALGORITHM = 'sha512';
 export const RESTORE_LINK_TIMEOUT_IN_HOURS = 48;
 export const NULL_TIMEOUT = new Date(0, 0, 0, 0, 0, 0, 0);
 export const CHECK_SERVER_MESSAGES_INTERVAL = 3000;
+export const CHECK_TRANSLATE_SERVICE_TIMEOUT = 5000;
 export const SCRIPT_FILE_SERVER_MESSAGES = 'server-messages.js';
