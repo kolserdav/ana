@@ -22,16 +22,6 @@ $textare-button-indent-right: 8px;
       justify-content: space-around;
     }
 
-    .tags_created {
-      display: flex;
-      flex-flow: row wrap;
-      margin-top: 1rem;
-
-      .tag_item {
-        margin-right: 0.2rem; 
-      }
-    }
-
     .button {
       min-width: 90px;
     }
@@ -151,6 +141,16 @@ $textare-button-indent-right: 8px;
 
   .check_item {
     margin: 1rem 0;
+  }
+
+  .tags_created {
+    display: flex;
+    flex-flow: row wrap;
+    margin-top: 1rem;
+
+    .tag_item {
+      margin-right: 0.2rem; 
+    }
   }
 
   .tags_spoiler {
