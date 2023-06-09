@@ -607,22 +607,59 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
 
   const { fixed: playToolsFixed } = useFixedTools({ elementRef: playToolsRef });
 
-  const onStopPlayItem = useMemo(
+  const stop = useMemo(
     () => () => {
       const { current } = phrasesRef;
       if (!current) {
         return;
       }
-      const nextPlay = currentPlay + 1;
-      if (!current.children[currentPlay]) {
-        setPlayed(false);
+      const button = getPlayButtonFromContainer({ current, currentPlay });
+      if (button && played) {
+        button.click();
+      }
+      setPlayed(false);
+    },
+    [currentPlay, phrasesRef, played]
+  );
+
+  const onClickStopAll = useMemo(
+    () => () => {
+      stop();
+      setPaused(false);
+      setCurrentPlay(0);
+
+      const { current } = phrasesRef;
+      if (!current) {
         return;
       }
-      setTimeout(() => {
-        setCurrentPlay(nextPlay);
-      }, PLAY_ALL_ITEM_PAUSE);
+      const button = getPlayButtonFromContainer({ current, currentPlay: 0 });
+      if (button) {
+        scrollTo({ element: button });
+      }
     },
-    [currentPlay, phrasesRef]
+    [phrasesRef, stop]
+  );
+
+  const onStopPlayItem = useMemo(
+    () =>
+      (withoutPause = false) => {
+        const { current } = phrasesRef;
+        if (!current || !played) {
+          return;
+        }
+        const nextPlay = currentPlay + 1;
+        if (!current.children[nextPlay]) {
+          onClickStopAll();
+          return;
+        }
+        setTimeout(
+          () => {
+            setCurrentPlay(nextPlay);
+          },
+          withoutPause ? 0 : PLAY_ALL_ITEM_PAUSE
+        );
+      },
+    [currentPlay, phrasesRef, onClickStopAll, played]
   );
 
   /**
@@ -643,7 +680,7 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
         setPlayedText(_playText);
       }
     } else {
-      onStopPlayItem();
+      onStopPlayItem(true);
     }
   }, [played, phrasesRef, currentPlay, onStopPlayItem]);
 
@@ -652,36 +689,9 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
     setPaused(false);
   };
 
-  const stop = () => {
-    const { current } = phrasesRef;
-    if (!current) {
-      return;
-    }
-    const button = getPlayButtonFromContainer({ current, currentPlay });
-    if (button && played) {
-      button.click();
-    }
-    setPlayed(false);
-  };
-
   const onClickPauseAll = () => {
     stop();
     setPaused(true);
-  };
-
-  const onClickStopAll = () => {
-    stop();
-    setPaused(false);
-    setCurrentPlay(0);
-
-    const { current } = phrasesRef;
-    if (!current) {
-      return;
-    }
-    const button = getPlayButtonFromContainer({ current, currentPlay: 0 });
-    if (button) {
-      scrollTo({ element: button });
-    }
   };
 
   return {

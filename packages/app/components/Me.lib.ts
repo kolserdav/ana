@@ -110,7 +110,11 @@ export function getPlayText({
 export const scrollTo = ({ element }: { element: HTMLElement }) => {
   const { y } = element.getBoundingClientRect();
   window.scrollTo({
-    top: y + window.scrollY - FIXED_TOOLS_HIGHT - PLAY_ALL_SCROLL_BY_TOP_SHIFT,
+    top:
+      y +
+      (window.scrollY > y ? window.scrollY : 0) -
+      FIXED_TOOLS_HIGHT -
+      PLAY_ALL_SCROLL_BY_TOP_SHIFT,
     behavior: 'smooth',
   });
 };
