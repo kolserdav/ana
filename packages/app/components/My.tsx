@@ -40,6 +40,7 @@ import {
   APP_BAR_TRANSITION,
   DATA_TYPE_PHRASE,
   FIXED_TOOLS_HIGHT,
+  LEARN_LANG_DEFAULT,
 } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
@@ -51,6 +52,7 @@ import PlaySoundButton from './PlaySoundButton';
 import PlayIcon from './icons/Play';
 import PauseIcon from './icons/Pause';
 import StopIcon from './icons/Stop';
+import useSpeechSynth from '../hooks/useSpeechSynth';
 
 function My({
   locale,
