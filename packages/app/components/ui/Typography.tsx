@@ -17,6 +17,7 @@ function Typography({
   disabled,
   blur,
   datatype,
+  nowrap,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | React.ReactNode;
@@ -30,6 +31,7 @@ function Typography({
   disabled?: boolean;
   blur?: boolean;
   datatype?: string;
+  nowrap?: boolean;
 }) {
   return (
     <div
@@ -40,6 +42,7 @@ function Typography({
         className,
         small ? s.small : '',
         large ? s.large : '',
+        nowrap ? s.nowrap : '',
         align
           ? align === 'center'
             ? s.center
@@ -96,6 +99,7 @@ Typography.defaultProps = {
   blur: undefined,
   large: undefined,
   datatype: undefined,
+  nowrap: undefined,
 };
 
 export default Typography;

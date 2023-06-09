@@ -24,7 +24,13 @@ import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/loc
 import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
 import { DateFilter } from '../types';
-import { getGTDate, getPlayButtonFromContainer, getPlayText, scrollTo } from './Me.lib';
+import {
+  getAnimationDuration,
+  getGTDate,
+  getPlayButtonFromContainer,
+  getPlayText,
+  scrollTo,
+} from './Me.lib';
 import useLangs from '../hooks/useLangs';
 import useFixedTools from '../hooks/useFixedTools';
 
@@ -604,6 +610,7 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
   const [currentPlay, setCurrentPlay] = useState<number>(0);
   const [playedText, setPlayedText] = useState<string>('');
   const [paused, setPaused] = useState<boolean>(false);
+  const [animationDuration, setAnimationDuration] = useState<number>(0);
 
   const { fixed: playToolsFixed } = useFixedTools({ elementRef: playToolsRef });
 
@@ -678,6 +685,7 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
       const _playText = getPlayText({ current, currentPlay });
       if (_playText) {
         setPlayedText(_playText);
+        setAnimationDuration(getAnimationDuration(_playText.length));
       }
     } else {
       onStopPlayItem(true);
@@ -704,5 +712,6 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
     onClickStopAll,
     playedText,
     paused,
+    animationDuration,
   };
 };

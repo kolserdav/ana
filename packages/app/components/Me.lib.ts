@@ -6,6 +6,7 @@ import {
   DATA_TYPE_PLAY_BUTTON,
   DATA_TYPE_PHRASE,
 } from '../utils/constants';
+import { LocalStorageName, getLocalStorage } from '../utils/localStorage';
 
 // eslint-disable-next-line import/prefer-default-export
 export const setMatchesBold = ({ text, matches }: { text: string; matches: string[] }) => {
@@ -117,4 +118,10 @@ export const scrollTo = ({ element }: { element: HTMLElement }) => {
       PLAY_ALL_SCROLL_BY_TOP_SHIFT,
     behavior: 'smooth',
   });
+};
+
+export const getAnimationDuration = (textLenght: number) => {
+  const _speechSpeed = getLocalStorage(LocalStorageName.SPEECH_SPEED);
+  const speechSpeed = _speechSpeed || 1;
+  return textLenght * speechSpeed * 0.04;
 };

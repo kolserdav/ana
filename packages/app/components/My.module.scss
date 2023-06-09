@@ -266,5 +266,22 @@ $search-input-wudth-coeff: 1.5;
     overflow: hidden;
     display: block;
     max-height: 100%;
+
+    .content {
+      position: relative;
+      display: inline;
+      width: auto;
+
+      &.animate {
+        animation-name: moving;
+        animation-timing-function: linear;
+        left: 0;
+      }
+      @keyframes moving {
+        0%   {left:0;}
+        100% {left:-200%;}
+      }
+    }
   }
+
 }

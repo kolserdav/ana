@@ -178,9 +178,12 @@ function My({
     onClickStopAll,
     playedText,
     paused,
+    animationDuration,
   } = usePlayAll({
     phrasesRef,
   });
+
+  console.log(animationDuration);
 
   return (
     <div className={s.wrapper}>
@@ -346,9 +349,14 @@ function My({
             {played ? <PauseIcon color={theme.yellow} /> : <PlayIcon color={theme.green} />}
           </IconButton>
           <div className={s.played_phrase}>
-            <Typography theme={theme} variant="span" disabled>
-              {!played && !paused ? locale.playAll : playedText}
-            </Typography>
+            <div
+              className={clsx(s.content, played ? s.animate : '')}
+              style={{ animationDuration: `${animationDuration}s` }}
+            >
+              <Typography nowrap theme={theme} variant="span" disabled>
+                {!played && !paused ? locale.playAll : playedText}
+              </Typography>
+            </div>
           </div>
           {(played || paused) && (
             <IconButton onClick={onClickStopAll}>
