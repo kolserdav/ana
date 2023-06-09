@@ -75,7 +75,6 @@ public class MainActivity extends Activity {
 
         });
 
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mWebView.loadUrl("https://uyem.ru" );
 
         this.setContentView(mWebView);
