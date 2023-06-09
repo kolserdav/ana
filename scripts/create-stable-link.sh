@@ -24,7 +24,7 @@ echo "Create stable link with tag $TAG"
 curl --request POST \
   --data name="app-release.apk" \
   --data url="https://$ORIGIN/ana/releases/apk/$TAG/app-release.apk" \
-  --data direct_asset_path="/ana/releases/apk/v1.16/app-release.apk" \
+  --data direct_asset_path="/ana/releases/apk/$TAG/app-release.apk" \
   --header "PRIVATE-TOKEN: $ACCESS_TOKEN" \
   "https://gitlab.com/api/v4/projects/46053722/releases/$TAG/assets/links"
 fi
