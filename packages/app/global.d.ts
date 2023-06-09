@@ -51,6 +51,8 @@ declare global {
 
   interface AndroidCommon {
     closeApp: () => void;
+
+    setKeepScreenOn: (sleep: boolean) => void;
   }
 
   const androidCommon: AndroidCommon | undefined;

@@ -625,6 +625,9 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
         button.click();
       }
       setPlayed(false);
+      if (androidCommon) {
+        androidCommon.setKeepScreenOn(false);
+      }
     },
     [currentPlay, phrasesRef, played]
   );
@@ -695,6 +698,9 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
   const onClickPlayAll = () => {
     setPlayed(true);
     setPaused(false);
+    if (androidCommon) {
+      androidCommon.setKeepScreenOn(true);
+    }
   };
 
   const onClickPauseAll = () => {

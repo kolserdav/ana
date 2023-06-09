@@ -32,5 +32,12 @@ export default function useTheme() {
     };
   }, []);
 
+  /**
+   * Set body colors
+   */
+  useEffect(() => {
+    document.body.setAttribute('style', `background-color: ${theme.paper}`);
+  }, [theme.paper]);
+
   return { themeName, theme };
 }

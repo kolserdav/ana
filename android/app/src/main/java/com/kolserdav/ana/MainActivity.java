@@ -10,6 +10,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
@@ -74,6 +75,7 @@ public class MainActivity extends Activity {
 
         });
 
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mWebView.loadUrl("https://uyem.ru" );
 
         this.setContentView(mWebView);
@@ -165,6 +167,20 @@ class AndroidCommon {
             public void run() {
                 main.finishAffinity();
                 System.exit(0);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void setKeepScreenOn(boolean sleep) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (sleep) {
+                    main.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                } else {
+                    main.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
             }
         });
     }
