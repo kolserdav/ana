@@ -196,7 +196,7 @@ function Translate({
             ))}
           </Select>
           <div className={s.swap_button}>
-            <IconButton onClick={onClickChangeLangs} title={locale.swapLangs}>
+            <IconButton theme={theme} onClick={onClickChangeLangs} title={locale.swapLangs}>
               <SwapHorizontalIcon color={theme.text} />
             </IconButton>
           </div>
@@ -227,8 +227,9 @@ function Translate({
           />
           <div className={s.close_button}>
             <IconButton
+              theme={theme}
               onClick={undo ? revertText : cleanText}
-              title={edit ? locale.quitEdit : locale.cleanField}
+              title={edit ? locale.quitEdit : undo ? locale.undo : locale.cleanField}
               disabled={load}
             >
               {undo ? <UndoIcon color={theme.text} /> : <CloseIcon color={theme.text} />}
@@ -237,6 +238,7 @@ function Translate({
           {allowRecogn && (
             <div className={s.micro_button} title={locale.startRecognize}>
               <IconButton
+                theme={theme}
                 disabled={load}
                 onMouseUp={onStopRecognize}
                 onMouseDown={onStartRecognize}
@@ -306,7 +308,7 @@ function Translate({
                       name={tagToUpdate ? locale.changeTag : locale.newTag}
                       theme={theme}
                     />
-                    <IconButton title={showHelp} ref={helpTagRef}>
+                    <IconButton theme={theme} title={showHelp} ref={helpTagRef}>
                       <HelpIcon color={theme.text} />
                     </IconButton>
                   </div>
@@ -332,10 +334,18 @@ function Translate({
                             postfix={item.PhraseTag.length.toString()}
                             menuChildren={
                               <div className={s.menu_tooltip}>
-                                <IconButton title={_edit} onClick={onClickTagUpdateWrapper(item)}>
+                                <IconButton
+                                  theme={theme}
+                                  title={_edit}
+                                  onClick={onClickTagUpdateWrapper(item)}
+                                >
                                   <EditIcon color={theme.blue} />
                                 </IconButton>
-                                <IconButton onClick={onClickTagDeleteWrapper(item)} title={_delete}>
+                                <IconButton
+                                  theme={theme}
+                                  onClick={onClickTagDeleteWrapper(item)}
+                                  title={_delete}
+                                >
                                   <DeleteIcon color={theme.red} />
                                 </IconButton>
                               </div>

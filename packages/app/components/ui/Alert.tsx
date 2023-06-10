@@ -330,7 +330,7 @@ function Alert({ theme }: { theme: Theme }) {
             {item.message}
           </p>
           {item.infinity && (
-            <IconButton id={item.id} onClick={onClickCloseHandler}>
+            <IconButton theme={theme} id={item.id} onClick={onClickCloseHandler}>
               <CloseCircleIcon color={theme.black} />
             </IconButton>
           )}

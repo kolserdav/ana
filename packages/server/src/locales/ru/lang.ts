@@ -137,6 +137,7 @@ const lang: Locale = {
       recognizeNotSupport: 'Распознание речи не поддерживается',
       microNotPermitted: 'Разрешение на использование микрофона не получено',
       serverIsNotConnected: 'Сервер недоступен или клиент не поддерживает протокол',
+      undo: 'Отменить последнюю операцию',
     },
     my: {
       title: 'Мои фразы',
@@ -162,6 +163,7 @@ const lang: Locale = {
       willDelete: `Будет удалено ${LocaleVars.count} фраз(а)`,
       resetAllFilters: 'Сбросить фильтры',
       playAll: 'Воспроизвести все',
+      openTools: 'Открыть инструменты',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',

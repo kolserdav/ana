@@ -405,6 +405,7 @@ export interface Locale {
       recognizeNotSupport: string;
       microNotPermitted: string;
       serverIsNotConnected: string;
+      undo: string;
     };
     my: {
       title: string;
@@ -438,6 +439,7 @@ export interface Locale {
       willDelete: string;
       resetAllFilters: string;
       playAll: string;
+      openTools: string;
     };
     app: {
       connectionRefused: string;

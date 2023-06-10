@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ubuntu300 } from '../../fonts/ubuntu';
 import storeClick from '../../store/click';
 import storeScroll from '../../store/scroll';
@@ -20,30 +20,31 @@ function Tooltip({
   length,
   closeOnClick,
   parentRef,
+  withoutListenClick,
+  remoteOpen,
+  setRemoteOpen,
 }: {
   parentRef: React.RefObject<HTMLElement>;
   children: string | React.ReactNode;
   theme: Theme;
   length?: number;
   closeOnClick?: boolean;
+  withoutListenClick?: boolean;
+  remoteOpen?: boolean;
+  setRemoteOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState<boolean>();
   const [position, setPosition] = useState<typeof POSITION_DEFAULT>(POSITION_DEFAULT);
 
-  /**
-   * Handle click
-   */
-  useEffect(() => {
-    const { current } = parentRef;
+  const onClick = useMemo(
+    () => () => {
+      const { current } = parentRef;
+      if (!current) {
+        return;
+      }
 
-    if (!current) {
-      return () => {
-        /** */
-      };
-    }
-    const onClick = () => {
       const b = current.getBoundingClientRect();
       const { y, x, width: _width, height: _height } = b;
       const { innerWidth } = window;
@@ -58,8 +59,8 @@ function Tooltip({
       let cols = 4;
       let rows = 1;
       if (_length >= 10 && _length < 30) {
-        cols = 4;
-        rows = 3;
+        cols = 5;
+        rows = 2;
       } else if (_length >= 30 && _length < 50) {
         cols = 6;
         rows = 3;
@@ -78,7 +79,7 @@ function Tooltip({
       } else if (_length >= 130 && _length < 150) {
         cols = 11;
         rows = 7;
-      } else {
+      } else if (_length >= 150) {
         cols = 12;
         rows = 8;
         log('warn', 'Tooltip length is too long', { _length, max: 150 });
@@ -101,12 +102,39 @@ function Tooltip({
       setTimeout(() => {
         setOpen(true);
       }, 110);
-    };
+    },
+    [children, length, parentRef]
+  );
+
+  /**
+   * Handle click
+   */
+  useEffect(() => {
+    const { current } = parentRef;
+
+    if (!current || withoutListenClick) {
+      return () => {
+        /** */
+      };
+    }
+
     current.addEventListener('click', onClick);
     return () => {
       current.removeEventListener('click', onClick);
     };
-  }, [children, length, parentRef]);
+  }, [parentRef, onClick, withoutListenClick]);
+
+  /**
+   * Listen remote open
+   */
+  useEffect(() => {
+    if (remoteOpen !== undefined) {
+      setOpen(remoteOpen);
+      if (remoteOpen) {
+        onClick();
+      }
+    }
+  }, [remoteOpen, onClick]);
 
   /**
    * Listen scroll
@@ -133,18 +161,26 @@ function Tooltip({
     const cleanSubs = storeClick.subscribe(() => {
       const { clientX, clientY } = storeClick.getState();
       const clickBy = checkClickBy({ current: _current, clientX, clientY });
-      if (open) {
+      if (open || remoteOpen) {
+        let _open = true;
         if (!clickBy) {
-          setOpen(false);
+          _open = false;
         } else if (closeOnClick) {
-          setOpen(false);
+          _open = false;
+        }
+        if (withoutListenClick) {
+          _open = false;
+        }
+        setOpen(_open);
+        if (setRemoteOpen) {
+          setRemoteOpen(_open);
         }
       }
     });
     return () => {
       cleanSubs();
     };
-  }, [ref, open, closeOnClick]);
+  }, [ref, open, closeOnClick, remoteOpen, setRemoteOpen, withoutListenClick]);
 
   return (
     <div
@@ -167,6 +203,9 @@ function Tooltip({
 Tooltip.defaultProps = {
   length: 0,
   closeOnClick: false,
+  withoutListenClick: undefined,
+  remoteOpen: undefined,
+  setRemoteOpen: undefined,
 };
 
 export default Tooltip;

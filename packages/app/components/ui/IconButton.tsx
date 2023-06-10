@@ -1,13 +1,48 @@
-import { forwardRef } from 'react';
+import { forwardRef, useRef, useState } from 'react';
 import s from './IconButton.module.scss';
+import { Theme } from '../../Theme';
+import Tooltip from './Tooltip';
 
 const IconButton = forwardRef<
   HTMLButtonElement,
-  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
->((props, ref) => (
+  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
+    theme: Theme;
+  }
+>((props, ref) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [openTooltip, setOpenTooltip] = useState<boolean>(false);
+  const { theme, title } = props;
+  const onContextMenuOpen = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (title) {
+      ev.preventDefault();
+      setOpenTooltip(true);
+    }
+  };
+
   // eslint-disable-next-line react/jsx-props-no-spreading
-  <button className={s.wrapper} type="button" ref={ref} {...props} />
-));
+  return (
+    <>
+      <div ref={containerRef}>
+        <button
+          onContextMenu={onContextMenuOpen}
+          className={s.wrapper}
+          type="button"
+          ref={ref}
+          {...props}
+        />
+      </div>
+      <Tooltip
+        withoutListenClick
+        remoteOpen={openTooltip}
+        setRemoteOpen={setOpenTooltip}
+        theme={theme}
+        parentRef={containerRef}
+      >
+        {title}
+      </Tooltip>
+    </>
+  );
+});
 
 IconButton.displayName = 'IconButton';
 

@@ -138,6 +138,7 @@ const lang: Locale = {
       microNotPermitted: 'Microphone permission not received',
       serverIsNotConnected:
         'The server is not available or the client does not support the protocol',
+      undo: 'Undo last operation',
     },
     my: {
       title: 'My Phrases',
@@ -163,6 +164,7 @@ const lang: Locale = {
       willDelete: `${LocaleVars.count} phrase(s) will be deleted`,
       resetAllFilters: 'Reset filters',
       playAll: 'Play All',
+      openTools: 'Open Tools',
     },
     app: {
       connectionRefused: 'Connection to server lost',

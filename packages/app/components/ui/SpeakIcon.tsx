@@ -18,7 +18,7 @@ function SpeakIcon({
   volumeIcon: VolumeIcon;
 }) {
   return (
-    <IconButton datatype={DATA_TYPE_PLAY_BUTTON} onClick={onClick} title={title}>
+    <IconButton theme={theme} datatype={DATA_TYPE_PLAY_BUTTON} onClick={onClick} title={title}>
       {volumeIcon === 'high' ? (
         <VolumeHighIcon color={theme.text} />
       ) : volumeIcon === 'medium' ? (

@@ -267,7 +267,7 @@ function My({
               <Typography small variant="span" theme={theme}>
                 {`${locale.byUpdateDate}:`}
               </Typography>
-              <IconButton onClick={onClickSortByDate}>
+              <IconButton theme={theme} onClick={onClickSortByDate}>
                 <FilterIcon className={orderBy === 'asc' ? s.asc : s.desc} color={theme.text} />
               </IconButton>
             </div>
@@ -316,7 +316,11 @@ function My({
                 indeterminate
                 label={`${locale.unselectAll}: ${selected.length}`}
               />
-              <IconButton onClick={onClickOpenDeleteSeleted} title={locale.deleteSelected}>
+              <IconButton
+                theme={theme}
+                onClick={onClickOpenDeleteSeleted}
+                title={locale.deleteSelected}
+              >
                 <DeleteIcon color={theme.red} />
               </IconButton>
             </div>
@@ -342,7 +346,7 @@ function My({
             borderColor: theme.text,
           }}
         >
-          <IconButton onClick={played ? onClickPauseAll : onClickPlayAll}>
+          <IconButton theme={theme} onClick={played ? onClickPauseAll : onClickPlayAll}>
             {played ? <PauseIcon color={theme.yellow} /> : <PlayIcon color={theme.green} />}
           </IconButton>
           <div className={s.played_phrase}>
@@ -356,7 +360,7 @@ function My({
             </div>
           </div>
           {(played || paused) && (
-            <IconButton onClick={onClickStopAll}>
+            <IconButton theme={theme} onClick={onClickStopAll}>
               <StopIcon color={theme.red} />
             </IconButton>
           )}
@@ -372,16 +376,24 @@ function My({
                   className={s.item_container}
                 >
                   <div className={s.actions}>
-                    <IconButton aria-label={locale.byUpdateDate} ref={ref}>
+                    <IconButton title={locale.openTools} theme={theme} ref={ref}>
                       <DotsHorisontalIcon color={theme.text} />
                     </IconButton>
 
                     <Tooltip closeOnClick theme={theme} parentRef={ref} length={40}>
                       <div className={s.menu_tooltip}>
-                        <IconButton title={edit} onClick={onClickPhraseUpdateWraper(item)}>
+                        <IconButton
+                          theme={theme}
+                          title={edit}
+                          onClick={onClickPhraseUpdateWraper(item)}
+                        >
                           <EditIcon color={theme.blue} />
                         </IconButton>
-                        <IconButton onClick={onClickDeletePhraseWrapper(item)} title={_delete}>
+                        <IconButton
+                          theme={theme}
+                          onClick={onClickDeletePhraseWrapper(item)}
+                          title={_delete}
+                        >
                           <DeleteIcon color={theme.red} />
                         </IconButton>
                         {selected.length === 0 && (

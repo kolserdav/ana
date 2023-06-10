@@ -6,6 +6,7 @@ import { getWindowDimensions, setBodyScroll } from '../../utils/lib';
 import CloseIcon from '../icons/Close';
 import IconButton from './IconButton';
 import s from './Image.module.scss';
+import { Theme } from '../../Theme';
 
 const getSrcPreview = (src: string) =>
   src.replace(new RegExp(`${IMAGE_EXT}$`), `${IMAGE_PREV_POSTFIX}${IMAGE_EXT}`);
@@ -26,6 +27,7 @@ function Image({
   preHeight,
   preWidth,
   className,
+  theme,
   style,
   link,
 }: {
@@ -35,6 +37,7 @@ function Image({
   preHeight: number;
   alt: string;
   src: string;
+  theme: Theme;
   className?: string;
   style?: React.CSSProperties;
   link?: string;
@@ -138,7 +141,7 @@ function Image({
         src={src}
         alt={alt}
       />
-      <IconButton className={s.close} onClick={onCloseImageClick}>
+      <IconButton theme={theme} className={s.close} onClick={onCloseImageClick}>
         <CloseIcon color="white" />
       </IconButton>
     </div>

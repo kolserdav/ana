@@ -68,7 +68,7 @@ function Cheep({
 
         {add && menuChildren && (
           <div className={s.postfix}>
-            <IconButton ref={menuRef}>
+            <IconButton theme={theme} ref={menuRef}>
               <DotsHorisontalIcon color={theme.text} />
             </IconButton>
             <Tooltip
