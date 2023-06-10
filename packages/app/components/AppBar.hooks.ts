@@ -132,6 +132,8 @@ export const useChangeTheme = () => {
 };
 
 export const useLogout = () => {
+  const [logoutDialog, setLogoutDialog] = useState<boolean>(false);
+
   const onClickLogout = () => {
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() - 1);
@@ -140,15 +142,31 @@ export const useLogout = () => {
       const { userRenew } = storeUserRenew.getState();
       storeUserRenew.dispatch(changeUserRenew({ userRenew: !userRenew }));
     }, 100);
+    setLogoutDialog(false);
   };
 
-  const onKeyDownLogout = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const onClickCancelLogout = () => {
+    setLogoutDialog(false);
+  };
+
+  const onClickOpenLogoutDialog = () => {
+    setLogoutDialog(true);
+  };
+
+  const onKeyDownOpenLogoutDialog = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.code === 'Enter') {
-      onClickLogout();
+      onClickOpenLogoutDialog();
     }
   };
 
-  return { onClickLogout, onKeyDownLogout };
+  return {
+    onClickLogout,
+    onKeyDownOpenLogoutDialog,
+    logoutDialog,
+    setLogoutDialog,
+    onClickCancelLogout,
+    onClickOpenLogoutDialog,
+  };
 };
 
 export const useAndroid = () => {

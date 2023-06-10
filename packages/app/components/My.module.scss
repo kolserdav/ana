@@ -12,9 +12,7 @@ $search-input-wudth-coeff: 1.5;
   align-items: center;
   justify-content: center;
 
-  .button_margin {
-    width: 1rem;
-  }
+  
 
   .container {
     position: relative;
@@ -105,6 +103,10 @@ $search-input-wudth-coeff: 1.5;
       border-width: 1px;
       border-radius: 4px;
       height: $fixed-tools-hight;
+
+      &.with_margin_bottom {
+        margin-bottom: $fixed-tools-hight;
+      }
 
 
       .selected_items__button {

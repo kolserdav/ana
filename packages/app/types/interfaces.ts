@@ -351,6 +351,9 @@ export interface Locale {
       about: string;
       closeApp: string;
       settings: string;
+      logoutDesc: string;
+      yes: string;
+      no: string;
     };
     confirmEmail: {
       title: string;

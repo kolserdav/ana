@@ -326,6 +326,7 @@ function My({
           ref={playToolsRef}
           className={clsx(
             s.selected_items,
+            !playToolsFixed && selected.length !== 0 ? s.with_margin_bottom : '',
             playToolsFixed && (played || paused) ? s.selected_items__fixed : ''
           )}
           style={{
@@ -486,7 +487,7 @@ function My({
           <Button className={s.button} onClick={onClickCloseDelete} theme={theme}>
             {cancel}
           </Button>
-          <div className={s.button_margin} />
+          <div className={p.button_margin} />
           <Button className={s.button} onClick={onClickDeletePhrase} theme={theme}>
             {_delete}
           </Button>

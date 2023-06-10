@@ -317,11 +317,13 @@ export const useTranslate = ({
     setRetranslate('');
     setAddTags(false);
     setTags([]);
-    setUndo(true);
     removeLocalStorage(LocalStorageName.TEXT);
     if (edit) {
       setEdit(null);
       router.push(cleanPath(router.asPath));
+    }
+    if (oldText) {
+      setUndo(true);
     }
   };
 

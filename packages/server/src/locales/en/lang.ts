@@ -82,6 +82,10 @@ const lang: Locale = {
       about: 'About us',
       closeApp: 'Close app',
       settings: 'Settings',
+      logoutDesc:
+        "If you log out of your account, then you won't be able to access your saved tags and phrases, and you won't be able to create new ones",
+      yes: 'Yes',
+      no: 'No',
     },
     confirmEmail: {
       title: 'Mail Confirmation',

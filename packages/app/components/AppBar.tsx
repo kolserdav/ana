@@ -14,9 +14,13 @@ import Link from './ui/Link';
 import Menu from './ui/Menu';
 import Switch from './ui/Switch';
 import l from './ui/Link.module.scss';
+import p from '../styles/Page.module.scss';
 import TranslateIcon from './icons/Translate';
 import Select from './ui/Select';
 import Hr from './ui/Hr';
+import Dialog from './ui/Dialog';
+import Typography from './ui/Typography';
+import Button from './ui/Button';
 
 function AppBar({
   theme,
@@ -38,7 +42,14 @@ function AppBar({
 
   const { darkTheme, onClickChangeTheme } = useChangeTheme();
 
-  const { onClickLogout, onKeyDownLogout } = useLogout();
+  const {
+    onClickLogout,
+    onKeyDownOpenLogoutDialog,
+    logoutDialog,
+    setLogoutDialog,
+    onClickCancelLogout,
+    onClickOpenLogoutDialog,
+  } = useLogout();
 
   const linkStyle: React.CSSProperties =
     menuOpen && isMobile
@@ -155,9 +166,9 @@ function AppBar({
           {user && (
             <div
               role="button"
-              onKeyDown={onKeyDownLogout}
+              onKeyDown={onKeyDownOpenLogoutDialog}
               tabIndex={-1}
-              onClick={onClickLogout}
+              onClick={onClickOpenLogoutDialog}
               className={clsx(l.wrapper, l.full__width, l.without__hover)}
             >
               <div className={clsx(s.menu__item, s.active)}>
@@ -194,6 +205,23 @@ function AppBar({
           <ChevronUpIcon />
         </button>
       )}
+      <Dialog className={p.dialog} theme={theme} onClose={setLogoutDialog} open={logoutDialog}>
+        <Typography variant="h3" theme={theme} align="center">
+          {`${locale.logout}?`}
+        </Typography>
+        <Typography variant="p" theme={theme}>
+          {locale.logoutDesc}
+        </Typography>
+        <div className={p.dialog__actions}>
+          <Button className={s.button} onClick={onClickCancelLogout} theme={theme}>
+            {locale.no}
+          </Button>
+          <div className={p.button_margin} />
+          <Button className={s.button} onClick={onClickLogout} theme={theme}>
+            {locale.yes}
+          </Button>
+        </div>
+      </Dialog>
     </header>
   );
 }

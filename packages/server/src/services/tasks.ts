@@ -19,7 +19,9 @@ class Tasks {
   cwd = process.cwd();
 
   constructor() {
-    this.checkTranslateService();
+    if (NODE_ENV !== 'development') {
+      this.checkTranslateService();
+    }
   }
 
   private checkTranslateService() {
