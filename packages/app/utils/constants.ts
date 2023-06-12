@@ -115,7 +115,7 @@ export const APP_BAR_HEIGHT = 60;
 // deps $spoiler-border-width
 export const SPOILER_BORDER_WIDTH = 1;
 // deps $input-margin-bottom
-export const INPUT_MARGIN_BOTTOM = 30;
+export const INPUT_MARGIN_BOTTOM = 10;
 // deps $form-item-margin-top
 export const FORM_ITEM_MARGIN_TOP = 25;
 // deps $input-height
