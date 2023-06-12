@@ -64,10 +64,6 @@ export const TAB_INDEX_DEFAULT = -1;
 export const PASSWORD_MIN_LENGTH = 6;
 export const PUBLIC_ICONS_FILES = '/icons/files/';
 export const SELECTED_TAG_MAX = 2;
-export const LINK_REGEX =
-  /(https?:\/\/)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
-export const LINK_REGEX_HTTP =
-  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
 
 // Deps load-page-duration
 export const LOAD_PAGE_DURATION = 900;
@@ -99,7 +95,7 @@ export const MOBILE_WIDTH = 760;
 export const TRANSLATE_DELAY = 1000;
 export const TEXTAREA_ROWS = 4;
 export const ORDER_BY_DEFAULT: OrderBy = 'asc';
-export const TAKE_PHRASES_DEFAULT = 10;
+export const TAKE_PHRASES_DEFAULT = 30;
 export const LEARN_LANG_DEFAULT = 'en';
 export const NATIVE_LANG_DEFAULT = 'ru';
 export const LICENSE = {
@@ -130,3 +126,4 @@ export const PLAY_ALL_ITEM_PAUSE = 1000;
 // deps $fixed-tools-hight
 export const FIXED_TOOLS_HIGHT = 44;
 export const PLAY_ALL_SCROLL_BY_TOP_SHIFT = 20;
+export const SCALE_ICONS_COEFF = 1.5;

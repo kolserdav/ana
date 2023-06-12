@@ -18,6 +18,9 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.autopep8",
   },
+  "[scss]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint",
+  },
   "files.associations": {
     ".stylelintrc": ".json",
     ".env": "ini",

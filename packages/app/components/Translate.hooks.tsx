@@ -741,7 +741,11 @@ export const useSpeechRecognize = ({
       };
 
       recognition.lang = recognitionLang;
-      recognition.start();
+      try {
+        recognition.start();
+      } catch (e) {
+        log('error', 'Recognition is already started', e);
+      }
     }
   };
 

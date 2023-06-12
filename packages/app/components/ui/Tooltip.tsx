@@ -59,7 +59,7 @@ function Tooltip({
       let cols = 4;
       let rows = 1;
       if (_length >= 10 && _length < 30) {
-        cols = 5;
+        cols = 6;
         rows = 2;
       } else if (_length >= 30 && _length < 50) {
         cols = 6;

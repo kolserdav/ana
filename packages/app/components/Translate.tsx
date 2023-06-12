@@ -238,6 +238,7 @@ function Translate({
           {allowRecogn && (
             <div className={s.micro_button} title={locale.startRecognize}>
               <IconButton
+                title={locale.startRecognize}
                 theme={theme}
                 disabled={load}
                 onMouseUp={onStopRecognize}

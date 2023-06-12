@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   FullTag,
@@ -30,7 +30,7 @@ import {
   getPlayButtonFromContainer,
   getPlayText,
   scrollTo,
-} from './Me.lib';
+} from './My.lib';
 import useLangs from '../hooks/useLangs';
 import useFixedTools from '../hooks/useFixedTools';
 
@@ -614,61 +614,54 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
 
   const { fixed: playToolsFixed } = useFixedTools({ elementRef: playToolsRef });
 
-  const stop = useMemo(
-    () => () => {
+  const stop = useCallback(() => {
+    const { current } = phrasesRef;
+    if (!current) {
+      return;
+    }
+    const button = getPlayButtonFromContainer({ current, currentPlay });
+    if (button && played) {
+      button.click();
+    }
+    setPlayed(false);
+    if (typeof androidCommon !== 'undefined') {
+      androidCommon.setKeepScreenOn(false);
+    }
+  }, [currentPlay, phrasesRef, played]);
+
+  const onClickStopAll = useCallback(() => {
+    stop();
+    setPaused(false);
+    setCurrentPlay(0);
+
+    const { current } = phrasesRef;
+    if (!current) {
+      return;
+    }
+    const button = getPlayButtonFromContainer({ current, currentPlay: 0 });
+    if (button) {
+      scrollTo({ element: button });
+    }
+  }, [phrasesRef, stop]);
+
+  const onStopPlayItem = useCallback(
+    (withoutPause = false) => {
       const { current } = phrasesRef;
-      if (!current) {
+      if (!current || !played) {
         return;
       }
-      const button = getPlayButtonFromContainer({ current, currentPlay });
-      if (button && played) {
-        button.click();
-      }
-      setPlayed(false);
-      if (typeof androidCommon !== 'undefined') {
-        androidCommon.setKeepScreenOn(false);
-      }
-    },
-    [currentPlay, phrasesRef, played]
-  );
-
-  const onClickStopAll = useMemo(
-    () => () => {
-      stop();
-      setPaused(false);
-      setCurrentPlay(0);
-
-      const { current } = phrasesRef;
-      if (!current) {
+      const nextPlay = currentPlay + 1;
+      if (!current.children[nextPlay]) {
+        onClickStopAll();
         return;
       }
-      const button = getPlayButtonFromContainer({ current, currentPlay: 0 });
-      if (button) {
-        scrollTo({ element: button });
-      }
+      setTimeout(
+        () => {
+          setCurrentPlay(nextPlay);
+        },
+        withoutPause ? 0 : PLAY_ALL_ITEM_PAUSE
+      );
     },
-    [phrasesRef, stop]
-  );
-
-  const onStopPlayItem = useMemo(
-    () =>
-      (withoutPause = false) => {
-        const { current } = phrasesRef;
-        if (!current || !played) {
-          return;
-        }
-        const nextPlay = currentPlay + 1;
-        if (!current.children[nextPlay]) {
-          onClickStopAll();
-          return;
-        }
-        setTimeout(
-          () => {
-            setCurrentPlay(nextPlay);
-          },
-          withoutPause ? 0 : PLAY_ALL_ITEM_PAUSE
-        );
-      },
     [currentPlay, phrasesRef, onClickStopAll, played]
   );
 

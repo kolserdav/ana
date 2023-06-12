@@ -43,7 +43,7 @@ import {
 } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
-import { setMatchesBold } from './Me.lib';
+import { changeLinks, setMatchesBold } from './My.lib';
 import { getFormatDistance } from '../utils/lib';
 import Select from './ui/Select';
 import Spoiler from './ui/Spoiler';
@@ -414,7 +414,7 @@ function My({
                         <Typography datatype={DATA_TYPE_PHRASE} variant="p" theme={theme}>
                           {sePieces.length === 0
                             ? item.text
-                            : setMatchesBold({ text: item.text, matches: sePieces })}
+                            : setMatchesBold({ text: changeLinks(item.text), matches: sePieces })}
                         </Typography>
                         <div className={s.play_button}>
                           <div className={s.play_button__container}>
