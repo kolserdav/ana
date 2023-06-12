@@ -15,17 +15,16 @@ const IconButton = forwardRef<
   const onContextMenuOpen = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (title) {
       ev.preventDefault();
-      if (props.onClick !== undefined) {
-        setOpenTooltip(true);
-      }
+      setOpenTooltip(true);
     }
   };
 
-  const onClick = !props.onClick
-    ? () => {
-        setOpenTooltip(true);
-      }
-    : undefined;
+  const onClick =
+    !props.onClick && !ref
+      ? () => {
+          setOpenTooltip(true);
+        }
+      : undefined;
 
   // eslint-disable-next-line react/jsx-props-no-spreading
   return (

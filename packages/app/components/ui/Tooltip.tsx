@@ -57,7 +57,7 @@ function Tooltip({
       }
 
       let cols = 4;
-      let rows = 1;
+      let rows = 2;
       if (_length >= 10 && _length < 30) {
         cols = 6;
         rows = 2;
@@ -84,6 +84,7 @@ function Tooltip({
         rows = 8;
         log('warn', 'Tooltip length is too long', { _length, max: 150 });
       }
+
       const width = cols * pt;
       const height = rows * pt;
       const TOOLTIP_SHIFT = 8;
