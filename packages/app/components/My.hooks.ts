@@ -753,10 +753,12 @@ export const usePlayOne = ({
   onStopPlayItem: () => void;
 }) => {
   const [forSpeech, setForSpeech] = useState<PlayOnePhrase | null>(null);
+  const [ticker, setTicker] = useState<boolean>(false);
 
   const onStopPlayOne = () => {
     setForSpeech(null);
     onStopPlayItem();
+    setTicker(false);
   };
 
   const { synthAllow, volumeIcon, speechText } = useSpeechSynth({
@@ -767,10 +769,13 @@ export const usePlayOne = ({
   });
 
   const clickForPlayWrapper = (data: PlayOnePhrase) => () => {
-    let speech = null;
-    if (forSpeech?.text !== data.text) {
-      speech = data;
+    let speech: PlayOnePhrase | null = data;
+    let _ticker = true;
+    if (forSpeech?.text === data.text) {
+      speech = null;
+      _ticker = false;
     }
+    setTicker(_ticker);
     setForSpeech(speech);
   };
 
@@ -781,5 +786,5 @@ export const usePlayOne = ({
     speechText();
   }, [forSpeech, speechText]);
 
-  return { synthAllow, volumeIcon, speechText, clickForPlayWrapper, forSpeech };
+  return { synthAllow, volumeIcon, speechText, clickForPlayWrapper, forSpeech, ticker };
 };

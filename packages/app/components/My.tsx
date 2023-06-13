@@ -180,7 +180,7 @@ function My({
 
   const playIsFixed = playToolsFixed && (played || paused);
 
-  const { volumeIcon, clickForPlayWrapper, forSpeech } = usePlayOne({
+  const { volumeIcon, clickForPlayWrapper, forSpeech, ticker } = usePlayOne({
     voiceNotFound,
     onStopPlayItem,
   });
@@ -359,7 +359,7 @@ function My({
           </IconButton>
           <div className={s.played_phrase}>
             <div
-              className={clsx(s.content, played ? s.animate : '')}
+              className={clsx(s.content, ticker ? s.animate : '')}
               style={{ animationDuration: `${animationDuration}s` }}
             >
               <Typography nowrap theme={theme} variant="span" disabled>
