@@ -51,6 +51,8 @@ import {
   QUERY_STRING_ARRAY_SPLITTER,
   PhraseDeleteManyBody,
   PhraseDeleteManyResult,
+  SendConfirmEmailBody,
+  SendConfirmEmailResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -289,6 +291,16 @@ class Request {
   public async tagCreate(body: TagCreateBody): Promise<Result<TagCreateResult>> {
     return this.send({
       url: Api.postTagCreate,
+      method: 'POST',
+      body,
+    });
+  }
+
+  public async sendConfirmEmail(
+    body: SendConfirmEmailBody
+  ): Promise<Result<SendConfirmEmailResult>> {
+    return this.send({
+      url: Api.postSendConfirmEmail,
       method: 'POST',
       body,
     });

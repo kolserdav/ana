@@ -9,7 +9,7 @@ const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
   if (method === 'OPTIONS') {
     return next();
   }
-  const { lang, id, token, timeout } = parseHeaders(headers);
+  const { lang, token } = parseHeaders(headers);
   const locale = getLocale(lang).server;
   const result = await checkToken(token);
   if (result === 2) {

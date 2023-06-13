@@ -44,7 +44,7 @@ function Tooltip({
   const onClick = useMemo(
     () => () => {
       const { current } = parentRef;
-      if (!current) {
+      if (!current || !children) {
         return;
       }
 
@@ -62,10 +62,10 @@ function Tooltip({
       let cols = 4;
       let rows = 2;
       if (_length >= 10 && _length < 30) {
-        cols = 6;
+        cols = 7;
         rows = 3;
       } else if (_length >= 30 && _length < 50) {
-        cols = 6;
+        cols = 8;
         rows = 3;
       } else if (_length >= 50 && _length < 70) {
         cols = 8;
@@ -87,7 +87,7 @@ function Tooltip({
         rows = 8;
         log('warn', 'Tooltip length is too long', { _length, max: 150 });
       }
-      // console.log({ rows, cols });
+
       const width = cols * pt;
       const height = rows * pt;
       const TOOLTIP_SHIFT = 8;

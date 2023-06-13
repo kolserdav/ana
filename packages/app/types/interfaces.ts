@@ -34,6 +34,7 @@ export enum Api {
   getPhraseFindByText = '/v1/phrase-find-by-text',
   getPhraseDistinct = '/v1/phrase-distinct',
   deletePhraseDeleteMany = '/v1/phrase-delete-many',
+  postSendConfirmEmail = '/v1/send-confirm-email',
 }
 
 // eslint-disable-next-line no-shadow
@@ -155,6 +156,12 @@ export interface UserCreateBody {
   password: string;
   name?: string;
 }
+
+export interface SendConfirmEmailBody {
+  userId: string;
+  email: string;
+}
+export type SendConfirmEmailResult = UserCleanResult;
 
 export interface UserUpdateBody {
   userId: string;
@@ -328,7 +335,6 @@ export interface Locale {
       successRegistration: string;
       forgotPassword: string;
       restorePassword: string;
-      sendRestoreMail: string;
       restoreDesc: string;
       changePassword: string;
       newPassword: string;
@@ -376,6 +382,8 @@ export interface Locale {
       voiceNotFound: string;
       playSound: string;
       insertedLink: string;
+      sendMail: string;
+      emailIsSend: string;
     };
     translate: {
       title: string;
@@ -471,6 +479,8 @@ export interface Locale {
       deleteMyAccount: string;
       deleteAccountWarning: string;
       changePassword: string;
+      emailIsConfirmed: string;
+      sendConfirmEmail: string;
     };
   };
 }

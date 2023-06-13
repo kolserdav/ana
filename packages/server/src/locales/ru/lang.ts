@@ -7,8 +7,7 @@ const lang: Locale = {
     notFound: 'Не найдено',
     success: 'Успешный запрос',
     wrongPassword: 'Неверный логин или пароль',
-    emailIsSend:
-      'На указанную почту отправлено письмо с инструкцией. Если письмо не приходит длительное время, то проверьте папку "Спам"',
+    emailIsSend: 'На указанную почту отправлено письмо с инструкцией.',
     linkExpired: 'Просроченная ссылка',
     linkUnaccepted: 'Недействительная ссылка',
     letterNotSend:
@@ -58,7 +57,6 @@ const lang: Locale = {
       successRegistration: 'Успешная регистрация',
       forgotPassword: 'Забыли пароль?',
       restorePassword: 'Восстановление пароля',
-      sendRestoreMail: 'Отправить письмо',
       restoreDesc: 'На указанную почту будет выслано письмо с инструкцией по восстановлению пароля',
       changePassword: 'Сменить пароль',
       newPassword: 'Новый пароль',
@@ -107,6 +105,8 @@ const lang: Locale = {
       voiceNotFound: 'Голос для озвучивания не найден',
       playSound: 'Озвучить текст',
       insertedLink: '...с...',
+      sendMail: 'Отправить письмо',
+      emailIsSend: 'Если письмо не приходит длительное время, то проверьте папку "Спам"',
     },
     translate: {
       title: 'Составление предложений',
@@ -199,6 +199,8 @@ const lang: Locale = {
       deleteAccountWarning:
         'Я понимаю, что данную операцию нельзя будет отменить. Аккаунт будет удален сразу и навсегда.',
       changePassword: 'Сменить пароль',
+      emailIsConfirmed: 'Почта подтверждена',
+      sendConfirmEmail: 'Отправить письмо для подтверждения почты',
     },
   },
 };

@@ -361,3 +361,49 @@ export const useDeleteAccount = ({
     setAcceptDeleteWarning,
   };
 };
+
+export const useConfirmEmail = ({
+  user,
+  setLoad,
+  emailIsSend,
+}: {
+  user: UserCleanResult | null;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  emailIsSend: string;
+}) => {
+  const [sendConfirmEmail, setSendConfirmEmail] = useState<boolean>(false);
+
+  const onClickCloseConfirmEmail = () => {
+    setSendConfirmEmail(false);
+  };
+
+  const onClickOpenConfirmEmail = () => {
+    setSendConfirmEmail(true);
+  };
+
+  const onClickConfirmEmail = async () => {
+    if (!user) {
+      log('warn', 'User is missin in onClickConfirmEmail', { user });
+      return;
+    }
+    setLoad(true);
+    const res = await request.sendConfirmEmail({ email: user.email, userId: user.id });
+    log(res.status, res.message, { res }, true, true);
+    setLoad(false);
+    if (res.status !== 'info') {
+      return;
+    }
+    setSendConfirmEmail(false);
+    setTimeout(() => {
+      log('warn', emailIsSend, { res }, true, true);
+    }, 500);
+  };
+
+  return {
+    sendConfirmEmail,
+    setSendConfirmEmail,
+    onClickCloseConfirmEmail,
+    onClickConfirmEmail,
+    onClickOpenConfirmEmail,
+  };
+};

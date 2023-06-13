@@ -19,6 +19,22 @@ $speech-select-shift: 8px;
 
     
 
+    .email_input {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .email_input__icon {
+        margin-left: 1rem;
+
+        .opacity {
+          opacity: 0.6;
+        }
+      }
+    }
+
     .test_input {
       display: flex;
       flex-flow: row wrap;

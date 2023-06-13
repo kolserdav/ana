@@ -34,6 +34,7 @@ import userDelete from './api/v1/user/delete';
 import phraseFindByText from './api/v1/phrase/findByText';
 import phraseDistinct from './api/v1/phrase/distinct';
 import phraseDeleteMany from './api/v1/phrase/deleteMany';
+import sendConfirmEmail from './api/v1/user/send-confirm-email';
 
 const prisma = new PrismaClient();
 
@@ -77,6 +78,7 @@ process.on('unhandledRejection', (err: Error) => {
       Api.getPhraseFindByText,
       Api.getPhraseDistinct,
       Api.deletePhraseDeleteMany,
+      Api.postSendConfirmEmail,
     ],
     checkTokenMiddleware
   );
@@ -105,17 +107,7 @@ process.on('unhandledRejection', (err: Error) => {
   );
 
   await fastify.use(
-    [Api.putUserUpdate],
-    checkAccessMiddlewareWrapper(prisma, {
-      model: 'User',
-      bodyField: 'id',
-      key: 'UserScalarFieldEnum',
-      fieldId: 'userId',
-    })
-  );
-
-  await fastify.use(
-    [Api.deleteUserDelete],
+    [Api.putUserUpdate, Api.deleteUserDelete, Api.postSendConfirmEmail],
     checkAccessMiddlewareWrapper(prisma, {
       model: 'User',
       bodyField: 'id',
@@ -131,16 +123,6 @@ process.on('unhandledRejection', (err: Error) => {
       bodyField: 'userId',
       key: 'TagScalarFieldEnum',
       fieldId: 'tagId',
-    })
-  );
-
-  await fastify.use(
-    [Api.getPhrase],
-    checkAccessMiddlewareWrapper(prisma, {
-      model: 'Phrase',
-      queryField: 'userId',
-      key: 'PhraseScalarFieldEnum',
-      fieldId: 'phraseId',
     })
   );
 
@@ -174,6 +156,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.get(Api.getPhraseFindByText, phraseFindByText);
   fastify.get(Api.getPhraseDistinct, phraseDistinct);
   fastify.delete(Api.deletePhraseDeleteMany, phraseDeleteMany);
+  fastify.post(Api.postSendConfirmEmail, sendConfirmEmail);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

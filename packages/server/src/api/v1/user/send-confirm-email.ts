@@ -3,35 +3,27 @@ import {
   APPLICATION_JSON,
   Result,
   checkEmail,
-  UserCreateBody,
-  UserCleanResult,
-  PAGE_CONFIRM_EMAIL,
-  EMAIL_QS,
-  KEY_QS,
+  SendConfirmEmailBody,
+  SendConfirmEmailResult,
 } from '../../../types/interfaces';
 import { getConfirmEmailLink, getHttpCode, log, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
-import { createPasswordHash, createRandomSalt } from '../../../utils/auth';
-import { Prisma } from '@prisma/client';
 import { sendEmail } from '../../../utils/email';
-import { APP_URL } from '../../../utils/constants';
 import { cleanUserFields } from '../../../components/lib';
 import getLocale from '../../../utils/getLocale';
 
 const orm = new ORM();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResult | null>> = async (
-  { headers, body },
-  reply
-) => {
-  const { lang } = parseHeaders(headers);
-  const { email, password, name } = body;
+const sendConfirmEmail: RequestHandler<
+  { Body: SendConfirmEmailBody },
+  Result<SendConfirmEmailResult | null>
+> = async ({ headers, body }, reply) => {
+  const { lang, id } = parseHeaders(headers);
+  const { email } = body;
 
   const locale = getLocale(lang).server;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: Prisma.UserCreateArgs['data'] = { email, name } as any;
   if (!checkEmail(email)) {
     reply.type(APPLICATION_JSON).code(400);
     return {
@@ -40,13 +32,10 @@ const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResul
       data: null,
     };
   }
-  const salt = createRandomSalt();
-  const hash = createPasswordHash({ salt, password });
-  data.password = hash;
-  data.salt = salt;
-  const user = await orm.userCreate({
+
+  const user = await orm.userUpdate({
+    where: { id },
     data: {
-      ...data,
       ConfirmLink: {
         create: {},
       },
@@ -85,9 +74,9 @@ const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResul
   reply.type(APPLICATION_JSON).code(201);
   return {
     status: 'info',
-    message: locale.success,
+    message: locale.emailIsSend,
     data: cleanData,
   };
 };
 
-export default userCreate;
+export default sendConfirmEmail;

@@ -33,6 +33,8 @@ export default function HomePage({
           policyTitle={localeCommon.policyTitle}
           rulesTitle={localeCommon.rulesTitle}
           and={localeCommon.and}
+          sendMail={localeCommon.sendMail}
+          emailIsSend={localeCommon.emailIsSend}
         />
       </main>
       <LoaderFull open={!userLoad} noOpacity />

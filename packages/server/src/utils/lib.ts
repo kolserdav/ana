@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { format } from 'date-fns';
 import fs from 'fs';
 import { IncomingHttpHeaders } from 'http';
@@ -13,6 +13,10 @@ import {
   TIMEOUT_HEADER,
   IMAGE_EXT,
   CSRF_HEADER,
+  PAGE_CONFIRM_EMAIL,
+  EMAIL_QS,
+  KEY_QS,
+  PAGE_RESTORE_PASSWORD_CALLBACK,
 } from '../types/interfaces';
 import { APP_URL, CLOUD_PATH, IS_DEV, LOG_LEVEL } from './constants';
 
@@ -118,3 +122,29 @@ export const getFilePath = ({
 }) => path.resolve(userCloud, `${id}${postfix}${ext}`);
 
 export const getCloudPath = (id: string) => path.resolve(CLOUD_PATH, id);
+
+const cleanLastSlush = (text: string) => text.replace(/\/$/, '');
+
+export const getConfirmEmailLink = ({
+  user,
+  lang,
+}: {
+  user: User & { ConfirmLink: { id: string }[] };
+  lang: LocaleValue;
+}) =>
+  `${cleanLastSlush(APP_URL)}/${lang}/${PAGE_CONFIRM_EMAIL}?${EMAIL_QS}=${user.email}&${KEY_QS}=${
+    user.ConfirmLink[0]!.id
+  }`;
+
+export const getForgotPasswordLink = ({
+  restoreId,
+  lang,
+  email,
+}: {
+  restoreId: string;
+  lang: LocaleValue;
+  email: string;
+}) =>
+  `${cleanLastSlush(
+    APP_URL
+  )}/${lang}/${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restoreId}`;

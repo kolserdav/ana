@@ -11,5 +11,7 @@
     position: relative;
     width: 100%;
     max-width: $container-max-width;
+    display: flex;
+    flex-direction: column;
   }
 }

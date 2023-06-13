@@ -33,6 +33,8 @@ function Login({
   policyTitle,
   rulesTitle,
   and,
+  sendMail,
+  emailIsSend,
 }: {
   theme: Theme;
   locale: Locale['app']['login'];
@@ -43,6 +45,8 @@ function Login({
   policyTitle: string;
   rulesTitle: string;
   and: string;
+  sendMail: string;
+  emailIsSend: string;
 }) {
   const { load, setLoad } = useLoad();
 
@@ -113,6 +117,7 @@ function Login({
     eliminateRemarks,
     isSignUp,
     isChangePass,
+    emailIsSend,
   });
 
   const { cleanAllFields } = useClean({
@@ -288,7 +293,7 @@ function Login({
               {isSignUp
                 ? locale.register
                 : isRestore
-                ? locale.sendRestoreMail
+                ? sendMail
                 : isChangePass
                 ? locale.save
                 : locale.loginButton}

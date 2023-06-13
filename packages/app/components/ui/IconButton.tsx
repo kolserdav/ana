@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import s from './IconButton.module.scss';
 import { Theme } from '../../Theme';
 import Tooltip from './Tooltip';
@@ -10,6 +10,12 @@ const IconButton = forwardRef<
     touchStarted?: boolean;
   }
 >((props, ref) => {
+  const _props = useMemo(() => {
+    const newProps = { ...props };
+    delete newProps.touchStarted;
+    return newProps;
+  }, [props]);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [openTooltip, setOpenTooltip] = useState<boolean>(false);
   const { theme, title, touchStarted } = props;
@@ -48,7 +54,7 @@ const IconButton = forwardRef<
           className={s.wrapper}
           type="button"
           ref={ref}
-          {...props}
+          {..._props}
         />
       </div>
       <Tooltip

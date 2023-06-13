@@ -31,7 +31,7 @@ export default function ConfirmEmailPage({
       </Head>
       <AppBar theme={theme} locale={localeAppBar} withoutExpandLess user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <ConfirmEmail theme={theme} locale={localeConfirm} />
+        <ConfirmEmail theme={theme} locale={localeConfirm} user={user} />
       </main>
     </>
   );

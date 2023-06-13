@@ -6,6 +6,7 @@ import { SPEECH_SPEED_MAX } from '../utils/constants';
 import { useEmailInput, useNameInput, usePasswordInput } from './Login.hooks';
 import {
   useClean,
+  useConfirmEmail,
   useDeleteAccount,
   useLanguage,
   usePersonalData,
@@ -22,6 +23,9 @@ import Typography from './ui/Typography';
 import SpeakIcon from './ui/SpeakIcon';
 import Checkbox from './ui/Checkbox';
 import Spoiler from './ui/Spoiler';
+import IconButton from './ui/IconButton';
+import EmailCheckIcon from './icons/EmailCheck';
+import EmailAlertIcon from './icons/EmailAlert';
 
 function Settings({
   locale,
@@ -34,6 +38,8 @@ function Settings({
   eliminateRemarks,
   cancel,
   _delete,
+  sendMail,
+  emailIsSend,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -45,6 +51,8 @@ function Settings({
   eliminateRemarks: string;
   cancel: string;
   _delete: string;
+  sendMail: string;
+  emailIsSend: string;
 }) {
   const { load, setLoad } = useLoad();
   const { testText, onChangeTestText } = useTestSpeech();
@@ -177,6 +185,14 @@ function Settings({
     setAcceptDeleteWarning,
   } = useDeleteAccount({ user, setLoad, locale });
 
+  const {
+    sendConfirmEmail,
+    setSendConfirmEmail,
+    onClickCloseConfirmEmail,
+    onClickConfirmEmail,
+    onClickOpenConfirmEmail,
+  } = useConfirmEmail({ user, setLoad, emailIsSend });
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
@@ -264,20 +280,35 @@ function Settings({
               name={localeLogin.name}
               fullWidth
             />
-            <Input
-              theme={theme}
-              onChange={onChangeEmail}
-              onBlur={onBlurEmail}
-              value={email}
-              id="email"
-              type="email"
-              required
-              error={emailError}
-              success={emailSuccess}
-              disabled={load}
-              name={localeLogin.email}
-              fullWidth
-            />
+            <div className={s.email_input}>
+              <Input
+                theme={theme}
+                onChange={onChangeEmail}
+                onBlur={onBlurEmail}
+                value={email}
+                id="email"
+                type="email"
+                required
+                error={emailError}
+                success={emailSuccess}
+                disabled={load}
+                name={localeLogin.email}
+                fullWidth
+              />
+              <div className={s.email_input__icon}>
+                <IconButton
+                  theme={theme}
+                  title={user.confirm ? locale.emailIsConfirmed : locale.sendConfirmEmail}
+                  onClick={user?.confirm ? undefined : onClickOpenConfirmEmail}
+                >
+                  {user.confirm ? (
+                    <EmailCheckIcon className={s.opacity} color={theme.green} />
+                  ) : (
+                    <EmailAlertIcon className={s.opacity} color={theme.red} />
+                  )}
+                </IconButton>
+              </div>
+            </div>
             <Spoiler
               height={changePasswordHeight}
               theme={theme}
@@ -393,6 +424,32 @@ function Settings({
             theme={theme}
           >
             {_delete}
+          </Button>
+        </div>
+      </Dialog>
+      <Dialog
+        className={p.dialog}
+        theme={theme}
+        onClose={setSendConfirmEmail}
+        open={sendConfirmEmail}
+      >
+        <Typography variant="h3" theme={theme} align="center">
+          {`${locale.sendConfirmEmail}?`}
+        </Typography>
+        <Typography variant="p" theme={theme}>
+          {user?.email}
+        </Typography>
+        <div className={p.dialog__actions}>
+          <Button
+            className={s.button}
+            disabled={load}
+            onClick={onClickCloseConfirmEmail}
+            theme={theme}
+          >
+            {cancel}
+          </Button>
+          <Button disabled={load} className={s.button} onClick={onClickConfirmEmail} theme={theme}>
+            {sendMail}
           </Button>
         </div>
       </Dialog>

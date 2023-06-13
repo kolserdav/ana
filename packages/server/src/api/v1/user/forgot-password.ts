@@ -9,7 +9,7 @@ import {
   ForgotPasswordBody,
   ForgotPasswordResult,
 } from '../../../types/interfaces';
-import { getHttpCode, parseHeaders } from '../../../utils/lib';
+import { getForgotPasswordLink, getHttpCode, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
 import { sendEmail } from '../../../utils/email';
 import { APP_URL, RESTORE_LINK_TIMEOUT_IN_HOURS } from '../../../utils/constants';
@@ -87,7 +87,7 @@ const forgotPassword: RequestHandler<
     subject: locale.mailSubjects.resetPassword,
     data: {
       name: user.data.name || '',
-      link: `${APP_URL}${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restore.data.id}`,
+      link: getForgotPasswordLink({ email, restoreId: restore.data.id, lang }),
       expire: RESTORE_LINK_TIMEOUT_IN_HOURS,
     },
   });

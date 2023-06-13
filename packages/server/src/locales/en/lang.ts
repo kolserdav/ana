@@ -7,8 +7,7 @@ const lang: Locale = {
     notFound: 'Not Found',
     success: 'Successful request',
     wrongPassword: 'Invalid username or password',
-    emailIsSend:
-      'An email with instructions has been sent to the specified email address. If the letter does not arrive for a long time, then check the "Spam" folder',
+    emailIsSend: 'An email with instructions has been sent to the specified email address.',
     linkExpired: 'Link expired',
     linkUnaccepted: 'Invalid link',
     letterNotSend:
@@ -58,7 +57,6 @@ const lang: Locale = {
       successRegistration: 'Successful registration',
       forgotPassword: 'Forgot your password?',
       restorePassword: 'Password Recovery',
-      sendRestoreMail: 'Send mail',
       restoreDesc:
         'An email with password recovery instructions will be sent to the specified email address',
       changePassword: 'Change password',
@@ -108,6 +106,8 @@ const lang: Locale = {
       voiceNotFound: 'No voice found',
       playSound: 'Play text',
       insertedLink: '...Link replaced...',
+      sendMail: 'Send mail',
+      emailIsSend: 'If the email does not arrive for a long time, then check the Spam folder',
     },
     translate: {
       title: 'Creation of sentences',
@@ -199,6 +199,8 @@ const lang: Locale = {
       deleteAccountWarning:
         'I understand that this operation cannot be undone. The account will be deleted immediately and permanently.',
       changePassword: 'Change password',
+      emailIsConfirmed: 'Mail confirmed',
+      sendConfirmEmail: 'Send confirmation email',
     },
   },
 };

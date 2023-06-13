@@ -42,6 +42,8 @@ export default function SettingsPage({
           fieldMustBeNotEmpty={localeCommon.fieldMustBeNotEmpty}
           cancel={localeCommon.cancel}
           _delete={localeCommon.delete}
+          sendMail={localeCommon.sendMail}
+          emailIsSend={localeCommon.emailIsSend}
         />
       </main>
     </>

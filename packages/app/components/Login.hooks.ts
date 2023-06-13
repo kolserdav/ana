@@ -9,7 +9,13 @@ import {
   KEY_QS,
   UserCleanResult,
 } from '../types/interfaces';
-import { EMAIL_MAX_LENGTH, NAME_MAX_LENGTH, Pages, PASSWORD_MIN_LENGTH } from '../utils/constants';
+import {
+  EMAIL_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  Pages,
+  PASSWORD_MIN_LENGTH,
+  WARN_ALERT_TIMEOUT,
+} from '../utils/constants';
 import { checkRouterPath, log } from '../utils/lib';
 import { checkName, checkPasswordError } from './Login.lib';
 import Request from '../utils/request';
@@ -282,6 +288,7 @@ export const useButton = ({
   eliminateRemarks,
   isSignUp,
   isChangePass,
+  emailIsSend,
 }: {
   name: string;
   email: string;
@@ -301,6 +308,7 @@ export const useButton = ({
   fieldMustBeNotEmpty: string;
   eliminateRemarks: string;
   isChangePass: boolean;
+  emailIsSend: string;
 }) => {
   const router = useRouter();
   const [buttonError, setButtonError] = useState<string>('');
@@ -405,6 +413,9 @@ export const useButton = ({
       setTimeout(() => {
         setNeedClean(false);
       }, 1000);
+      setTimeout(() => {
+        log('warn', emailIsSend, forgotRes, true, true);
+      }, WARN_ALERT_TIMEOUT);
     }
   };
 
