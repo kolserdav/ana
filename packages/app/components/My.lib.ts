@@ -108,13 +108,19 @@ export function getPlayText({
   return elem.firstElementChild?.innerHTML;
 }
 
-export const scrollTo = ({ element }: { element: HTMLElement }) => {
+export const scrollTo = ({
+  element,
+  selectedFixed,
+}: {
+  element: HTMLElement;
+  selectedFixed: boolean;
+}) => {
   const { y } = element.getBoundingClientRect();
   window.scrollTo({
     top:
       y +
       (window.scrollY > y ? window.scrollY : 0) -
-      FIXED_TOOLS_HIGHT -
+      FIXED_TOOLS_HIGHT * (selectedFixed ? 2 : 1) -
       PLAY_ALL_SCROLL_BY_TOP_SHIFT,
     behavior: 'smooth',
   });
@@ -126,26 +132,35 @@ export const getAnimationDuration = (textLenght: number) => {
   return textLenght * speechSpeed * 0.04;
 };
 
+// eslint-disable-next-line no-useless-escape
+const HTTP_LINKS_REGEX = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+// eslint-disable-next-line no-useless-escape
+const WWW_LINKS_REGEX = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+// eslint-disable-next-line no-useless-escape
+const EMAIL_LINK_REGEX = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+
+/**
+ * From here https://stackoverflow.com/a/3890175/8111346
+ */
 export function changeLinks(inputText: string) {
   let replacedText = inputText;
 
-  // URLs starting with http://, https://, or ftp://
-  // eslint-disable-next-line no-useless-escape
-  const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-  replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+  replacedText = inputText.replace(HTTP_LINKS_REGEX, '<a href="$1" target="_blank">$1</a>');
 
-  // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
-  // eslint-disable-next-line no-useless-escape
-  const replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
   replacedText = replacedText.replace(
-    replacePattern2,
+    WWW_LINKS_REGEX,
     '$1<a href="http://$2" target="_blank">$2</a>'
   );
 
-  // Change email addresses to mailto:: links.
-  // eslint-disable-next-line no-useless-escape
-  const replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
-  replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+  replacedText = replacedText.replace(EMAIL_LINK_REGEX, '<a href="mailto:$1">$1</a>');
+
+  return replacedText;
+}
+
+export function cleanLinks(inputText: string, changeTo = '') {
+  let replacedText = inputText;
+
+  replacedText = inputText.replace(/<a.+<\/a>/g, changeTo);
 
   return replacedText;
 }

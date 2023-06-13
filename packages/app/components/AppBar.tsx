@@ -99,7 +99,7 @@ function AppBar({
             </div>
             {typeof isMobile === 'boolean' && !isMobile && (
               <div className={s.actions}>
-                <TranslateIcon color={theme.text} />
+                <TranslateIcon withoutScale color={theme.text} />
                 <Select
                   ref={localeRef}
                   onChange={onChangeLang}

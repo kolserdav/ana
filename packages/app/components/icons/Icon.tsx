@@ -1,7 +1,7 @@
 import { IconProps } from '../../types';
 import { ICON_WIDTH_DEFAULT, SCALE_ICONS_COEFF } from '../../utils/constants';
 
-function Icon({ width, height, children, color, animate, className }: IconProps) {
+function Icon({ width, height, children, color, animate, className, withoutScale }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +14,7 @@ function Icon({ width, height, children, color, animate, className }: IconProps)
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: `scale(${SCALE_ICONS_COEFF})`,
+        transform: !withoutScale ? `scale(${SCALE_ICONS_COEFF})` : undefined,
       }}
     >
       <path d={children}>{animate}</path>

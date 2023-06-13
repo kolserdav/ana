@@ -48,6 +48,7 @@ function Translate({
   missingCSRF,
   voiceNotFound,
   playSound,
+  changeLinkTo,
 }: {
   theme: Theme;
   locale: Locale['app']['translate'];
@@ -61,6 +62,7 @@ function Translate({
   missingCSRF: string;
   voiceNotFound: string;
   playSound: string;
+  changeLinkTo: string;
 }) {
   const helpTagRef = createRef<HTMLButtonElement>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -278,6 +280,7 @@ function Translate({
                 text={reTranslate}
                 lang={learnLang}
                 voiceNotFound={voiceNotFound}
+                changeLinkTo={changeLinkTo}
               />
             </div>
           )}

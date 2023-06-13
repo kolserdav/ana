@@ -45,6 +45,7 @@ export default function MyPage({
           cancel={localeCommon.cancel}
           playSound={localeCommon.playSound}
           voiceNotFound={localeCommon.voiceNotFound}
+          changeLinkTo={localeCommon.insertedLink}
         />
       </main>
     </>

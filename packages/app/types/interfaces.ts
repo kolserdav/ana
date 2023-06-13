@@ -375,6 +375,7 @@ export interface Locale {
       and: string;
       voiceNotFound: string;
       playSound: string;
+      insertedLink: string;
     };
     translate: {
       title: string;
@@ -440,6 +441,7 @@ export interface Locale {
       resetAllFilters: string;
       playAll: string;
       openTools: string;
+      selectPhrase: string;
     };
     app: {
       connectionRefused: string;

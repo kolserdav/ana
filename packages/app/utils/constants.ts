@@ -95,7 +95,7 @@ export const MOBILE_WIDTH = 760;
 export const TRANSLATE_DELAY = 1000;
 export const TEXTAREA_ROWS = 4;
 export const ORDER_BY_DEFAULT: OrderBy = 'asc';
-export const TAKE_PHRASES_DEFAULT = 30;
+export const TAKE_PHRASES_DEFAULT = 10;
 export const LEARN_LANG_DEFAULT = 'en';
 export const NATIVE_LANG_DEFAULT = 'ru';
 export const LICENSE = {
@@ -115,7 +115,7 @@ export const APP_BAR_HEIGHT = 60;
 // deps $spoiler-border-width
 export const SPOILER_BORDER_WIDTH = 1;
 // deps $input-margin-bottom
-export const INPUT_MARGIN_BOTTOM = 10;
+export const INPUT_MARGIN_BOTTOM = 30;
 // deps $form-item-margin-top
 export const FORM_ITEM_MARGIN_TOP = 25;
 // deps $input-height

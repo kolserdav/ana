@@ -106,6 +106,7 @@ const lang: Locale = {
       and: 'и',
       voiceNotFound: 'Голос для озвучивания не найден',
       playSound: 'Озвучить текст',
+      insertedLink: '...с...',
     },
     translate: {
       title: 'Перевод предложений',
@@ -164,6 +165,7 @@ const lang: Locale = {
       resetAllFilters: 'Сбросить фильтры',
       playAll: 'Воспроизвести все',
       openTools: 'Открыть инструменты',
+      selectPhrase: 'Выбрать фразу',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',

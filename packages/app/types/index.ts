@@ -26,6 +26,7 @@ export interface IconProps {
   color?: string;
   animate?: React.ReactNode;
   className?: string;
+  withoutScale?: boolean;
 }
 
 export interface AlertProps {

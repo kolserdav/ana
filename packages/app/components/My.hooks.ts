@@ -25,11 +25,13 @@ import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
 import { DateFilter } from '../types';
 import {
+  changeLinks,
   getAnimationDuration,
   getGTDate,
   getPlayButtonFromContainer,
   getPlayText,
   scrollTo,
+  setMatchesBold,
 } from './My.lib';
 import useLangs from '../hooks/useLangs';
 import useFixedTools from '../hooks/useFixedTools';
@@ -189,8 +191,27 @@ export const usePhrases = ({
     setSearch('');
   };
 
+  const sePieces = search.split(' ').filter((item) => item !== '');
+
+  const _phrases = useMemo(
+    () =>
+      phrases.map((item) => {
+        const _item = { ...item };
+        _item.text = changeLinks(item.text);
+
+        if (sePieces.length !== 0) {
+          _item.text = setMatchesBold({ text: _item.text, matches: sePieces });
+          if (_item.translate) {
+            _item.translate = setMatchesBold({ text: _item.translate, matches: sePieces });
+          }
+        }
+        return _item;
+      }),
+    [phrases, sePieces]
+  );
+
   return {
-    phrases,
+    phrases: _phrases,
     setRestart,
     restart,
     orderBy,
@@ -506,21 +527,13 @@ export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) =
   const selectedRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<string[]>([]);
 
-  const onChangeSelectedWrapper = (phraseId: string) => (checked: boolean) => {
+  const onChangeSelectedWrapper = (phraseId: string) => () => {
     const _selected = selected.slice();
-    if (checked) {
-      if (selected.indexOf(phraseId) === -1) {
-        _selected.push(phraseId);
-      } else {
-        log('warn', 'Duplicate selected phrase', { selected, phraseId });
-      }
+    const index = selected.indexOf(phraseId);
+    if (index === -1) {
+      _selected.push(phraseId);
     } else {
-      const index = _selected.indexOf(phraseId);
-      if (index !== -1) {
-        _selected.splice(index, 1);
-      } else {
-        log('warn', 'Deleted selected phrase is missing', { selected, phraseId });
-      }
+      _selected.splice(index, 1);
     }
     setSelected(_selected);
   };
@@ -604,7 +617,13 @@ export const useResetAllFilters = ({
   return { resetAllFilters, showResetFilters };
 };
 
-export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDivElement> }) => {
+export const usePlayAll = ({
+  phrasesRef,
+  selectedFixed,
+}: {
+  phrasesRef: React.RefObject<HTMLDivElement>;
+  selectedFixed: boolean;
+}) => {
   const playToolsRef = useRef<HTMLDivElement>(null);
   const [played, setPlayed] = useState<boolean>(false);
   const [currentPlay, setCurrentPlay] = useState<number>(0);
@@ -640,9 +659,9 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
     }
     const button = getPlayButtonFromContainer({ current, currentPlay: 0 });
     if (button) {
-      scrollTo({ element: button });
+      scrollTo({ element: button, selectedFixed });
     }
-  }, [phrasesRef, stop]);
+  }, [phrasesRef, stop, selectedFixed]);
 
   const onStopPlayItem = useCallback(
     (withoutPause = false) => {
@@ -675,7 +694,7 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
     }
     const button = getPlayButtonFromContainer({ current, currentPlay });
     if (button) {
-      scrollTo({ element: button });
+      scrollTo({ element: button, selectedFixed });
       button.click();
 
       const _playText = getPlayText({ current, currentPlay });
@@ -686,7 +705,7 @@ export const usePlayAll = ({ phrasesRef }: { phrasesRef: React.RefObject<HTMLDiv
     } else {
       onStopPlayItem(true);
     }
-  }, [played, phrasesRef, currentPlay, onStopPlayItem]);
+  }, [played, phrasesRef, currentPlay, onStopPlayItem, selectedFixed]);
 
   const onClickPlayAll = () => {
     setPlayed(true);

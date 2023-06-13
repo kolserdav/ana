@@ -43,7 +43,6 @@ import {
 } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
-import { changeLinks, setMatchesBold } from './My.lib';
 import { getFormatDistance } from '../utils/lib';
 import Select from './ui/Select';
 import Spoiler from './ui/Spoiler';
@@ -51,6 +50,7 @@ import PlaySoundButton from './PlaySoundButton';
 import PlayIcon from './icons/Play';
 import PauseIcon from './icons/Pause';
 import StopIcon from './icons/Stop';
+import IconCheckbox from './ui/IconCheckbox';
 
 function My({
   locale,
@@ -61,6 +61,7 @@ function My({
   user,
   playSound,
   voiceNotFound,
+  changeLinkTo,
 }: {
   locale: Locale['app']['my'];
   theme: Theme;
@@ -70,6 +71,7 @@ function My({
   user: UserCleanResult | null;
   voiceNotFound: string;
   playSound: string;
+  changeLinkTo: string;
 }) {
   const router = useRouter();
   const phrasesRef = useRef<HTMLDivElement>(null);
@@ -119,8 +121,6 @@ function My({
     gt,
     learnLang: langFilter,
   });
-
-  const sePieces = search.split(' ');
 
   const {
     selected,
@@ -179,7 +179,10 @@ function My({
     animationDuration,
   } = usePlayAll({
     phrasesRef,
+    selectedFixed: selected.length !== 0,
   });
+
+  const playIsFixed = playToolsFixed && (played || paused);
 
   return (
     <div className={s.wrapper}>
@@ -258,7 +261,7 @@ function My({
             theme={theme}
             value={search}
             classWrapper={s.input_wrapper}
-            name={<SearchIcon color={theme.text} />}
+            name={<SearchIcon withoutScale color={theme.text} />}
             id="search"
             onChange={changeSearch}
           />
@@ -268,7 +271,11 @@ function My({
                 {`${locale.byUpdateDate}:`}
               </Typography>
               <IconButton theme={theme} onClick={onClickSortByDate}>
-                <FilterIcon className={orderBy === 'asc' ? s.asc : s.desc} color={theme.text} />
+                <FilterIcon
+                  withoutScale
+                  className={orderBy === 'asc' ? s.asc : s.desc}
+                  color={theme.text}
+                />
               </IconButton>
             </div>
           </div>
@@ -301,20 +308,20 @@ function My({
                 borderColor: theme.text,
               }}
             >
-              <Checkbox
-                id="select-all"
-                theme={theme}
+              <IconCheckbox
                 checked={phrases.length === selected.length}
-                onChange={selectAll}
+                onClick={selectAll}
+                theme={theme}
+                title={locale.selectAll}
                 label={`${locale.selectAll}: ${phrases.length - selected.length}`}
               />
-              <Checkbox
-                id="unselect-all"
-                theme={theme}
+              <IconCheckbox
                 checked={phrases.length === selected.length}
-                onChange={unSelectAll}
-                indeterminate
+                onClick={unSelectAll}
+                theme={theme}
+                title={locale.unselectAll}
                 label={`${locale.unselectAll}: ${selected.length}`}
+                minus
               />
               <IconButton
                 theme={theme}
@@ -331,16 +338,16 @@ function My({
           className={clsx(
             s.selected_items,
             !playToolsFixed && selected.length !== 0 ? s.with_margin_bottom : '',
-            playToolsFixed && (played || paused) ? s.selected_items__fixed : ''
+            playIsFixed ? s.selected_items__fixed : ''
           )}
           style={{
             backgroundColor: theme.active,
             top:
-              playToolsFixed && (played || paused) && showAppBar
+              playIsFixed && showAppBar
                 ? `${selected.length !== 0 ? APP_BAR_HEIGHT + FIXED_TOOLS_HIGHT : APP_BAR_HEIGHT}px`
                 : `${selected.length !== 0 ? FIXED_TOOLS_HIGHT : 0}px`,
             transition:
-              playToolsFixed && (played || paused) && showAppBar
+              playIsFixed && showAppBar
                 ? `top ${APP_BAR_TRANSITION}s ease-out`
                 : `top ${APP_BAR_TRANSITION}s  ease-in`,
             borderColor: theme.text,
@@ -380,7 +387,7 @@ function My({
                       <DotsHorisontalIcon color={theme.text} />
                     </IconButton>
 
-                    <Tooltip closeOnClick theme={theme} parentRef={ref} length={40}>
+                    <Tooltip closeOnClick theme={theme} parentRef={ref} length={60}>
                       <div className={s.menu_tooltip}>
                         <IconButton
                           theme={theme}
@@ -396,14 +403,12 @@ function My({
                         >
                           <DeleteIcon color={theme.red} />
                         </IconButton>
-                        {selected.length === 0 && (
-                          <Checkbox
-                            theme={theme}
-                            id={`tooltip-check-${item.id}`}
-                            onChange={onChangeSelectedWrapper(item.id)}
-                            checked={selected.indexOf(item.id) !== -1}
-                          />
-                        )}
+                        <IconCheckbox
+                          checked={selected.indexOf(item.id) !== -1}
+                          onClick={onChangeSelectedWrapper(item.id)}
+                          theme={theme}
+                          title={locale.selectPhrase}
+                        />
                       </div>
                     </Tooltip>
                   </div>
@@ -412,9 +417,7 @@ function My({
                     <div className={s.item__content}>
                       <div className={s.item__translate}>
                         <Typography datatype={DATA_TYPE_PHRASE} variant="p" theme={theme}>
-                          {sePieces.length === 0
-                            ? item.text
-                            : setMatchesBold({ text: changeLinks(item.text), matches: sePieces })}
+                          {item.text}
                         </Typography>
                         <div className={s.play_button}>
                           <div className={s.play_button__container}>
@@ -425,25 +428,24 @@ function My({
                               lang={item.learnLang}
                               voiceNotFound={voiceNotFound}
                               onStop={onStopPlayItem}
+                              changeLinkTo={changeLinkTo}
                             />
                           </div>
                         </div>
                       </div>
                       {item.translate && (
                         <Typography className={s.translate} variant="p" theme={theme} small>
-                          {sePieces.length === 0
-                            ? item.translate
-                            : setMatchesBold({ text: item.translate, matches: sePieces })}
+                          {item.translate}
                         </Typography>
                       )}
                     </div>
                     {selected.length !== 0 && (
                       <div className={s.item__selector}>
-                        <Checkbox
-                          theme={theme}
-                          id={`card-check-${item.id}`}
-                          onChange={onChangeSelectedWrapper(item.id)}
+                        <IconCheckbox
                           checked={selected.indexOf(item.id) !== -1}
+                          onClick={onChangeSelectedWrapper(item.id)}
+                          theme={theme}
+                          title={locale.selectPhrase}
                         />
                       </div>
                     )}

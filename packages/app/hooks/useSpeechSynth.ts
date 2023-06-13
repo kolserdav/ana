@@ -3,6 +3,7 @@ import { log } from '../utils/lib';
 import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import { VolumeIcon } from '../types';
+import { cleanLinks } from '../components/My.lib';
 
 let speaking = false;
 
@@ -11,11 +12,13 @@ const useSpeechSynth = ({
   voiceNotFound,
   lang,
   onStop,
+  changeLinkTo,
 }: {
   text: string;
   lang: string | undefined;
   voiceNotFound: string;
   onStop?: () => void;
+  changeLinkTo?: string;
 }) => {
   const [textToSpeech, setTextToSpeech] = useState<string>();
   const [voice, setVoice] = useState<SpeechSynthesisVoice>();
@@ -178,7 +181,7 @@ const useSpeechSynth = ({
   }, [textToSpeech, lang, voice, speechSpeed, synth]);
 
   const speechText = () => {
-    setTextToSpeech(text);
+    setTextToSpeech(cleanLinks(text, changeLinkTo));
   };
 
   /**

@@ -107,6 +107,7 @@ const lang: Locale = {
       and: 'and',
       voiceNotFound: 'No voice found',
       playSound: 'Play text',
+      insertedLink: '...Link replaced...',
     },
     translate: {
       title: 'Sentence Translation',
@@ -165,6 +166,7 @@ const lang: Locale = {
       resetAllFilters: 'Reset filters',
       playAll: 'Play All',
       openTools: 'Open Tools',
+      selectPhrase: 'Select Phrase',
     },
     app: {
       connectionRefused: 'Connection to server lost',

@@ -120,7 +120,7 @@ $search-input-wudth-coeff: 1.5;
         left: calc((100vw - ($translate-container-max - $container-padding)) / 2);
 
         @media (max-width: $translate-container-max) {
-            left: 0;
+          left: 0;
         }
       }
     }
