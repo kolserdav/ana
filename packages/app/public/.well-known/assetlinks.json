@@ -1,5 +1,5 @@
 [{
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target" : { "namespace": "android_app", "package_name": "com.kolserdav.ana",
-    "sha256_cert_fingerprints": [] }
+    "sha256_cert_fingerprints": ["F9:17:36:ED:82:78:EB:7D:F6:A3:A0:28:0C:FF:67:C4:79:F2:08:25:E3:C2:19:5C:BF:A0:9D:58:5C:5A:33:61"] }
 }]
