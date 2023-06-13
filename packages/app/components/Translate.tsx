@@ -174,16 +174,12 @@ function Translate({
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
-        <Typography variant="h1" theme={theme} align="center">
+        <Typography variant="h1" theme={theme} align="center" fullWidth>
           {edit ? locale.updatePhrase : locale.title}
         </Typography>
-
-        {!edit && (
-          <Typography variant="p" align="center" theme={theme}>
-            {locale.description}
-          </Typography>
-        )}
-
+        <Typography variant="p" align="center" theme={theme} fullWidth>
+          {edit ? locale.descEdit : locale.description}
+        </Typography>
         <div className={s.selectors}>
           <Select
             onChange={changeLangWrapper('native')}

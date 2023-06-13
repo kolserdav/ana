@@ -2,7 +2,9 @@ package com.kolserdav.ana;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,10 +31,13 @@ import java.util.Locale;
 public class MainActivity extends Activity {
     private WebView mWebView;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+
 
         mWebView = new WebView(this);
         WebSettings webSettings = this.mWebView.getSettings();
@@ -75,7 +80,7 @@ public class MainActivity extends Activity {
 
         });
 
-        mWebView.loadUrl("https://uyem.ru" );
+        mWebView.loadUrl("https://uyem.ru");
 
         this.setContentView(mWebView);
 

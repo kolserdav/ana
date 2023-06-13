@@ -110,8 +110,9 @@ const lang: Locale = {
       insertedLink: '...Link replaced...',
     },
     translate: {
-      title: 'Sentence Translation',
-      description: 'Write on your own in a foreign language and check yourself right away',
+      title: 'Creation of sentences',
+      description: 'Practice your sentence creation skills on the phrases you will be using',
+      descEdit: 'Improve your sentences as your skills grow',
       nativeLang: 'I know',
       learnLang: 'Learning',
       allowRecomend: 'Apply suggested option',

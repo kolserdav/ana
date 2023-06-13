@@ -18,6 +18,7 @@ function Typography({
   blur,
   datatype,
   nowrap,
+  fullWidth,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | React.ReactNode;
@@ -27,11 +28,12 @@ function Typography({
   small?: boolean;
   large?: boolean;
   align?: 'center' | 'right' | 'justify';
-  styleName?: Status;
+  styleName?: Status | 'vice-versa';
   disabled?: boolean;
   blur?: boolean;
   datatype?: string;
   nowrap?: boolean;
+  fullWidth?: boolean;
 }) {
   return (
     <div
@@ -43,6 +45,7 @@ function Typography({
         small ? s.small : '',
         large ? s.large : '',
         nowrap ? s.nowrap : '',
+        fullWidth ? s.full_width : '',
         align
           ? align === 'center'
             ? s.center
@@ -63,6 +66,8 @@ function Typography({
             ? theme.red
             : styleName === 'info'
             ? theme.green
+            : styleName === 'vice-versa'
+            ? theme.paper
             : theme.text,
       }}
       dangerouslySetInnerHTML={{
@@ -100,6 +105,7 @@ Typography.defaultProps = {
   large: undefined,
   datatype: undefined,
   nowrap: undefined,
+  fullWidth: undefined,
 };
 
 export default Typography;

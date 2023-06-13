@@ -6,6 +6,7 @@ import storeScroll from '../../store/scroll';
 import { Theme } from '../../Theme';
 import { checkClickBy, log } from '../../utils/lib';
 import s from './Tooltip.module.scss';
+import Typography from './Typography';
 
 const POSITION_DEFAULT = {
   width: 0,
@@ -38,6 +39,8 @@ function Tooltip({
   const [open, setOpen] = useState<boolean>();
   const [position, setPosition] = useState<typeof POSITION_DEFAULT>(POSITION_DEFAULT);
 
+  const isString = typeof children === 'string';
+
   const onClick = useMemo(
     () => () => {
       const { current } = parentRef;
@@ -50,7 +53,7 @@ function Tooltip({
       const { innerWidth } = window;
       const pt = 20;
       let _length = 0;
-      if (typeof children !== 'string') {
+      if (!isString) {
         _length = length || 200;
       } else {
         _length = children.length;
@@ -60,7 +63,7 @@ function Tooltip({
       let rows = 2;
       if (_length >= 10 && _length < 30) {
         cols = 6;
-        rows = 2;
+        rows = 3;
       } else if (_length >= 30 && _length < 50) {
         cols = 6;
         rows = 3;
@@ -84,7 +87,7 @@ function Tooltip({
         rows = 8;
         log('warn', 'Tooltip length is too long', { _length, max: 150 });
       }
-
+      // console.log({ rows, cols });
       const width = cols * pt;
       const height = rows * pt;
       const TOOLTIP_SHIFT = 8;
@@ -104,7 +107,7 @@ function Tooltip({
         setOpen(true);
       }, 110);
     },
-    [children, length, parentRef]
+    [children, length, parentRef, isString]
   );
 
   /**
@@ -196,7 +199,13 @@ function Tooltip({
       }}
       className={clsx(s.wrapper, ubuntu300.className, open ? s.open : '')}
     >
-      {children}
+      {isString ? (
+        <Typography variant="span" theme={theme} styleName="vice-versa">
+          {children}
+        </Typography>
+      ) : (
+        children
+      )}
     </div>
   );
 }

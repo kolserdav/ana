@@ -380,6 +380,7 @@ export interface Locale {
     translate: {
       title: string;
       description: string;
+      descEdit: string;
       nativeLang: string;
       learnLang: string;
       allowRecomend: string;
