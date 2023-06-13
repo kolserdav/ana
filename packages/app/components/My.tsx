@@ -463,7 +463,7 @@ function My({
                     </div>
                     <div className={s.date}>
                       <Typography variant="span" theme={theme} small disabled>
-                        {getFormatDistance(item.updated, router.locale as LocaleValue)}
+                        {item.updated.toString()}
                       </Typography>
                     </div>
                   </div>

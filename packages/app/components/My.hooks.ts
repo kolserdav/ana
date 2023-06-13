@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import {
   FullTag,
   Locale,
+  LocaleValue,
   LocaleVars,
   OrderBy,
   PhraseFindManyResult,
@@ -12,7 +13,7 @@ import {
   UNDEFINED_QUERY_STRING,
 } from '../types/interfaces';
 import Request from '../utils/request';
-import { log } from '../utils/lib';
+import { getFormatDistance, log } from '../utils/lib';
 import {
   DATE_FILTER_ALL,
   ORDER_BY_DEFAULT,
@@ -61,6 +62,7 @@ export const usePhrases = ({
   gt: string;
   learnLang: string | undefined;
 }) => {
+  const router = useRouter();
   const lastRef = useRef<HTMLDivElement>(null);
 
   const [phrases, setPhrases] = useState<PhraseFindManyResult>([]);
@@ -198,7 +200,7 @@ export const usePhrases = ({
       phrases.map((item) => {
         const _item = { ...item };
         _item.text = changeLinks(item.text);
-
+        _item.updated = getFormatDistance(item.updated, router.locale as LocaleValue) as any;
         if (sePieces.length !== 0) {
           _item.text = setMatchesBold({ text: _item.text, matches: sePieces });
           if (_item.translate) {
@@ -207,7 +209,7 @@ export const usePhrases = ({
         }
         return _item;
       }),
-    [phrases, sePieces]
+    [phrases, sePieces, router.locale]
   );
 
   return {
