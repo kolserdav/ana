@@ -650,6 +650,7 @@ export const useSpeechRecognize = ({
   const [allowRecogn, setAllowRecogn] = useState<boolean>(false);
   const [allowMicro, setAllowMicro] = useState<boolean>();
   const [recognition, setRecognition] = useState<webkitSpeechRecognition>();
+  const [speechRecognStarted, setSpeechRecognStarted] = useState<boolean>(false);
 
   const recognitionLang = useMemo(() => {
     if (!learnLang) {
@@ -721,6 +722,7 @@ export const useSpeechRecognize = ({
   };
 
   const onStartRecognize = () => {
+    setSpeechRecognStarted(true);
     if (!recognitionLang) {
       return;
     }
@@ -781,9 +783,10 @@ export const useSpeechRecognize = ({
       return;
     }
     recognition.stop();
+    setSpeechRecognStarted(false);
   };
 
-  return { onStartRecognize, onStopRecognize, allowRecogn };
+  return { onStartRecognize, onStopRecognize, allowRecogn, speechRecognStarted };
 };
 
 export const useUndo = () => {

@@ -1,4 +1,4 @@
-import { forwardRef, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import s from './IconButton.module.scss';
 import { Theme } from '../../Theme';
 import Tooltip from './Tooltip';
@@ -7,17 +7,29 @@ const IconButton = forwardRef<
   HTMLButtonElement,
   React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
     theme: Theme;
+    touchStarted?: boolean;
   }
 >((props, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [openTooltip, setOpenTooltip] = useState<boolean>(false);
-  const { theme, title } = props;
+  const { theme, title, touchStarted } = props;
   const onContextMenuOpen = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (title) {
       ev.preventDefault();
-      setOpenTooltip(true);
+      if (!touchStarted) {
+        setOpenTooltip(true);
+      }
     }
   };
+
+  /**
+   * Close while recognize
+   */
+  useEffect(() => {
+    if (touchStarted) {
+      setOpenTooltip(false);
+    }
+  }, [touchStarted]);
 
   const onClick =
     !props.onClick && !ref
@@ -53,5 +65,9 @@ const IconButton = forwardRef<
 });
 
 IconButton.displayName = 'IconButton';
+
+IconButton.defaultProps = {
+  touchStarted: undefined,
+};
 
 export default IconButton;

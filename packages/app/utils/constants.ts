@@ -126,4 +126,5 @@ export const PLAY_ALL_ITEM_PAUSE = 1000;
 // deps $fixed-tools-hight
 export const FIXED_TOOLS_HIGHT = 44;
 export const PLAY_ALL_SCROLL_BY_TOP_SHIFT = 20;
+// deps $text-area-activities-coeff
 export const SCALE_ICONS_COEFF = 1.5;

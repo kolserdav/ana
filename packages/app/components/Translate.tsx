@@ -163,11 +163,12 @@ function Translate({
     setTagRestart,
   });
 
-  const { onStartRecognize, onStopRecognize, allowRecogn } = useSpeechRecognize({
-    setText,
-    locale,
-    learnLang,
-  });
+  const { onStartRecognize, onStopRecognize, allowRecogn, speechRecognStarted } =
+    useSpeechRecognize({
+      setText,
+      locale,
+      learnLang,
+    });
 
   const { loginRedirect } = useRedirect();
 
@@ -243,6 +244,7 @@ function Translate({
                 onMouseDown={onStartRecognize}
                 onTouchStart={onStartRecognize}
                 onTouchEnd={onStopRecognize}
+                touchStarted={speechRecognStarted}
               >
                 <MicrophoneIcon color={theme.text} />
               </IconButton>
