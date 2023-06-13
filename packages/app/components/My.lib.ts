@@ -5,6 +5,7 @@ import {
   PLAY_ALL_SCROLL_BY_TOP_SHIFT,
   DATA_TYPE_PLAY_BUTTON,
   DATA_TYPE_PHRASE,
+  TICKER_DURATION_COEFFICIENT,
 } from '../utils/constants';
 import { LocalStorageName, getLocalStorage } from '../utils/localStorage';
 
@@ -129,7 +130,7 @@ export const scrollTo = ({
 export const getAnimationDuration = (textLenght: number) => {
   const _speechSpeed = getLocalStorage(LocalStorageName.SPEECH_SPEED);
   const speechSpeed = _speechSpeed || 1;
-  return textLenght * speechSpeed * 0.04;
+  return textLenght * speechSpeed * TICKER_DURATION_COEFFICIENT;
 };
 
 // eslint-disable-next-line no-useless-escape
