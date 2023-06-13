@@ -161,14 +161,14 @@ export const usePhrases = ({
    */
   useEffect(() => {
     const cleanSubs = storeScroll.subscribe(() => {
-      const { scrollY } = window;
+      const { innerHeight } = window;
       const { current } = lastRef;
       if (!current) {
         return;
       }
-      const { y } = current.getBoundingClientRect();
+      const { bottom } = current.getBoundingClientRect();
 
-      if (scrollY > y && phrases.length < count && !_load) {
+      if (bottom < innerHeight && phrases.length < count && !_load) {
         _load = true;
         setSkip(skip + TAKE_PHRASES_DEFAULT);
       }
