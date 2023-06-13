@@ -106,6 +106,8 @@ function Translate({
     setText,
     translate,
     setTranslate,
+    oldText,
+    setOldText,
   } = useLanguages({ undo, setUndo, textareaRef, connId, user });
 
   const {
@@ -136,6 +138,8 @@ function Translate({
     connId,
     missingCSRF,
     setUndo,
+    oldText,
+    setOldText,
   });
 
   const {

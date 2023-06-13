@@ -30,7 +30,6 @@ import {
 import useLangs from '../hooks/useLangs';
 
 const request = new Request();
-let oldText = '';
 
 export const useLanguages = ({
   undo,
@@ -54,6 +53,7 @@ export const useLanguages = ({
   const [nativeLang, setNativeLang] = useState<string>();
   const [learnLang, setLearnLang] = useState<string>();
   const [changeLang, setChangeLang] = useState<boolean>(false);
+  const [oldText, setOldText] = useState<string>('');
 
   const { langs } = useLangs();
 
@@ -61,19 +61,23 @@ export const useLanguages = ({
    * Set saved text
    */
   useEffect(() => {
-    if (!connId) {
-      return;
-    }
     const _text = getLocalStorage(LocalStorageName.TEXT);
     if (!_text) {
       return;
     }
     setText(_text);
-    if (!user) {
+  }, [connId]);
+
+  /**
+   * Load phrase from database
+   */
+  useEffect(() => {
+    if (!connId || !user || !text || edit) {
       return;
     }
+    log('info', 'Text is', { oldText, text });
     (async () => {
-      const phrase = await request.phraseFindByText({ text: _text });
+      const phrase = await request.phraseFindByText({ text });
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
@@ -81,7 +85,7 @@ export const useLanguages = ({
         router.push(`${router.asPath}?edit=${phrase.data.id}`);
       }
     })();
-  }, [connId, user, router, edit]);
+  }, [text, user, connId, oldText, edit, router]);
 
   /**
    * Set default langs
@@ -141,7 +145,7 @@ export const useLanguages = ({
     setNativeLang(learnLang);
     setLearnLang(nativeLang);
     setText(translate);
-    oldText = translate;
+    setOldText(translate);
     if (undo) {
       setUndo(false);
     }
@@ -162,6 +166,8 @@ export const useLanguages = ({
     translate,
     setText,
     setTranslate,
+    oldText,
+    setOldText,
   };
 };
 
@@ -186,6 +192,8 @@ export const useTranslate = ({
   missingCSRF,
   setUndo,
   undo,
+  setOldText,
+  oldText,
 }: {
   learnLang: string | undefined;
   nativeLang: string | undefined;
@@ -203,6 +211,8 @@ export const useTranslate = ({
   setAddTags: React.Dispatch<React.SetStateAction<boolean>>;
   connId: string | null;
   missingCSRF: string;
+  setOldText: React.Dispatch<React.SetStateAction<string>>;
+  oldText: string;
 }) => {
   const router = useRouter();
 
@@ -251,11 +261,7 @@ export const useTranslate = ({
    */
   useEffect(() => {
     clearTimeout(timeout);
-    if (!text || !learnLang || !nativeLang) {
-      return;
-    }
-    if (!connId) {
-      log('warn', missingCSRF, connId, true);
+    if (!text || !learnLang || !nativeLang || !connId) {
       return;
     }
     const runTranslate = async (q: string) => {
@@ -314,7 +320,7 @@ export const useTranslate = ({
   };
 
   const cleanText = () => {
-    oldText = text;
+    setOldText(text);
     setText('');
     setRows(TEXTAREA_ROWS);
     setTranslate('');
@@ -326,7 +332,7 @@ export const useTranslate = ({
       setEdit(null);
       router.push(cleanPath(router.asPath));
     }
-    if (oldText) {
+    if (text) {
       setUndo(true);
     }
   };
@@ -373,7 +379,7 @@ export const useTranslate = ({
   }, [translate, learnLang, nativeLang, connId, missingCSRF]);
 
   const setRightText = () => {
-    oldText = text;
+    setOldText(text);
     setUndo(true);
     saveText(reTranslate);
   };
