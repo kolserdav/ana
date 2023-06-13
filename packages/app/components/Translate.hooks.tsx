@@ -290,6 +290,11 @@ export const useTranslate = ({
     );
   }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate, connId, missingCSRF]);
 
+  const saveText = (value: string) => {
+    setLocalStorage(LocalStorageName.TEXT, value);
+    setText(value);
+  };
+
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const {
       target: { value, scrollHeight, clientHeight },
@@ -305,8 +310,7 @@ export const useTranslate = ({
     if (value.length > PHRASE_MAX_LENGTH) {
       _value = shortenString(value, PHRASE_MAX_LENGTH);
     }
-    setLocalStorage(LocalStorageName.TEXT, _value);
-    setText(_value);
+    saveText(_value);
   };
 
   const cleanText = () => {
@@ -328,7 +332,7 @@ export const useTranslate = ({
   };
 
   const revertText = () => {
-    setText(oldText);
+    saveText(oldText);
     setUndo(false);
   };
 
@@ -371,7 +375,7 @@ export const useTranslate = ({
   const setRightText = () => {
     oldText = text;
     setUndo(true);
-    setText(reTranslate);
+    saveText(reTranslate);
   };
 
   const onKeyDownReTranslate = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -431,7 +435,7 @@ export const useSavePhrase = ({
 }) => {
   const router = useRouter();
   const [saveDialog, setSaveDialog] = useState<boolean>(false);
-  const [saveTranslate, setSaveTranslate] = useState<boolean>(true);
+  const [saveTranslate, setSaveTranslate] = useState<boolean>();
 
   const onClickSavePhrase = () => {
     setSaveDialog(true);
@@ -465,6 +469,23 @@ export const useSavePhrase = ({
     }
   };
 
+  /**
+   * Set save translate
+   */
+  useEffect(() => {
+    const _saveTranslate = getLocalStorage(LocalStorageName.SAVE_WITH_TRANSLATE);
+    if (_saveTranslate !== null) {
+      setSaveTranslate(_saveTranslate);
+    } else {
+      setSaveTranslate(true);
+    }
+  }, []);
+
+  const changeSaveTranslate = (value: boolean) => {
+    setSaveTranslate(value);
+    setLocalStorage(LocalStorageName.SAVE_WITH_TRANSLATE, value);
+  };
+
   const onClickUpdate = async () => {
     if (!edit) {
       log('warn', 'This is not editable phrase', { edit });
@@ -495,7 +516,7 @@ export const useSavePhrase = ({
     saveDialog,
     setSaveDialog,
     saveTranslate,
-    setSaveTranslate,
+    changeSaveTranslate,
     onClickSave,
     onClickUpdate,
     onClickCancelSave,
@@ -694,6 +715,11 @@ export const useSpeechRecognize = ({
     setRecognition(_recognition);
   }, [allowMicro, locale.recognizeNotSupport, locale.microNotPermitted, recognitionLang]);
 
+  const saveRecognizedText = (value: string) => {
+    setLocalStorage(LocalStorageName.TEXT, value);
+    setText(value);
+  };
+
   const onStartRecognize = () => {
     if (!recognitionLang) {
       return;
@@ -732,10 +758,10 @@ export const useSpeechRecognize = ({
 
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
-            setText(event.results[i][0].transcript);
+            saveRecognizedText(event.results[i][0].transcript);
           } else {
             intTranscipt += event.results[i][0].transcript;
-            setText(intTranscipt);
+            saveRecognizedText(intTranscipt);
           }
         }
       };

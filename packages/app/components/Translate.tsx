@@ -143,7 +143,7 @@ function Translate({
     onClickSavePhrase,
     setSaveDialog,
     saveTranslate,
-    setSaveTranslate,
+    changeSaveTranslate,
     onClickSave,
     onClickUpdate,
     onClickCancelSave,
@@ -397,13 +397,15 @@ function Translate({
             </Typography>
           </div>
           <div className={s.check_item}>
-            <Checkbox
-              theme={theme}
-              label={locale.saveTranlsate}
-              id="save-translate"
-              checked={saveTranslate}
-              onChange={setSaveTranslate}
-            />
+            {typeof saveTranslate === 'boolean' && (
+              <Checkbox
+                theme={theme}
+                label={locale.saveTranlsate}
+                id="save-translate"
+                checked={saveTranslate}
+                onChange={changeSaveTranslate}
+              />
+            )}
           </div>
           {saveTranslate && (
             <div className={s.active} style={{ backgroundColor: theme.active }}>
