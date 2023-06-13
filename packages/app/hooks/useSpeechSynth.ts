@@ -145,9 +145,6 @@ const useSpeechSynth = ({
     if (!lang) {
       return;
     }
-    if (!textToSpeech) {
-      return;
-    }
 
     if (typeof androidTextToSpeech !== 'undefined') {
       androidTextToSpeech.isSpeaking();
@@ -155,6 +152,9 @@ const useSpeechSynth = ({
         androidTextToSpeech.cancel();
         setAndroidSpeaking(false);
         setTextToSpeech(undefined);
+        return;
+      }
+      if (!textToSpeech) {
         return;
       }
       setAndroidSpeaking(true);

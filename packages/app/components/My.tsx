@@ -3,13 +3,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import {
-  Locale,
-  LocaleValue,
-  LocaleVars,
-  UNDEFINED_QUERY_STRING,
-  UserCleanResult,
-} from '../types/interfaces';
+import { Locale, LocaleVars, UNDEFINED_QUERY_STRING, UserCleanResult } from '../types/interfaces';
 import {
   useFilterByDate,
   useLangFilter,
@@ -18,6 +12,7 @@ import {
   usePhraseUpdate,
   usePhrases,
   usePlayAll,
+  usePlayOne,
   useResetAllFilters,
   useTags,
 } from './My.hooks';
@@ -39,11 +34,11 @@ import {
   APP_BAR_HEIGHT,
   APP_BAR_TRANSITION,
   DATA_TYPE_PHRASE,
+  DATA_TYPE_PLAY_BUTTON,
   FIXED_TOOLS_HIGHT,
 } from '../utils/constants';
 import Input from './ui/Input';
 import SearchIcon from './icons/Search';
-import { getFormatDistance } from '../utils/lib';
 import Select from './ui/Select';
 import Spoiler from './ui/Spoiler';
 import PlaySoundButton from './PlaySoundButton';
@@ -51,6 +46,8 @@ import PlayIcon from './icons/Play';
 import PauseIcon from './icons/Pause';
 import StopIcon from './icons/Stop';
 import IconCheckbox from './ui/IconCheckbox';
+import useSpeechSynth from '../hooks/useSpeechSynth';
+import SpeakIcon from './ui/SpeakIcon';
 
 function My({
   locale,
@@ -73,7 +70,6 @@ function My({
   playSound: string;
   changeLinkTo: string;
 }) {
-  const router = useRouter();
   const phrasesRef = useRef<HTMLDivElement>(null);
   const { load, setLoad } = useLoad();
 
@@ -183,6 +179,11 @@ function My({
   });
 
   const playIsFixed = playToolsFixed && (played || paused);
+
+  const { volumeIcon, clickForPlayWrapper, forSpeech } = usePlayOne({
+    voiceNotFound,
+    onStopPlayItem,
+  });
 
   return (
     <div className={s.wrapper}>
@@ -420,15 +421,19 @@ function My({
                           {item.text}
                         </Typography>
                         <div className={s.play_button}>
-                          <div className={s.play_button__container}>
-                            <PlaySoundButton
-                              theme={theme}
+                          <div
+                            className={s.play_button__container}
+                            datatype={DATA_TYPE_PLAY_BUTTON}
+                          >
+                            <SpeakIcon
+                              onClick={clickForPlayWrapper({
+                                id: item.id,
+                                text: item.text,
+                                lang: item.learnLang,
+                              })}
                               title={playSound}
-                              text={item.text}
-                              lang={item.learnLang}
-                              voiceNotFound={voiceNotFound}
-                              onStop={onStopPlayItem}
-                              changeLinkTo={changeLinkTo}
+                              volumeIcon={item.id === forSpeech?.id ? volumeIcon : 'high'}
+                              theme={theme}
                             />
                           </div>
                         </div>

@@ -86,9 +86,9 @@ export function getPlayButtonFromContainer({
   if (!current.children[currentPlay]) {
     return undefined;
   }
-  return current.children[currentPlay].querySelector(
-    `button[datatype="${DATA_TYPE_PLAY_BUTTON}"]`
-  ) as HTMLButtonElement;
+  return current.children[currentPlay]
+    .querySelector(`div[datatype="${DATA_TYPE_PLAY_BUTTON}"]`)
+    ?.querySelector('button') as HTMLButtonElement;
 }
 
 export function getPlayText({

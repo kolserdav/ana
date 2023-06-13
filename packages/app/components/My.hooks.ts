@@ -16,6 +16,7 @@ import Request from '../utils/request';
 import { getFormatDistance, log } from '../utils/lib';
 import {
   DATE_FILTER_ALL,
+  LEARN_LANG_DEFAULT,
   ORDER_BY_DEFAULT,
   PLAY_ALL_ITEM_PAUSE,
   Pages,
@@ -36,6 +37,7 @@ import {
 } from './My.lib';
 import useLangs from '../hooks/useLangs';
 import useFixedTools from '../hooks/useFixedTools';
+import useSpeechSynth from '../hooks/useSpeechSynth';
 
 const request = new Request();
 
@@ -695,6 +697,7 @@ export const usePlayAll = ({
       return;
     }
     const button = getPlayButtonFromContainer({ current, currentPlay });
+
     if (button) {
       scrollTo({ element: button, selectedFixed });
       button.click();
@@ -734,4 +737,49 @@ export const usePlayAll = ({
     paused,
     animationDuration,
   };
+};
+
+export interface PlayOnePhrase {
+  id: string;
+  text: string;
+  lang: string;
+}
+
+export const usePlayOne = ({
+  voiceNotFound,
+  onStopPlayItem,
+}: {
+  voiceNotFound: string;
+  onStopPlayItem: () => void;
+}) => {
+  const [forSpeech, setForSpeech] = useState<PlayOnePhrase | null>(null);
+
+  const onStopPlayOne = () => {
+    setForSpeech(null);
+    onStopPlayItem();
+  };
+
+  const { synthAllow, volumeIcon, speechText } = useSpeechSynth({
+    text: forSpeech?.text || '',
+    voiceNotFound,
+    lang: forSpeech?.lang || LEARN_LANG_DEFAULT,
+    onStop: onStopPlayOne,
+  });
+
+  const clickForPlayWrapper = (data: PlayOnePhrase) => () => {
+    let speech = null;
+    if (forSpeech?.text !== data.text) {
+      speech = data;
+    }
+    setForSpeech(speech);
+  };
+
+  /**
+   * Play phrase
+   */
+  useEffect(() => {
+    speechText();
+  }, [forSpeech, speechText]);
+
+  return { synthAllow, volumeIcon, speechText, clickForPlayWrapper, forSpeech };
 };
