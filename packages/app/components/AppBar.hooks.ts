@@ -4,12 +4,22 @@ import storeMenuOpen from '../store/menuOpen';
 import storeScroll from '../store/scroll';
 import storeTheme, { changeTheme } from '../store/theme';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
-import { DEFAULT_THEME, EXPAND_LESS_SHOW_FROM, MOBILE_WIDTH } from '../utils/constants';
+import {
+  DEFAULT_THEME,
+  EXPAND_LESS_SHOW_FROM,
+  MOBILE_WIDTH,
+  SUPPORT_TEXT_MAX_LENGHT,
+  TEXTAREA_ROWS_DEFAULT,
+} from '../utils/constants';
 import { CookieName, setCookie } from '../utils/cookies';
 import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
 import storeTouchEvent from '../store/touchEvent';
-import { LocaleValue } from '../types/interfaces';
+import { LocaleValue, UserCleanResult } from '../types/interfaces';
 import storeShowAppBar, { changeShowAppBar } from '../store/showAppBar';
+import { log, shortenString } from '../utils/lib';
+import Request from '../utils/request';
+
+const request = new Request();
 
 let oldY = 0;
 let mayChange = true;
@@ -225,4 +235,93 @@ export const useLanguage = () => {
   }, [lang]);
 
   return { onChangeLang, language, locales };
+};
+
+export const useSupport = ({
+  user,
+  setLoad,
+}: {
+  user: UserCleanResult | null;
+  setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const [supportDialog, setSupportDialog] = useState<boolean>(false);
+  const [supportSubject, setSupportSubject] = useState<string>('');
+  const [supportSubjectError, setSupportSubjectError] = useState<string>('');
+  const [supportText, setSupportText] = useState<string>('');
+  const [supportTextRows, setSupportTextRows] = useState<number>(TEXTAREA_ROWS_DEFAULT);
+
+  const changeSupportText = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const {
+      target: { value },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } = e as any;
+
+    let _value = value;
+    if (value.length > SUPPORT_TEXT_MAX_LENGHT) {
+      _value = shortenString(value, SUPPORT_TEXT_MAX_LENGHT);
+    }
+    setSupportText(_value);
+  };
+
+  const onChangeSupportSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setSupportSubject(value);
+  };
+
+  const onClickSupport = async () => {
+    if (!user) {
+      return;
+    }
+    setLoad(true);
+    const res = await request.support({
+      subject: supportSubject,
+      text: supportText,
+      userId: user.id,
+    });
+    setLoad(false);
+    log(res.status, res.message, res, true);
+    if (res.status !== 'info') {
+      return;
+    }
+    setSupportText('');
+    setSupportSubject('');
+    setSupportTextRows(TEXTAREA_ROWS_DEFAULT);
+    setSupportDialog(false);
+  };
+
+  const onClickCancelSupport = () => {
+    setSupportDialog(false);
+  };
+
+  const onClickOpenSupportDialog = () => {
+    setSupportDialog(true);
+  };
+
+  const onKeyDownOpenSupportDialog = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.code === 'Enter') {
+      onClickOpenSupportDialog();
+    }
+  };
+
+  const onBlurSupportSubject = () => {
+    //
+  };
+
+  return {
+    onClickSupport,
+    onKeyDownOpenSupportDialog,
+    supportDialog,
+    setSupportDialog,
+    onClickCancelSupport,
+    onClickOpenSupportDialog,
+    onChangeSupportSubject,
+    onBlurSupportSubject,
+    supportSubject,
+    supportSubjectError,
+    changeSupportText,
+    supportText,
+    supportTextRows,
+  };
 };

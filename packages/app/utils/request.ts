@@ -53,6 +53,8 @@ import {
   PhraseDeleteManyResult,
   SendConfirmEmailBody,
   SendConfirmEmailResult,
+  SupportBody,
+  SupportResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -291,6 +293,14 @@ class Request {
   public async tagCreate(body: TagCreateBody): Promise<Result<TagCreateResult>> {
     return this.send({
       url: Api.postTagCreate,
+      method: 'POST',
+      body,
+    });
+  }
+
+  public async support(body: SupportBody): Promise<Result<SupportResult>> {
+    return this.send({
+      url: Api.postSupport,
       method: 'POST',
       body,
     });

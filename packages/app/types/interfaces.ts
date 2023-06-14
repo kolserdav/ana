@@ -35,6 +35,7 @@ export enum Api {
   getPhraseDistinct = '/v1/phrase-distinct',
   deletePhraseDeleteMany = '/v1/phrase-delete-many',
   postSendConfirmEmail = '/v1/send-confirm-email',
+  postSupport = '/v1/support',
 }
 
 // eslint-disable-next-line no-shadow
@@ -162,6 +163,13 @@ export interface SendConfirmEmailBody {
   email: string;
 }
 export type SendConfirmEmailResult = UserCleanResult;
+
+export interface SupportBody {
+  userId: string;
+  subject: string;
+  text: string;
+}
+export type SupportResult = UserCleanResult;
 
 export interface UserUpdateBody {
   userId: string;
@@ -310,6 +318,7 @@ export interface Locale {
       deletedAccount: string;
     };
     translateServiceNotWorking: string;
+    supportSuccess: string;
   };
   app: {
     login: {
@@ -360,6 +369,15 @@ export interface Locale {
       logoutDesc: string;
       yes: string;
       no: string;
+      cancel: string;
+      send: string;
+      support: {
+        title: string;
+        description: string;
+        warning: string;
+        subject: string;
+        text: string;
+      };
     };
     confirmEmail: {
       title: string;

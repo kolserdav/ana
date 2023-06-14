@@ -5,10 +5,23 @@ import { useRef } from 'react';
 import { ubuntu500 } from '../fonts/ubuntu';
 import { Theme } from '../Theme';
 import { Locale, LocaleValue, UserCleanResult } from '../types/interfaces';
-import { Pages, PAGE_LOGIN_IN_MENU, MENU_TRANSITION, LOCALE_NAMES } from '../utils/constants';
+import {
+  Pages,
+  PAGE_LOGIN_IN_MENU,
+  MENU_TRANSITION,
+  LOCALE_NAMES,
+  SUPPORT_TEXT_MAX_LENGHT,
+} from '../utils/constants';
 import { checkRouterPath, scrollToTop } from '../utils/lib';
 import ChevronUpIcon from './icons/ChevronUp';
-import { useAndroid, useAppBar, useChangeTheme, useLanguage, useLogout } from './AppBar.hooks';
+import {
+  useAndroid,
+  useAppBar,
+  useChangeTheme,
+  useLanguage,
+  useLogout,
+  useSupport,
+} from './AppBar.hooks';
 import s from './AppBar.module.scss';
 import Link from './ui/Link';
 import Menu from './ui/Menu';
@@ -21,6 +34,9 @@ import Hr from './ui/Hr';
 import Dialog from './ui/Dialog';
 import Typography from './ui/Typography';
 import Button from './ui/Button';
+import Input from './ui/Input';
+import useLoad from '../hooks/useLoad';
+import Textarea from './ui/Textarea';
 
 function AppBar({
   theme,
@@ -35,6 +51,7 @@ function AppBar({
   user: UserCleanResult | null;
   full?: boolean;
 }) {
+  const { load, setLoad } = useLoad();
   const router = useRouter();
   const localeRef = useRef<HTMLSelectElement>(null);
 
@@ -50,6 +67,22 @@ function AppBar({
     onClickCancelLogout,
     onClickOpenLogoutDialog,
   } = useLogout();
+
+  const {
+    onClickSupport,
+    onKeyDownOpenSupportDialog,
+    supportDialog,
+    setSupportDialog,
+    onClickCancelSupport,
+    onClickOpenSupportDialog,
+    onChangeSupportSubject,
+    onBlurSupportSubject,
+    supportSubject,
+    supportSubjectError,
+    supportText,
+    changeSupportText,
+    supportTextRows,
+  } = useSupport({ user, setLoad });
 
   const linkStyle: React.CSSProperties =
     menuOpen && isMobile
@@ -157,6 +190,19 @@ function AppBar({
             </Link>
           )}
           <Hr theme={theme} />
+          {user && (
+            <div
+              role="button"
+              onKeyDown={onKeyDownOpenSupportDialog}
+              tabIndex={-2}
+              onClick={onClickOpenSupportDialog}
+              className={clsx(l.wrapper, l.full__width, l.without__hover)}
+            >
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.support.title}</div>
+              </div>
+            </div>
+          )}
           <div className={s.bottom}>
             {!checkRouterPath(router.asPath, [Pages.about]) && (
               <Link withoutHover fullWidth theme={theme} href={Pages.about}>
@@ -219,6 +265,58 @@ function AppBar({
           <div className={p.button_margin} />
           <Button className={s.button} onClick={onClickLogout} theme={theme}>
             {locale.yes}
+          </Button>
+        </div>
+      </Dialog>
+      <Dialog className={p.dialog} theme={theme} onClose={setSupportDialog} open={supportDialog}>
+        <Typography variant="h3" theme={theme} align="center">
+          {locale.support.title}
+        </Typography>
+        {!user?.confirm && (
+          <>
+            <Typography variant="p" theme={theme} styleName="warn">
+              {locale.support.warning}
+            </Typography>
+            <Link href={Pages.settings} theme={theme}>
+              {locale.settings}
+            </Link>
+          </>
+        )}
+        <Input
+          theme={theme}
+          onChange={onChangeSupportSubject}
+          onBlur={onBlurSupportSubject}
+          value={supportSubject}
+          id="subject"
+          type="text"
+          required
+          error={supportSubjectError}
+          disabled={load || !user?.confirm}
+          name={locale.support.subject}
+          fullWidth
+        />
+        <Textarea
+          placeholder={locale.support.text}
+          value={supportText}
+          spellCheck={false}
+          onInput={changeSupportText}
+          rows={supportTextRows}
+          theme={theme}
+          disabled={load || !user?.confirm}
+          maxLength={SUPPORT_TEXT_MAX_LENGHT}
+        />
+        <div className={p.dialog__actions}>
+          <Button className={s.button} onClick={onClickCancelSupport} theme={theme}>
+            {locale.cancel}
+          </Button>
+          <div className={p.button_margin} />
+          <Button
+            disabled={load || !user?.confirm}
+            className={s.button}
+            onClick={onClickSupport}
+            theme={theme}
+          >
+            {locale.send}
           </Button>
         </div>
       </Dialog>

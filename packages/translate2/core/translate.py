@@ -62,6 +62,7 @@ class Translate:
         translator = ctranslate2.Translator(
             f"{package_path}/model", device="cpu")
         paragraphs = text.split(self.eol)
+
         for paragraph in paragraphs:
             tokenized = self.tokenize(package_path, paragraph)
             translate_result = translator.translate_batch(

@@ -6,6 +6,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
 export const NODE_ENV = process.env.NODE_ENV as string;
+export const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL as string;
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL as string;
 export const HOST = process.env.HOST as string;
 export const SMTP_EMAIL = process.env.SMTP_EMAIL as string;

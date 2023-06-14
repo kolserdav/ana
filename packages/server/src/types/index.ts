@@ -18,13 +18,19 @@ export interface JWTFull {
   iat: number;
 }
 
-export type EmailType = 'restore-password' | 'confirm-email' | 'account-deleted' | 'admin-message';
+export type EmailType =
+  | 'restore-password'
+  | 'confirm-email'
+  | 'account-deleted'
+  | 'admin-message'
+  | 'support';
 
 export interface SendEmailParams<T extends EmailType> {
   type: T;
   locale: LocaleValue;
   email: string;
   subject: string;
+  from?: string;
   data: T extends 'restore-password'
     ? {
         name: string;
@@ -43,6 +49,13 @@ export interface SendEmailParams<T extends EmailType> {
     : T extends 'admin-message'
     ? {
         message: string;
+      }
+    : T extends 'support'
+    ? {
+        message: string;
+        date: string;
+        email: string;
+        name: string;
       }
     : never;
 }

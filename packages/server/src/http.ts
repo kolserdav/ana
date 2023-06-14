@@ -35,6 +35,7 @@ import phraseFindByText from './api/v1/phrase/findByText';
 import phraseDistinct from './api/v1/phrase/distinct';
 import phraseDeleteMany from './api/v1/phrase/deleteMany';
 import sendConfirmEmail from './api/v1/user/send-confirm-email';
+import support from './api/v1/user/support';
 
 const prisma = new PrismaClient();
 
@@ -79,6 +80,7 @@ process.on('unhandledRejection', (err: Error) => {
       Api.getPhraseDistinct,
       Api.deletePhraseDeleteMany,
       Api.postSendConfirmEmail,
+      Api.postSupport,
     ],
     checkTokenMiddleware
   );
@@ -107,7 +109,7 @@ process.on('unhandledRejection', (err: Error) => {
   );
 
   await fastify.use(
-    [Api.putUserUpdate, Api.deleteUserDelete, Api.postSendConfirmEmail],
+    [Api.putUserUpdate, Api.deleteUserDelete, Api.postSendConfirmEmail, Api.postSupport],
     checkAccessMiddlewareWrapper(prisma, {
       model: 'User',
       bodyField: 'id',
@@ -157,6 +159,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.get(Api.getPhraseDistinct, phraseDistinct);
   fastify.delete(Api.deletePhraseDeleteMany, phraseDeleteMany);
   fastify.post(Api.postSendConfirmEmail, sendConfirmEmail);
+  fastify.post(Api.postSupport, support);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

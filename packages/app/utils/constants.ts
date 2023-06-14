@@ -129,3 +129,4 @@ export const PLAY_ALL_SCROLL_BY_TOP_SHIFT = 20;
 export const SCALE_ICONS_COEFF = 1.5;
 export const WARN_ALERT_TIMEOUT = 500;
 export const TICKER_DURATION_COEFFICIENT = 0.08;
+export const SUPPORT_TEXT_MAX_LENGHT = 2500;

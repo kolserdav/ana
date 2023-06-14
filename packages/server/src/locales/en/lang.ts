@@ -32,6 +32,7 @@ const lang: Locale = {
       deletedAccount: 'Account deleted',
     },
     translateServiceNotWorking: 'Sorry, the translation service is temporarily unavailable',
+    supportSuccess: 'The ticket has been sent to technical support',
   },
   app: {
     login: {
@@ -84,6 +85,15 @@ const lang: Locale = {
         "If you log out of your account, then you won't be able to access your saved tags and phrases, and you won't be able to create new ones",
       yes: 'Yes',
       no: 'No',
+      cancel: 'Cancel',
+      send: 'Send',
+      support: {
+        title: 'Support',
+        description: 'Send an email to technical support.',
+        warning: 'To write to support, first confirm your mail, to do this, go to',
+        subject: 'Email Subject',
+        text: 'Ask a question or write a suggestion',
+      },
     },
     confirmEmail: {
       title: 'Mail Confirmation',
