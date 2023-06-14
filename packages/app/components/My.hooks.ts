@@ -563,7 +563,7 @@ export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) =
           }
           return undefined;
         })
-        .filter((item) => item !== undefined),
+        .filter((item) => item !== undefined) as string[],
     [selected, phrases]
   );
 
