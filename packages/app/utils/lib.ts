@@ -175,4 +175,12 @@ export const shortenString = (str: string, len: number) => {
   return res;
 };
 
-export const copyText = (text: string) => navigator.clipboard.writeText(text);
+export const copyText = (text: string) => {
+  if (typeof androidCommon === 'undefined') {
+    return navigator.clipboard.writeText(text);
+  }
+  return new Promise((resolve) => {
+    androidCommon.copyToClipboard(text);
+    resolve(0);
+  });
+};

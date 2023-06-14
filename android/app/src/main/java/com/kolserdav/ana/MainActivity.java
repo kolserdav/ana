@@ -2,6 +2,9 @@ package com.kolserdav.ana;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -171,6 +174,18 @@ class AndroidCommon {
             public void run() {
                 main.finishAffinity();
                 System.exit(0);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void copyToClipboard(String text) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                ClipboardManager clipboard = (ClipboardManager) main.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("copy", text);
+                clipboard.setPrimaryClip(clip);
             }
         });
     }

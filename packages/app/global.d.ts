@@ -53,6 +53,8 @@ declare global {
     closeApp: () => void;
 
     setKeepScreenOn: (sleep: boolean) => void;
+
+    copyToClipboard: (text: string) => void;
   }
 
   const androidCommon: AndroidCommon | undefined;
