@@ -6,6 +6,7 @@
 
   textarea {
     width: 100%;
+    resize: vertical;
     font-size: large;
     padding: $textarea-padding calc($icon-width-default * $text-area-activities-coeff) $textarea-padding $textarea-padding;
     border-radius: $input-border-radius;

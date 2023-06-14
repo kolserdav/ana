@@ -194,6 +194,7 @@ export const useTranslate = ({
   undo,
   setOldText,
   oldText,
+  textareaRef,
 }: {
   learnLang: string | undefined;
   nativeLang: string | undefined;
@@ -213,6 +214,7 @@ export const useTranslate = ({
   missingCSRF: string;
   setOldText: React.Dispatch<React.SetStateAction<string>>;
   oldText: string;
+  textareaRef: React.RefObject<HTMLTextAreaElement>;
 }) => {
   const router = useRouter();
 
@@ -221,6 +223,7 @@ export const useTranslate = ({
   const [edit, setEdit] = useState<string | null>(null);
   const [restart, setRestart] = useState<boolean>(false);
   const [phraseToUpdate, setPhraseToUpdate] = useState<PhraseUpdateResult>(null);
+  const [checkRows, setCheckRows] = useState<boolean>(false);
 
   /**
    * Set edit
@@ -255,6 +258,25 @@ export const useTranslate = ({
       setAddTags(tags.length !== 0);
     })();
   }, [edit, setNativeLang, setLearnLang, setTags, setAddTags, restart, setText]);
+
+  /**
+   * Set rows
+   */
+  useEffect(() => {
+    const { current } = textareaRef;
+    if (!current || !text) {
+      return;
+    }
+    const { scrollHeight, clientHeight } = current;
+
+    const checkSize = () => {
+      if (scrollHeight > clientHeight) {
+        setRows(rows + 1);
+        setCheckRows(!checkRows);
+      }
+    };
+    checkSize();
+  }, [rows, textareaRef, checkRows, text]);
 
   /**
    * Tranlate
@@ -303,12 +325,10 @@ export const useTranslate = ({
 
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const {
-      target: { value, scrollHeight, clientHeight },
+      target: { value },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } = e as any;
-    if (scrollHeight > clientHeight) {
-      setRows(rows + 1);
-    }
+
     if (undo) {
       setUndo(false);
     }

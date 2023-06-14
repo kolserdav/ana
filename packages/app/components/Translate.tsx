@@ -140,6 +140,7 @@ function Translate({
     setUndo,
     oldText,
     setOldText,
+    textareaRef,
   });
 
   const {

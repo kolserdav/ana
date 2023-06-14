@@ -142,7 +142,7 @@ const useSpeechSynth = ({
    * Speech text
    */
   useEffect(() => {
-    if (!lang) {
+    if (!lang || !textToSpeech) {
       return;
     }
 
@@ -154,9 +154,7 @@ const useSpeechSynth = ({
         setTextToSpeech(undefined);
         return;
       }
-      if (!textToSpeech) {
-        return;
-      }
+
       setAndroidSpeaking(true);
       androidTextToSpeech.speak(textToSpeech);
     } else {

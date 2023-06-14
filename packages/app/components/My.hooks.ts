@@ -769,14 +769,12 @@ export const usePlayOne = ({
   });
 
   const clickForPlayWrapper = (data: PlayOnePhrase) => () => {
-    let speech: PlayOnePhrase | null = data;
     let _ticker = true;
     if (forSpeech?.text === data.text) {
-      speech = null;
       _ticker = false;
     }
     setTicker(_ticker);
-    setForSpeech(speech);
+    setForSpeech(data);
   };
 
   /**
