@@ -46,7 +46,7 @@ const IconButton = forwardRef<
 
   // eslint-disable-next-line react/jsx-props-no-spreading
   return (
-    <>
+    <div className={s.wrapper}>
       <div ref={containerRef}>
         <button
           onClick={onClick}
@@ -66,7 +66,7 @@ const IconButton = forwardRef<
       >
         {title}
       </Tooltip>
-    </>
+    </div>
   );
 });
 

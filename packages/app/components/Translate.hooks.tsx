@@ -3,14 +3,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
-import { cleanPath, log, shortenString } from '../utils/lib';
+import { cleanPath, copyText, log, shortenString } from '../utils/lib';
 import {
   FOCUS_TEXTAREA_TIMEOUT,
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
   PHRASE_MAX_LENGTH,
   Pages,
-  TEXTAREA_ROWS,
+  TEXTAREA_MAX_ROWS,
+  TEXTAREA_ROWS_DEFAULT,
   TRANSLATE_DELAY,
 } from '../utils/constants';
 import {
@@ -219,7 +220,7 @@ export const useTranslate = ({
   const router = useRouter();
 
   const [reTranslate, setRetranslate] = useState<string>('');
-  const [rows, setRows] = useState<number>(TEXTAREA_ROWS);
+  const [rows, setRows] = useState<number>(TEXTAREA_ROWS_DEFAULT);
   const [edit, setEdit] = useState<string | null>(null);
   const [restart, setRestart] = useState<boolean>(false);
   const [phraseToUpdate, setPhraseToUpdate] = useState<PhraseUpdateResult>(null);
@@ -270,7 +271,7 @@ export const useTranslate = ({
     const { scrollHeight, clientHeight } = current;
 
     const checkSize = () => {
-      if (scrollHeight > clientHeight) {
+      if (scrollHeight > clientHeight && rows <= TEXTAREA_MAX_ROWS) {
         setRows(rows + 1);
         setCheckRows(!checkRows);
       }
@@ -342,7 +343,7 @@ export const useTranslate = ({
   const cleanText = () => {
     setOldText(text);
     setText('');
-    setRows(TEXTAREA_ROWS);
+    setRows(TEXTAREA_ROWS_DEFAULT);
     setTranslate('');
     setRetranslate('');
     setAddTags(false);
@@ -829,4 +830,18 @@ export const useRedirect = () => {
   };
 
   return { loginRedirect };
+};
+
+export const useCopyText = ({ locale }: { locale: Locale['app']['common']['copyText'] }) => {
+  const onClickCopyTextWrapper = (text: string) => () => {
+    copyText(text)
+      .then(() => {
+        log('info', locale.textCopied, text, true);
+      })
+      .catch(() => {
+        log('error', locale.copyTextError, text, true);
+      });
+  };
+
+  return { onClickCopyTextWrapper };
 };

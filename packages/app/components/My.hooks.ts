@@ -553,8 +553,22 @@ export const useMultiSelect = ({ phrases }: { phrases: PhraseFindManyResult }) =
     setSelected([]);
   };
 
+  const _selected = useMemo(
+    () =>
+      selected
+        .map((item) => {
+          const ph = phrases.find((_item) => _item.id === item);
+          if (ph) {
+            return item;
+          }
+          return undefined;
+        })
+        .filter((item) => item !== undefined),
+    [selected, phrases]
+  );
+
   return {
-    selected,
+    selected: _selected,
     onChangeSelectedWrapper,
     selectedRef,
     selectedFixed,

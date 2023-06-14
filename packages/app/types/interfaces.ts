@@ -384,6 +384,11 @@ export interface Locale {
       insertedLink: string;
       sendMail: string;
       emailIsSend: string;
+      copyText: {
+        title: string;
+        textCopied: string;
+        copyTextError: string;
+      };
     };
     translate: {
       title: string;

@@ -108,6 +108,11 @@ const lang: Locale = {
       insertedLink: '...Link replaced...',
       sendMail: 'Send mail',
       emailIsSend: 'If the email does not arrive for a long time, then check the Spam folder',
+      copyText: {
+        title: 'Copy text',
+        textCopied: 'Text copied',
+        copyTextError: 'Error copying text',
+      },
     },
     translate: {
       title: 'Creation of sentences',

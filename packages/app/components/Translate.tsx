@@ -4,6 +4,7 @@ import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
 import {
+  useCopyText,
   useLanguages,
   useRedirect,
   useSavePhrase,
@@ -34,6 +35,7 @@ import UndoIcon from './icons/Undo';
 import { PHRASE_MAX_LENGTH } from '../utils/constants';
 import Spoiler from './ui/Spoiler';
 import PlaySoundButton from './PlaySoundButton';
+import CopyIcon from './icons/Copy';
 
 function Translate({
   theme,
@@ -49,9 +51,11 @@ function Translate({
   voiceNotFound,
   playSound,
   changeLinkTo,
+  copyText,
 }: {
   theme: Theme;
   locale: Locale['app']['translate'];
+  copyText: Locale['app']['common']['copyText'];
   user: UserCleanResult | null;
   save: string;
   showHelp: string;
@@ -177,6 +181,8 @@ function Translate({
 
   const { loginRedirect } = useRedirect();
 
+  const { onClickCopyTextWrapper } = useCopyText({ locale: copyText });
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
@@ -239,8 +245,18 @@ function Translate({
               {undo ? <UndoIcon color={theme.text} /> : <CloseIcon color={theme.text} />}
             </IconButton>
           </div>
-          {allowRecogn && (
-            <div className={s.micro_button} title={locale.startRecognize}>
+
+          <div className={s.micro_button} title={locale.startRecognize}>
+            <div className={clsx(s.copy_button, allowRecogn ? s.copy_button__allow_recogn : '')}>
+              <IconButton
+                title={copyText.title}
+                theme={theme}
+                onClick={onClickCopyTextWrapper(text)}
+              >
+                <CopyIcon color={theme.text} />
+              </IconButton>
+            </div>
+            {allowRecogn && (
               <IconButton
                 title={locale.startRecognize}
                 theme={theme}
@@ -253,15 +269,28 @@ function Translate({
               >
                 <MicrophoneIcon color={theme.text} />
               </IconButton>
+            )}
+          </div>
+        </div>
+        <div className={s.trans_container}>
+          <div style={{ color: theme.text }} className={s.native_res}>
+            <Typography variant="p" theme={theme}>
+              {translate}
+            </Typography>
+          </div>
+          {translate && (
+            <div className={s.translate_actions}>
+              <IconButton
+                title={copyText.title}
+                theme={theme}
+                onClick={onClickCopyTextWrapper(translate)}
+              >
+                <CopyIcon color={theme.text} withoutScale />
+              </IconButton>
             </div>
           )}
         </div>
-        <div style={{ color: theme.text }} className={s.native_res}>
-          <Typography variant="p" theme={theme}>
-            {translate}
-          </Typography>
-        </div>
-        <div className={s.retrans_container}>
+        <div className={s.trans_container}>
           <div
             role="button"
             tabIndex={-1}
@@ -276,7 +305,7 @@ function Translate({
             </Typography>
           </div>
           {reTranslate && (
-            <div className={s.sound_button}>
+            <div className={s.translate_actions}>
               <PlaySoundButton
                 theme={theme}
                 title={playSound}
@@ -285,6 +314,13 @@ function Translate({
                 voiceNotFound={voiceNotFound}
                 changeLinkTo={changeLinkTo}
               />
+              <IconButton
+                title={copyText.title}
+                theme={theme}
+                onClick={onClickCopyTextWrapper(reTranslate)}
+              >
+                <CopyIcon color={theme.text} withoutScale />
+              </IconButton>
             </div>
           )}
         </div>

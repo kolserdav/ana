@@ -70,8 +70,8 @@ export const LOAD_PAGE_DURATION = 900;
 export const LABEL_TRANSITION = '0.2s';
 export const PROJECT_TITLE_MAX = 255;
 export const IMAGE_PREVIEW_WIDTH = 140;
-export const TEXTAREA_ROWS_DEFAULT = 3;
-export const TEXTAREA_MAX_ROWS = 8;
+export const TEXTAREA_ROWS_DEFAULT = 5;
+export const TEXTAREA_MAX_ROWS = 12;
 export const FONT_SUBSETS: (
   | 'cyrillic'
   | 'latin'
@@ -93,7 +93,6 @@ export const HTML_EDITOR_HEIGHT = 300;
 export const MOBILE_WIDTH = 760;
 
 export const TRANSLATE_DELAY = 1000;
-export const TEXTAREA_ROWS = 4;
 export const ORDER_BY_DEFAULT: OrderBy = 'asc';
 export const TAKE_PHRASES_DEFAULT = 20;
 export const LEARN_LANG_DEFAULT = 'en';

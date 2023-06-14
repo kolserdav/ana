@@ -174,3 +174,5 @@ export const shortenString = (str: string, len: number) => {
   }
   return res;
 };
+
+export const copyText = (text: string) => navigator.clipboard.writeText(text);

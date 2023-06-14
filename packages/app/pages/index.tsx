@@ -47,6 +47,7 @@ export default function TranslatePage({
           cancel={localeCommon.cancel}
           playSound={localeCommon.playSound}
           changeLinkTo={localeCommon.insertedLink}
+          copyText={localeCommon.copyText}
         />
       </main>
     </>

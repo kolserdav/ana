@@ -132,6 +132,7 @@ function AppBar({
               </div>
             </Link>
           )}
+          <Hr theme={theme} />
           <div className={clsx(s.menu__item)}>
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
@@ -156,27 +157,6 @@ function AppBar({
             </Link>
           )}
           <Hr theme={theme} />
-          {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
-            <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
-              <div className={clsx(s.menu__item, s.active)}>
-                <div style={{ color: theme.text }}>{locale.login}</div>
-              </div>
-            </Link>
-          )}
-          {user && (
-            <div
-              role="button"
-              onKeyDown={onKeyDownOpenLogoutDialog}
-              tabIndex={-1}
-              onClick={onClickOpenLogoutDialog}
-              className={clsx(l.wrapper, l.full__width, l.without__hover)}
-            >
-              <div className={clsx(s.menu__item, s.active)}>
-                <div style={{ color: theme.text }}>{locale.logout}</div>
-              </div>
-            </div>
-          )}
-
           <div className={s.bottom}>
             {!checkRouterPath(router.asPath, [Pages.about]) && (
               <Link withoutHover fullWidth theme={theme} href={Pages.about}>
@@ -184,6 +164,26 @@ function AppBar({
                   <div style={{ color: theme.text }}>{locale.about}</div>
                 </div>
               </Link>
+            )}
+            {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
+              <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
+                <div className={clsx(s.menu__item, s.active)}>
+                  <div style={{ color: theme.text }}>{locale.login}</div>
+                </div>
+              </Link>
+            )}
+            {user && (
+              <div
+                role="button"
+                onKeyDown={onKeyDownOpenLogoutDialog}
+                tabIndex={-1}
+                onClick={onClickOpenLogoutDialog}
+                className={clsx(l.wrapper, l.full__width, l.without__hover)}
+              >
+                <div className={clsx(s.menu__item, s.active)}>
+                  <div style={{ color: theme.text }}>{locale.logout}</div>
+                </div>
+              </div>
             )}
             {android && (
               <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">

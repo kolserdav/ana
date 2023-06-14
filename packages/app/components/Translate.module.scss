@@ -47,7 +47,7 @@
       text-align: center;
     }
 
-    .sound_button {
+    .translate_actions {
       margin-left: 1rem;
       display: flex;
       align-items: center;
@@ -64,10 +64,21 @@
         right: $textare-button-indent;
       }
 
+      .copy_button {
+        position: relative;
+        transform: scale(0.8);
+
+        &.copy_button__allow_recogn {
+          margin-bottom: 1rem;
+        }
+      }
+
       .micro_button {
         position: absolute;
-        bottom: calc($textare-button-indent + 1rem);
+        bottom: calc($textare-button-indent + 1.5rem);
         right: $textare-button-indent;
+        display: flex;
+        flex-direction: column;
       }
     }
 
@@ -95,7 +106,7 @@
       }
     }
 
-    .retrans_container {
+    .trans_container {
       display: flex;
       flex-direction: row;
 

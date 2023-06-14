@@ -107,6 +107,11 @@ const lang: Locale = {
       insertedLink: '...с...',
       sendMail: 'Отправить письмо',
       emailIsSend: 'Если письмо не приходит длительное время, то проверьте папку "Спам"',
+      copyText: {
+        title: 'Скопировать текст',
+        textCopied: 'Текст скопирован',
+        copyTextError: 'Ошибка при копировании текста',
+      },
     },
     translate: {
       title: 'Составление предложений',
