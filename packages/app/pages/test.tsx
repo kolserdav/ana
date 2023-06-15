@@ -10,12 +10,12 @@ import Head from '../components/Head';
 
 const request = new Request();
 
-interface EmployerPageProps extends AppProps {
+interface PageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
   page: PageFull;
 }
 
-export default function TestPage({ app: { user, theme }, localeAppBar, page }: EmployerPageProps) {
+export default function TestPage({ app: { user, theme }, localeAppBar, page }: PageProps) {
   return (
     <>
       <Head title={page.title} description={page.description} keywords={page.keywords} />
@@ -29,7 +29,7 @@ export default function TestPage({ app: { user, theme }, localeAppBar, page }: E
 
 export async function getStaticProps({
   locale,
-}: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
+}: GetStaticPropsContext): Promise<{ props: Omit<PageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const page = await request.pageFindMany({
     where: {

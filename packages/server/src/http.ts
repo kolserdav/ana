@@ -36,6 +36,7 @@ import phraseDistinct from './api/v1/phrase/distinct';
 import phraseDeleteMany from './api/v1/phrase/deleteMany';
 import sendConfirmEmail from './api/v1/user/send-confirm-email';
 import support from './api/v1/user/support';
+import getStatistics from './api/v1/user/get-statistics';
 
 const prisma = new PrismaClient();
 
@@ -81,6 +82,7 @@ process.on('unhandledRejection', (err: Error) => {
       Api.deletePhraseDeleteMany,
       Api.postSendConfirmEmail,
       Api.postSupport,
+      Api.getStatistics,
     ],
     checkTokenMiddleware
   );
@@ -109,7 +111,13 @@ process.on('unhandledRejection', (err: Error) => {
   );
 
   await fastify.use(
-    [Api.putUserUpdate, Api.deleteUserDelete, Api.postSendConfirmEmail, Api.postSupport],
+    [
+      Api.putUserUpdate,
+      Api.deleteUserDelete,
+      Api.postSendConfirmEmail,
+      Api.postSupport,
+      Api.getStatistics,
+    ],
     checkAccessMiddlewareWrapper(prisma, {
       model: 'User',
       bodyField: 'id',
@@ -160,6 +168,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.delete(Api.deletePhraseDeleteMany, phraseDeleteMany);
   fastify.post(Api.postSendConfirmEmail, sendConfirmEmail);
   fastify.post(Api.postSupport, support);
+  fastify.get(Api.getStatistics, getStatistics);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

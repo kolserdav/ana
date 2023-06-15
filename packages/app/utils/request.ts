@@ -55,6 +55,8 @@ import {
   SendConfirmEmailResult,
   SupportBody,
   SupportResult,
+  GetStatisticsQuery,
+  GetStatisticsResult,
 } from '../types/interfaces';
 import { SERVER } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -329,6 +331,16 @@ class Request {
       url: Api.putTag,
       method: 'PUT',
       body,
+    });
+  }
+
+  public async getStatistics({
+    userId,
+    gt,
+  }: GetStatisticsQuery): Promise<Result<GetStatisticsResult>> {
+    return this.send({
+      url: `${Api.getStatistics}?userId=${userId}&gt=${gt}`,
+      method: 'GET',
     });
   }
 

@@ -29,7 +29,6 @@ import { DateFilter } from '../types';
 import {
   changeLinks,
   getAnimationDuration,
-  getGTDate,
   getPlayButtonFromContainer,
   getPlayText,
   scrollTo,
@@ -61,7 +60,7 @@ export const usePhrases = ({
   locale: Locale['app']['my'];
   tagsIsSet: boolean;
   strongTags: boolean;
-  gt: string;
+  gt: string | undefined;
   learnLang: string | undefined;
 }) => {
   const router = useRouter();
@@ -118,7 +117,13 @@ export const usePhrases = ({
    */
   useEffect(() => {
     const _search = search?.trim();
-    if (!orderBy || !tagsIsSet || (_search && _search.length < SEARCH_MIN_LENGTH) || !learnLang) {
+    if (
+      !orderBy ||
+      !tagsIsSet ||
+      (_search && _search.length < SEARCH_MIN_LENGTH) ||
+      !learnLang ||
+      !gt
+    ) {
       return;
     }
     (async () => {
@@ -430,49 +435,6 @@ export const useTags = () => {
   };
 };
 
-export const useFilterByDate = ({
-  setSkip,
-}: {
-  setSkip: React.Dispatch<React.SetStateAction<number>>;
-}) => {
-  const [date, setDate] = useState<DateFilter>();
-  const [gt, setGT] = useState<string>('');
-
-  const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {
-      target: { value },
-    } = e;
-    setDate(value as DateFilter);
-    setLocalStorage(LocalStorageName.FILTER_BY_DATE, value as DateFilter);
-    setSkip(0);
-  };
-
-  /**
-   * Set date
-   */
-  useEffect(() => {
-    const savedDate = getLocalStorage(LocalStorageName.FILTER_BY_DATE);
-    setDate(savedDate || DATE_FILTER_ALL);
-  }, []);
-
-  /**
-   * Set lt
-   */
-  useEffect(() => {
-    if (!date) {
-      return;
-    }
-    setGT(getGTDate(date));
-  }, [date]);
-
-  const resetFilterByDate = () => {
-    setDate(DATE_FILTER_ALL);
-    setLocalStorage(LocalStorageName.FILTER_BY_DATE, DATE_FILTER_ALL);
-  };
-
-  return { gt, onChangeDateFilter, date, resetFilterByDate };
-};
-
 export const useLangFilter = ({
   setSkip,
 }: {
@@ -762,9 +724,11 @@ export interface PlayOnePhrase {
 export const usePlayOne = ({
   voiceNotFound,
   onStopPlayItem,
+  changeLinkTo,
 }: {
   voiceNotFound: string;
   onStopPlayItem: () => void;
+  changeLinkTo: string;
 }) => {
   const [forSpeech, setForSpeech] = useState<PlayOnePhrase | null>(null);
   const [ticker, setTicker] = useState<boolean>(false);
@@ -780,6 +744,7 @@ export const usePlayOne = ({
     voiceNotFound,
     lang: forSpeech?.lang || LEARN_LANG_DEFAULT,
     onStop: onStopPlayOne,
+    changeLinkTo,
   });
 
   const clickForPlayWrapper = (data: PlayOnePhrase) => () => {

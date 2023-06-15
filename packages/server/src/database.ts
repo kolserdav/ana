@@ -9,10 +9,26 @@ import {
   ServerMessage,
   RestoreLink,
   OnlineStatistic,
+  PrismaClient,
 } from '@prisma/client';
 import { Result } from './types/interfaces';
 
 abstract class Database {
+  public abstract count<T>(
+    model: keyof PrismaClient,
+    args: Prisma.SelectSubset<T, any>
+  ): Promise<Result<number>>;
+
+  public abstract phraseGroupBy<T extends Prisma.PhraseGroupByArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PhraseGroupByArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Phrase | null>,
+      Promise<Result<Prisma.GetPhraseGroupByPayload<T> | null>>
+    >
+  >;
+
   public abstract userFindFirst<T extends Prisma.UserFindFirstArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>
   ): Promise<

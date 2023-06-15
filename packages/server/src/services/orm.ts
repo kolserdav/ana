@@ -19,6 +19,14 @@ export class ORM extends Service implements Database {
     }
   }
 
+  public $queryRaw<T = unknown>(query: string, ...values: any[]) {
+    return this.runFromWorker({
+      args: query as any,
+      model: values as any,
+      command: '$queryRaw',
+    });
+  }
+
   public phraseFindMany: Database['phraseFindMany'] = async (args) => {
     return this.runFromWorker({
       args,
@@ -219,14 +227,27 @@ export class ORM extends Service implements Database {
     });
   };
 
+  /**
+   *
+   * @param model [`'phrase'`]
+   * @param args [`PhraseCountArgs`]
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public count<T>(model: keyof PrismaClient, args: Prisma.SelectSubset<T, any>) {
+  count: Database['count'] = <T>(model: keyof PrismaClient, args: Prisma.SelectSubset<T, any>) => {
     return this.runFromWorker({
       args,
       model,
       command: 'count',
     });
-  }
+  };
+
+  phraseGroupBy: Database['phraseGroupBy'] = (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'groupBy',
+    });
+  };
 
   public onlineStatisticCreate: Database['onlineStatisticCreate'] = async (args) => {
     return this.runFromWorker({
@@ -287,6 +308,10 @@ export class ORM extends Service implements Database {
       if (command === 'findMany') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         count = await (prisma as any)[model].count({ where });
+      }
+      if (command === '$queryRaw') {
+        result = await prisma.$queryRawUnsafe(args as any, ...model);
+        return;
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       result = await (prisma as any)[model][command](args);

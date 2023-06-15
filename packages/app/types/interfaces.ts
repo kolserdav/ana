@@ -36,6 +36,7 @@ export enum Api {
   deletePhraseDeleteMany = '/v1/phrase-delete-many',
   postSendConfirmEmail = '/v1/send-confirm-email',
   postSupport = '/v1/support',
+  getStatistics = '/v1/get-statistics',
 }
 
 // eslint-disable-next-line no-shadow
@@ -94,9 +95,11 @@ export interface RequestContext {
   timeout: number;
 }
 
+export type PrismaCommand = Prisma.PrismaAction | 'groupBy' | '$queryRaw';
+
 export interface DBCommandProps {
   model: keyof PrismaClient;
-  command: Prisma.PrismaAction;
+  command: PrismaCommand;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: Prisma.SelectSubset<any, any>;
 }
@@ -279,6 +282,15 @@ export interface PhraseFindManyQuery {
 }
 export type PhraseFindManyResult = PhraseFull[];
 
+export interface GetStatisticsQuery {
+  userId: string;
+  gt: string;
+}
+export type GetStatisticsResult = {
+  phrasesCount: number;
+  user: UserCleanResult;
+};
+
 export interface ConfirmEmailBody {
   email: string;
   key: string;
@@ -365,6 +377,7 @@ export interface Locale {
       translate: string;
       myDictionary: string;
       openMenu: string;
+      statistics: string;
       closeMenu: string;
       changeInterfaceLang: string;
       about: string;
@@ -411,6 +424,15 @@ export interface Locale {
         title: string;
         textCopied: string;
         copyTextError: string;
+      };
+      dateFilter: {
+        forDay: string;
+        forWeek: string;
+        forMonth: string;
+        forThreeMoths: string;
+        forSixMonths: string;
+        forYear: string;
+        forAllTime: string;
       };
     };
     translate: {
@@ -459,13 +481,6 @@ export interface Locale {
        */
       pagination: string;
       minimalSearchLenght: string;
-      forDay: string;
-      forWeek: string;
-      forMonth: string;
-      forThreeMoths: string;
-      forSixMonths: string;
-      forYear: string;
-      forAllTime: string;
       allLangs: string;
       selectAll: string;
       unselectAll: string;
@@ -509,6 +524,9 @@ export interface Locale {
       changePassword: string;
       emailIsConfirmed: string;
       sendConfirmEmail: string;
+    };
+    statistics: {
+      title: string;
     };
   };
 }

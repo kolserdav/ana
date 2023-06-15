@@ -40,6 +40,8 @@ export enum Pages {
   contacts = '/contacts',
   // eslint-disable-next-line no-unused-vars
   settings = '/settings',
+  // eslint-disable-next-line no-unused-vars
+  statistics = '/statistics',
 }
 
 const now = new Date();

@@ -5,8 +5,8 @@ function Head({
   noIndex,
 }: {
   title: string;
-  description: string;
-  keywords: string;
+  description?: string;
+  keywords?: string;
   noIndex?: boolean;
 }) {
   return (
@@ -27,6 +27,8 @@ function Head({
 
 Head.defaultProps = {
   noIndex: false,
+  description: undefined,
+  keywords: undefined,
 };
 
 export default Head;

@@ -5,7 +5,6 @@ import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, LocaleVars, UNDEFINED_QUERY_STRING, UserCleanResult } from '../types/interfaces';
 import {
-  useFilterByDate,
   useLangFilter,
   useMultiSelect,
   usePhraseDelete,
@@ -41,13 +40,13 @@ import Input from './ui/Input';
 import SearchIcon from './icons/Search';
 import Select from './ui/Select';
 import Spoiler from './ui/Spoiler';
-import PlaySoundButton from './ui/PlaySoundButton';
 import PlayIcon from './icons/Play';
 import PauseIcon from './icons/Pause';
 import StopIcon from './icons/Stop';
 import IconCheckbox from './ui/IconCheckbox';
-import useSpeechSynth from '../hooks/useSpeechSynth';
 import SpeakIcon from './ui/SpeakIcon';
+import SelectDateFilter from './ui/SelectDateFilter';
+import useFilterByDate from '../hooks/useFilterByDate';
 
 function My({
   locale,
@@ -59,8 +58,10 @@ function My({
   playSound,
   voiceNotFound,
   changeLinkTo,
+  dateFilter,
 }: {
   locale: Locale['app']['my'];
+  dateFilter: Locale['app']['common']['dateFilter'];
   theme: Theme;
   edit: string;
   _delete: string;
@@ -90,7 +91,17 @@ function My({
     onClickFilterTags,
   } = useTags();
 
-  const { onChangeDateFilter, gt, date, resetFilterByDate } = useFilterByDate({ setSkip });
+  const {
+    onChangeDateFilter: _onChangeDateFilter,
+    gt,
+    date,
+    resetFilterByDate,
+  } = useFilterByDate({ withSave: true });
+
+  const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    _onChangeDateFilter(e);
+    setSkip(0);
+  };
 
   const { langs, langFilter, onChangeLangsFilter, resetLangFilter } = useLangFilter({ setSkip });
 
@@ -183,6 +194,7 @@ function My({
   const { volumeIcon, clickForPlayWrapper, forSpeech, ticker } = usePlayOne({
     voiceNotFound,
     onStopPlayItem,
+    changeLinkTo,
   });
 
   return (
@@ -193,15 +205,12 @@ function My({
         </Typography>
         <div className={s.global_filters}>
           <div className={s.global_filters__item}>
-            <Select onChange={onChangeDateFilter} value={date} theme={theme}>
-              <option value="all-time">{locale.forAllTime}</option>
-              <option value="day">{locale.forDay}</option>
-              <option value="week">{locale.forWeek}</option>
-              <option value="month">{locale.forMonth}</option>
-              <option value="three-months">{locale.forThreeMoths}</option>
-              <option value="six-months">{locale.forSixMonths}</option>
-              <option value="year">{locale.forYear}</option>
-            </Select>
+            <SelectDateFilter
+              onChange={onChangeDateFilter}
+              locale={dateFilter}
+              date={date}
+              theme={theme}
+            />
           </div>
           {langs.length > 1 && (
             <div className={s.global_filters__item}>

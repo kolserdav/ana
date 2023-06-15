@@ -86,6 +86,7 @@ const lang: Locale = {
       about: 'About us',
       closeApp: 'Close app',
       settings: 'Settings',
+      statistics: 'Statistics',
       logoutDesc:
         "If you log out of your account, then you won't be able to access your saved tags and phrases, and you won't be able to create new ones",
       yes: 'Yes',
@@ -128,6 +129,15 @@ const lang: Locale = {
         title: 'Copy text',
         textCopied: 'Text copied',
         copyTextError: 'Error copying text',
+      },
+      dateFilter: {
+        forDay: 'per day',
+        forWeek: 'for the week',
+        forMonth: 'per month',
+        forThreeMoths: 'for three months',
+        forSixMonths: 'half a year',
+        forYear: 'for the year',
+        forAllTime: 'for all time',
       },
     },
     translate: {
@@ -173,13 +183,6 @@ const lang: Locale = {
       emptyPhrases: 'No phrases found for the specified filter',
       pagination: `Showing: ${LocaleVars.show} of ${LocaleVars.all}`,
       minimalSearchLenght: `Minimum ${SEARCH_MIN_LENGTH} character per word`,
-      forDay: 'per day',
-      forWeek: 'for the week',
-      forMonth: 'per month',
-      forThreeMoths: 'for three months',
-      forSixMonths: 'half a year',
-      forYear: 'for the year',
-      forAllTime: 'for all time',
       allLangs: 'all languages',
       selectAll: 'Select All',
       unselectAll: 'Unselect all',
@@ -222,6 +225,9 @@ const lang: Locale = {
       changePassword: 'Change password',
       emailIsConfirmed: 'Mail confirmed',
       sendConfirmEmail: 'Send confirmation email',
+    },
+    statistics: {
+      title: 'Statistics',
     },
   },
 };

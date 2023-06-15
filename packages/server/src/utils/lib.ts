@@ -17,6 +17,7 @@ import {
   EMAIL_QS,
   KEY_QS,
   PAGE_RESTORE_PASSWORD_CALLBACK,
+  PrismaCommand,
 } from '../types/interfaces';
 import { APP_URL, CLOUD_PATH, IS_DEV, LOG_LEVEL } from './constants';
 
@@ -84,10 +85,9 @@ export const getPseudoHeaders = ({ lang }: { lang: LocaleValue }) => {
   return headers;
 };
 
-export const checkIsMany = (command: Prisma.PrismaAction) =>
-  /[a-zA-Z]+Many$/.test(command) ? [] : null;
+export const checkIsMany = (command: PrismaCommand) => (/[a-zA-Z]+Many$/.test(command) ? [] : null);
 
-export const checkIsFind = (command: Prisma.PrismaAction) => /^find/.test(command);
+export const checkIsFind = (command: PrismaCommand) => /^find/.test(command);
 
 export const getHttpCode = (status: Status) => {
   return status === 'warn' ? 404 : 500;

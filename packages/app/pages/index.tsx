@@ -10,7 +10,7 @@ import Translate from '../components/Translate';
 
 const request = new Request();
 
-interface EmployerPageProps extends AppProps {
+interface PageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
   localeCommon: Locale['app']['common'];
   localeTranslate: Locale['app']['translate'];
@@ -23,7 +23,7 @@ export default function TranslatePage({
   page,
   localeTranslate,
   localeCommon,
-}: EmployerPageProps) {
+}: PageProps) {
   return (
     <>
       <Head>
@@ -55,7 +55,7 @@ export default function TranslatePage({
 
 export async function getStaticProps({
   locale,
-}: GetStaticPropsContext): Promise<{ props: Omit<EmployerPageProps, 'app'> }> {
+}: GetStaticPropsContext): Promise<{ props: Omit<PageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const localeTranslate = await request.getLocale({ field: 'translate', locale });
   const localeCommon = await request.getLocale({ field: 'common', locale });
