@@ -228,6 +228,38 @@ export class ORM extends Service implements Database {
     });
   }
 
+  public onlineStatisticCreate: Database['onlineStatisticCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'onlineStatistic',
+      command: 'create',
+    });
+  };
+
+  public onlineStatisticUpdate: Database['onlineStatisticUpdate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'onlineStatistic',
+      command: 'update',
+    });
+  };
+
+  public onlineStatisticDelete: Database['onlineStatisticDelete'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'onlineStatistic',
+      command: 'delete',
+    });
+  };
+
+  public onlineStatisticFindMany: Database['onlineStatisticFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'onlineStatistic',
+      command: 'findMany',
+    });
+  };
+
   private createServer() {
     this.listenWorkerMessages<DBCommandProps>(async ({ id, msg }) => {
       const result = await this.run({ ...msg });
@@ -294,7 +326,7 @@ export class ORM extends Service implements Database {
       const { master, handler } = this.listenMasterMessages<Result<any>>(({ id: _id, msg }) => {
         if (id === _id) {
           if (msg.status === this.errorStatus) {
-            log('error', 'Database request failed', { args });
+            log('error', 'Database request failed', { args, model, command });
           }
           master.removeListener('message', handler);
           resolve(msg);

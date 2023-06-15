@@ -20,6 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
       user,
       connectionRefused: locale?.connectionRefused || 'Connection refused',
       connectionReOpened: locale?.connectionReOpened || 'Connection re-established',
+      userLoad,
     });
 
   return (

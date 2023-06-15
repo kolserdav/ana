@@ -60,6 +60,7 @@ export const WS_MESSAGE_COMMENT_SERVER_RELOAD = 'server_reload';
 export const TRANSLATE_SERVICE_UNAVAILABLE_COMMENT = 'translate_unavailable';
 export const WS_MESSAGE_CONN_ID = 'conn_id';
 export const WS_MESSAGE_LOCALE = 'locale';
+export const WS_MESSAGE_USER_ID = 'user_id';
 export const PAGE_RESTORE_PASSWORD_CALLBACK = '/account/restore-callback';
 export const PAGE_CONFIRM_EMAIL = '/account/confirm-email';
 export const EMAIL_QS = 'e';
@@ -105,6 +106,7 @@ export interface WSMessage {
   message: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: string;
+  token?: string;
   forUser?: boolean;
   infinity?: boolean;
 }

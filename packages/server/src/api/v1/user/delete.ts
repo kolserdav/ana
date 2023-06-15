@@ -45,6 +45,7 @@ const userDelete: RequestHandler<{ Body: UserDeleteBody }, Result<UserCleanResul
         },
       },
       ConfirmLink: true,
+      OnlineStatistic: true,
     },
   });
   if (user.status !== 'info' || !user.data) {
@@ -100,6 +101,13 @@ const userDelete: RequestHandler<{ Body: UserDeleteBody }, Result<UserCleanResul
         deleteMany: {
           id: {
             in: user.data.ConfirmLink.map((item) => item.id),
+          },
+        },
+      },
+      OnlineStatistic: {
+        deleteMany: {
+          id: {
+            in: user.data.OnlineStatistic.map((item) => item.id),
           },
         },
       },

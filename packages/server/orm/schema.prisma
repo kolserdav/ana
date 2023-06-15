@@ -45,18 +45,19 @@ model Page {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  name        String?       @db.VarChar(24)
-  email       String        @unique @db.VarChar(255)
-  confirm     Boolean       @default(false)
-  password    String
-  salt        String        @db.VarChar(32)
-  updated     DateTime      @default(now())
-  created     DateTime      @default(now())
-  RestoreLink RestoreLink[]
-  ConfirmLink ConfirmLink[]
-  Phrase      Phrase[]
-  Tag         Tag[]
+  id              String            @id @default(uuid())
+  name            String?           @db.VarChar(24)
+  email           String            @unique @db.VarChar(255)
+  confirm         Boolean           @default(false)
+  password        String
+  salt            String            @db.VarChar(32)
+  updated         DateTime          @default(now())
+  created         DateTime          @default(now())
+  RestoreLink     RestoreLink[]
+  ConfirmLink     ConfirmLink[]
+  Phrase          Phrase[]
+  Tag             Tag[]
+  OnlineStatistic OnlineStatistic[]
 }
 
 model RestoreLink {
@@ -123,5 +124,13 @@ model ServerMessage {
 
 model Online {
   id      String   @id
+  created DateTime @default(now())
+}
+
+model OnlineStatistic {
+  id      String   @id @default(uuid())
+  userId  String
+  User    User     @relation(fields: [userId], references: [id])
+  updated DateTime @default(now())
   created DateTime @default(now())
 }

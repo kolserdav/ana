@@ -4,6 +4,7 @@ import { log } from '../utils/lib';
 import { ORM } from './orm';
 import { CHECK_SERVER_MESSAGES_INTERVAL, WS_PORT } from '../utils/constants';
 import { WSMessage, WS_MESSAGE_COMMENT_SERVER_RELOAD } from '../types/interfaces';
+import { checkToken } from '../utils/auth';
 
 const server = createServer();
 const orm = new ORM();
@@ -13,7 +14,7 @@ const CHECK = '+';
 class WS {
   server = new WebSocketServer({ server });
 
-  sockets: Record<string, { locale: string; socket: WebSocket }> = {};
+  sockets: Record<string, { locale: string; socket: WebSocket; userOnline: string | null }> = {};
 
   notificated: Record<string, Record<string, typeof CHECK>> = {};
 
@@ -28,22 +29,118 @@ class WS {
     this.listenServerMessages();
   }
 
-  public async setSocket(id: string, locale: string, ws: WebSocket) {
+  private async onlineCreate({ id }: { id: string }) {
+    const online = await orm.onlineCreate({
+      data: {
+        id,
+      },
+    });
+    if (!this.sockets[id]) {
+      if (online.status !== 'info' || !online.data) {
+        return;
+      }
+      await orm.onlineDelete({
+        where: {
+          id: online.data.id,
+        },
+      });
+    }
+  }
+
+  private async onlineDelete({ id, userOnline }: { id: string; userOnline: string | null }) {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        await orm.onlineDelete({
+          where: {
+            id,
+          },
+        });
+        if (userOnline) {
+          await orm.onlineStatisticUpdate({
+            where: {
+              id: userOnline,
+            },
+            data: {
+              updated: new Date(),
+            },
+          });
+        }
+        resolve(0);
+      }, 1000);
+    });
+  }
+
+  public async setSocket({
+    id,
+    locale,
+    ws,
+    userOnline,
+  }: {
+    id: string;
+    locale: string;
+    ws: WebSocket;
+    userOnline: string | null;
+  }) {
     if (this.sockets[id]) {
       log('warn', 'Duplicate ws socket', id);
       return;
     }
 
-    await orm.onlineCreate({
-      data: {
-        id,
-      },
-    });
-
     this.sockets[id] = {
       locale,
       socket: ws,
+      userOnline,
     };
+
+    await this.onlineCreate({ id });
+  }
+
+  public async setUserId({
+    id,
+    userId,
+    token,
+  }: {
+    id: string;
+    userId: string;
+    token: string | undefined;
+  }) {
+    if (!token) {
+      return;
+    }
+
+    if (!this.sockets[id]) {
+      log('warn', 'Socket not found in setUserId', { id, userId });
+      return;
+    }
+    if (this.sockets[id]?.userOnline) {
+      log('warn', 'Duplicate ws sockets.userOnline', id);
+      return;
+    }
+
+    if (await checkToken(token)) {
+      return;
+    }
+
+    const userOnline = await orm.onlineStatisticCreate({
+      data: {
+        userId,
+      },
+    });
+
+    if (userOnline.status !== 'info' || !userOnline.data) {
+      return;
+    }
+
+    if (!this.sockets[id]) {
+      log('warn', 'Socket is missing after create online statistic', { id });
+      await orm.onlineStatisticDelete({
+        where: {
+          id: userOnline.data.id,
+        },
+      });
+      return;
+    }
+    this.sockets[id]!.userOnline = userOnline.data.id;
   }
 
   private async deleteServerRebootMessages() {
@@ -74,15 +171,12 @@ class WS {
       return;
     }
 
-    await orm.onlineDelete({
-      where: {
-        id,
-      },
-    });
-
+    const { userOnline } = this.sockets[id]!;
     delete this.sockets[id];
 
     this.deleteNotificated(id);
+
+    await this.onlineDelete({ id, userOnline });
   }
 
   private deleteNotificated(id: string) {

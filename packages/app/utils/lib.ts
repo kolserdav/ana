@@ -126,7 +126,7 @@ export const getWindowDimensions = () => {
   return res;
 };
 
-export const cleanPath = (asPath: string) => asPath.replace(/(\?|#)?.*$/, '');
+export const cleanPath = (asPath: string) => asPath.replace(/(\?|#).*$/, '');
 
 export function getUTCDate(date: Date): Date {
   const dt = new Date(date);

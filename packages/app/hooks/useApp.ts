@@ -12,20 +12,23 @@ import {
   WS_MESSAGE_COMMENT_SERVER_RELOAD,
   WS_MESSAGE_CONN_ID,
   WS_MESSAGE_LOCALE,
+  WS_MESSAGE_USER_ID,
   parseMessage,
 } from '../types/interfaces';
 import storeTouchEvent, { changeTouchEvent } from '../store/touchEvent';
-import { CookieName, setCookie } from '../utils/cookies';
+import { CookieName, getCookie, setCookie } from '../utils/cookies';
 import { WS_ADDRESS } from '../utils/constants';
 import useLoad from './useLoad';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 export default function useApp({
   user,
+  userLoad,
   connectionReOpened,
   connectionRefused,
 }: {
   user: UserCleanResult | null;
+  userLoad: boolean;
   connectionRefused: string;
   connectionReOpened: string;
 }) {
@@ -55,12 +58,14 @@ export default function useApp({
   }, []);
 
   const ws = useMemo(() => {
-    log('info', 'Creating WS connection', { restart });
+    if (!userLoad) {
+      return null;
+    }
+    log('info', 'Creating WS connection', { restart, userLoad });
     return typeof WebSocket !== 'undefined' ? new WebSocket(WS_ADDRESS) : null;
-  }, [restart]);
+  }, [restart, userLoad]);
 
   const { theme } = useTheme();
-  const loadConnect = typeof restart === 'undefined';
 
   /**
    * Listen server messages
@@ -71,11 +76,10 @@ export default function useApp({
     }
 
     ws.onopen = () => {
-      if (!loadConnect) {
-        if (getLocalStorage(LocalStorageName.SERVER_RELOAD)) {
-          log('info', connectionReOpened, {}, true);
-          setLocalStorage(LocalStorageName.SERVER_RELOAD, false);
-        }
+      log('info', 'Open WS connection', {});
+      if (getLocalStorage(LocalStorageName.SERVER_RELOAD)) {
+        log('info', connectionReOpened, {}, true);
+        setLocalStorage(LocalStorageName.SERVER_RELOAD, false);
       }
 
       ws.send(
@@ -95,12 +99,23 @@ export default function useApp({
       if (!parsed) {
         return;
       }
+      log('info', 'On WS message', parsed);
       const { type, message, data: _data, forUser, infinity } = parsed;
 
       switch (message) {
         case WS_MESSAGE_CONN_ID:
           setLoad(false);
           setConnId(_data);
+          if (user) {
+            ws.send(
+              JSON.stringify({
+                type: 'info',
+                message: WS_MESSAGE_USER_ID,
+                data: user.id,
+                token: getCookie(CookieName._utoken) || '',
+              })
+            );
+          }
           break;
         default:
           log(type, message, _data, forUser, infinity);
@@ -119,10 +134,21 @@ export default function useApp({
         log('warn', connectionRefused, e, true);
       }
       setLoad(true);
-      setRestart(loadConnect ? true : !restart);
+
+      setRestart(restart === undefined ? false : !restart);
+
       setConnId(null);
     };
-  }, [ws, router.locale, loadConnect, restart, setLoad, connectionReOpened, connectionRefused]);
+  }, [
+    ws,
+    router.locale,
+    restart,
+    setLoad,
+    connectionReOpened,
+    connectionRefused,
+    user,
+    router.asPath,
+  ]);
 
   /**
    * Set lang cookie
@@ -159,7 +185,7 @@ export default function useApp({
     }
     const onFocusHandler = () => {
       if (ws.readyState !== 1) {
-        setRestart(loadConnect ? true : !restart);
+        setRestart(restart === undefined ? true : !restart);
       }
     };
     window.addEventListener('focus', onFocusHandler);
@@ -167,7 +193,7 @@ export default function useApp({
     return () => {
       window.removeEventListener('focus', onFocusHandler);
     };
-  }, [loadConnect, restart, ws]);
+  }, [restart, ws]);
 
   /**
    * Touch start handler
@@ -227,7 +253,7 @@ export default function useApp({
     return () => {
       cleanSubs();
     };
-  }, []);
+  }, [setLoad]);
 
   useEffect(() => {
     const touchpadHandler = () => {

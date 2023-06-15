@@ -8,6 +8,7 @@ import {
   Online,
   ServerMessage,
   RestoreLink,
+  OnlineStatistic,
 } from '@prisma/client';
 import { Result } from './types/interfaces';
 
@@ -186,6 +187,46 @@ abstract class Database {
     args: Prisma.SelectSubset<T, Prisma.TagDeleteArgs>
   ): Promise<
     Prisma.CheckSelect<T, Result<Tag | null>, Promise<Result<Prisma.TagGetPayload<T> | null>>>
+  >;
+
+  public abstract onlineStatisticCreate<T extends Prisma.OnlineStatisticCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineStatisticCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<OnlineStatistic | null>,
+      Promise<Result<Prisma.OnlineStatisticGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract onlineStatisticUpdate<T extends Prisma.OnlineStatisticUpdateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineStatisticUpdateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<OnlineStatistic | null>,
+      Promise<Result<Prisma.OnlineStatisticGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract onlineStatisticDelete<T extends Prisma.OnlineStatisticDeleteArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineStatisticDeleteArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<OnlineStatistic | null>,
+      Promise<Result<Prisma.OnlineStatisticGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract onlineStatisticFindMany<T extends Prisma.OnlineStatisticFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineStatisticFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<OnlineStatistic>>,
+      Promise<Result<Array<Prisma.OnlineStatisticGetPayload<T>>>>
+    >
   >;
 }
 
