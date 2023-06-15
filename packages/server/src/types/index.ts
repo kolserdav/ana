@@ -23,7 +23,7 @@ export type EmailType =
   | 'confirm-email'
   | 'account-deleted'
   | 'admin-message'
-  | 'support';
+  | 'admin-support';
 
 export interface SendEmailParams<T extends EmailType> {
   type: T;
@@ -50,7 +50,7 @@ export interface SendEmailParams<T extends EmailType> {
     ? {
         message: string;
       }
-    : T extends 'support'
+    : T extends 'admin-support'
     ? {
         message: string;
         date: string;

@@ -11,6 +11,7 @@ import {
   MENU_TRANSITION,
   LOCALE_NAMES,
   SUPPORT_TEXT_MAX_LENGHT,
+  SUPPORT_SUBJECT_MAX_LENGTH,
 } from '../utils/constants';
 import { checkRouterPath, scrollToTop } from '../utils/lib';
 import ChevronUpIcon from './icons/ChevronUp';
@@ -82,7 +83,8 @@ function AppBar({
     supportText,
     changeSupportText,
     supportTextRows,
-  } = useSupport({ user, setLoad });
+    supportTextError,
+  } = useSupport({ user, setLoad, locale: locale.support });
 
   const linkStyle: React.CSSProperties =
     menuOpen && isMobile
@@ -165,7 +167,7 @@ function AppBar({
               </div>
             </Link>
           )}
-          <Hr theme={theme} />
+          {user && <Hr theme={theme} />}
           <div className={clsx(s.menu__item)}>
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>
             <Switch on={darkTheme} onClick={onClickChangeTheme} theme={theme} />
@@ -294,6 +296,8 @@ function AppBar({
           disabled={load || !user?.confirm}
           name={locale.support.subject}
           fullWidth
+          maxLength={SUPPORT_SUBJECT_MAX_LENGTH}
+          desc={`${supportSubject.length}/${SUPPORT_SUBJECT_MAX_LENGTH}`}
         />
         <Textarea
           placeholder={locale.support.text}
@@ -304,6 +308,7 @@ function AppBar({
           theme={theme}
           disabled={load || !user?.confirm}
           maxLength={SUPPORT_TEXT_MAX_LENGHT}
+          error={supportTextError}
         />
         <div className={p.dialog__actions}>
           <Button className={s.button} onClick={onClickCancelSupport} theme={theme}>
@@ -311,7 +316,9 @@ function AppBar({
           </Button>
           <div className={p.button_margin} />
           <Button
-            disabled={load || !user?.confirm}
+            disabled={
+              load || !user?.confirm || supportText.length === 0 || supportSubjectError !== ''
+            }
             className={s.button}
             onClick={onClickSupport}
             theme={theme}

@@ -41,7 +41,7 @@ import Input from './ui/Input';
 import SearchIcon from './icons/Search';
 import Select from './ui/Select';
 import Spoiler from './ui/Spoiler';
-import PlaySoundButton from './PlaySoundButton';
+import PlaySoundButton from './ui/PlaySoundButton';
 import PlayIcon from './icons/Play';
 import PauseIcon from './icons/Pause';
 import StopIcon from './icons/Stop';

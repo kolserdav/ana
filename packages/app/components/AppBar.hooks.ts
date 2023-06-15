@@ -14,7 +14,12 @@ import {
 import { CookieName, setCookie } from '../utils/cookies';
 import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
 import storeTouchEvent from '../store/touchEvent';
-import { LocaleValue, UserCleanResult } from '../types/interfaces';
+import {
+  Locale,
+  LocaleValue,
+  MINIMAL_SUPPORT_TEXT_LENGTH,
+  UserCleanResult,
+} from '../types/interfaces';
 import storeShowAppBar, { changeShowAppBar } from '../store/showAppBar';
 import { log, shortenString } from '../utils/lib';
 import Request from '../utils/request';
@@ -240,13 +245,16 @@ export const useLanguage = () => {
 export const useSupport = ({
   user,
   setLoad,
+  locale,
 }: {
   user: UserCleanResult | null;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
+  locale: Locale['app']['appBar']['support'];
 }) => {
   const [supportDialog, setSupportDialog] = useState<boolean>(false);
   const [supportSubject, setSupportSubject] = useState<string>('');
   const [supportSubjectError, setSupportSubjectError] = useState<string>('');
+  const [supportTextError, setSupportTextError] = useState<string>('');
   const [supportText, setSupportText] = useState<string>('');
   const [supportTextRows, setSupportTextRows] = useState<number>(TEXTAREA_ROWS_DEFAULT);
 
@@ -260,6 +268,9 @@ export const useSupport = ({
     if (value.length > SUPPORT_TEXT_MAX_LENGHT) {
       _value = shortenString(value, SUPPORT_TEXT_MAX_LENGHT);
     }
+    if (_value.length >= MINIMAL_SUPPORT_TEXT_LENGTH && supportTextError) {
+      setSupportTextError('');
+    }
     setSupportText(_value);
   };
 
@@ -267,11 +278,27 @@ export const useSupport = ({
     const {
       target: { value },
     } = e;
+    if (value && supportSubjectError) {
+      setSupportSubjectError('');
+    }
     setSupportSubject(value);
   };
 
+  const checkFileds = () => {
+    let error = 0;
+    if (!supportSubject) {
+      error = 1;
+      setSupportSubjectError(locale.subjectMustBeNotEmpty);
+    }
+    if (supportText.length < MINIMAL_SUPPORT_TEXT_LENGTH) {
+      error = 1;
+      setSupportTextError(locale.minimalLengthOfTextIs);
+    }
+    return error;
+  };
+
   const onClickSupport = async () => {
-    if (!user) {
+    if (!user || checkFileds()) {
       return;
     }
     setLoad(true);
@@ -279,6 +306,7 @@ export const useSupport = ({
       subject: supportSubject,
       text: supportText,
       userId: user.id,
+      date: new Date().toString(),
     });
     setLoad(false);
     log(res.status, res.message, res, true);
@@ -323,5 +351,6 @@ export const useSupport = ({
     changeSupportText,
     supportText,
     supportTextRows,
+    supportTextError,
   };
 };

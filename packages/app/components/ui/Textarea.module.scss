@@ -16,8 +16,23 @@
     }
   }
 
-  .count_symbols {
-    text-align: right;
-    font-size: small;
+  .info {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    .error {
+      word-wrap: break-word;
+      max-width: 70%;
+    }
+
+    .count_symbols {
+      text-align: right;
+      font-size: small;
+      margin: 0 0 0 auto;
+    }
   }
+
+  
 }

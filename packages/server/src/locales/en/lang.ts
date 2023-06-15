@@ -1,4 +1,9 @@
-import { Locale, LocaleVars, SEARCH_MIN_LENGTH } from '../../types/interfaces';
+import {
+  Locale,
+  LocaleVars,
+  SEARCH_MIN_LENGTH,
+  MINIMAL_SUPPORT_TEXT_LENGTH,
+} from '../../types/interfaces';
 
 const lang: Locale = {
   server: {
@@ -93,6 +98,8 @@ const lang: Locale = {
         warning: 'To write to support, first confirm your mail, to do this, go to',
         subject: 'Email Subject',
         text: 'Ask a question or write a suggestion',
+        subjectMustBeNotEmpty: 'Subject must not be empty',
+        minimalLengthOfTextIs: `Minimum is ${MINIMAL_SUPPORT_TEXT_LENGTH} characters`,
       },
     },
     confirmEmail: {
@@ -109,7 +116,6 @@ const lang: Locale = {
       edit: 'Edit',
       delete: 'Delete',
       cancel: 'Cancel',
-      missingCSRF: 'CSRF Token is missing',
       policyTitle: 'Privacy Policy',
       rulesTitle: 'Service Rules',
       and: 'and',

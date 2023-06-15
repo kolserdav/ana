@@ -52,6 +52,7 @@ export enum LocaleVars {
   count = '%count',
 }
 
+export const MINIMAL_SUPPORT_TEXT_LENGTH = 10;
 export const UNDEFINED_QUERY_STRING = 'undefined';
 export const QUERY_STRING_ARRAY_SPLITTER = ',';
 export type LocaleValue = 'ru' | 'en';
@@ -168,6 +169,7 @@ export interface SupportBody {
   userId: string;
   subject: string;
   text: string;
+  date: string;
 }
 export type SupportResult = UserCleanResult;
 
@@ -377,6 +379,8 @@ export interface Locale {
         warning: string;
         subject: string;
         text: string;
+        subjectMustBeNotEmpty: string;
+        minimalLengthOfTextIs: string;
       };
     };
     confirmEmail: {
@@ -393,7 +397,6 @@ export interface Locale {
       edit: string;
       delete: string;
       cancel: string;
-      missingCSRF: string;
       policyTitle: string;
       rulesTitle: string;
       and: string;

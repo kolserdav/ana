@@ -190,7 +190,6 @@ export const useTranslate = ({
   setText,
   setTranslate,
   connId,
-  missingCSRF,
   setUndo,
   undo,
   setOldText,
@@ -212,7 +211,6 @@ export const useTranslate = ({
   setTags: React.Dispatch<React.SetStateAction<TagFindManyResult>>;
   setAddTags: React.Dispatch<React.SetStateAction<boolean>>;
   connId: string | null;
-  missingCSRF: string;
   setOldText: React.Dispatch<React.SetStateAction<string>>;
   oldText: string;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
@@ -317,7 +315,7 @@ export const useTranslate = ({
       },
       changeLang ? 0 : TRANSLATE_DELAY
     );
-  }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate, connId, missingCSRF]);
+  }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate, connId]);
 
   const saveText = (value: string) => {
     setLocalStorage(LocalStorageName.TEXT, value);
@@ -371,7 +369,6 @@ export const useTranslate = ({
       return;
     }
     if (!connId) {
-      log('warn', missingCSRF, connId, true);
       return;
     }
     const runRetranslate = async (q: string) => {
@@ -397,7 +394,7 @@ export const useTranslate = ({
       setRetranslate(data.translatedText);
     };
     runRetranslate(translate);
-  }, [translate, learnLang, nativeLang, connId, missingCSRF]);
+  }, [translate, learnLang, nativeLang, connId]);
 
   const setRightText = () => {
     setOldText(text);

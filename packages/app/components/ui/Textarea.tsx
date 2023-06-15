@@ -7,6 +7,7 @@ import { ubuntu300 } from '../../fonts/ubuntu';
 interface TextareaProps {
   theme: Theme;
   maxLength?: number;
+  error?: string;
 }
 
 type TextAreaDefaultProps = React.DetailedHTMLProps<
@@ -16,13 +17,14 @@ type TextAreaDefaultProps = React.DetailedHTMLProps<
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextAreaDefaultProps & TextareaProps>(
   (_props, ref) => {
-    const { theme, maxLength, value } = _props;
+    const { theme, maxLength, value, error } = _props;
 
     const props = useMemo(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const propsC: TextAreaDefaultProps & Partial<TextareaProps> = { ..._props } as any;
       delete propsC.theme;
       delete propsC.maxLength;
+      delete propsC.error;
       return propsC;
     }, [_props]);
 
@@ -33,18 +35,29 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaDefaultProps & Textarea
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <textarea
           ref={ref}
-          style={{ background: theme.paper, color: theme.text, borderColor: theme.text }}
+          style={{
+            background: theme.paper,
+            color: theme.text,
+            borderColor: error ? theme.red : theme.text,
+          }}
           {...props}
         />
         {maxLength && (
-          <div
-            className={clsx(s.count_symbols, ubuntu300.className)}
-            style={{
-              color: length === maxLength ? theme.yellow : theme.text,
-              opacity: length === 0 ? 0.5 : 1,
-            }}
-          >
-            {length}/{maxLength}
+          <div className={s.info}>
+            {error && (
+              <div style={{ color: theme.yellow }} className={s.error}>
+                {error}
+              </div>
+            )}
+            <div
+              className={clsx(s.count_symbols, ubuntu300.className)}
+              style={{
+                color: length === maxLength ? theme.yellow : theme.text,
+                opacity: length === 0 ? 0.5 : 1,
+              }}
+            >
+              {length}/{maxLength}
+            </div>
           </div>
         )}
       </div>
@@ -56,6 +69,7 @@ Textarea.displayName = 'Textarea';
 
 Textarea.defaultProps = {
   maxLength: undefined,
+  error: undefined,
 };
 
 export default Textarea;

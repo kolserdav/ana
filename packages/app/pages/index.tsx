@@ -35,7 +35,6 @@ export default function TranslatePage({
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Translate
           voiceNotFound={localeCommon.voiceNotFound}
-          missingCSRF={localeCommon.missingCSRF}
           connId={connId}
           _edit={localeCommon.edit}
           _delete={localeCommon.delete}

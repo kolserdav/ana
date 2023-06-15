@@ -34,7 +34,7 @@ import MicrophoneIcon from './icons/Microphone';
 import UndoIcon from './icons/Undo';
 import { PHRASE_MAX_LENGTH } from '../utils/constants';
 import Spoiler from './ui/Spoiler';
-import PlaySoundButton from './PlaySoundButton';
+import PlaySoundButton from './ui/PlaySoundButton';
 import CopyIcon from './icons/Copy';
 
 function Translate({
@@ -47,7 +47,6 @@ function Translate({
   _delete,
   cancel,
   connId,
-  missingCSRF,
   voiceNotFound,
   playSound,
   changeLinkTo,
@@ -63,7 +62,6 @@ function Translate({
   _delete: string;
   cancel: string;
   connId: string | null;
-  missingCSRF: string;
   voiceNotFound: string;
   playSound: string;
   changeLinkTo: string;
@@ -140,7 +138,6 @@ function Translate({
     translate,
     setTranslate,
     connId,
-    missingCSRF,
     setUndo,
     oldText,
     setOldText,
@@ -253,7 +250,7 @@ function Translate({
                 theme={theme}
                 onClick={onClickCopyTextWrapper(text)}
               >
-                <CopyIcon color={theme.text} />
+                <CopyIcon color={theme.text} withoutScale />
               </IconButton>
             </div>
             {allowRecogn && (

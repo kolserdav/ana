@@ -5,7 +5,7 @@ import { ORM } from '../../../services/orm';
 import { sendEmail } from '../../../utils/email';
 import { cleanUserFields } from '../../../components/lib';
 import getLocale from '../../../utils/getLocale';
-import { SUPPORT_EMAIL } from '../../../utils/constants';
+import { SUPPORT_EMAIL, USER_NAME_DEFAULT } from '../../../utils/constants';
 
 const orm = new ORM();
 
@@ -15,8 +15,8 @@ const support: RequestHandler<{ Body: SupportBody }, Result<SupportResult | null
   reply
 ) => {
   const { lang, id } = parseHeaders(headers);
-  console.log(id);
-  const { subject, text } = body;
+
+  const { subject, text, date } = body;
 
   const locale = getLocale(lang).server;
 
@@ -44,13 +44,13 @@ const support: RequestHandler<{ Body: SupportBody }, Result<SupportResult | null
 
   const sendRes = await sendEmail({
     email: SUPPORT_EMAIL,
-    type: 'support',
+    type: 'admin-support',
     locale: lang,
     subject: subject,
     data: {
       message: text,
-      date: new Date().toISOString(),
-      name: user.data.name || 'Anon',
+      date,
+      name: user.data.name || USER_NAME_DEFAULT,
       email: user.data.email,
     },
   });

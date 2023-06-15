@@ -33,6 +33,7 @@ const Input = forwardRef<
     accept?: string;
     classWrapper?: string;
     defaultValue?: string;
+    maxLength?: number;
   }
 >(
   (
@@ -60,6 +61,7 @@ const Input = forwardRef<
       desc,
       classWrapper,
       defaultValue,
+      maxLength,
     },
     ref
   ) => {
@@ -105,6 +107,7 @@ const Input = forwardRef<
           multiple={multiple}
           value={value}
           title={title}
+          maxLength={maxLength}
           min={min}
           max={max}
           defaultValue={defaultValue}
@@ -182,6 +185,7 @@ Input.defaultProps = {
   classWrapper: undefined,
   defaultValue: undefined,
   value: undefined,
+  maxLength: undefined,
 };
 
 export default Input;

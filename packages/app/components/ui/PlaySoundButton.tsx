@@ -1,6 +1,6 @@
-import { Theme } from '../Theme';
-import useSpeechSynth from '../hooks/useSpeechSynth';
-import SpeakIcon from './ui/SpeakIcon';
+import { Theme } from '../../Theme';
+import useSpeechSynth from '../../hooks/useSpeechSynth';
+import SpeakIcon from './SpeakIcon';
 
 function PlaySoundButton({
   text,

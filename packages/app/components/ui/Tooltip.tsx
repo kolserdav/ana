@@ -87,7 +87,7 @@ function Tooltip({
         rows = 8;
         log('warn', 'Tooltip length is too long', { _length, max: 150 });
       }
-
+      // console.log({ rows, cols });
       const width = cols * pt;
       const height = rows * pt;
       const TOOLTIP_SHIFT = 8;

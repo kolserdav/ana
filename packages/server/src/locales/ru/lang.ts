@@ -1,4 +1,9 @@
-import { Locale, LocaleVars, SEARCH_MIN_LENGTH } from '../../types/interfaces';
+import {
+  Locale,
+  LocaleVars,
+  SEARCH_MIN_LENGTH,
+  MINIMAL_SUPPORT_TEXT_LENGTH,
+} from '../../types/interfaces';
 
 const lang: Locale = {
   server: {
@@ -92,6 +97,8 @@ const lang: Locale = {
         warning: 'Чтобы написать в поддержку сначала подтвердите вашу почту, для этого перейдите в',
         subject: 'Тема письма',
         text: 'Задайте вопрос или напишите предложение',
+        subjectMustBeNotEmpty: 'Тема обращения не должна быть пустой',
+        minimalLengthOfTextIs: `Минимум ${MINIMAL_SUPPORT_TEXT_LENGTH} символов`,
       },
     },
     confirmEmail: {
@@ -108,7 +115,6 @@ const lang: Locale = {
       edit: 'Изменить',
       delete: 'Удалить',
       cancel: 'Отмена',
-      missingCSRF: 'Токен безопасности не найден',
       policyTitle: 'Политика конфиденциальности',
       rulesTitle: 'Правила сервиса',
       and: 'и',
