@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ubuntu300 } from '../../fonts/ubuntu';
 import storeClick from '../../store/click';
 import storeScroll from '../../store/scroll';
@@ -42,17 +42,20 @@ function Tooltip({
 
   const isString = typeof children === 'string';
 
-  const openTooltip = (value: boolean) => {
-    setOpen(value);
-    if (value) {
-      setTimeout(() => {
-        setOpen(false);
-        if (setRemoteOpen) {
-          setRemoteOpen(false);
-        }
-      }, TOOLTIP_DURATION);
-    }
-  };
+  const openTooltip = useCallback(
+    (value: boolean) => {
+      setOpen(value);
+      if (value) {
+        setTimeout(() => {
+          setOpen(false);
+          if (setRemoteOpen) {
+            setRemoteOpen(false);
+          }
+        }, TOOLTIP_DURATION);
+      }
+    },
+    [setRemoteOpen]
+  );
 
   const onClick = useMemo(
     () => () => {
@@ -120,7 +123,7 @@ function Tooltip({
         openTooltip(true);
       }, 110);
     },
-    [children, length, parentRef, isString]
+    [children, length, parentRef, isString, openTooltip]
   );
 
   /**
@@ -151,7 +154,7 @@ function Tooltip({
         onClick();
       }
     }
-  }, [remoteOpen, onClick]);
+  }, [remoteOpen, onClick, openTooltip]);
 
   /**
    * Listen scroll
@@ -163,7 +166,7 @@ function Tooltip({
     return () => {
       cleanSubs();
     };
-  }, []);
+  }, [openTooltip]);
 
   /**
    * Listen click
@@ -197,7 +200,7 @@ function Tooltip({
     return () => {
       cleanSubs();
     };
-  }, [ref, open, closeOnClick, remoteOpen, setRemoteOpen, withoutListenClick]);
+  }, [ref, open, closeOnClick, remoteOpen, setRemoteOpen, withoutListenClick, openTooltip]);
 
   return (
     <div
