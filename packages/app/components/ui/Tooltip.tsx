@@ -7,6 +7,7 @@ import { Theme } from '../../Theme';
 import { checkClickBy, log } from '../../utils/lib';
 import s from './Tooltip.module.scss';
 import Typography from './Typography';
+import { TOOLTIP_DURATION } from '../../utils/constants';
 
 const POSITION_DEFAULT = {
   width: 0,
@@ -40,6 +41,18 @@ function Tooltip({
   const [position, setPosition] = useState<typeof POSITION_DEFAULT>(POSITION_DEFAULT);
 
   const isString = typeof children === 'string';
+
+  const openTooltip = (value: boolean) => {
+    setOpen(value);
+    if (value) {
+      setTimeout(() => {
+        setOpen(false);
+        if (setRemoteOpen) {
+          setRemoteOpen(false);
+        }
+      }, TOOLTIP_DURATION);
+    }
+  };
 
   const onClick = useMemo(
     () => () => {
@@ -104,7 +117,7 @@ function Tooltip({
         height,
       });
       setTimeout(() => {
-        setOpen(true);
+        openTooltip(true);
       }, 110);
     },
     [children, length, parentRef, isString]
@@ -133,7 +146,7 @@ function Tooltip({
    */
   useEffect(() => {
     if (remoteOpen !== undefined) {
-      setOpen(remoteOpen);
+      openTooltip(remoteOpen);
       if (remoteOpen) {
         onClick();
       }
@@ -145,7 +158,7 @@ function Tooltip({
    */
   useEffect(() => {
     const cleanSubs = storeScroll.subscribe(() => {
-      setOpen(false);
+      openTooltip(false);
     });
     return () => {
       cleanSubs();
@@ -175,7 +188,7 @@ function Tooltip({
         if (withoutListenClick) {
           _open = false;
         }
-        setOpen(_open);
+        openTooltip(_open);
         if (setRemoteOpen) {
           setRemoteOpen(_open);
         }

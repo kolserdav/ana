@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import storeClick from '../../store/click';
 import storeMenuOpen, { changeMenuOpen } from '../../store/menuOpen';
 import { Theme } from '../../Theme';
@@ -24,20 +24,17 @@ function Menu({
   const [open, setOpen] = useState<boolean>(false);
   const [_open, _setOpen] = useState<boolean>(false);
 
-  const onClickOpen = useMemo(
-    () => () => {
-      storeMenuOpen.dispatch(
-        changeMenuOpen({
-          menuOpen: !open,
-        })
-      );
-      setOpen(!open);
-      setTimeout(() => {
-        _setOpen(!_open);
-      }, MENU_TRANSITION);
-    },
-    [open, _open]
-  );
+  const onClickOpen = useCallback(() => {
+    storeMenuOpen.dispatch(
+      changeMenuOpen({
+        menuOpen: !open,
+      })
+    );
+    setOpen(!open);
+    setTimeout(() => {
+      _setOpen(!_open);
+    }, MENU_TRANSITION);
+  }, [open, _open]);
 
   /**
    * Listen document click
