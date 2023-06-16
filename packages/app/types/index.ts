@@ -10,15 +10,6 @@ export type PageFull = {
   [K in PageField]: string;
 };
 
-export type DateFilter =
-  | 'day'
-  | 'week'
-  | 'month'
-  | 'three-months'
-  | 'six-months'
-  | 'year'
-  | 'all-time';
-
 export interface IconProps {
   width?: number;
   height?: number;

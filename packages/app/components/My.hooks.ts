@@ -11,6 +11,7 @@ import {
   SEARCH_MIN_LENGTH,
   TagFindManyResult,
   UNDEFINED_QUERY_STRING,
+  DateFilter,
 } from '../types/interfaces';
 import Request from '../utils/request';
 import { getFormatDistance, log } from '../utils/lib';
@@ -25,7 +26,6 @@ import {
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import storeScroll from '../store/scroll';
 import useTagsGlobal from '../hooks/useTags';
-import { DateFilter } from '../types';
 import {
   changeLinks,
   getAnimationDuration,

@@ -17,9 +17,9 @@ import {
   EMAIL_QS,
   KEY_QS,
   PAGE_RESTORE_PASSWORD_CALLBACK,
-  PrismaCommand,
 } from '../types/interfaces';
 import { APP_URL, CLOUD_PATH, IS_DEV, LOG_LEVEL } from './constants';
+import { PrismaCommand } from '../types';
 
 // eslint-disable-next-line no-unused-vars
 enum LogLevel {

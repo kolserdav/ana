@@ -22,7 +22,7 @@ function Statistics({
 
   const { onChangeDateFilter, gt, date, resetFilterByDate } = useFilterByDate({ withSave: false });
 
-  const { statistics } = useStatistics({ user, setLoad, gt });
+  const { statistics } = useStatistics({ user, setLoad, gt, dateFilter: date });
 
   <SelectDateFilter onChange={onChangeDateFilter} locale={dateFilter} date={date} theme={theme} />;
 
@@ -40,6 +40,9 @@ function Statistics({
             theme={theme}
           />
         </div>
+        <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 10 L20,20 Z" fill="transparent" stroke={theme.text} strokeWidth={4} />
+        </svg>
       </div>
     </div>
   );

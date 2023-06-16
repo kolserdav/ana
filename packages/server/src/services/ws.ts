@@ -50,20 +50,30 @@ class WS {
   private async onlineDelete({ id, userOnline }: { id: string; userOnline: string | null }) {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        await orm.onlineDelete({
-          where: {
-            id,
-          },
-        });
+        const online = await orm.onlineFindFirst({ where: { id } });
+        if (online.status === 'info') {
+          await orm.onlineDelete({
+            where: {
+              id,
+            },
+          });
+        }
         if (userOnline) {
-          await orm.onlineStatisticUpdate({
+          const onlineStatistic = await orm.onlineStatisticFindMany({
             where: {
               id: userOnline,
             },
-            data: {
-              updated: new Date(),
-            },
           });
+          if (onlineStatistic.data?.length) {
+            await orm.onlineStatisticUpdate({
+              where: {
+                id: userOnline,
+              },
+              data: {
+                updated: new Date(),
+              },
+            });
+          }
         }
         resolve(0);
       }, 1000);

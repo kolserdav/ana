@@ -1,6 +1,5 @@
 import { Theme } from '../../Theme';
-import { DateFilter } from '../../types';
-import { Locale } from '../../types/interfaces';
+import { Locale, DateFilter } from '../../types/interfaces';
 import Select from './Select';
 
 function SelectDateFilter({

@@ -95,14 +95,27 @@ export interface RequestContext {
   timeout: number;
 }
 
-export type PrismaCommand = Prisma.PrismaAction | 'groupBy' | '$queryRaw';
-
-export interface DBCommandProps {
-  model: keyof PrismaClient;
-  command: PrismaCommand;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args: Prisma.SelectSubset<any, any>;
+export interface GroupBySummaryDateItemCount {
+  summary_date: string;
+  count: number;
 }
+
+export interface GroupBySummaryDateItemSum {
+  summary_date: string;
+  sum: number;
+}
+
+export type DateTruncateArgument = 'year' | 'quarter' | 'month' | 'week' | 'day' | 'hour';
+
+export type DateFilter =
+  | 'day'
+  | 'week'
+  | 'month'
+  | 'three-months'
+  | 'six-months'
+  | 'year'
+  | 'all-time';
+
 export type Status = 'error' | 'warn' | 'info';
 export interface WSMessage {
   type: Status;
@@ -285,10 +298,20 @@ export type PhraseFindManyResult = PhraseFull[];
 export interface GetStatisticsQuery {
   userId: string;
   gt: string;
+  dateFilter: DateFilter;
 }
 export type GetStatisticsResult = {
   phrasesCount: number;
   user: UserCleanResult;
+  groupPhrases: {
+    max: number;
+    items: GroupBySummaryDateItemCount[];
+  };
+  groupOnline: {
+    max: number;
+    items: GroupBySummaryDateItemSum[];
+  };
+  truncArg: DateTruncateArgument;
 };
 
 export interface ConfirmEmailBody {

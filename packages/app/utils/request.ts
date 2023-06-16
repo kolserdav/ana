@@ -337,9 +337,10 @@ class Request {
   public async getStatistics({
     userId,
     gt,
+    dateFilter,
   }: GetStatisticsQuery): Promise<Result<GetStatisticsResult>> {
     return this.send({
-      url: `${Api.getStatistics}?userId=${userId}&gt=${gt}`,
+      url: `${Api.getStatistics}?userId=${userId}&gt=${gt}&dateFilter=${dateFilter}`,
       method: 'GET',
     });
   }

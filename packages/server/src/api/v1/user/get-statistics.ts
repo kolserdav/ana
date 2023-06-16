@@ -4,6 +4,10 @@ import {
   Result,
   GetStatisticsQuery,
   GetStatisticsResult,
+  DateFilter,
+  DateTruncateArgument,
+  GroupBySummaryDateItemCount,
+  GroupBySummaryDateItemSum,
 } from '../../../types/interfaces';
 import { getHttpCode, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
@@ -13,6 +17,34 @@ import { Prisma, PrismaClient } from '@prisma/client';
 
 const orm = new ORM();
 
+// 'year' | 'quarter' | 'month' | 'week' | 'day' | 'hour'
+const getDateTruncArg = (filter: DateFilter): DateTruncateArgument => {
+  let res: DateTruncateArgument = 'hour';
+  switch (filter) {
+    case 'day':
+      res = 'hour';
+      break;
+    case 'week':
+      res = 'day';
+      break;
+    case 'month':
+      res = 'week';
+      break;
+    case 'three-months':
+      res = 'week';
+      break;
+    case 'six-months':
+      res = 'month';
+      break;
+    case 'year':
+      res = 'quarter';
+      break;
+    default:
+      res = 'year';
+  }
+  return res;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getStatistics: RequestHandler<
   { Querystring: GetStatisticsQuery },
@@ -21,7 +53,7 @@ const getStatistics: RequestHandler<
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const { gt } = query;
+  const { gt, dateFilter } = query;
 
   const user = await orm.userFindFirst({ where: { id } });
   if (user.data === null) {
@@ -69,23 +101,59 @@ const getStatistics: RequestHandler<
     };
   }
 
-  const phrases = await orm.phraseGroupBy({ where, by: ['learnLang'] });
+  const truncArg = getDateTruncArg(dateFilter);
 
-  const date = new Date().toISOString();
-
-  const r = await orm.$queryRaw(
-    `CREATE VIEW record_by_month AS SELECT distinct $1 id, date_trunc('month', $2) updated FROM "Phrase";`,
-    date,
-    date
+  const groupPhrases = await orm.$queryRawUnsafe<GroupBySummaryDateItemCount[]>(
+    `SELECT DATE_TRUNC('${truncArg}', updated) as summary_date, COUNT (id) FROM "Phrase" 
+    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date;`,
+    id,
+    gt
   );
-  console.log(r);
+  if (groupPhrases.status === 'error') {
+    reply.type(APPLICATION_JSON).code(500);
+    return {
+      status: 'error',
+      data: null,
+      message: locale.error,
+    };
+  }
+
+  const groupOnline = await orm.$queryRawUnsafe<GroupBySummaryDateItemSum[]>(
+    `SELECT DATE_TRUNC('${truncArg}', updated) as summary_date, SUM(EXTRACT(MICROSECONDS from updated::timestamp - created::timestamp)) FROM "OnlineStatistic" 
+    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date;`,
+    id,
+    gt
+  );
+  if (groupOnline.status === 'error') {
+    reply.type(APPLICATION_JSON).code(500);
+    return {
+      status: 'error',
+      data: null,
+      message: locale.error,
+    };
+  }
 
   reply.type(APPLICATION_JSON).code(200);
+
+  const _groupOnline = groupOnline.data.map((item) => {
+    const _item = { ...item };
+    _item.sum = parseInt(item.sum.toString() as string, 10);
+    return _item;
+  });
   return {
     status: 'info',
     data: {
       phrasesCount: phrasesCount.data,
       user: cleanData,
+      groupPhrases: {
+        items: groupPhrases.data,
+        max: Math.max(...groupPhrases.data.map((item) => item.count)),
+      },
+      truncArg,
+      groupOnline: {
+        items: _groupOnline,
+        max: Math.max(..._groupOnline.map((item) => item.sum)),
+      },
     },
     message: locale.success,
   };

@@ -1,6 +1,5 @@
 import { ThemeType } from '../Theme';
-import { DateFilter } from '../types';
-import { LocaleValue, OrderBy } from '../types/interfaces';
+import { LocaleValue, OrderBy, DateFilter } from '../types/interfaces';
 import { log } from './lib';
 
 // eslint-disable-next-line no-shadow

@@ -1,7 +1,6 @@
 import { format } from 'date-fns';
 import { ThemeType } from '../Theme';
-import { LocaleValue, OrderBy } from '../types/interfaces';
-import { DateFilter } from '../types';
+import { LocaleValue, OrderBy, DateFilter } from '../types/interfaces';
 
 export const LOCALE_NAMES: Record<LocaleValue, string> = {
   en: 'English',

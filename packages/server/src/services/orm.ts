@@ -4,8 +4,9 @@ import { v4 } from 'uuid';
 import Service from './service';
 import Database from '../database';
 import { checkIsFind, checkIsMany, log } from '../utils/lib';
-import { DBCommandProps, Result } from '../types/interfaces';
+import { Result } from '../types/interfaces';
 import { PRISMA_LOG } from '../utils/constants';
+import { DBCommandProps } from '../types';
 
 const prisma = new PrismaClient({ log: [PRISMA_LOG] });
 
@@ -19,11 +20,11 @@ export class ORM extends Service implements Database {
     }
   }
 
-  public $queryRaw<T = unknown>(query: string, ...values: any[]) {
+  public $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Promise<Result<T>> {
     return this.runFromWorker({
       args: query as any,
       model: values as any,
-      command: '$queryRaw',
+      command: '$queryRawUnsafe',
     });
   }
 
@@ -309,12 +310,13 @@ export class ORM extends Service implements Database {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         count = await (prisma as any)[model].count({ where });
       }
-      if (command === '$queryRaw') {
+      if (command === '$queryRawUnsafe') {
         result = await prisma.$queryRawUnsafe(args as any, ...model);
-        return;
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        result = await (prisma as any)[model][command](args);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      result = await (prisma as any)[model][command](args);
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       log('error', 'Database error', err);

@@ -10,10 +10,8 @@ import {
   parseMessage,
 } from './types/interfaces';
 import Tasks from './services/tasks';
-
+process.setMaxListeners(0);
 if (cluster.isPrimary) {
-  process.setMaxListeners(0);
-
   process.on('uncaughtException', (err: Error) => {
     log('error', '[MASTER] uncaughtException', err);
   });

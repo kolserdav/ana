@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { DateFilter } from '../types';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import { DATE_FILTER_ALL } from '../utils/constants';
+import { DateFilter } from '../types/interfaces';
 
 export const getGTDate = (filter: DateFilter) => {
   const date = new Date();

@@ -1,6 +1,7 @@
 import cluster, { Worker } from 'cluster';
 import EventEmitter from 'events';
-import { ProcessMessage } from '../types/interfaces';
+import { ProcessMessage, Result, WSMessage } from '../types/interfaces';
+import { log } from '../utils/lib';
 
 class Service extends EventEmitter {
   private readonly workerNotFound = 'Worker not found in Service';
@@ -53,12 +54,21 @@ class Service extends EventEmitter {
     return { worker, handler };
   }
 
-  public sendMessageToWorker<T>(data: ProcessMessage<T>) {
+  public sendMessageToWorker<T extends Result<any>>(data: ProcessMessage<T>) {
     if (!this.worker) {
       throw new Error(this.workerNotFound);
     }
     if (!cluster.isPrimary) {
       throw new Error(`${this.unexpectedUseProcess}: master`);
+    }
+    try {
+      data.msg.data = JSON.parse(
+        JSON.stringify(data.msg.data, (_, v) =>
+          typeof v === 'bigint' ? parseInt(v.toString(), 10) : v
+        )
+      );
+    } catch (e) {
+      log('error', 'Failed to stringify bigint', e);
     }
     this.worker.send(data);
   }

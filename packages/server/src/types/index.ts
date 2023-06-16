@@ -2,11 +2,20 @@
 import type { RequestGenericInterface, FastifyRequest, FastifyReply } from 'fastify';
 import type { NextHandleFunction } from '@fastify/middie';
 import { LocaleValue } from './interfaces';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 export type RequestHandler<T extends RequestGenericInterface, R> = (
   req: FastifyRequest<T>,
   res: FastifyReply
 ) => Promise<R>;
+
+export type PrismaCommand = Prisma.PrismaAction | 'groupBy' | '$queryRawUnsafe';
+export interface DBCommandProps {
+  model: keyof PrismaClient;
+  command: PrismaCommand;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  args: Prisma.SelectSubset<any, any>;
+}
 
 export type MiddleHandler = NextHandleFunction;
 

@@ -1,4 +1,3 @@
-import { DateFilter } from '../types';
 import { firstCapitalize } from '../types/interfaces';
 import {
   FIXED_TOOLS_HIGHT,
