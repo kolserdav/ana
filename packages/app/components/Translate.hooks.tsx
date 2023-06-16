@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { ServerLanguage } from '../types';
 import Request from '../utils/request';
 import { cleanPath, copyText, log, shortenString } from '../utils/lib';
 import {
@@ -57,6 +56,8 @@ export const useLanguages = ({
   const [oldText, setOldText] = useState<string>('');
 
   const { langs } = useLangs();
+
+  console.log(langs);
 
   /**
    * Set saved text
