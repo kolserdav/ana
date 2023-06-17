@@ -133,3 +133,4 @@ export const TICKER_DURATION_COEFFICIENT = 0.08;
 export const SUPPORT_TEXT_MAX_LENGHT = 2500;
 export const SUPPORT_SUBJECT_MAX_LENGTH = 100;
 export const TOOLTIP_DURATION = 2000;
+export const GRAPH_XAXIS_DATA_KEY = 'name';

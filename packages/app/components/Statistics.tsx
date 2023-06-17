@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import { Theme } from '../Theme';
 import useFilterByDate from '../hooks/useFilterByDate';
 import useLoad from '../hooks/useLoad';
@@ -6,6 +7,39 @@ import { useStatistics } from './Statistics.hooks';
 import s from './Statistics.module.scss';
 import SelectDateFilter from './ui/SelectDateFilter';
 import Typography from './ui/Typography';
+
+const Graph = dynamic(() => import('./ui/Graph'), { ssr: false });
+
+const data = [
+  {
+    name: 'Page A',
+    uv: 4000,
+  },
+  {
+    name: 'Page B',
+    uv: 3000,
+  },
+  {
+    name: 'Page C',
+    uv: 2000,
+  },
+  {
+    name: 'Page D',
+    uv: 2780,
+  },
+  {
+    name: 'Page E',
+    uv: 1890,
+  },
+  {
+    name: 'Page F',
+    uv: 2390,
+  },
+  {
+    name: 'Page G',
+    uv: 3490,
+  },
+];
 
 function Statistics({
   theme,
@@ -40,9 +74,7 @@ function Statistics({
             theme={theme}
           />
         </div>
-        <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 10 L20,20 Z" fill="transparent" stroke={theme.text} strokeWidth={4} />
-        </svg>
+        <Graph data={data} dataKey="uv" stroke={theme.blue} />
       </div>
     </div>
   );
