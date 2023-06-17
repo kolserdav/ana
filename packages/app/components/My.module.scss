@@ -265,6 +265,8 @@ $search-input-wudth-coeff: 1.5;
 
   .played_phrase {
     position: relative;
+    width: 100%;
+    text-align: center;
     overflow: hidden;
     display: block;
     max-height: 100%;

@@ -57,8 +57,6 @@ export const useLanguages = ({
 
   const { langs } = useLangs();
 
-  console.log(langs);
-
   /**
    * Set saved text
    */
@@ -306,7 +304,9 @@ export const useTranslate = ({
       }
 
       log('info', 'Translate result', data);
-      setTranslate(data.translatedText);
+      if (text) {
+        setTranslate(data.translatedText);
+      }
     };
 
     timeout = setTimeout(
@@ -392,7 +392,9 @@ export const useTranslate = ({
       }
 
       log('info', 'Re translate result', data);
-      setRetranslate(data.translatedText);
+      if (translate) {
+        setRetranslate(data.translatedText);
+      }
     };
     runRetranslate(translate);
   }, [translate, learnLang, nativeLang, connId]);
@@ -832,6 +834,9 @@ export const useRedirect = () => {
 
 export const useCopyText = ({ locale }: { locale: Locale['app']['common']['copyText'] }) => {
   const onClickCopyTextWrapper = (text: string) => () => {
+    if (!text) {
+      return;
+    }
     copyText(text)
       .then(() => {
         log('info', locale.textCopied, text, true);

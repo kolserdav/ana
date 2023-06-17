@@ -739,7 +739,7 @@ export const usePlayOne = ({
     setTicker(false);
   };
 
-  const { synthAllow, volumeIcon, speechText } = useSpeechSynth({
+  const { synthAllow, volumeIcon, speechText, stopSpeech } = useSpeechSynth({
     text: forSpeech?.text || '',
     voiceNotFound,
     lang: forSpeech?.lang || LEARN_LANG_DEFAULT,
@@ -749,17 +749,23 @@ export const usePlayOne = ({
 
   const clickForPlayWrapper = (data: PlayOnePhrase) => () => {
     let _ticker = true;
-    if (forSpeech?.text === data.text) {
+    if (forSpeech?.id === data.id) {
+      stopSpeech();
       _ticker = false;
+      setForSpeech(null);
+    } else {
+      setForSpeech(data);
     }
     setTicker(_ticker);
-    setForSpeech(data);
   };
 
   /**
    * Play phrase
    */
   useEffect(() => {
+    if (!forSpeech) {
+      return;
+    }
     speechText();
   }, [forSpeech, speechText]);
 

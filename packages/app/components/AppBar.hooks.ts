@@ -297,6 +297,14 @@ export const useSupport = ({
     return error;
   };
 
+  const cleanFields = () => {
+    setSupportText('');
+    setSupportTextError('');
+    setSupportSubject('');
+    setSupportSubjectError('');
+    setSupportTextRows(TEXTAREA_ROWS_DEFAULT);
+  };
+
   const onClickSupport = async () => {
     if (!user || checkFileds()) {
       return;
@@ -313,13 +321,12 @@ export const useSupport = ({
     if (res.status !== 'info') {
       return;
     }
-    setSupportText('');
-    setSupportSubject('');
-    setSupportTextRows(TEXTAREA_ROWS_DEFAULT);
+    cleanFields();
     setSupportDialog(false);
   };
 
   const onClickCancelSupport = () => {
+    cleanFields();
     setSupportDialog(false);
   };
 

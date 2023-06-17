@@ -2,7 +2,7 @@ import { forwardRef, useMemo } from 'react';
 import clsx from 'clsx';
 import { Theme } from '../../Theme';
 import s from './Textarea.module.scss';
-import { ubuntu300 } from '../../fonts/ubuntu';
+import { ubuntu300, ubuntu500 } from '../../fonts/ubuntu';
 
 interface TextareaProps {
   theme: Theme;
@@ -45,7 +45,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaDefaultProps & Textarea
         {maxLength && (
           <div className={s.info}>
             {error && (
-              <div style={{ color: theme.yellow }} className={s.error}>
+              <div style={{ color: theme.yellow }} className={clsx(s.error, ubuntu500.className)}>
                 {error}
               </div>
             )}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { log } from '../utils/lib';
 import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
@@ -138,6 +138,21 @@ const useSpeechSynth = ({
     };
   }, [androidSpeaking]);
 
+  const stopSpeech = useCallback(() => {
+    if (typeof androidTextToSpeech !== 'undefined') {
+      if (androidTextToSpeech.isSpeaking()) {
+        androidTextToSpeech.cancel();
+        setAndroidSpeaking(false);
+      }
+    } else {
+      if (!synth) {
+        return;
+      }
+      synth.cancel();
+    }
+    setTextToSpeech(undefined);
+  }, [synth]);
+
   /**
    * Speech text
    */
@@ -145,13 +160,11 @@ const useSpeechSynth = ({
     if (!lang || !textToSpeech) {
       return;
     }
-
+    log('info', 'Speech text', { textToSpeech });
     if (typeof androidTextToSpeech !== 'undefined') {
       androidTextToSpeech.isSpeaking();
       if (androidTextToSpeech.isSpeaking()) {
-        androidTextToSpeech.cancel();
-        setAndroidSpeaking(false);
-        setTextToSpeech(undefined);
+        stopSpeech();
         return;
       }
 
@@ -165,8 +178,7 @@ const useSpeechSynth = ({
       const utterThis = new SpeechSynthesisUtterance(textToSpeech);
 
       if (synth.speaking) {
-        synth.cancel();
-        setTextToSpeech(undefined);
+        stopSpeech();
         return;
       }
 
@@ -175,8 +187,8 @@ const useSpeechSynth = ({
       synth.speak(utterThis);
     }
 
-    setTextToSpeech('');
-  }, [textToSpeech, lang, voice, speechSpeed, synth]);
+    setTextToSpeech(undefined);
+  }, [textToSpeech, lang, voice, speechSpeed, synth, stopSpeech]);
 
   const speechText = () => {
     setTextToSpeech(cleanLinks(text, changeLinkTo));
@@ -222,7 +234,7 @@ const useSpeechSynth = ({
     };
   }, [volumeIcon, volumeIconUp, synth?.speaking, androidSpeaking, onStop]);
 
-  return { speechText, synthAllow, speechSpeed, changeSpeechSpeed, volumeIcon };
+  return { speechText, synthAllow, speechSpeed, changeSpeechSpeed, volumeIcon, stopSpeech };
 };
 
 export default useSpeechSynth;

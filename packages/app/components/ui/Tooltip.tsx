@@ -25,6 +25,7 @@ function Tooltip({
   withoutListenClick,
   remoteOpen,
   setRemoteOpen,
+  withoutClose,
 }: {
   parentRef: React.RefObject<HTMLElement>;
   children: string | React.ReactNode;
@@ -34,6 +35,7 @@ function Tooltip({
   withoutListenClick?: boolean;
   remoteOpen?: boolean;
   setRemoteOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  withoutClose?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -45,7 +47,7 @@ function Tooltip({
   const openTooltip = useCallback(
     (value: boolean) => {
       setOpen(value);
-      if (value) {
+      if (value && !withoutClose) {
         setTimeout(() => {
           setOpen(false);
           if (setRemoteOpen) {
@@ -54,7 +56,7 @@ function Tooltip({
         }, TOOLTIP_DURATION);
       }
     },
-    [setRemoteOpen]
+    [setRemoteOpen, withoutClose]
   );
 
   const onClick = useMemo(
@@ -212,6 +214,7 @@ function Tooltip({
         top: `${position?.top}px`,
         width: `${position?.width}px`,
         height: `${position?.height}px`,
+        border: withoutClose ? `-1px groove ${theme.active}` : 'none',
       }}
       className={clsx(s.wrapper, ubuntu300.className, open ? s.open : '')}
     >
@@ -232,6 +235,7 @@ Tooltip.defaultProps = {
   withoutListenClick: undefined,
   remoteOpen: undefined,
   setRemoteOpen: undefined,
+  withoutClose: undefined,
 };
 
 export default Tooltip;

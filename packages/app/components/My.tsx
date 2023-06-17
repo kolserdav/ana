@@ -1,4 +1,4 @@
-import { createRef, useRef } from 'react';
+import { createRef, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
@@ -371,7 +371,7 @@ function My({
               className={clsx(s.content, ticker ? s.animate : '')}
               style={{ animationDuration: `${animationDuration}s` }}
             >
-              <Typography nowrap theme={theme} variant="span" disabled>
+              <Typography nowrap theme={theme} variant="span" disabled fullWidth>
                 {!played && !paused ? locale.playAll : playedText}
               </Typography>
             </div>
@@ -397,7 +397,7 @@ function My({
                       <DotsHorisontalIcon color={theme.text} />
                     </IconButton>
 
-                    <Tooltip closeOnClick theme={theme} parentRef={ref} length={60}>
+                    <Tooltip withoutClose closeOnClick theme={theme} parentRef={ref} length={60}>
                       <div className={s.menu_tooltip}>
                         <IconButton
                           theme={theme}

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { createRef, useRef } from 'react';
+import { createRef, useEffect, useRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
@@ -244,15 +244,17 @@ function Translate({
           </div>
 
           <div className={s.micro_button} title={locale.startRecognize}>
-            <div className={clsx(s.copy_button, allowRecogn ? s.copy_button__allow_recogn : '')}>
-              <IconButton
-                title={copyText.title}
-                theme={theme}
-                onClick={onClickCopyTextWrapper(text)}
-              >
-                <CopyIcon color={theme.text} withoutScale />
-              </IconButton>
-            </div>
+            {text && (
+              <div className={clsx(s.copy_button, allowRecogn ? s.copy_button__allow_recogn : '')}>
+                <IconButton
+                  title={copyText.title}
+                  theme={theme}
+                  onClick={onClickCopyTextWrapper(text)}
+                >
+                  <CopyIcon color={theme.text} withoutScale />
+                </IconButton>
+              </div>
+            )}
             {allowRecogn && (
               <IconButton
                 title={locale.startRecognize}
