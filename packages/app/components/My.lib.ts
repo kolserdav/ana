@@ -8,41 +8,49 @@ import {
 } from '../utils/constants';
 import { LocalStorageName, getLocalStorage } from '../utils/localStorage';
 
+const getBoldRegex = (item: string) => new RegExp(`(<b>)?${item}`, 'g');
+
+const checkBold = (item: string) => /(<b>)/.test(item);
+
 // eslint-disable-next-line import/prefer-default-export
 export const setMatchesBold = ({ text, matches }: { text: string; matches: string[] }) => {
   let res = text;
 
   const createBoldItem = (item: string) => `<b>${item}</b>`;
 
+  const boldReplace = (_item: string) =>
+    checkBold(_item) ? _item : res.replaceAll(_item, createBoldItem(_item));
+
   matches.forEach((item) => {
     if (item === '') {
       return;
     }
-    const words = text.match(new RegExp(`${item}`, 'g'));
+
+    const words = text.match(getBoldRegex(item));
     if (words) {
       words.forEach((_item) => {
-        res = res.replace(_item, createBoldItem(_item));
+        res = boldReplace(_item);
       });
     }
 
-    const wordsFC = text.match(new RegExp(`${firstCapitalize(item)}`, 'g'));
+    const wordsFC = text.match(getBoldRegex(firstCapitalize(item)));
     if (wordsFC) {
       wordsFC.forEach((_item) => {
-        res = res.replace(_item, createBoldItem(_item));
+        res = boldReplace(_item);
       });
     }
 
-    const wordsUC = text.match(new RegExp(`${item.toUpperCase()}`, 'g'));
+    const wordsUC = text.match(getBoldRegex(item.toUpperCase()));
     if (wordsUC) {
       wordsUC.forEach((_item) => {
-        res = res.replace(_item, createBoldItem(_item));
+        res = boldReplace(_item);
       });
     }
 
-    const wordsLC = text.match(new RegExp(`${item.toLowerCase()}`, 'g'));
+    const wordsLC = text.match(getBoldRegex(item.toLowerCase()));
     if (wordsLC) {
       wordsLC.forEach((_item) => {
-        res = res.replace(_item, createBoldItem(_item));
+        res = boldReplace(_item);
       });
     }
   });
@@ -134,6 +142,14 @@ export function cleanLinks(inputText: string, changeTo = '') {
   let replacedText = inputText;
 
   replacedText = inputText.replace(/<a.+<\/a>/g, changeTo);
+
+  return replacedText;
+}
+
+export function cleanBold(inputText: string, changeTo = '') {
+  let replacedText = inputText;
+
+  replacedText = inputText.replace(/[(<b>)(</b>)]+/g, changeTo);
 
   return replacedText;
 }
