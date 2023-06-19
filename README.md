@@ -1,43 +1,45 @@
 # Ana
 
-Application for easy composing phrases in the target language.
+Application for easy composing texts in the foreign language.
 
-## Dependencies
+## Main Features
 
-```sh
-NodeJS: 18
-Python 3 + pip (or docker-compose)
-PostgreSQL: latest (or docker-compose)
-```
+---
 
-## Installation
+Without sign in
 
-1. Clone source code:
+---
 
-```sh
-git clone https://github.com/kolserdav/ana.git
-```
+- Translation (English, Arabic, Azerbaijani, Catalan, Chinese, Czech, Danish, Dutch, Esperanto, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Indonesian, Irish, Italian, Japanese, Korean , Persian, Polish, Portuguese, Russian, Slovak, Spanish, Swedish, Thai, Turkish, Ukrainian.)
+- Speech recognize
+- Synth speech
 
-2. Install dependencies:
+---
 
-```sh
-cd ana
-npm i
-```
+With sign in
 
-3. Set up server environment file `.env`.
-4. Set up client environment file `packages/app/.env`.
-5. Set up translate environment file `packages/translate/.env`.
-6. Run migrations:
+---
 
-```sh
-npm run migrate
-```
+- Save, edit, delete own texts
+- Create tags and pin they to the text
+- Filter saved texts by tags, date, search, learn language
+- Sort saved texts by date
+- Synth speech of all saved texts
 
-7. Run in development mode:
+## Screenshots
 
-```sh
-npm run dev
-```
+![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg)
+![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg)
+![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg)
+![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg)
+![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg)
 
-_Then open in your browser the page http://localhost:3000_
+## Localization
+
+At the moment, two interface languages English and Russian are supported, to add other interface languages, see [docs/contributing/LOCALES.md](docs/contributing/LOCALES.md)
+
+## License
+
+[![AGPL-3.0 license ](https://www.gnu.org/graphics/agplv3-155x51.png)](https://www.gnu.org/licenses/agpl-3.0.html)
+
+It requires the operator of a network server to provide the source code of the modified version running there to the users of that server.
