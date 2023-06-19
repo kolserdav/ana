@@ -76,7 +76,6 @@ export const useStatistics = ({
       setStatistics(stats.data);
     })();
   }, [user, setLoad, gt, dateFilter]);
-  console.log(statistics);
 
   const countGraphData = useMemo(
     () =>
