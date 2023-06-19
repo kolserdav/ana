@@ -47,6 +47,7 @@ import IconCheckbox from './ui/IconCheckbox';
 import SpeakIcon from './ui/SpeakIcon';
 import SelectDateFilter from './ui/SelectDateFilter';
 import useFilterByDate from '../hooks/useFilterByDate';
+import { LocalStorageName } from '../utils/localStorage';
 
 function My({
   locale,
@@ -96,7 +97,7 @@ function My({
     gt,
     date,
     resetFilterByDate,
-  } = useFilterByDate({ withSave: true });
+  } = useFilterByDate({ localStorageName: LocalStorageName.FILTER_BY_DATE });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
     _onChangeDateFilter(e);

@@ -7,6 +7,7 @@ import { useStatistics } from './Statistics.hooks';
 import s from './Statistics.module.scss';
 import SelectDateFilter from './ui/SelectDateFilter';
 import Typography from './ui/Typography';
+import { LocalStorageName } from '../utils/localStorage';
 
 const Graph = dynamic(() => import('./ui/Graph'), { ssr: false });
 
@@ -23,7 +24,9 @@ function Statistics({
 }) {
   const { setLoad } = useLoad();
 
-  const { onChangeDateFilter, gt, date } = useFilterByDate({ withSave: false });
+  const { onChangeDateFilter, gt, date } = useFilterByDate({
+    localStorageName: LocalStorageName.FILTER_BY_DATE_STAT,
+  });
 
   const { countGraphData, onlineGraphData, onlineLabelFormatter, graphWidth, graphCountHeight } =
     useStatistics({
@@ -53,23 +56,27 @@ function Statistics({
           />
         </div>
         {graphWidth && graphCountHeight && (
-          <Graph
-            width={graphWidth}
-            height={graphCountHeight}
-            data={countGraphData}
-            dataKey={locale.newTexts}
-            stroke={theme.blue}
-          />
+          <div className={s.graph_item}>
+            <Graph
+              width={graphWidth}
+              height={graphCountHeight}
+              data={countGraphData}
+              dataKey={locale.newTexts}
+              stroke={theme.blue}
+            />
+          </div>
         )}
         {graphWidth && graphCountHeight && (
-          <Graph
-            width={graphWidth}
-            height={graphCountHeight}
-            formatter={onlineLabelFormatter}
-            data={onlineGraphData}
-            dataKey={locale.studyTime}
-            stroke={theme.red}
-          />
+          <div className={s.graph_item}>
+            <Graph
+              width={graphWidth}
+              height={graphCountHeight}
+              formatter={onlineLabelFormatter}
+              data={onlineGraphData}
+              dataKey={locale.studyTime}
+              stroke={theme.red}
+            />
+          </div>
         )}
       </div>
     </div>

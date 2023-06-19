@@ -33,7 +33,11 @@ function Graph({
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey={GRAPH_XAXIS_DATA_KEY} />
       <YAxis />
-      <Tooltip labelFormatter={labelFormatter} formatter={formatter} />
+      <Tooltip
+        contentStyle={{ color: 'blue', maxWidth: 'calc(100vw / 1.5)', whiteSpace: 'pre-wrap' }}
+        labelFormatter={labelFormatter}
+        formatter={formatter}
+      />
       <Legend />
       <Line type="monotone" dataKey={dataKey} stroke={stroke} activeDot={{ r: 8 }} />
     </LineChart>

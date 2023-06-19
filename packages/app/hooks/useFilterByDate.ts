@@ -30,7 +30,7 @@ export const getGTDate = (filter: DateFilter) => {
   return date.toISOString();
 };
 
-const useFilterByDate = ({ withSave }: { withSave?: boolean }) => {
+const useFilterByDate = ({ localStorageName }: { localStorageName: LocalStorageName }) => {
   const [date, setDate] = useState<DateFilter>();
   const [gt, setGT] = useState<string>();
 
@@ -39,23 +39,17 @@ const useFilterByDate = ({ withSave }: { withSave?: boolean }) => {
       target: { value },
     } = e;
     setDate(value as DateFilter);
-    if (withSave) {
-      setLocalStorage(LocalStorageName.FILTER_BY_DATE, value as DateFilter);
-    }
+
+    setLocalStorage(localStorageName, value as DateFilter);
   };
 
   /**
    * Set date
    */
   useEffect(() => {
-    if (!withSave) {
-      setDate(DATE_FILTER_ALL);
-      return;
-    }
-
-    const savedDate = getLocalStorage(LocalStorageName.FILTER_BY_DATE);
-    setDate(savedDate || DATE_FILTER_ALL);
-  }, [withSave]);
+    const savedDate = getLocalStorage(localStorageName);
+    setDate((savedDate as DateFilter | null) || DATE_FILTER_ALL);
+  }, [localStorageName]);
 
   /**
    * Set gt
@@ -70,9 +64,7 @@ const useFilterByDate = ({ withSave }: { withSave?: boolean }) => {
   const resetFilterByDate = () => {
     setDate(DATE_FILTER_ALL);
 
-    if (withSave) {
-      setLocalStorage(LocalStorageName.FILTER_BY_DATE, DATE_FILTER_ALL);
-    }
+    setLocalStorage(localStorageName, DATE_FILTER_ALL);
   };
 
   return { gt, onChangeDateFilter, date, resetFilterByDate };

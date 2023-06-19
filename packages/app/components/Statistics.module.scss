@@ -15,5 +15,9 @@
     max-width: $translate-container-max;
     flex-direction: column;
     padding: $container-padding;
+
+    .graph_item {
+      margin-top: 1rem;
+    }
   }
 }
