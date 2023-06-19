@@ -28,7 +28,7 @@ With sign in
 
 ## Screenshots
 
-<div style="display:flex;flex-flow:row wrap;">
+<div style="position:relative;width:100%;display:flex;flex-flow:row wrap;">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg" width="200"/>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg" width="200"/>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg" width="200"/>
