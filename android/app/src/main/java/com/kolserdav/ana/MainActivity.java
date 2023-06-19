@@ -5,13 +5,12 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -28,7 +27,10 @@ import androidx.core.content.ContextCompat;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 
 public class MainActivity extends Activity {
@@ -111,23 +113,32 @@ class TTS {
 
     Locale[] locales;
 
+    Voice voice;
+
+    Locale lang;
+
     public TTS(MainActivity context) {
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
-                    String textToSay = "Hello world, this is a test message!";
-                    // textToSpeechSystem.speak(textToSay, TextToSpeech.QUEUE_ADD, null);
+                    locales = Locale.getAvailableLocales();
+
+                    voice = textToSpeech.getDefaultVoice();
+
                 }
             }
         });
         textToSpeech.setLanguage(Locale.US);
-
-        locales = Locale.getAvailableLocales();
     }
+
 
     public Boolean getSpeechState() {
         return textToSpeech.isSpeaking();
+    }
+
+    public Set<Voice> getVoices() {
+        return textToSpeech.getVoices();
     }
 
     public String getAvailableLocales() {
@@ -144,7 +155,16 @@ class TTS {
         return json.toString();
     }
     public void textToSpeak(String text) {
+        textToSpeech.setVoice(this.voice);
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    public void setVoice(Voice voice) {
+        this.voice = voice;
+    }
+
+    public Voice getDefaultVoice() {
+        return textToSpeech.getDefaultVoice();
     }
 
     public void stopSpeak() {
@@ -153,6 +173,7 @@ class TTS {
 
     public void setLanguage(String locale) {
         Locale _locale = Locale.forLanguageTag(locale);
+        lang = _locale;
         textToSpeech.setLanguage(_locale);
     }
 
@@ -235,6 +256,18 @@ class AndroidTextToSpeech {
     }
     @JavascriptInterface
     public void speak(String text) {
+        Iterator<Voice> d = tts.getVoices().iterator();
+        while (d.hasNext()) {
+            Voice v = d.next();
+            boolean check = v.getLocale().toString().matches(tts.lang.toString());
+            // Log.d("222", check ? "true" : "false" );
+            // Log.d("2233", v.getLocale().toString());
+            if (v.getLocale() == tts.lang) {
+                Log.d("2222222222222", "r222222222222222tr");
+                tts.setVoice(v);
+            }
+        }
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

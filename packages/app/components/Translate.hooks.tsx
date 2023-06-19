@@ -129,8 +129,10 @@ export const useLanguages = ({
       current.focus();
       const range = document.createRange();
       const sel = window.getSelection();
-      range.setStart(current.childNodes[0], oldText.length);
-      range.collapse(true);
+      if (current.childNodes[0]) {
+        range.setStart(current.childNodes[0], oldText.length);
+        range.collapse(true);
+      }
 
       if (!sel) {
         return;
