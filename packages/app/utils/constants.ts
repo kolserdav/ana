@@ -134,3 +134,7 @@ export const SUPPORT_TEXT_MAX_LENGHT = 2500;
 export const SUPPORT_SUBJECT_MAX_LENGTH = 100;
 export const TOOLTIP_DURATION = 2000;
 export const GRAPH_XAXIS_DATA_KEY = 'name';
+export const GRAPH_WIDTH_DEFAULT = 500;
+export const GRAPH_HEIGHT_COEFF = 1.6666666666666667;
+// deps $container-padding
+export const CONTAINER_PADDING = 16;

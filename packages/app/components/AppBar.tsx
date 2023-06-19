@@ -167,15 +167,13 @@ function AppBar({
               </div>
             </Link>
           )}
-          {/**
-             * {!checkRouterPath(router.asPath, Pages.statistics) && (
+          {!checkRouterPath(router.asPath, Pages.statistics) && (
             <Link withoutHover fullWidth theme={theme} href={Pages.statistics}>
               <div className={clsx(s.menu__item, s.active)}>
                 <div style={{ color: theme.text }}>{locale.statistics}</div>
               </div>
             </Link>
           )}
-             */}
           {user && <Hr theme={theme} />}
           <div className={clsx(s.menu__item)}>
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>

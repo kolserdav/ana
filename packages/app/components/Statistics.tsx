@@ -10,37 +10,6 @@ import Typography from './ui/Typography';
 
 const Graph = dynamic(() => import('./ui/Graph'), { ssr: false });
 
-const data = [
-  {
-    name: 'Page A',
-    uv: 4000,
-  },
-  {
-    name: 'Page B',
-    uv: 3000,
-  },
-  {
-    name: 'Page C',
-    uv: 2000,
-  },
-  {
-    name: 'Page D',
-    uv: 2780,
-  },
-  {
-    name: 'Page E',
-    uv: 1890,
-  },
-  {
-    name: 'Page F',
-    uv: 2390,
-  },
-  {
-    name: 'Page G',
-    uv: 3490,
-  },
-];
-
 function Statistics({
   theme,
   user,
@@ -54,9 +23,18 @@ function Statistics({
 }) {
   const { setLoad } = useLoad();
 
-  const { onChangeDateFilter, gt, date, resetFilterByDate } = useFilterByDate({ withSave: false });
+  const { onChangeDateFilter, gt, date } = useFilterByDate({ withSave: false });
 
-  const { statistics } = useStatistics({ user, setLoad, gt, dateFilter: date });
+  const { countGraphData, onlineGraphData, onlineLabelFormatter, graphWidth, graphCountHeight } =
+    useStatistics({
+      user,
+      setLoad,
+      gt,
+      dateFilter: date,
+      newTexts: locale.newTexts,
+      studyTime: locale.studyTime,
+      localeDateDuration: locale.dateDuration,
+    });
 
   <SelectDateFilter onChange={onChangeDateFilter} locale={dateFilter} date={date} theme={theme} />;
 
@@ -74,7 +52,25 @@ function Statistics({
             theme={theme}
           />
         </div>
-        <Graph data={data} dataKey="uv" stroke={theme.blue} />
+        {graphWidth && graphCountHeight && (
+          <Graph
+            width={graphWidth}
+            height={graphCountHeight}
+            data={countGraphData}
+            dataKey={locale.newTexts}
+            stroke={theme.blue}
+          />
+        )}
+        {graphWidth && graphCountHeight && (
+          <Graph
+            width={graphWidth}
+            height={graphCountHeight}
+            formatter={onlineLabelFormatter}
+            data={onlineGraphData}
+            dataKey={locale.studyTime}
+            stroke={theme.red}
+          />
+        )}
       </div>
     </div>
   );

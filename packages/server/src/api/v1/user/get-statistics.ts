@@ -37,7 +37,7 @@ const getDateTruncArg = (filter: DateFilter): DateTruncateArgument => {
       res = 'month';
       break;
     case 'year':
-      res = 'quarter';
+      res = 'month';
       break;
     default:
       res = 'year';

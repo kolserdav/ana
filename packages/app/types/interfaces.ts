@@ -105,7 +105,7 @@ export interface GroupBySummaryDateItemSum {
   sum: number;
 }
 
-export type DateTruncateArgument = 'year' | 'quarter' | 'month' | 'week' | 'day' | 'hour';
+export type DateTruncateArgument = 'year' | 'month' | 'week' | 'day' | 'hour';
 
 export type DateFilter =
   | 'day'
@@ -550,6 +550,16 @@ export interface Locale {
     };
     statistics: {
       title: string;
+      newTexts: string;
+      studyTime: string;
+      dateDuration: {
+        days: string;
+        months: string;
+        years: string;
+        hours: string;
+        minutes: string;
+        seconds: string;
+      };
     };
   };
 }

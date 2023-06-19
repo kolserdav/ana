@@ -6,7 +6,7 @@ import { LocaleValue, LogLevel } from '../types/interfaces';
 import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from './constants';
 import { PageFull } from '../types';
 
-const DATE_LOCALE = {
+export const DATE_LOCALE = {
   ru,
   en,
 };

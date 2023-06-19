@@ -14,5 +14,6 @@
     width: 100%;
     max-width: $translate-container-max;
     flex-direction: column;
+    padding: $container-padding;
   }
 }
