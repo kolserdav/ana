@@ -28,11 +28,11 @@ With sign in
 
 ## Screenshots
 
-![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg)
-![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg)
-![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg)
-![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg)
-![fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg](fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg)
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg" width="200"/>
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg" width="200"/>
+
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg" width="200"/>
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg" width="200"/>
 
 ## Localization
 
