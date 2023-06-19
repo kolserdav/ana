@@ -2,6 +2,8 @@
 
 Application for easy composing texts in the foreign language.
 
+![License](https://img.shields.io/github/license/kolserdav/ana)
+
 ## Main Features
 
 ---
