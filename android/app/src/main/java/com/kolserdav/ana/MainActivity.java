@@ -177,7 +177,7 @@ class TTS {
                 Log.d("Error json voice put", e.getMessage());
             }
         }
-        Log.d("locales", json.toString());
+        Log.d("locales", voices.toString());
         return json.toString();
     }
     public void textToSpeak(String text) {
@@ -237,11 +237,6 @@ class AndroidTextToSpeech {
                 locales = tts.setAvailableLocales();
             }
         });
-    }
-
-    @JavascriptInterface
-    public boolean getTTSIsInit() {
-        return tts.isInit;
     }
 
     @JavascriptInterface

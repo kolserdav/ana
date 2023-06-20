@@ -27,7 +27,6 @@ const useSpeechSynth = ({
   const [volumeIcon, setVolumeIcon] = useState<VolumeIcon>('high');
   const [volumeIconUp, setVolumeIconUp] = useState<boolean>(true);
   const [androidSpeaking, setAndroidSpeaking] = useState<boolean>(false);
-  const [ttsIsInit, setTTSIsInit] = useState<boolean>(false);
 
   const synth: null | SpeechSynthesis = useMemo(
     () => (typeof window === 'undefined' ? null : window.speechSynthesis),
@@ -114,35 +113,14 @@ const useSpeechSynth = ({
   }, [voiceNotFound, lang, synth]);
 
   /**
-   * Set mobile tts is init
-   */
-  useEffect(() => {
-    if (typeof androidTextToSpeech === 'undefined') {
-      return () => {
-        /** */
-      };
-    }
-    const interval = setInterval(() => {
-      const _isInit = androidTextToSpeech.getTTSIsInit();
-      if (_isInit) {
-        setTTSIsInit(true);
-        clearInterval(interval);
-      }
-    }, 200);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  /**
    * Set available locales and voices
    */
   useEffect(() => {
-    if (typeof androidTextToSpeech === 'undefined' || !ttsIsInit) {
+    if (typeof androidTextToSpeech === 'undefined') {
       return;
     }
     androidTextToSpeech.setAvailableLocalesAndVoices();
-  }, [ttsIsInit]);
+  }, []);
 
   /**
    * set android speaking
