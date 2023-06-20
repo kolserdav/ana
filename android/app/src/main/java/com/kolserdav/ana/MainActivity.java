@@ -5,13 +5,14 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -28,7 +29,10 @@ import androidx.core.content.ContextCompat;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 
 public class MainActivity extends Activity {
@@ -84,7 +88,7 @@ public class MainActivity extends Activity {
         });
 
         mWebView.loadUrl("https://uyem.ru");
-
+        this.setLocale("en");
         this.setContentView(mWebView);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -94,6 +98,15 @@ public class MainActivity extends Activity {
             // Permission has already been granted
             // Setup audio recording
         }
+    }
+
+    public void setLocale(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Resources resources = this.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     @Override
@@ -111,26 +124,37 @@ class TTS {
 
     Locale[] locales;
 
+    Voice voice;
+
+    Locale lang;
+
+    Iterator<Voice> voices;
+
+
     public TTS(MainActivity context) {
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
-                    String textToSay = "Hello world, this is a test message!";
-                    // textToSpeechSystem.speak(textToSay, TextToSpeech.QUEUE_ADD, null);
+                    voices = textToSpeech.getVoices().iterator();
+                    locales = Locale.getAvailableLocales();
+                    voice = textToSpeech.getDefaultVoice();
                 }
             }
         });
         textToSpeech.setLanguage(Locale.US);
-
-        locales = Locale.getAvailableLocales();
     }
+
 
     public Boolean getSpeechState() {
         return textToSpeech.isSpeaking();
     }
 
-    public String getAvailableLocales() {
+    public Set<Voice> getVoices() {
+        return textToSpeech.getVoices();
+    }
+
+    public String setAvailableLocales() {
         Locale[] _locales = textToSpeech.getAvailableLanguages().toArray(new Locale[0]);
         JSONObject json = new JSONObject();
         for (int i = 0; i < _locales.length; i ++) {
@@ -143,8 +167,34 @@ class TTS {
         }
         return json.toString();
     }
+
+    public String setVoices() {
+        JSONObject json = new JSONObject();
+        while (voices.hasNext()) {
+            Voice v = voices.next();
+            try {
+                json.put(String.valueOf(v.getName()), v.getLocale().getDisplayName());
+            } catch (Exception e) {
+                Log.d("Error json voice put", e.getMessage());
+            }
+        }
+        Log.d("locales", json.toString());
+        return json.toString();
+    }
     public void textToSpeak(String text) {
+        textToSpeech.setVoice(this.voice);
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    private void setVoice() {
+        while (voices.hasNext()) {
+            Voice v = voices.next();
+            boolean check = v.getLocale().getLanguage().matches(lang.getLanguage());
+            if (check) {
+                Log.d("locale", v.getName());
+                this.voice = v;
+            }
+        }
     }
 
     public void stopSpeak() {
@@ -153,7 +203,9 @@ class TTS {
 
     public void setLanguage(String locale) {
         Locale _locale = Locale.forLanguageTag(locale);
+        lang = _locale;
         textToSpeech.setLanguage(_locale);
+        setVoice();
     }
 
     public void setSpeechRate(String val) {
@@ -209,6 +261,7 @@ class AndroidTextToSpeech {
 
     TTS tts;
 
+    String voices;
 
     String locales;
 
@@ -220,11 +273,12 @@ class AndroidTextToSpeech {
     }
 
     @JavascriptInterface
-    public void setAvailableLocales() {
+    public void setAvailableLocalesAndVoices() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                locales = tts.getAvailableLocales();
+                voices = tts.setVoices();
+                locales = tts.setAvailableLocales();
             }
         });
     }
@@ -232,6 +286,11 @@ class AndroidTextToSpeech {
     @JavascriptInterface
     public String getAvailableLocales() {
         return locales;
+    }
+
+    @JavascriptInterface
+    public String getAvailableVoices() {
+        return voices;
     }
     @JavascriptInterface
     public void speak(String text) {
