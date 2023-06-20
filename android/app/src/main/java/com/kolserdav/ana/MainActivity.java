@@ -165,13 +165,15 @@ class TTS {
         return json.toString();
     }
 
-    public String getVoices() {
+    public String getVoices(String lang) {
         JSONObject json = new JSONObject();
         Voice[] _voices = voices.toArray(new Voice[0]);
         for (int i = 0; i < _voices.length; i ++) {
             Voice v = _voices[i];
             try {
-                json.put(String.valueOf(v.getName()), v.getLocale().getDisplayName());
+                if (v.getLocale().getLanguage().matches(lang)) {
+                    json.put(String.valueOf(v.getName()), v.getLocale().getDisplayName());
+                }
             } catch (Exception e) {
                 Log.d("Error json voice put", e.getMessage());
             }
@@ -190,7 +192,6 @@ class TTS {
             Voice v = _voices[i];
             boolean check = v.getLocale().getLanguage().matches(lang.getLanguage());
             if (check) {
-                Log.d("locale", v.getName());
                 this.voice = v;
             }
         }
@@ -200,8 +201,9 @@ class TTS {
         Voice[] _voices = voices.toArray(new Voice[0]);
         for (int i = 0; i < _voices.length; i ++) {
             Voice v = _voices[i];
-            boolean check = v.getName() == language;
+            boolean check = v.getName().equals(language);
             if (check) {
+                Log.d("set voice", v.getName() + " " + language);
                 this.voice = v;
             }
         }
@@ -215,7 +217,7 @@ class TTS {
         Locale _locale = Locale.forLanguageTag(locale);
         lang = _locale;
         textToSpeech.setLanguage(_locale);
-        if (voice == null) {    
+        if (voice == null) {
             setVoice();
         }
     }
@@ -273,11 +275,12 @@ class AndroidTextToSpeech {
 
     @JavascriptInterface
     public void setLanguage(String lang) {
+        Log.d("Set language", lang);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 tts.setLanguage(lang);
-                voices = tts.getVoices();
+                voices = tts.getVoices(lang);
             }
         });
     }

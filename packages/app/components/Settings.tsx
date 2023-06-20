@@ -209,14 +209,6 @@ function Settings({
           {locale.title}
         </Typography>
         <Hr theme={theme} />
-        <Select onChange={changeVoice} value={voice} aria-label={locale.speechVoice} theme={theme}>
-          {voices.map((item) => (
-            <option key={item.lang} value={item.lang}>
-              {item.value}
-            </option>
-          ))}
-        </Select>
-        <Hr theme={theme} />
         <Typography variant="h4" theme={theme}>
           {locale.speechSpeed}
         </Typography>
@@ -229,6 +221,20 @@ function Settings({
                 </option>
               ))}
             </Select>
+            <div className={s.lang_select__voice}>
+              <Select
+                onChange={changeVoice}
+                value={voice}
+                aria-label={locale.speechVoice}
+                theme={theme}
+              >
+                {voices.map((item) => (
+                  <option key={item.lang} value={item.lang}>
+                    {item.value}
+                  </option>
+                ))}
+              </Select>
+            </div>
           </div>
           {!synthAllow && (
             <div className={s.test_input__item}>

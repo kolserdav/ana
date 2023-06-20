@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { log } from '../utils/lib';
+import { log, wait } from '../utils/lib';
 import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import { VolumeIcon } from '../types';
@@ -75,16 +75,22 @@ const useSpeechSynth = ({
     }
     log('info', 'Set android voice with router.locale', router.locale);
     if (typeof androidTextToSpeech !== 'undefined') {
-      androidTextToSpeech.setLanguage(lang);
-      const androidVoices = androidTextToSpeech.getAvailableVoices();
-      let _voices: Record<string, string> = {};
-      try {
-        _voices = JSON.parse(androidVoices);
-      } catch (e) {
-        log('error', 'Error parse android voices', e);
-      }
-      setVoices(_voices);
-      setSynthAllow(true);
+      (async () => {
+        androidTextToSpeech.setLanguage(lang);
+        let androidVoices = androidTextToSpeech.getAvailableVoices();
+        let _voices: Record<string, string> = {};
+        if (!androidVoices) {
+          await wait(1000);
+          androidVoices = androidTextToSpeech.getAvailableVoices();
+        }
+        try {
+          _voices = JSON.parse(androidVoices);
+        } catch (e) {
+          log('error', 'Error parse android voices', e);
+        }
+        setVoices(_voices);
+        setSynthAllow(true);
+      })();
     }
   }, [lang, router.locale]);
 
@@ -104,11 +110,7 @@ const useSpeechSynth = ({
         }
         let _voices = synth.getVoices();
         if (_voices.length === 0) {
-          await new Promise((resolve) => {
-            setTimeout(() => {
-              resolve(0);
-            }, 1000);
-          });
+          await wait(1000);
           _voices = synth.getVoices();
         }
         if (_voices.length !== 0) {

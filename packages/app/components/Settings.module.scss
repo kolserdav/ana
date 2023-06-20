@@ -51,6 +51,10 @@ $speech-select-shift: 8px;
 
       .lang_select {
         margin-bottom: $speech-select-shift;
+
+        .lang_select__voice {
+          margin-top: 1rem;
+        }
       }
 
       .speed_select {

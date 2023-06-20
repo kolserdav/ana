@@ -184,3 +184,10 @@ export const copyText = (text: string) => {
     resolve(0);
   });
 };
+
+export const wait = async (timeout: number) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(0);
+    }, timeout);
+  });
