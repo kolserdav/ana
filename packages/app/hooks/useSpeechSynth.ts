@@ -308,11 +308,10 @@ const useSpeechSynth = ({
     const {
       target: { value },
     } = e;
-    if (typeof androidTextToSpeech === 'undefined') {
-      setVoice(value);
-    } else {
+    if (typeof androidTextToSpeech !== 'undefined') {
       androidTextToSpeech.setVoice(value);
     }
+    setVoice(value);
     const langVoices = getLocalStorage(LocalStorageName.LANG_VOICES) || {};
     langVoices[lang] = value;
     setLocalStorage(LocalStorageName.LANG_VOICES, langVoices);
