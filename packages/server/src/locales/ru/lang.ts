@@ -119,7 +119,7 @@ const lang: Locale = {
       policyTitle: 'Политика конфиденциальности',
       rulesTitle: 'Правила сервиса',
       and: 'и',
-      voiceNotFound: 'Голос для озвучивания не найден',
+      voiceNotFound: 'Национальный голос для озвучивания не найден',
       playSound: 'Озвучить текст',
       insertedLink: '...с...',
       sendMail: 'Отправить письмо',
@@ -214,6 +214,7 @@ const lang: Locale = {
       speechTest: 'Тест озвучивания',
       speechLang: 'Язык озвучивания',
       speechVoice: 'Голос озвучивания',
+      speechSettings: 'Настройки озвучивания',
       personalData: 'Личные данные',
       deleteAccountTitle: 'Удалить аккаунт',
       deleteAccountDesc:

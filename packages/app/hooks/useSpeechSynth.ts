@@ -74,7 +74,22 @@ const useSpeechSynth = ({
       return;
     }
     log('info', 'Set android voice with router.locale', router.locale);
+
     if (typeof androidTextToSpeech !== 'undefined') {
+      const setDefaultVoice = (_voices: Record<string, string>) => {
+        const langVoices = getLocalStorage(LocalStorageName.LANG_VOICES);
+        if (langVoices && langVoices[lang]) {
+          setVoice(langVoices[lang]);
+          androidTextToSpeech.setVoice(langVoices[lang]);
+          return;
+        }
+        Object.keys(_voices).every((item) => {
+          setVoice(item);
+          androidTextToSpeech.setVoice(item);
+          return false;
+        });
+      };
+
       (async () => {
         androidTextToSpeech.setLanguage(lang);
         const waitChange = async (): Promise<number> => {
@@ -96,6 +111,7 @@ const useSpeechSynth = ({
         } catch (e) {
           log('error', 'Error parse android voices', e);
         }
+        setDefaultVoice(_voices);
         setVoices(_voices);
         setSynthAllow(true);
       })();
@@ -130,13 +146,20 @@ const useSpeechSynth = ({
         }
 
         const _voice = _voices.find((item) => new RegExp(`${lang}`).test(item.lang));
+        const langVoices = getLocalStorage(LocalStorageName.LANG_VOICES);
         if (!_voice) {
           log('warn', voiceNotFound, _voices, true);
           setSynthAllow(false);
-          return;
+        } else {
+          setSynthAllow(true);
+          if (!langVoices || !langVoices[lang]) {
+            setVoice(_voice.lang);
+          }
         }
-        setSynthAllow(true);
-        setVoice(_voice.lang);
+
+        if (langVoices && langVoices[lang]) {
+          setVoice(langVoices[lang]);
+        }
       }
     })();
   }, [voiceNotFound, lang, synth]);
@@ -279,6 +302,9 @@ const useSpeechSynth = ({
   );
 
   const changeVoice = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!lang) {
+      return;
+    }
     const {
       target: { value },
     } = e;
@@ -287,6 +313,9 @@ const useSpeechSynth = ({
     } else {
       androidTextToSpeech.setVoice(value);
     }
+    const langVoices = getLocalStorage(LocalStorageName.LANG_VOICES) || {};
+    langVoices[lang] = value;
+    setLocalStorage(LocalStorageName.LANG_VOICES, langVoices);
   };
 
   return {

@@ -534,6 +534,7 @@ export interface Locale {
     };
     settings: {
       title: string;
+      speechSettings: string;
       speechSpeed: string;
       speechTest: string;
       speechLang: string;

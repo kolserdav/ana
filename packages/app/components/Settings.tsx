@@ -210,7 +210,7 @@ function Settings({
         </Typography>
         <Hr theme={theme} />
         <Typography variant="h4" theme={theme}>
-          {locale.speechSpeed}
+          {locale.speechSettings}
         </Typography>
         <div className={s.test_input}>
           <div className={s.lang_select}>
@@ -243,46 +243,40 @@ function Settings({
               </Typography>
             </div>
           )}
-          {synthAllow && (
-            <div className={s.test_input__item}>
-              <Input
-                type="text"
-                id="test-speech"
-                theme={theme}
-                value={testText}
-                name={locale.speechTest}
-                onChange={onChangeTestText}
-                disabled={load}
-              />
-            </div>
-          )}
-          {synthAllow && (
-            <div className={s.speed_select}>
-              <Typography variant="label" theme={theme}>
-                {`${locale.speechSpeed}: ${speechSpeed}`}
-              </Typography>
-              <input
-                type="range"
-                value={speechSpeed}
-                max={SPEECH_SPEED_MAX}
-                min={0}
-                step={0.1}
-                name="tes"
-                onChange={changeSpeechSpeed}
-                id="speech-speed"
-              />
-            </div>
-          )}
-          {synthAllow && (
-            <div className={s.speech_button}>
-              <SpeakIcon
-                onClick={speechText}
-                title={playSound}
-                volumeIcon={volumeIcon}
-                theme={theme}
-              />
-            </div>
-          )}
+          <div className={s.test_input__item}>
+            <Input
+              type="text"
+              id="test-speech"
+              theme={theme}
+              value={testText}
+              name={locale.speechTest}
+              onChange={onChangeTestText}
+              disabled={load}
+            />
+          </div>
+          <div className={s.speed_select}>
+            <Typography variant="label" theme={theme}>
+              {`${locale.speechSpeed}: ${speechSpeed}`}
+            </Typography>
+            <input
+              type="range"
+              value={speechSpeed}
+              max={SPEECH_SPEED_MAX}
+              min={0}
+              step={0.1}
+              name="tes"
+              onChange={changeSpeechSpeed}
+              id="speech-speed"
+            />
+          </div>
+          <div className={s.speech_button}>
+            <SpeakIcon
+              onClick={speechText}
+              title={playSound}
+              volumeIcon={volumeIcon}
+              theme={theme}
+            />
+          </div>
         </div>
         {user !== null && (
           <div className={s.personal_data}>

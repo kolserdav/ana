@@ -186,17 +186,6 @@ class TTS {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    private void setVoice() {
-        Voice[] _voices = voices.toArray(new Voice[0]);
-        for (int i = 0; i < _voices.length; i ++) {
-            Voice v = _voices[i];
-            boolean check = v.getLocale().getLanguage().matches(lang.getLanguage());
-            if (check) {
-                this.voice = v;
-            }
-        }
-    }
-
     public void setVoice(String language) {
         Voice[] _voices = voices.toArray(new Voice[0]);
         for (int i = 0; i < _voices.length; i ++) {
@@ -221,9 +210,6 @@ class TTS {
         Locale _locale = Locale.forLanguageTag(locale);
         lang = _locale;
         textToSpeech.setLanguage(_locale);
-        if (voice == null) {
-            setVoice();
-        }
     }
 
     public void setSpeechRate(String val) {

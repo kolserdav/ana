@@ -34,6 +34,8 @@ export enum LocalStorageName {
   SAVE_WITH_TRANSLATE = 'SAVE_WITH_TRANSLATE',
   // eslint-disable-next-line no-unused-vars
   FILTER_BY_DATE_STAT = 'FILTER_BY_DATE_STAT',
+  // eslint-disable-next-line no-unused-vars
+  LANG_VOICES = 'LANG_VOICES',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
@@ -66,6 +68,8 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   ? boolean
   : T extends LocalStorageName.FILTER_BY_DATE_STAT
   ? DateFilter
+  : T extends LocalStorageName.LANG_VOICES
+  ? Record<string, string>
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(
