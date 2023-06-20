@@ -113,6 +113,16 @@ const useSpeechSynth = ({
   }, [voiceNotFound, lang, synth]);
 
   /**
+   * Set available locales and voices
+   */
+  useEffect(() => {
+    if (typeof androidTextToSpeech === 'undefined') {
+      return;
+    }
+    androidTextToSpeech.setAvailableLocalesAndVoices();
+  }, []);
+
+  /**
    * set android speaking
    */
   useEffect(() => {

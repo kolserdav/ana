@@ -29,12 +29,16 @@ declare global {
     setLanguage: (lang: string) => void;
 
     /**
-     *
      * @returns {string} Like Record<0, 'ru'>
      */
     getAvailableLocales: () => string;
 
-    setAvailableLocales: () => void;
+    setAvailableLocalesAndVoices: () => void;
+
+    /**
+     * @returns {string} Like Record<en, 'english'>
+     */
+    getAvailableVoices: () => string;
 
     cancel: () => void;
 
