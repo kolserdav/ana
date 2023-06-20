@@ -130,6 +130,8 @@ class TTS {
 
     Iterator<Voice> voices;
 
+    Boolean isInit = false;
+
 
     public TTS(MainActivity context) {
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
@@ -139,6 +141,7 @@ class TTS {
                     voices = textToSpeech.getVoices().iterator();
                     locales = Locale.getAvailableLocales();
                     voice = textToSpeech.getDefaultVoice();
+                    isInit = true;
                 }
             }
         });
@@ -148,10 +151,6 @@ class TTS {
 
     public Boolean getSpeechState() {
         return textToSpeech.isSpeaking();
-    }
-
-    public Set<Voice> getVoices() {
-        return textToSpeech.getVoices();
     }
 
     public String setAvailableLocales() {
@@ -213,49 +212,6 @@ class TTS {
     }
 }
 
-class AndroidCommon {
-
-    MainActivity main;
-    AndroidCommon(MainActivity main) {
-        this.main = main;
-    }
-    @JavascriptInterface
-    public void closeApp() {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                main.finishAffinity();
-                System.exit(0);
-            }
-        });
-    }
-
-    @JavascriptInterface
-    public void copyToClipboard(String text) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                ClipboardManager clipboard = (ClipboardManager) main.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("copy", text);
-                clipboard.setPrimaryClip(clip);
-            }
-        });
-    }
-
-    @JavascriptInterface
-    public void setKeepScreenOn(boolean sleep) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (sleep) {
-                    main.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                } else {
-                    main.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                }
-            }
-        });
-    }
-}
 
 class AndroidTextToSpeech {
 
@@ -281,6 +237,11 @@ class AndroidTextToSpeech {
                 locales = tts.setAvailableLocales();
             }
         });
+    }
+
+    @JavascriptInterface
+    public boolean getTTSIsInit() {
+        return tts.isInit;
     }
 
     @JavascriptInterface
@@ -342,6 +303,51 @@ class AndroidTextToSpeech {
             public void run() {
                 speaking = false;
                 tts.stopSpeak();
+            }
+        });
+    }
+
+}
+
+class AndroidCommon {
+
+    MainActivity main;
+    AndroidCommon(MainActivity main) {
+        this.main = main;
+    }
+    @JavascriptInterface
+    public void closeApp() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                main.finishAffinity();
+                System.exit(0);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void copyToClipboard(String text) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                ClipboardManager clipboard = (ClipboardManager) main.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("copy", text);
+                clipboard.setPrimaryClip(clip);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void setKeepScreenOn(boolean sleep) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (sleep) {
+                    main.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                } else {
+                    main.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
             }
         });
     }

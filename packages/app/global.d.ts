@@ -44,6 +44,8 @@ declare global {
 
     isSpeaking: () => boolean;
 
+    getTTSIsInit: () => boolean;
+
     /**
      *
      * @param rate {string} Like "0.5"
