@@ -130,7 +130,6 @@ class TTS {
 
     Iterator<Voice> voices;
 
-    Boolean isInit = false;
 
 
     public TTS(MainActivity context) {
@@ -141,7 +140,6 @@ class TTS {
                     voices = textToSpeech.getVoices().iterator();
                     locales = Locale.getAvailableLocales();
                     voice = textToSpeech.getDefaultVoice();
-                    isInit = true;
                 }
             }
         });
@@ -171,13 +169,13 @@ class TTS {
         JSONObject json = new JSONObject();
         while (voices.hasNext()) {
             Voice v = voices.next();
+            Log.d("v", v.toString());
             try {
                 json.put(String.valueOf(v.getName()), v.getLocale().getDisplayName());
             } catch (Exception e) {
                 Log.d("Error json voice put", e.getMessage());
             }
         }
-        Log.d("locales", voices.toString());
         return json.toString();
     }
     public void textToSpeak(String text) {
@@ -229,11 +227,10 @@ class AndroidTextToSpeech {
     }
 
     @JavascriptInterface
-    public void setAvailableLocalesAndVoices() {
+    public void setAvailableLocales() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                voices = tts.setVoices();
                 locales = tts.setAvailableLocales();
             }
         });
@@ -265,6 +262,7 @@ class AndroidTextToSpeech {
             @Override
             public void run() {
                 tts.setLanguage(lang);
+                voices = tts.setVoices();
             }
         });
     }

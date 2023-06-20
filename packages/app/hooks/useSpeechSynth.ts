@@ -119,7 +119,7 @@ const useSpeechSynth = ({
     if (typeof androidTextToSpeech === 'undefined') {
       return;
     }
-    androidTextToSpeech.setAvailableLocalesAndVoices();
+    androidTextToSpeech.setAvailableLocales();
   }, []);
 
   /**

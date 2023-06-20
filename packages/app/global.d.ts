@@ -33,7 +33,7 @@ declare global {
      */
     getAvailableLocales: () => string;
 
-    setAvailableLocalesAndVoices: () => void;
+    setAvailableLocales: () => void;
 
     /**
      * @returns {string} Like Record<en, 'english'>
