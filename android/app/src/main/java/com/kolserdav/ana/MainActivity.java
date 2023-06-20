@@ -213,6 +213,10 @@ class TTS {
         textToSpeech.stop();
     }
 
+    public String getLanguage() {
+        return textToSpeech.getVoice().getLocale().getLanguage();
+    }
+
     public void setLanguage(String locale) {
         Locale _locale = Locale.forLanguageTag(locale);
         lang = _locale;
@@ -283,6 +287,11 @@ class AndroidTextToSpeech {
                 voices = tts.getVoices(lang);
             }
         });
+    }
+
+    @JavascriptInterface
+    public String getLanguage() {
+        return tts.getLanguage();
     }
 
     @JavascriptInterface

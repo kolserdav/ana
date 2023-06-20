@@ -28,6 +28,8 @@ declare global {
 
     setLanguage: (lang: string) => void;
 
+    getLanguage: () => string;
+
     /**
      * @returns {string} Like Record<0, 'ru'>
      */

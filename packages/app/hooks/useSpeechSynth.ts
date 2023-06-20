@@ -77,10 +77,18 @@ const useSpeechSynth = ({
     if (typeof androidTextToSpeech !== 'undefined') {
       (async () => {
         androidTextToSpeech.setLanguage(lang);
+        const waitChange = async (): Promise<number> => {
+          const _lang = androidTextToSpeech.getLanguage();
+          if (_lang !== lang) {
+            await wait(100);
+            return waitChange();
+          }
+          return 0;
+        };
+        await waitChange();
         let androidVoices = androidTextToSpeech.getAvailableVoices();
         let _voices: Record<string, string> = {};
         if (!androidVoices) {
-          await wait(1000);
           androidVoices = androidTextToSpeech.getAvailableVoices();
         }
         try {
