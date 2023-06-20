@@ -213,6 +213,7 @@ const lang: Locale = {
       speechSpeed: 'Скорость речи',
       speechTest: 'Тест озвучивания',
       speechLang: 'Язык озвучивания',
+      speechVoice: 'Голос озвучивания',
       personalData: 'Личные данные',
       deleteAccountTitle: 'Удалить аккаунт',
       deleteAccountDesc:

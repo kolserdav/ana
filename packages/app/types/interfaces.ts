@@ -537,6 +537,7 @@ export interface Locale {
       speechSpeed: string;
       speechTest: string;
       speechLang: string;
+      speechVoice: string;
       personalData: string;
       deleteAccountTitle: string;
       deleteAccountDesc: string;

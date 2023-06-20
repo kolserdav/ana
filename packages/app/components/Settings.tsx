@@ -59,7 +59,16 @@ function Settings({
 
   const { lang, langs, changeLang } = useLanguage();
 
-  const { synthAllow, speechText, speechSpeed, changeSpeechSpeed, volumeIcon } = useSpeechSynth({
+  const {
+    synthAllow,
+    speechText,
+    speechSpeed,
+    changeSpeechSpeed,
+    volumeIcon,
+    voices,
+    changeVoice,
+    voice,
+  } = useSpeechSynth({
     text: testText,
     voiceNotFound,
     lang,
@@ -199,6 +208,14 @@ function Settings({
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
+        <Hr theme={theme} />
+        <Select onChange={changeVoice} value={voice} aria-label={locale.speechVoice} theme={theme}>
+          {voices.map((item) => (
+            <option key={item.lang} value={item.lang}>
+              {item.value}
+            </option>
+          ))}
+        </Select>
         <Hr theme={theme} />
         <Typography variant="h4" theme={theme}>
           {locale.speechSpeed}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import { log } from '../utils/lib';
 import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
@@ -20,13 +21,16 @@ const useSpeechSynth = ({
   onStop?: () => void;
   changeLinkTo?: string;
 }) => {
+  const router = useRouter();
+
   const [textToSpeech, setTextToSpeech] = useState<string>();
-  const [voice, setVoice] = useState<SpeechSynthesisVoice>();
+  const [voice, setVoice] = useState<string>();
   const [synthAllow, setSynthAllow] = useState<boolean>(false);
   const [speechSpeed, setSpeechSpeed] = useState<number>(SPEECH_SPEED_DEFAULT);
   const [volumeIcon, setVolumeIcon] = useState<VolumeIcon>('high');
   const [volumeIconUp, setVolumeIconUp] = useState<boolean>(true);
   const [androidSpeaking, setAndroidSpeaking] = useState<boolean>(false);
+  const [voices, setVoices] = useState<Record<string, string>>({});
 
   const synth: null | SpeechSynthesis = useMemo(
     () => (typeof window === 'undefined' ? null : window.speechSynthesis),
@@ -69,12 +73,20 @@ const useSpeechSynth = ({
     if (!lang) {
       return;
     }
+    log('info', 'Set android voice with router.locale', router.locale);
     if (typeof androidTextToSpeech !== 'undefined') {
       androidTextToSpeech.setLanguage(lang);
-
+      const androidVoices = androidTextToSpeech.getAvailableVoices();
+      let _voices: Record<string, string> = {};
+      try {
+        _voices = JSON.parse(androidVoices);
+      } catch (e) {
+        log('error', 'Error parse android voices', e);
+      }
+      setVoices(_voices);
       setSynthAllow(true);
     }
-  }, [lang]);
+  }, [lang, router.locale]);
 
   /**
    * Set suitable voice
@@ -90,24 +102,31 @@ const useSpeechSynth = ({
           setSynthAllow(false);
           return;
         }
-        let voices = synth.getVoices();
-        if (voices.length === 0) {
+        let _voices = synth.getVoices();
+        if (_voices.length === 0) {
           await new Promise((resolve) => {
             setTimeout(() => {
               resolve(0);
             }, 1000);
           });
-          voices = synth.getVoices();
+          _voices = synth.getVoices();
+        }
+        if (_voices.length !== 0) {
+          const newVoices: typeof voices = {};
+          _voices.forEach((item) => {
+            newVoices[item.lang] = item.name;
+          });
+          setVoices(newVoices);
         }
 
-        const _voice = voices.find((item) => new RegExp(`${lang}`).test(item.lang));
+        const _voice = _voices.find((item) => new RegExp(`${lang}`).test(item.lang));
         if (!_voice) {
-          log('warn', voiceNotFound, voices, true);
+          log('warn', voiceNotFound, _voices, true);
           setSynthAllow(false);
           return;
         }
         setSynthAllow(true);
-        setVoice(_voice);
+        setVoice(_voice.lang);
       }
     })();
   }, [voiceNotFound, lang, synth]);
@@ -192,7 +211,7 @@ const useSpeechSynth = ({
         return;
       }
 
-      utterThis.lang = voice.lang;
+      utterThis.lang = voice;
       utterThis.rate = speechSpeed;
       synth.speak(utterThis);
     }
@@ -244,7 +263,33 @@ const useSpeechSynth = ({
     };
   }, [volumeIcon, volumeIconUp, synth?.speaking, androidSpeaking, onStop]);
 
-  return { speechText, synthAllow, speechSpeed, changeSpeechSpeed, volumeIcon, stopSpeech };
+  const _voices = useMemo(
+    () => Object.keys(voices).map((item) => ({ lang: item, value: voices[item] })),
+    [voices]
+  );
+
+  const changeVoice = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    if (typeof androidTextToSpeech === 'undefined') {
+      setVoice(value);
+    } else {
+      androidTextToSpeech.setVoice(value);
+    }
+  };
+
+  return {
+    speechText,
+    synthAllow,
+    speechSpeed,
+    changeSpeechSpeed,
+    volumeIcon,
+    stopSpeech,
+    voices: _voices,
+    changeVoice,
+    voice,
+  };
 };
 
 export default useSpeechSynth;

@@ -49,6 +49,8 @@ declare global {
      * @param rate {string} Like "0.5"
      */
     setSpeechRate: (rate: string) => void;
+
+    setVoice: (lang: string) => void;
   }
 
   const androidTextToSpeech: AndroidTextToSpeech | undefined;
@@ -59,6 +61,8 @@ declare global {
     setKeepScreenOn: (sleep: boolean) => void;
 
     copyToClipboard: (text: string) => void;
+
+    setInterfaceLanguage: (languageCode: string) => void;
   }
 
   const androidCommon: AndroidCommon | undefined;

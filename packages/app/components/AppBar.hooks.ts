@@ -226,6 +226,10 @@ export const useLanguage = () => {
     if (lang !== language) {
       router.push(router.asPath, router.asPath, { locale: language });
       setLocalStorage(LocalStorageName.INTERFACE_LANGUAGE, language);
+
+      if (typeof androidCommon !== 'undefined') {
+        androidCommon.setInterfaceLanguage(language);
+      }
     }
   }, [router, lang, language]);
 
