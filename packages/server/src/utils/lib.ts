@@ -132,7 +132,7 @@ export const getConfirmEmailLink = ({
   user: User & { ConfirmLink: { id: string }[] };
   lang: LocaleValue;
 }) =>
-  `${cleanLastSlush(APP_URL)}/${lang}/${PAGE_CONFIRM_EMAIL}?${EMAIL_QS}=${user.email}&${KEY_QS}=${
+  `${cleanLastSlush(APP_URL)}/${lang}${PAGE_CONFIRM_EMAIL}?${EMAIL_QS}=${user.email}&${KEY_QS}=${
     user.ConfirmLink[0]!.id
   }`;
 
@@ -147,4 +147,4 @@ export const getForgotPasswordLink = ({
 }) =>
   `${cleanLastSlush(
     APP_URL
-  )}/${lang}/${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restoreId}`;
+  )}/${lang}${PAGE_RESTORE_PASSWORD_CALLBACK}?${EMAIL_QS}=${email}&${KEY_QS}=${restoreId}`;

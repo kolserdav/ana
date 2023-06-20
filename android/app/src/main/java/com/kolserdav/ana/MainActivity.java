@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,7 +31,9 @@ import androidx.core.content.ContextCompat;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
@@ -62,6 +66,33 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
 
+        String url = "https://uyem.ru";
+        Intent intent = getIntent();
+
+        // Parse process text
+        CharSequence text = intent
+                .getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
+        if (text != null) {
+            // Dependency PROCESS_TEXT_QUERY_STRING in packages/app/utils/constants.ts
+            url = url.concat("?process_text=");
+            String _text = text.toString();
+            try {
+                _text = URLDecoder.decode(_text, "UTF-8");
+            }
+            catch (UnsupportedEncodingException e) {
+                _text = text.toString();
+                Log.e("Error decode URI", e.getMessage());
+            }
+            url = url.concat(_text);
+        }
+
+        // Parse deep link
+        Uri path = intent.getData();
+        if (path != null) {
+            url = url.concat(path.getPath());
+            url = url.concat("?");
+            url = url.concat(path.getQuery());
+        }
 
         mWebView.setWebChromeClient(new WebChromeClient() {
 
@@ -87,7 +118,7 @@ public class MainActivity extends Activity {
 
         });
 
-        mWebView.loadUrl("https://uyem.ru");
+        mWebView.loadUrl(url);
 
         this.setContentView(mWebView);
 
@@ -178,7 +209,6 @@ class TTS {
                 Log.d("Error json voice put", e.getMessage());
             }
         }
-        Log.d("voices", json.toString());
         return json.toString();
     }
     public void textToSpeak(String text) {
@@ -192,7 +222,6 @@ class TTS {
             Voice v = _voices[i];
             boolean check = v.getName().equals(language);
             if (check) {
-                Log.d("set voice", v.getName() + " " + language);
                 this.voice = v;
             }
         }

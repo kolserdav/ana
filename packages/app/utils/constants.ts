@@ -138,3 +138,5 @@ export const GRAPH_WIDTH_DEFAULT = 500;
 export const GRAPH_HEIGHT_COEFF = 1.6666666666666667;
 // deps $container-padding
 export const CONTAINER_PADDING = 16;
+// deps in parseProcessText in android/app/src/main/java/com/kolserdav/ana/MainActivity.java
+export const PROCESS_TEXT_QUERY_STRING = 'process_text';

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import Request from '../utils/request';
 import { cleanPath, copyText, log, shortenString } from '../utils/lib';
@@ -8,6 +8,7 @@ import {
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
   PHRASE_MAX_LENGTH,
+  PROCESS_TEXT_QUERY_STRING,
   Pages,
   TEXTAREA_MAX_ROWS,
   TEXTAREA_ROWS_DEFAULT,
@@ -218,6 +219,8 @@ export const useTranslate = ({
 }) => {
   const router = useRouter();
 
+  const { [PROCESS_TEXT_QUERY_STRING]: processText } = router.query;
+
   const [reTranslate, setRetranslate] = useState<string>('');
   const [rows, setRows] = useState<number>(TEXTAREA_ROWS_DEFAULT);
   const [edit, setEdit] = useState<string | null>(null);
@@ -320,10 +323,24 @@ export const useTranslate = ({
     );
   }, [text, learnLang, nativeLang, changeLang, setChangeLang, setTranslate, connId]);
 
-  const saveText = (value: string) => {
-    setLocalStorage(LocalStorageName.TEXT, value);
-    setText(value);
-  };
+  const saveText = useCallback(
+    (value: string) => {
+      setLocalStorage(LocalStorageName.TEXT, value);
+      setText(value);
+    },
+    [setText]
+  );
+
+  /**
+   * Set process text
+   */
+  useEffect(() => {
+    if (!processText || typeof processText !== 'string') {
+      return;
+    }
+    saveText(processText);
+    router.push(cleanPath(router.asPath));
+  }, [processText, router, saveText]);
 
   const changeText = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const {

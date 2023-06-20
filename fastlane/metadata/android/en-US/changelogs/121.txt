@@ -1,0 +1,3 @@
+- Added ability to select speech voice
+- Added the ability to open the application from the text selection context menu 
+- Added the ability to open the application from the browser if open the site
