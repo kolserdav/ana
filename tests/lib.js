@@ -31,7 +31,7 @@ async function getPage({ url }) {
         console.log(d.toString());
       });
       chrome.on('exit', () => {
-        resolve(path.normalize(data.trim()));
+        resolve(path.normalize(data.trim().replace(/[\s\r\n]+/g, '')));
       });
     });
     log('info', 'Chrome executable path:', executablePath, true);
