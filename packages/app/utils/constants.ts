@@ -96,7 +96,9 @@ export const MOBILE_WIDTH = 760;
 export const TRANSLATE_DELAY = 1000;
 export const ORDER_BY_DEFAULT: OrderBy = 'asc';
 export const TAKE_PHRASES_DEFAULT = 20;
+// deps packages/translate2/utils/constants.py LEARN_LANG_DEFAULT
 export const LEARN_LANG_DEFAULT = 'en';
+// deps packages/translate2/utils/constants.py NATIVE_LANG_DEFAULT
 export const NATIVE_LANG_DEFAULT = 'ru';
 export const LICENSE = {
   title: 'AGPL-3.0 license ',

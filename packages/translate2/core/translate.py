@@ -6,7 +6,7 @@ from typing import List
 from pathlib import Path
 import sentencepiece as sp
 import re
-from utils.constants import NUM_HYPOTHESES, logger
+from utils.constants import NUM_HYPOTHESES, logger, LEARN_LANG_DEFAULT, NATIVE_LANG_DEFAULT, CI
 
 
 class Translate:
@@ -44,7 +44,16 @@ class Translate:
             need_update = False
             if index != -1:
                 need_update = installed_packages[index].package_version != available_package.package_version
-            if index == -1 or need_update:
+
+            install_extra = True
+            if (available_package.from_code != NATIVE_LANG_DEFAULT
+                    or available_package.to_code != NATIVE_LANG_DEFAULT
+                    or available_package.to_code != LEARN_LANG_DEFAULT
+                    or available_package.from_code != LEARN_LANG_DEFAULT
+                ) and CI:
+                install_extra = False
+
+            if (index == -1 or need_update) and install_extra:
                 logger.warn(
                     "Downloading %s: version %s ..."
                     % (available_package, available_package.package_version)

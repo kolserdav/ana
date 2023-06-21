@@ -4,3 +4,7 @@ services:
     extends:
       file: docker-compose.yml
       service: db
+  translate:
+    extends:
+      file: docker-compose.yml
+      service: translate

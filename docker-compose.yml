@@ -31,3 +31,18 @@ services:
         max-size: '12m'
         max-file: '5'
       driver: json-file
+  translate:
+    build:
+      container_name: translate
+      context: ./
+      dockerfile: ./dockerfiles/Dockerfile.translate
+    restart: always
+    ports:
+      - '8000:8000'
+    environment: # depends on .env
+      CI: '${CI}'
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file

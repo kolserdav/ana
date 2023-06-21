@@ -1,7 +1,7 @@
 from bottle import route, run, json_dumps, request
 import json
 from core.translate import Translate
-from utils.constants import DEBUG, HOST, PORT
+from utils.constants import DEBUG, HOST, PORT, CI
 
 
 def parse_body():
@@ -33,6 +33,11 @@ def get_languages():
 @route('/check', method='GET')
 def check():
     return 'success'
+
+
+@route('/ci', method='GET')
+def ci():
+    return CI
 
 
 run(host=HOST, port=PORT, reloader=DEBUG, quiet=DEBUG == False)
