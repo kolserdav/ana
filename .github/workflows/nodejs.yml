@@ -22,16 +22,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: python
+      - name: Install dependencies
         run: |
-          add-apt-repository ppa:deadsnakes/ppa
-          apt update
-          apt install python3.11
-      - name: install-dependencies
+          npm install --ignore-scripts
+          npm run install:server
+          npm run scripts
+      - name: Prepare environment
         run: |
-          npm i
           docker-compose -f docker-compose.ci.yml up -d
-      - name: build-server
+      - name: Build server
         env:
           CI: false
         run: |
