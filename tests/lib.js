@@ -5,6 +5,7 @@ const { TEST_HEADLESS } = require('./constants.json');
 // @ts-ignore
 const { spawn, ChildProcessWithoutNullStreams } = require('child_process');
 const { log } = require('../packages/server/dist/utils/lib');
+const path = require('path');
 
 /**
  * @type {any}
@@ -30,7 +31,7 @@ async function getPage({ url }) {
         console.log(d.toString());
       });
       chrome.on('exit', () => {
-        resolve(data);
+        resolve(path.normalize(data.trim()));
       });
     });
     log('info', 'Chrome executable path:', executablePath, true);
