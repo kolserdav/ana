@@ -31,7 +31,7 @@ const test1 = async () => {
   textarea.type('Tests').catch((e) => {
     log('error', 'Error type to textarea', e, true);
   });
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(15000);
   const paragraphs = await page.$$('p');
   let error = false;
   const pars = [];
