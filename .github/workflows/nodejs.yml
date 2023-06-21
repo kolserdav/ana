@@ -22,16 +22,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Prepare environment
+        run: |
+          npm run scripts
+          docker-compose -f docker-compose.ci.yml up -d
       - name: Install dependencies
         run: |
           npm install --ignore-scripts
-          npm run scripts
-      - name: Prepare environment
-        run: |
-          docker-compose -f docker-compose.ci.yml up -d
+          npm run install:server
+          npm run install:app
       - name: Build server
         run: |
-          npm run install:server
           npm run build:server
       - name: Unit tests
         run: |

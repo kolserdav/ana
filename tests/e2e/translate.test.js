@@ -40,7 +40,7 @@ const test1 = async () => {
     pars.push(value);
   }
   if (pars.indexOf('Испытания') === -1 || pars.indexOf('Tests') === -1) {
-    log('error', 'Translate test failed', true);
+    log('error', 'Translate test failed', { pars }, true);
     error = true;
   }
   if (error) {
