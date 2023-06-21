@@ -22,10 +22,19 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: python
+        run: |
+          sudo apt update
+          sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
+          wget https://www.python.org/ftp/python/3.11.3/Python-3.11.3.tgz
+          tar -xf Python-3.11.3.tgz
+          cd Python-3.11.3
+          ./configure --enable-optimizations
+          make -j 12
+          make altinstall
       - name: install-dependencies
         run: |
-          npm run install:server
-          npm run scripts
+          npm i
           docker-compose -f docker-compose.ci.yml up -d
       - name: build-server
         env:
