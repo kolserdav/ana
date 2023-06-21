@@ -35,21 +35,6 @@ const startServer = async () => {
    * @type {any}
    */
   const { env } = process;
-  let migrate = spawn('npm', ['run', 'migrate'], {
-    env,
-  });
-  migrate.stdout.on('data', (d) => {
-    console.log(d.toString());
-  });
-  migrate.stderr.on('data', (d) => {
-    const data = d.toString();
-    console.log(data);
-  });
-  await new Promise((resolve) => {
-    migrate.on('exit', () => {
-      resolve(0);
-    });
-  });
 
   log('log', 'Run command:', '"npm run start:server"', true);
   let server = spawn('npm', ['run', 'start:server'], {
