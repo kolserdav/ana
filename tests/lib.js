@@ -19,15 +19,18 @@ async function getPage({ url }) {
   let executablePath;
   if (env.CI === 'true') {
     executablePath = await new Promise((resolve) => {
-      const chrome = spawn('npm', ['run', 'migrate'], {
+      const chrome = spawn('which', ['chrome'], {
         env: process.env,
       });
+      let data = '';
       chrome.stdout.on('data', (d) => {
-        resolve(d.toString());
+        data += d.toString();
       });
       chrome.stderr.on('data', (d) => {
-        const data = d.toString();
-        console.log(data);
+        console.log(d.toString());
+      });
+      chrome.on('exit', () => {
+        resolve(data);
       });
     });
     log('info', 'Chrome executable path:', executablePath, true);
