@@ -62,7 +62,7 @@ export const checkClickBy = ({
   clientX,
   clientY,
 }: {
-  current: HTMLElement;
+  current: Element;
   clientX: number;
   clientY: number;
 }) => {

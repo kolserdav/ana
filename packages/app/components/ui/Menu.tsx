@@ -45,9 +45,13 @@ function Menu({
       const { current: button } = buttonRef;
       if (current && open && button) {
         const { clientX, clientY } = storeClick.getState();
+        if (button.firstElementChild === null) {
+          return;
+        }
         if (
           !checkClickBy({ clientX, clientY, current }) &&
-          !checkClickBy({ clientX, clientY, current: button })
+          !checkClickBy({ clientX, clientY, current: button }) &&
+          !checkClickBy({ clientX, clientY, current: button.firstElementChild })
         ) {
           onClickOpen();
         }
