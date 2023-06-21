@@ -7,12 +7,35 @@ const { spawn, ChildProcessWithoutNullStreams } = require('child_process');
 const { log } = require('../packages/server/dist/utils/lib');
 
 /**
+ * @type {any}
+ */
+const { env } = process;
+
+/**
  *
  * @param {{url: string}} param0
  */
 async function getPage({ url }) {
+  let executablePath;
+  if (env.CI === 'true') {
+    executablePath = await new Promise((resolve) => {
+      const chrome = spawn('npm', ['run', 'migrate'], {
+        env: process.env,
+      });
+      chrome.stdout.on('data', (d) => {
+        resolve(d.toString());
+      });
+      chrome.stderr.on('data', (d) => {
+        const data = d.toString();
+        console.log(data);
+      });
+    });
+    log('info', 'Chrome executable path:', executablePath, true);
+  }
+
   const browser = await puppeteer.launch({
     headless: TEST_HEADLESS,
+    executablePath,
   });
   const [page] = await browser.pages();
   await page.goto(url);
@@ -30,11 +53,6 @@ const startServer = async () => {
       resolve(0);
     }, 3000);
   });
-
-  /**
-   * @type {any}
-   */
-  const { env } = process;
 
   log('log', 'Run command:', '"npm run start:server"', true);
   let server = spawn('npm', ['run', 'start:server'], {

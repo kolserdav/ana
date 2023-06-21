@@ -27,7 +27,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Prepare environment
         run: |
-          which chrome
           npm run scripts
           docker-compose -f docker-compose.ci.yml up -d
       - name: Install dependencies
