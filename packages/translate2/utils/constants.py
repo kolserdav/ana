@@ -5,7 +5,7 @@ import logging
 
 load_dotenv()
 
-CI: bool = os.getenv('CI') == 'true' or False
+CI: bool = os.getenv('CI') == '1' or False
 
 SECRET_KEY: str = os.getenv('SECRET_KEY') or 'SECRET_KEY'
 

@@ -37,7 +37,10 @@ def check():
 
 @route('/ci', method='GET')
 def ci():
-    return CI
+    result = "false"
+    if CI is True:
+        result = "true"
+    return result
 
 
 run(host=HOST, port=PORT, reloader=DEBUG, quiet=DEBUG == False)

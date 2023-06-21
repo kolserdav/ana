@@ -36,22 +36,23 @@ class Translate:
 
         for available_package in available_packages:
             index = -1
+
+            install_extra = True
+            if CI:
+                is_native_learn = available_package.from_code == NATIVE_LANG_DEFAULT and available_package.to_code == LEARN_LANG_DEFAULT
+                is_learn_native = available_package.to_code == NATIVE_LANG_DEFAULT and available_package.from_code == LEARN_LANG_DEFAULT
+                if not is_native_learn and not is_learn_native:
+                    install_extra = False
+
             try:
                 index = installed_packages.index(available_package)
             except:
-                logger.warn("Package %s, not found" % (available_package))
+                if install_extra:
+                    logger.warn("Package %s, not found" % (available_package))
 
             need_update = False
             if index != -1:
                 need_update = installed_packages[index].package_version != available_package.package_version
-
-            install_extra = True
-            if (available_package.from_code != NATIVE_LANG_DEFAULT
-                    or available_package.to_code != NATIVE_LANG_DEFAULT
-                    or available_package.to_code != LEARN_LANG_DEFAULT
-                    or available_package.from_code != LEARN_LANG_DEFAULT
-                ) and CI:
-                install_extra = False
 
             if (index == -1 or need_update) and install_extra:
                 logger.warn(

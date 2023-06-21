@@ -32,13 +32,15 @@ services:
         max-file: '5'
       driver: json-file
   translate:
+    container_name: translate
     build:
-      container_name: translate
       context: ./
       dockerfile: ./dockerfiles/Dockerfile.translate
     restart: always
-    ports:
-      - '8000:8000'
+    network_mode: host
+    volumes:
+      - ./packages/translate2:/usr/app
+    command: python ./main.py
     environment: # depends on .env
       CI: '${CI}'
     logging:

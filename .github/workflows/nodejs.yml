@@ -25,13 +25,17 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --ignore-scripts
-          npm run install:server
           npm run scripts
       - name: Prepare environment
         run: |
           docker-compose -f docker-compose.ci.yml up -d
       - name: Build server
-        env:
-          CI: false
         run: |
+          npm run install:server
           npm run build:server
+      - name: Unit tests
+        run: |
+          npm run test
+      - name: Test translate
+        run: |
+          npm run test:translate

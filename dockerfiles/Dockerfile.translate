@@ -1,12 +1,15 @@
 FROM python:3
 
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
-COPY packages/translate2 .
-RUN apt-get install sentencepiece
+RUN apt-get update
+# Install sentencepiece cli
+RUN apt-get install -y curl zip unzip tar cmake
+RUN git clone https://github.com/Microsoft/vcpkg.git
+RUN cd vcpkg && ./bootstrap-vcpkg.sh && ./vcpkg integrate install && ./vcpkg install sentencepiece 
+# Install dependencies
 RUN pip install --upgrade pip
+COPY packages/translate2/requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-
-
-CMD [ "python", "./main.py" ]
+COPY packages/translate2 .
