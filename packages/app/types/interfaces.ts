@@ -46,7 +46,6 @@ export enum Api {
   postSendConfirmEmail = '/v1/send-confirm-email',
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
-  localGetSelector = '/local/get-selector',
   localPostSelector = '/local/create-selector',
 }
 

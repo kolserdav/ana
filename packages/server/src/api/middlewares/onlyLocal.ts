@@ -1,19 +1,17 @@
 import { MiddleHandler } from '../../types';
 import { parseHeaders } from '../../utils/lib';
-import { checkToken } from '../../utils/auth';
 import { getErrorResult } from './lib';
 import getLocale from '../../utils/getLocale';
 
-const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
-  const { headers, method, origin } = req;
+const onlyLocals: MiddleHandler = async (req, res, next) => {
+  const { headers, method, hostname } = req;
   if (method === 'OPTIONS') {
     return next();
   }
-  const { lang, token } = parseHeaders(headers);
+  const { lang } = parseHeaders(headers);
   const locale = getLocale(lang).server;
-  const result = 1;
-  console.log(origin);
-  if (result === 1) {
+
+  if (!/^localhost/.test(hostname) && !/^127\.0\.0\.1/.test(hostname)) {
     res.statusCode = 403;
     return res.end(
       getErrorResult({
@@ -25,4 +23,4 @@ const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
   return next();
 };
 
-export default checkTokenMiddleware;
+export default onlyLocals;

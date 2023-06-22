@@ -38,6 +38,7 @@ import sendConfirmEmail from './api/v1/user/send-confirm-email';
 import support from './api/v1/user/support';
 import getStatistics from './api/v1/user/get-statistics';
 import selectorCreate from './api/localhost/selector/create';
+import onlyLocals from './api/middlewares/onlyLocal';
 
 const prisma = new PrismaClient();
 
@@ -87,6 +88,8 @@ process.on('unhandledRejection', (err: Error) => {
     ],
     checkTokenMiddleware
   );
+
+  await fastify.use([Api.localPostSelector], onlyLocals);
 
   await fastify.use([Api.translate], checkCSRFMiddlewareWrapper(prisma));
 
