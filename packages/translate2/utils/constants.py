@@ -11,7 +11,7 @@ SECRET_KEY: str = os.getenv('SECRET_KEY') or 'SECRET_KEY'
 
 APP_NAME: str = os.getenv('APP_NAME') or 'translate'
 
-DEBUG: bool = os.getenv('DEBUG') == '1'
+FLASK_DEBUG: bool = os.getenv('FLASK_DEBUG') == '1'
 
 HOST = os.getenv('HOST') or '127.0.0.1'
 

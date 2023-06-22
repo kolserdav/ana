@@ -1,9 +1,10 @@
-import time
-from bottle import route, run, json_dumps, request
-import threading
+from waitress import serve
 import json
 from core.translate import Translate
-from utils.constants import DEBUG, HOST, PORT, CI
+from utils.constants import FLASK_DEBUG, HOST, PORT, CI
+from flask import Flask
+
+app = Flask(__name__)
 
 
 def parse_body():
@@ -16,34 +17,28 @@ def parse_body():
 translate = Translate(True)
 
 
-@route('/translate', method='POST')
+@app.route('/translate', methods=['POST'])
 def translate_handler():
     request_body = parse_body()
     result = translate.translate(
         text=request_body['q'], from_code=request_body['source'], to_code=request_body['target'])
-    return json_dumps({"translatedText": result})
+    return {"translatedText": result}
 
 
-@route('/languages', method='GET')
+@app.route('/languages', methods=['GET'])
 def get_languages():
     langs = []
     for lang in translate.get_languages():
         langs.append({"name": lang.name, "code": lang.code})
-    return json_dumps(langs)
+    return langs
 
 
-@route('/test', method='GET')
-def test():
-    time.sleep(5)
-    return 'success'
-
-
-@route('/check', method='GET')
+@app.route('/check', methods=['GET'])
 def check():
     return 'success'
 
 
-@route('/ci', method='GET')
+@app.route('/ci', methods=['GET'])
 def ci():
     result = "false"
     if CI is True:
@@ -51,8 +46,7 @@ def ci():
     return result
 
 
-def start_server():
-    run(host=HOST, port=PORT, reloader=DEBUG, quiet=DEBUG == False)
-
-
-threading.Thread(target=start_server).start()
+if FLASK_DEBUG:
+    app.run(host=HOST, port=PORT)
+else:
+    serve(app, host=HOST, port=PORT)
