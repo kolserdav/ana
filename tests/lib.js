@@ -17,9 +17,11 @@ const { env } = process;
  * @param {string} executable
  * @param  {string[]} args
  * @param {NodeJS.ProcessEnv} _env
+ * @param {boolean} noWait
  * @returns
  */
-const spawnCommand = async (executable, args, _env = env) => {
+const spawnCommand = async (executable, args, _env = env, noWait = false) => {
+  log('log', 'Run command:', `${executable} ${args.join(' ')}`, true);
   let data = '';
   const command = spawn(executable, args, {
     env: _env,
@@ -31,12 +33,20 @@ const spawnCommand = async (executable, args, _env = env) => {
   command.stderr.on('data', (d) => {
     log('error', d.toString(), {}, true);
   });
+  let code = null;
+  if (noWait) {
+    return {
+      data,
+      code,
+    };
+  }
+
   /**
    * @type {number | null}
    */
-  const code = await new Promise((resolve) => {
-    command.on('exit', (code) => {
-      resolve(code);
+  code = await new Promise((resolve) => {
+    command.on('exit', (_code) => {
+      resolve(_code);
     });
   });
 
@@ -85,8 +95,7 @@ const startServer = async () => {
     }, 3000);
   });
 
-  log('log', 'Run command:', '"npm run start:server"', true);
-  await spawnCommand('npm', ['run', 'start:server']);
+  await spawnCommand('npm', ['run', 'start:server'], env, true);
   await new Promise((resolve) => {
     setTimeout(() => {
       resolve(0);
@@ -94,15 +103,13 @@ const startServer = async () => {
   });
 
   if (env.CI === 'true') {
-    log('log', 'Run command:', '"npm run build:app"', true);
     await spawnCommand('npm', ['run', 'build:app']);
   } else {
     log('log', 'Command npm run build:app skipped', { BUILD_SKIP: env.BUILD_SKIP }, true);
   }
 
   env.PORT = 3000;
-  log('log', 'Run command:', '"npm run start:app"', true);
-  await spawnCommand('npm', ['run', 'start:app'], env);
+  await spawnCommand('npm', ['run', 'start:app'], env, true);
   await new Promise((resolve) => {
     setTimeout(() => {
       resolve(0);
