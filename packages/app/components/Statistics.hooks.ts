@@ -4,7 +4,7 @@ import { DateFilter, GetStatisticsResult, Locale, UserCleanResult } from '../typ
 import Request from '../utils/request';
 import { log } from '../utils/lib';
 import { GraphData } from './ui/Graph';
-import { isoToDate, timestampToTime } from './Statistics.lib';
+import { getTimeZone, isoToDate, timestampToTime } from './Statistics.lib';
 import { CONTAINER_PADDING, GRAPH_HEIGHT_COEFF, GRAPH_WIDTH_DEFAULT } from '../utils/constants';
 
 const request = new Request();
@@ -67,7 +67,12 @@ export const useStatistics = ({
     }
     (async () => {
       setLoad(true);
-      const stats = await request.getStatistics({ userId: user.id, gt, dateFilter });
+      const stats = await request.getStatistics({
+        userId: user.id,
+        gt,
+        dateFilter,
+        timeZone: getTimeZone(),
+      });
       setLoad(false);
       if (stats.status !== 'info' || !stats.data) {
         log(stats.status, stats.message, stats, true, true);

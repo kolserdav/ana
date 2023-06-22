@@ -1,5 +1,10 @@
 import { format, intervalToDuration } from 'date-fns';
-import { DateTruncateArgument, Locale } from '../types/interfaces';
+import {
+  DateTruncateArgument,
+  Locale,
+  QUERY_STRING_MINUS_SYMBOL,
+  QUERY_STRING_PLUS_SYMBOL,
+} from '../types/interfaces';
 import { DATE_LOCALE } from '../utils/lib';
 
 export const isoToDate = ({
@@ -79,4 +84,26 @@ export const timestampToTime = ({
   }
 
   return res;
+};
+
+export const getTimeZone = (withoutMask = false) => {
+  const timezoneOffset = new Date().getTimezoneOffset();
+  const offset = Math.abs(timezoneOffset);
+  const offsetOperator = timezoneOffset < 0 ? '+' : '-';
+  const offsetHours = Math.floor(offset / 60)
+    .toString()
+    .padStart(2, '0');
+  const offsetMinutes = Math.floor(offset % 60)
+    .toString()
+    .padStart(2, '0');
+
+  const timeZone = `${offsetOperator}${offsetHours}:${offsetMinutes}`;
+  if (withoutMask) {
+    return timeZone;
+  }
+  return /^\+/.test(timeZone)
+    ? timeZone.replace('+', QUERY_STRING_PLUS_SYMBOL)
+    : /^-/.test(timeZone)
+    ? timeZone.replace('-', QUERY_STRING_MINUS_SYMBOL)
+    : timeZone;
 };

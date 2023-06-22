@@ -56,6 +56,8 @@ export enum LocaleVars {
 export const MINIMAL_SUPPORT_TEXT_LENGTH = 10;
 export const UNDEFINED_QUERY_STRING = 'undefined';
 export const QUERY_STRING_ARRAY_SPLITTER = ',';
+export const QUERY_STRING_PLUS_SYMBOL = '::plus::';
+export const QUERY_STRING_MINUS_SYMBOL = '::minus::';
 export type LocaleValue = 'ru' | 'en';
 export const WS_MESSAGE_COMMENT_SERVER_RELOAD = 'server_reload';
 export const TRANSLATE_SERVICE_UNAVAILABLE_COMMENT = 'translate_unavailable';
@@ -299,6 +301,7 @@ export interface GetStatisticsQuery {
   userId: string;
   gt: string;
   dateFilter: DateFilter;
+  timeZone: string;
 }
 export type GetStatisticsResult = {
   phrasesCount: number;

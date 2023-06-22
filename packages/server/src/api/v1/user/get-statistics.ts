@@ -8,6 +8,8 @@ import {
   DateTruncateArgument,
   GroupBySummaryDateItemCount,
   GroupBySummaryDateItemSum,
+  QUERY_STRING_PLUS_SYMBOL,
+  QUERY_STRING_MINUS_SYMBOL,
 } from '../../../types/interfaces';
 import { getHttpCode, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
@@ -53,7 +55,7 @@ const getStatistics: RequestHandler<
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const { gt, dateFilter } = query;
+  const { gt, dateFilter, timeZone: _timeZone } = query;
 
   const user = await orm.userFindFirst({ where: { id } });
   if (user.data === null) {
@@ -103,8 +105,12 @@ const getStatistics: RequestHandler<
 
   const truncArg = getDateTruncArg(dateFilter);
 
+  const timeZone = _timeZone
+    .replace(QUERY_STRING_PLUS_SYMBOL, '+')
+    .replace(QUERY_STRING_MINUS_SYMBOL, '-');
+
   const groupPhrases = await orm.$queryRawUnsafe<GroupBySummaryDateItemCount[]>(
-    `SELECT DATE_TRUNC('${truncArg}', updated) as summary_date, COUNT (id) FROM "Phrase" 
+    `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
     WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date;`,
     id,
     gt
@@ -119,7 +125,7 @@ const getStatistics: RequestHandler<
   }
 
   const groupOnline = await orm.$queryRawUnsafe<GroupBySummaryDateItemSum[]>(
-    `SELECT DATE_TRUNC('${truncArg}', updated) as summary_date, SUM(EXTRACT(MICROSECONDS from updated::timestamp - created::timestamp)) FROM "OnlineStatistic" 
+    `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, SUM(EXTRACT(MICROSECONDS from updated::timestamp - created::timestamp)) FROM "OnlineStatistic" 
     WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date;`,
     id,
     gt

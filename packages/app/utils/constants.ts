@@ -104,7 +104,6 @@ export const LICENSE = {
   title: 'AGPL-3.0 license ',
   link: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };
-export const FOCUS_TEXTAREA_TIMEOUT = 500;
 // deps packages/server/orm/schema.prisma.Phrase.text
 export const PHRASE_MAX_LENGTH = 1000;
 export const TEST_TEXT_DEFAULT = 'Test';
@@ -136,7 +135,8 @@ export const SUPPORT_TEXT_MAX_LENGHT = 2500;
 export const SUPPORT_SUBJECT_MAX_LENGTH = 100;
 export const TOOLTIP_DURATION = 2000;
 export const GRAPH_XAXIS_DATA_KEY = 'name';
-export const GRAPH_WIDTH_DEFAULT = 500;
+// deps $translate-container-max
+export const GRAPH_WIDTH_DEFAULT = 760;
 export const GRAPH_HEIGHT_COEFF = 1.6666666666666667;
 // deps $container-padding
 export const CONTAINER_PADDING = 16;

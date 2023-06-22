@@ -37,6 +37,8 @@ $app-bar-height: 60px;
 $color-black: black;
 $label-padding: calc($input-font-size / 2.2);
 $label-left: calc($input-padding + $label-padding);
+
+// deps GRAPH_WIDTH_DEFAULT
 $translate-container-max: 760px;
 $dialog-max-width: 720px;
 $dialog-padding: 2rem;

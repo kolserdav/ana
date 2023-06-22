@@ -338,9 +338,12 @@ class Request {
     userId,
     gt,
     dateFilter,
+    timeZone,
   }: GetStatisticsQuery): Promise<Result<GetStatisticsResult>> {
     return this.send({
-      url: `${Api.getStatistics}?userId=${userId}&gt=${gt}&dateFilter=${dateFilter}`,
+      url: encodeURI(
+        `${Api.getStatistics}?userId=${userId}&gt=${gt}&dateFilter=${dateFilter}&timeZone=${timeZone}`
+      ),
       method: 'GET',
     });
   }

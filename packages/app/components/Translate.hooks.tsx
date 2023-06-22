@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import Request from '../utils/request';
 import { cleanPath, copyText, log, shortenString } from '../utils/lib';
 import {
-  FOCUS_TEXTAREA_TIMEOUT,
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
   PHRASE_MAX_LENGTH,
@@ -121,29 +120,6 @@ export const useLanguages = ({
       setChangeLang(true);
     };
 
-  const focusTextArea = () => {
-    const { current } = textareaRef;
-    if (!current) {
-      return;
-    }
-    setTimeout(() => {
-      current.focus();
-      const range = document.createRange();
-      const sel = window.getSelection();
-      if (current.childNodes[0]) {
-        range.setStart(current.childNodes[0], oldText.length);
-        range.collapse(true);
-      }
-
-      if (!sel) {
-        return;
-      }
-
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }, FOCUS_TEXTAREA_TIMEOUT);
-  };
-
   const onClickChangeLangs = () => {
     setNativeLang(learnLang);
     setLearnLang(nativeLang);
@@ -152,7 +128,6 @@ export const useLanguages = ({
     if (undo) {
       setUndo(false);
     }
-    focusTextArea();
   };
 
   return {
