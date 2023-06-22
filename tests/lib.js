@@ -14,26 +14,47 @@ const { env } = process;
 
 /**
  *
+ * @param {string} executable
+ * @param  {string[]} args
+ * @param {NodeJS.ProcessEnv} _env
+ * @returns
+ */
+const spawnCommand = async (executable, args, _env = env) => {
+  let data = '';
+  const command = spawn(executable, args, {
+    env: _env,
+  });
+  command.stdout.on('data', (d) => {
+    data += d.toString();
+    log('log', d.toString(), {}, true);
+  });
+  command.stderr.on('data', (d) => {
+    log('error', d.toString(), {}, true);
+  });
+  /**
+   * @type {number | null}
+   */
+  const code = await new Promise((resolve) => {
+    command.on('exit', (code) => {
+      resolve(code);
+    });
+  });
+
+  return {
+    data,
+    code,
+  };
+};
+
+/**
+ *
  * @param {{url: string}} param0
  */
 async function getPage({ url }) {
   let executablePath;
   if (env.CI === 'true') {
-    executablePath = await new Promise((resolve) => {
-      const chrome = spawn('which', ['chrome'], {
-        env: process.env,
-      });
-      let data = '';
-      chrome.stdout.on('data', (d) => {
-        data += d.toString();
-      });
-      chrome.stderr.on('data', (d) => {
-        console.log(d.toString());
-      });
-      chrome.on('exit', () => {
-        resolve(path.normalize(data.trim().replace(/[\s\r\n]+/g, '')));
-      });
-    });
+    const { data } = await spawnCommand('which', ['chrome']);
+    executablePath = path.normalize(data.trim().replace(/[\s\r\n]+/g, ''));
     log('info', 'Chrome executable path:', executablePath, true);
   }
 
@@ -42,13 +63,19 @@ async function getPage({ url }) {
     executablePath,
   });
   const [page] = await browser.pages();
+  page.on('console', (message) => {
+    const text = message.text();
+    if (!/DevTools/.test(text) && !/webpack-dev-server/.test(text)) {
+      log('info', 'Browser console', text, true);
+    }
+  });
   await page.goto(url);
   return { page, browser };
 }
 
 /**
  *
- * @returns {Promise<{close: () => void}>}
+ * @returns {Promise<void>}
  */
 const startServer = async () => {
   log('info', 'Starting application', '...', true);
@@ -59,71 +86,28 @@ const startServer = async () => {
   });
 
   log('log', 'Run command:', '"npm run start:server"', true);
-  let server = spawn('npm', ['run', 'start:server'], {
-    env,
-  });
-  server.stdout.on('data', (d) => {
-    console.log(d.toString());
-  });
-  server.stderr.on('data', (d) => {
-    const data = d.toString();
-    console.log(data);
-  });
+  await spawnCommand('npm', ['run', 'start:server']);
   await new Promise((resolve) => {
     setTimeout(() => {
       resolve(0);
     }, 4000);
   });
 
-  let client;
-
   if (env.CI === 'true') {
     log('log', 'Run command:', '"npm run build:app"', true);
-    client = spawn('npm', ['run', 'build:app'], {
-      env,
-    });
-    client.stdout.on('data', (d) => {
-      console.log(d.toString());
-    });
-    client.stderr.on('data', (d) => {
-      const data = d.toString();
-      console.log(data);
-    });
-    await new Promise((resolve) => {
-      client.on('exit', () => {
-        resolve(0);
-      });
-    });
+    await spawnCommand('npm', ['run', 'build:app']);
   } else {
     log('log', 'Command npm run build:app skipped', { BUILD_SKIP: env.BUILD_SKIP }, true);
   }
 
   env.PORT = 3000;
   log('log', 'Run command:', '"npm run start:app"', true);
-  client = spawn('npm', ['run', 'start:app'], {
-    env,
-  });
-  client.stdout.on('data', (d) => {
-    console.log(d.toString());
-  });
-  client.stderr.on('data', (d) => {
-    const data = d.toString();
-    console.log(data);
-  });
+  await spawnCommand('npm', ['run', 'start:app'], env);
   await new Promise((resolve) => {
     setTimeout(() => {
       resolve(0);
     }, 4000);
   });
-
-  const close = () => {
-    server.kill();
-    client.kill();
-  };
-
-  return {
-    close,
-  };
 };
 
-module.exports = { getPage, startServer };
+module.exports = { getPage, startServer, spawnCommand };
