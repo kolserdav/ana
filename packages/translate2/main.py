@@ -2,16 +2,9 @@ from waitress import serve
 import json
 from core.translate import Translate
 from utils.constants import FLASK_DEBUG, HOST, PORT, CI
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
-
-
-def parse_body():
-    body = json.loads(b"{}")
-    for l in request.body:  # type: ignore
-        body = json.loads(l)
-    return body
 
 
 translate = Translate(True)
@@ -19,7 +12,9 @@ translate = Translate(True)
 
 @app.route('/translate', methods=['POST'])
 def translate_handler():
-    request_body = parse_body()
+    request_body = request.json
+    if request_body is None:
+        return "error"
     result = translate.translate(
         text=request_body['q'], from_code=request_body['source'], to_code=request_body['target'])
     return {"translatedText": result}
