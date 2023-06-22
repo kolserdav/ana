@@ -1,4 +1,6 @@
+import time
 from bottle import route, run, json_dumps, request
+import threading
 import json
 from core.translate import Translate
 from utils.constants import DEBUG, HOST, PORT, CI
@@ -30,6 +32,12 @@ def get_languages():
     return json_dumps(langs)
 
 
+@route('/test', method='GET')
+def test():
+    time.sleep(5)
+    return 'success'
+
+
 @route('/check', method='GET')
 def check():
     return 'success'
@@ -43,4 +51,8 @@ def ci():
     return result
 
 
-run(host=HOST, port=PORT, reloader=DEBUG, quiet=DEBUG == False)
+def start_server():
+    run(host=HOST, port=PORT, reloader=DEBUG, quiet=DEBUG == False)
+
+
+threading.Thread(target=start_server).start()

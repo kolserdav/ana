@@ -1,4 +1,4 @@
-bottle==0.12.25
+Flask==2.3.2
 argostranslate==1.8.0
 python-dotenv==1.0.0
 ctranslate2==2.24.0
