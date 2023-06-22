@@ -1,6 +1,15 @@
 /* eslint-disable no-unused-vars */
 
-import { Phrase, PhraseTag, Prisma, PrismaClient, Tag, User } from '@prisma/client';
+import {
+  Phrase,
+  PhraseTag,
+  Prisma,
+  PrismaClient,
+  Tag,
+  User,
+  Selector,
+  SelectorNames,
+} from '@prisma/client';
 
 export const TRANSLATE_PREFIX = '/libre';
 
@@ -37,6 +46,8 @@ export enum Api {
   postSendConfirmEmail = '/v1/send-confirm-email',
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
+  localGetSelector = '/local/get-selector',
+  localPostSelector = '/local/create-selector',
 }
 
 // eslint-disable-next-line no-shadow
@@ -269,6 +280,12 @@ export type TagDeleteResult = Tag | null;
 
 export type TagFindManyQuery = void;
 export type TagFindManyResult = FullTag[];
+
+export type SelectorCreateBody = {
+  type: SelectorNames;
+  value: string;
+};
+export type SelectorCreateResult = Selector | null;
 
 export interface PhraseFindFirstQuery {
   phraseId: string;

@@ -134,3 +134,16 @@ model OnlineStatistic {
   updated DateTime @default(now())
   created DateTime @default(now())
 }
+
+enum SelectorNames {
+  textarea
+  translate
+  reTranslate
+}
+
+model Selector {
+  id      Int           @id @default(autoincrement())
+  type    SelectorNames
+  value   String
+  created DateTime      @default(now())
+}

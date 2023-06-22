@@ -10,6 +10,7 @@ import {
   RestoreLink,
   OnlineStatistic,
   PrismaClient,
+  Selector,
 } from '@prisma/client';
 import { Result } from './types/interfaces';
 
@@ -242,6 +243,36 @@ abstract class Database {
       T,
       Result<Array<OnlineStatistic>>,
       Promise<Result<Array<Prisma.OnlineStatisticGetPayload<T>>>>
+    >
+  >;
+
+  public abstract selectorFindMany<T extends Prisma.SelectorFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.SelectorFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<Selector>>,
+      Promise<Result<Array<Prisma.SelectorGetPayload<T>>>>
+    >
+  >;
+
+  public abstract selectorDeleteMany<T extends Prisma.SelectorDeleteManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.SelectorDeleteManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<Selector>>,
+      Promise<Result<Array<Prisma.SelectorGetPayload<any>>>>
+    >
+  >;
+
+  public abstract selectorCreate<T extends Prisma.SelectorCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.SelectorCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Selector | null>,
+      Promise<Result<Prisma.SelectorGetPayload<T> | null>>
     >
   >;
 }

@@ -57,8 +57,10 @@ import {
   SupportResult,
   GetStatisticsQuery,
   GetStatisticsResult,
+  SelectorCreateBody,
+  SelectorCreateResult,
 } from '../types/interfaces';
-import { SERVER } from './constants';
+import { SERVER, SERVER_LOCAL_ADDRES } from './constants';
 import { CookieName, getCookie } from './cookies';
 import { log } from './lib';
 import { ServerLanguage, TranslateResult } from '../types';
@@ -77,6 +79,7 @@ class Request {
     locale,
     method,
     connId,
+    server,
     contentType = APPLICATION_JSON,
   }: {
     url: string;
@@ -85,6 +88,7 @@ class Request {
     locale?: string;
     contentType?: string | null;
     connId?: string;
+    server?: string;
     method: 'GET' | 'POST' | 'PUT' | 'DELETE';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }): Promise<any> {
@@ -105,7 +109,7 @@ class Request {
           ? JSON.stringify(_body)
           : _body
         : undefined;
-      fetch(`${SERVER}${url}`, {
+      fetch(`${server || SERVER}${url}`, {
         body,
         method,
         headers,
@@ -399,6 +403,15 @@ class Request {
     return this.send({
       url: Api.languages,
       method: 'GET',
+    });
+  }
+
+  public async selectorCreate(body: SelectorCreateBody): Promise<Result<SelectorCreateResult>> {
+    return this.send({
+      url: Api.localPostSelector,
+      server: SERVER_LOCAL_ADDRES,
+      method: 'POST',
+      body,
     });
   }
 }

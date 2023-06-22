@@ -6,6 +6,7 @@ const { TEST_HEADLESS } = require('./constants.json');
 const { spawn, ChildProcessWithoutNullStreams } = require('child_process');
 const { log } = require('../packages/server/dist/utils/lib');
 const path = require('path');
+const { CI } = require('./constants');
 
 /**
  * @type {any}
@@ -62,7 +63,7 @@ const spawnCommand = async (executable, args, _env = env, noWait = false) => {
  */
 async function getPage({ url }) {
   let executablePath;
-  if (env.CI === 'true') {
+  if (CI) {
     const { data } = await spawnCommand('which', ['chrome']);
     executablePath = path.normalize(data.trim().replace(/[\s\r\n]+/g, ''));
     log('info', 'Chrome executable path:', executablePath, true);

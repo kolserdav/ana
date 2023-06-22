@@ -20,10 +20,35 @@ export class ORM extends Service implements Database {
     }
   }
 
+  public selectorFindMany: Database['selectorFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'selector',
+      command: 'findMany',
+    });
+  };
+
+  public selectorDeleteMany: Database['selectorDeleteMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'selector',
+      command: 'deleteMany',
+    });
+  };
+
+  public selectorCreate: Database['selectorCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'selector',
+      command: 'create',
+    });
+  };
+
   public $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Promise<Result<T>> {
     return this.runFromWorker({
       args: query as any,
       model: values as any,
+      values,
       command: '$queryRawUnsafe',
     });
   }
@@ -298,6 +323,7 @@ export class ORM extends Service implements Database {
     model,
     command,
     args,
+    values,
   }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
   DBCommandProps): Promise<any> {
     const { skip, take, where } = args;
@@ -310,8 +336,8 @@ export class ORM extends Service implements Database {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         count = await (prisma as any)[model].count({ where });
       }
-      if (command === '$queryRawUnsafe') {
-        result = await prisma.$queryRawUnsafe(args as any, ...model);
+      if (command === '$queryRawUnsafe' && values) {
+        result = await prisma.$queryRawUnsafe(args as any, ...values);
       } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         result = await (prisma as any)[model][command](args);

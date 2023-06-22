@@ -12,6 +12,7 @@ export type RequestHandler<T extends RequestGenericInterface, R> = (
 export type PrismaCommand = Prisma.PrismaAction | 'groupBy' | '$queryRawUnsafe';
 export interface DBCommandProps {
   model: keyof PrismaClient;
+  values?: string[];
   command: PrismaCommand;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: Prisma.SelectSubset<any, any>;

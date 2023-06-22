@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { createRef, useEffect, useRef } from 'react';
+import { createRef, useRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
@@ -36,6 +36,7 @@ import { PHRASE_MAX_LENGTH } from '../utils/constants';
 import Spoiler from './ui/Spoiler';
 import PlaySoundButton from './ui/PlaySoundButton';
 import CopyIcon from './icons/Copy';
+import createSelector from '../backend/createSelector';
 
 function Translate({
   theme,
@@ -180,6 +181,12 @@ function Translate({
 
   const { onClickCopyTextWrapper } = useCopyText({ locale: copyText });
 
+  if (typeof window === 'undefined') {
+    createSelector({ type: 'textarea', value: s.textarea });
+    createSelector({ type: 'translate', value: s.native_res });
+    createSelector({ type: 'reTranslate', value: s.learn_res });
+  }
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
@@ -222,6 +229,7 @@ function Translate({
         </div>
         <div className={s.textarea}>
           <Textarea
+            id={s.textarea}
             ref={textareaRef}
             placeholder={load ? locale.serverIsNotConnected : locale.textareaPlaceholder}
             value={text}
@@ -273,7 +281,7 @@ function Translate({
         </div>
         <div className={s.trans_container}>
           <div style={{ color: theme.text }} className={s.native_res}>
-            <Typography variant="p" theme={theme}>
+            <Typography variant="p" theme={theme} id={s.native_res}>
               {translate}
             </Typography>
           </div>
@@ -299,7 +307,7 @@ function Translate({
             className={clsx(s.learn_res, reTranslate === text ? s.disabled : '')}
             title={locale.allowRecomend}
           >
-            <Typography variant="p" theme={theme}>
+            <Typography variant="p" theme={theme} id={s.learn_res}>
               {reTranslate}
             </Typography>
           </div>

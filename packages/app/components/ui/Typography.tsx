@@ -19,6 +19,7 @@ function Typography({
   datatype,
   nowrap,
   fullWidth,
+  id,
 }: {
   variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   children: string | React.ReactNode;
@@ -34,10 +35,12 @@ function Typography({
   datatype?: string;
   nowrap?: boolean;
   fullWidth?: boolean;
+  id?: string;
 }) {
   return (
     <div
       datatype={datatype}
+      id={id}
       className={clsx(
         s.wrapper,
         ubuntu400.className,
@@ -106,6 +109,7 @@ Typography.defaultProps = {
   datatype: undefined,
   nowrap: undefined,
   fullWidth: undefined,
+  id: undefined,
 };
 
 export default Typography;

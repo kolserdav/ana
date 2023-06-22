@@ -37,6 +37,7 @@ import phraseDeleteMany from './api/v1/phrase/deleteMany';
 import sendConfirmEmail from './api/v1/user/send-confirm-email';
 import support from './api/v1/user/support';
 import getStatistics from './api/v1/user/get-statistics';
+import selectorCreate from './api/localhost/selector/create';
 
 const prisma = new PrismaClient();
 
@@ -169,6 +170,8 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.post(Api.postSendConfirmEmail, sendConfirmEmail);
   fastify.post(Api.postSupport, support);
   fastify.get(Api.getStatistics, getStatistics);
+  // Local routes
+  fastify.post(Api.localPostSelector, selectorCreate);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;
