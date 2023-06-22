@@ -60,7 +60,7 @@ import {
   SelectorCreateBody,
   SelectorCreateResult,
 } from '../types/interfaces';
-import { SERVER, SERVER_LOCAL_ADDRES } from './constants';
+import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
 import { log } from './lib';
 import { ServerLanguage, TranslateResult } from '../types';
@@ -409,7 +409,7 @@ class Request {
   public async selectorCreate(body: SelectorCreateBody): Promise<Result<SelectorCreateResult>> {
     return this.send({
       url: Api.localPostSelector,
-      server: SERVER_LOCAL_ADDRES,
+      server: SERVER_LOCAL_ADDRESS,
       method: 'POST',
       body,
     });
