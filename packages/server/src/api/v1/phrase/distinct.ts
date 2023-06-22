@@ -66,7 +66,7 @@ const phraseDistinct: RequestHandler<
 
   const result: string[] = [];
   res.data.forEach((item) => {
-    const distinctVal = item[distinct as string];
+    const distinctVal = item[distinct as string] as any;
     if (distinctVal) {
       result.push(distinctVal);
     }
