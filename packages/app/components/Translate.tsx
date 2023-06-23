@@ -14,7 +14,6 @@ import {
   useUndo,
 } from './Translate.hooks';
 import s from './Translate.module.scss';
-import p from '../styles/Page.module.scss';
 import CloseIcon from './icons/Close';
 import IconButton from './ui/IconButton';
 import Select from './ui/Select';
@@ -22,7 +21,6 @@ import Textarea from './ui/Textarea';
 import Typography from './ui/Typography';
 import Button from './ui/Button';
 import Dialog from './ui/Dialog';
-import Checkbox from './ui/Checkbox';
 import Input from './ui/Input';
 import HelpIcon from './icons/Help';
 import Tooltip from './ui/Tooltip';
@@ -111,7 +109,7 @@ function Translate({
     setTranslate,
     oldText,
     setOldText,
-  } = useLanguages({ undo, setUndo, textareaRef, connId, user });
+  } = useLanguages({ undo, setUndo, connId, user });
 
   const {
     reTranslate,
@@ -252,6 +250,15 @@ function Translate({
                 >
                   <CopyIcon color={theme.text} withoutScale />
                 </IconButton>
+                <div className={s.vert_margin} />
+                <PlaySoundButton
+                  theme={theme}
+                  title={playSound}
+                  text={text}
+                  lang={learnLang}
+                  voiceNotFound={voiceNotFound}
+                  changeLinkTo={changeLinkTo}
+                />
               </div>
             )}
             {allowRecogn && (

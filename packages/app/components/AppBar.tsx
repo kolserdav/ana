@@ -38,6 +38,17 @@ import Button from './ui/Button';
 import Input from './ui/Input';
 import useLoad from '../hooks/useLoad';
 import Textarea from './ui/Textarea';
+import CopyIcon from './icons/Copy';
+import ChartLineIcon from './icons/ChartLine';
+import NotebookIcon from './icons/Notebook';
+import TranslateVariantIcon from './icons/TranslateVariant';
+import SettingsIcon from './icons/Settings';
+import TrashIcon from './icons/Trash';
+import SupportIcon from './icons/Support';
+import InformationIcon from './icons/Information';
+import LoginIcon from './icons/Login';
+import LogoutIcon from './icons/Logout';
+import CloseIcon from './icons/Close';
 
 function AppBar({
   theme,
@@ -156,6 +167,7 @@ function AppBar({
           {!checkRouterPath(router.asPath, Pages.translate) && (
             <Link withoutHover fullWidth theme={theme} href={Pages.translate}>
               <div className={clsx(s.menu__item, s.active)}>
+                <TranslateVariantIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.translate}</div>
               </div>
             </Link>
@@ -163,6 +175,7 @@ function AppBar({
           {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
             <Link withoutHover fullWidth theme={theme} href={Pages.myDictionary}>
               <div className={clsx(s.menu__item, s.active)}>
+                <NotebookIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.myDictionary}</div>
               </div>
             </Link>
@@ -170,6 +183,7 @@ function AppBar({
           {!checkRouterPath(router.asPath, Pages.statistics) && user && (
             <Link withoutHover fullWidth theme={theme} href={Pages.statistics}>
               <div className={clsx(s.menu__item, s.active)}>
+                <ChartLineIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.statistics}</div>
               </div>
             </Link>
@@ -177,6 +191,7 @@ function AppBar({
           {!checkRouterPath(router.asPath, Pages.trash) && user && (
             <Link withoutHover fullWidth theme={theme} href={Pages.trash}>
               <div className={clsx(s.menu__item, s.active)}>
+                <TrashIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.trash}</div>
               </div>
             </Link>
@@ -201,6 +216,7 @@ function AppBar({
           {!checkRouterPath(router.asPath, [Pages.settings]) && (
             <Link withoutHover fullWidth theme={theme} href={Pages.settings}>
               <div className={clsx(s.menu__item, s.active)}>
+                <SettingsIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.settings}</div>
               </div>
             </Link>
@@ -215,6 +231,7 @@ function AppBar({
               className={clsx(l.wrapper, l.full__width, l.without__hover)}
             >
               <div className={clsx(s.menu__item, s.active)}>
+                <SupportIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.support.title}</div>
               </div>
             </div>
@@ -223,6 +240,7 @@ function AppBar({
             {!checkRouterPath(router.asPath, [Pages.about]) && (
               <Link withoutHover fullWidth theme={theme} href={Pages.about}>
                 <div className={clsx(s.menu__item, s.active)}>
+                  <InformationIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.about}</div>
                 </div>
               </Link>
@@ -230,6 +248,7 @@ function AppBar({
             {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
               <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
                 <div className={clsx(s.menu__item, s.active)}>
+                  <LoginIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.login}</div>
                 </div>
               </Link>
@@ -243,6 +262,7 @@ function AppBar({
                 className={clsx(l.wrapper, l.full__width, l.without__hover)}
               >
                 <div className={clsx(s.menu__item, s.active)}>
+                  <LogoutIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.logout}</div>
                 </div>
               </div>
@@ -250,6 +270,7 @@ function AppBar({
             {android && (
               <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">
                 <div className={clsx(s.menu__item, s.active)}>
+                  <CloseIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.closeApp}</div>
                 </div>
               </Link>

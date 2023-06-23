@@ -72,6 +72,7 @@ function Cheep({
               <DotsHorisontalIcon color={theme.text} withoutScale />
             </IconButton>
             <Tooltip
+              withoutClose
               closeOnClick
               theme={theme}
               parentRef={menuRef}

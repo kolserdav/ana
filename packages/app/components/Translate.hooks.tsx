@@ -34,13 +34,11 @@ const request = new Request();
 export const useLanguages = ({
   undo,
   setUndo,
-  textareaRef,
   connId,
   user,
 }: {
   setUndo: React.Dispatch<React.SetStateAction<boolean>>;
   undo: boolean;
-  textareaRef: React.RefObject<HTMLTextAreaElement>;
   connId: string | null;
   user: UserCleanResult | null;
 }) => {
@@ -202,6 +200,16 @@ export const useTranslate = ({
   const [restart, setRestart] = useState<boolean>(false);
   const [phraseToUpdate, setPhraseToUpdate] = useState<PhraseUpdateResult>(null);
   const [checkRows, setCheckRows] = useState<boolean>(false);
+
+  /**
+   * Clean other if text is empty
+   */
+  useEffect(() => {
+    if (!text) {
+      setTranslate('');
+      setRetranslate('');
+    }
+  }, [text, setTranslate, setRetranslate]);
 
   /**
    * Set edit

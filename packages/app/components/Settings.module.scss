@@ -1,6 +1,7 @@
 @import '../styles/constants';
 
 $speech-select-shift: 8px;
+$settings-margin-left: 1rem;
 
 .wrapper {
   position: relative;
@@ -43,6 +44,7 @@ $speech-select-shift: 8px;
 
       .speech_button {
         margin-left: 1rem;
+        margin-top: 1rem;
       }
 
       .test_input__item {
@@ -51,17 +53,20 @@ $speech-select-shift: 8px;
 
       .lang_select {
         margin-bottom: $speech-select-shift;
+        margin: $settings-margin-left;
 
         .lang_select__voice {
-          margin-top: 1rem;
+          margin-top: 2rem;
         }
       }
 
       .speed_select {
+        position: relative;
+        width: 100%;
         display: flex;
         flex-direction: column;
         margin-bottom: $speech-select-shift;
-        margin-left: 1rem;
+        margin: $settings-margin-left;
       }
     }
 
