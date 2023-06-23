@@ -149,8 +149,6 @@ function Translate({
     saveDialog,
     onClickSavePhrase,
     setSaveDialog,
-    saveTranslate,
-    changeSaveTranslate,
     onClickSave,
     onClickUpdate,
     onClickCancelSave,
@@ -168,6 +166,7 @@ function Translate({
     addTags,
     tagRestart,
     setTagRestart,
+    reTranslate,
   });
 
   const { onStartRecognize, onStopRecognize, allowRecogn, speechRecognStarted } =
@@ -441,24 +440,6 @@ function Translate({
               {text}
             </Typography>
           </div>
-          <div className={s.check_item}>
-            {typeof saveTranslate === 'boolean' && (
-              <Checkbox
-                theme={theme}
-                label={locale.saveTranlsate}
-                id="save-translate"
-                checked={saveTranslate}
-                onChange={changeSaveTranslate}
-              />
-            )}
-          </div>
-          {saveTranslate && (
-            <div className={s.active} style={{ backgroundColor: theme.active }}>
-              <Typography align="center" theme={theme} variant="p">
-                {translate}
-              </Typography>
-            </div>
-          )}
           <div className={s.tags_created}>
             {tags.map((tag) => (
               <div key={tag.id} className={s.tag_item}>

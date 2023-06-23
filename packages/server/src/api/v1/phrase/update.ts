@@ -21,7 +21,7 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
 
   const {
     phraseId,
-    data: { text, translate, tags, learnLang, nativeLang },
+    data: { text, translate, tags, learnLang, nativeLang, reTranslate },
   } = body;
 
   const getRes = await orm.phraseFindFirst({
@@ -58,7 +58,12 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
   if (translate) {
     _data.translate = translate;
   } else {
-    _data.translate = null;
+    _data.translate = '';
+  }
+  if (reTranslate) {
+    _data.reTranslate = reTranslate;
+  } else {
+    _data.reTranslate = '';
   }
   if (tags) {
     const updRes = await orm.phraseUpdate({

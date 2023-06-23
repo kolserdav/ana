@@ -78,8 +78,8 @@ model Phrase {
   id          String      @id @default(uuid())
   // deps package/app/utils/constants.PHRASE_MAX_LENGTH
   text        String      @db.VarChar(1000)
-  translate   String      @default("") @db.VarChar(1500)
-  reTranslate String      @default("") @db.VarChar(1500)
+  translate   String      @db.VarChar(1500)
+  reTranslate String      @db.VarChar(1500)
   userId      String
   nativeLang  String      @db.VarChar(2)
   learnLang   String      @db.VarChar(2)

@@ -78,7 +78,7 @@ const lang: Locale = {
       homePage: 'Home',
       login: 'Sign in',
       logout: 'Sign out',
-      translate: 'Translate',
+      translate: 'Translator',
       myDictionary: 'My texts',
       openMenu: 'Open menu',
       closeMenu: 'Close Menu',
@@ -192,6 +192,8 @@ const lang: Locale = {
       playAll: 'Play All',
       openTools: 'Open Tools',
       selectPhrase: 'Select Text',
+      translation: 'Translation',
+      reTranslation: 'Reverse translation',
     },
     app: {
       connectionRefused: 'Connection to server lost',

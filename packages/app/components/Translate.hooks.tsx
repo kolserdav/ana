@@ -229,13 +229,25 @@ export const useTranslate = ({
       }
       setPhraseToUpdate(phrase.data);
       setText(phrase.data.text);
+      setTranslate(phrase.data.translate);
+      setRetranslate(phrase.data.reTranslate);
       setNativeLang(phrase.data.nativeLang);
       setLearnLang(phrase.data.learnLang);
       const tags = phrase.data.PhraseTag.map((item) => item.Tag);
       setTags(tags);
       setAddTags(tags.length !== 0);
     })();
-  }, [edit, setNativeLang, setLearnLang, setTags, setAddTags, restart, setText]);
+  }, [
+    edit,
+    setNativeLang,
+    setLearnLang,
+    setTags,
+    setAddTags,
+    restart,
+    setText,
+    setTranslate,
+    setRetranslate,
+  ]);
 
   /**
    * Set rows
@@ -439,6 +451,7 @@ export const useSavePhrase = ({
   setTagRestart,
   addTags,
   tags,
+  reTranslate,
 }: {
   text: string;
   tags: TagFindManyResult;
@@ -452,11 +465,11 @@ export const useSavePhrase = ({
   tagRestart: boolean;
   setTagRestart: React.Dispatch<React.SetStateAction<boolean>>;
   addTags: boolean;
-  translate?: string;
+  translate: string;
+  reTranslate: string;
 }) => {
   const router = useRouter();
   const [saveDialog, setSaveDialog] = useState<boolean>(false);
-  const [saveTranslate, setSaveTranslate] = useState<boolean>();
 
   const onClickSavePhrase = () => {
     setSaveDialog(true);
@@ -476,7 +489,8 @@ export const useSavePhrase = ({
       text,
       learnLang,
       nativeLang,
-      translate: saveTranslate ? translate : undefined,
+      translate,
+      reTranslate,
       tags: tags.map((item) => item.id),
     });
     setLoad(false);
@@ -488,23 +502,6 @@ export const useSavePhrase = ({
       setTagRestart(!tagRestart);
       router.push(`${router.asPath}?edit=${saveRes.data.id}`);
     }
-  };
-
-  /**
-   * Set save translate
-   */
-  useEffect(() => {
-    const _saveTranslate = getLocalStorage(LocalStorageName.SAVE_WITH_TRANSLATE);
-    if (_saveTranslate !== null) {
-      setSaveTranslate(_saveTranslate);
-    } else {
-      setSaveTranslate(true);
-    }
-  }, []);
-
-  const changeSaveTranslate = (value: boolean) => {
-    setSaveTranslate(value);
-    setLocalStorage(LocalStorageName.SAVE_WITH_TRANSLATE, value);
   };
 
   const onClickUpdate = async () => {
@@ -519,7 +516,8 @@ export const useSavePhrase = ({
         text,
         learnLang,
         nativeLang,
-        translate: saveTranslate ? translate : undefined,
+        translate,
+        reTranslate,
         tags: addTags ? tags.map((item) => item.id) : [],
       },
     });
@@ -536,8 +534,6 @@ export const useSavePhrase = ({
     onClickSavePhrase,
     saveDialog,
     setSaveDialog,
-    saveTranslate,
-    changeSaveTranslate,
     onClickSave,
     onClickUpdate,
     onClickCancelSave,

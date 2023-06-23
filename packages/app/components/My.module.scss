@@ -211,6 +211,14 @@ $search-input-wudth-coeff: 1.5;
           align-items: flex-start;
           flex-direction: column;
 
+          .item__content__details {
+            margin: 0.2rem;
+
+            summary {
+              cursor: pointer;
+            }
+          }
+
           .item__translate {
             width: 100%;
             display: flex;

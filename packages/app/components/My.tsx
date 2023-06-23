@@ -448,11 +448,26 @@ function My({
                           </div>
                         </div>
                       </div>
-                      {item.translate && (
+                      <details className={s.item__content__details}>
+                        <summary>
+                          <Typography variant="label" theme={theme} small>
+                            {locale.translation}
+                          </Typography>
+                        </summary>
                         <Typography className={s.translate} variant="p" theme={theme} small>
                           {item.translate}
                         </Typography>
-                      )}
+                      </details>
+                      <details className={s.item__content__details}>
+                        <summary>
+                          <Typography variant="label" theme={theme} small>
+                            {locale.reTranslation}
+                          </Typography>
+                        </summary>
+                        <Typography className={s.translate} variant="p" theme={theme} small>
+                          {item.reTranslate}
+                        </Typography>
+                      </details>
                     </div>
                     {selected.length !== 0 && (
                       <div className={s.item__selector}>

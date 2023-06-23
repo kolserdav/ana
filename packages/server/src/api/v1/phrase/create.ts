@@ -18,7 +18,7 @@ const phraseCreate: RequestHandler<{ Body: PhraseCreateBody }, Result<PhraseCrea
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const { tags, text, translate, learnLang, nativeLang } = body;
+  const { tags, text, translate, learnLang, nativeLang, reTranslate } = body;
 
   const _tags = await orm.tagFindMany({
     where: {
@@ -39,7 +39,8 @@ const phraseCreate: RequestHandler<{ Body: PhraseCreateBody }, Result<PhraseCrea
   const createRes = await orm.phraseCreate({
     data: {
       text,
-      translate: translate || null,
+      translate,
+      reTranslate,
       userId: id,
       learnLang,
       nativeLang,

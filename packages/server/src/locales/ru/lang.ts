@@ -192,6 +192,8 @@ const lang: Locale = {
       playAll: 'Воспроизвести все',
       openTools: 'Открыть инструменты',
       selectPhrase: 'Выбрать текст',
+      translation: 'Перевод',
+      reTranslation: 'Обратный перевод',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',

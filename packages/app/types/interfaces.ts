@@ -241,7 +241,8 @@ export interface PhraseCreateBody {
   tags: string[];
   learnLang: string;
   nativeLang: string;
-  translate?: string;
+  translate: string;
+  reTranslate: string;
 }
 export type PhraseCreateResult = Phrase | null;
 
@@ -536,6 +537,8 @@ export interface Locale {
       playAll: string;
       openTools: string;
       selectPhrase: string;
+      translation: string;
+      reTranslation: string;
     };
     app: {
       connectionRefused: string;
