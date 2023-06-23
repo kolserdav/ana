@@ -5,6 +5,7 @@ import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, LocaleVars, UNDEFINED_QUERY_STRING, UserCleanResult } from '../types/interfaces';
 import {
+  useCheckPage,
   useLangFilter,
   useMultiSelect,
   usePhraseDelete,
@@ -75,6 +76,8 @@ function My({
   const phrasesRef = useRef<HTMLDivElement>(null);
   const { load, setLoad } = useLoad();
 
+  const { isTrash } = useCheckPage();
+
   const { onClickPhraseUpdateWraper } = usePhraseUpdate();
 
   const {
@@ -104,7 +107,10 @@ function My({
     setSkip(0);
   };
 
-  const { langs, langFilter, onChangeLangsFilter, resetLangFilter } = useLangFilter({ setSkip });
+  const { langs, langFilter, onChangeLangsFilter, resetLangFilter } = useLangFilter({
+    setSkip,
+    isTrash,
+  });
 
   const {
     phrases,
@@ -128,6 +134,7 @@ function My({
     strongTags,
     gt,
     learnLang: langFilter,
+    isTrash,
   });
 
   const {
@@ -160,6 +167,7 @@ function My({
     setSkip,
     selectedPhrases: selected,
     setSelected,
+    isTrash,
   });
 
   const { resetAllFilters, showResetFilters } = useResetAllFilters({
@@ -202,7 +210,7 @@ function My({
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography theme={theme} variant="h1" align="center">
-          {locale.title}
+          {isTrash ? locale.trash : locale.title}
         </Typography>
         <div className={s.global_filters}>
           <div className={s.global_filters__item}>
@@ -226,45 +234,47 @@ function My({
             </div>
           )}
         </div>
-        <Spoiler
-          theme={theme}
-          className={s.filters_spoiler}
-          setOpen={onClickFilterTags}
-          open={filterTags}
-          summary={locale.filterByTags}
-        >
-          <div
-            className={clsx(s.filters, filterTags ? s.filters__open : '')}
-            style={{ backgroundColor: theme.active }}
+        {!isTrash && (
+          <Spoiler
+            theme={theme}
+            className={s.filters_spoiler}
+            setOpen={onClickFilterTags}
+            open={filterTags}
+            summary={locale.filterByTags}
           >
-            <div className={s.filters_tags}>
-              {allTags.map((item) => (
-                <span key={item.id}>
-                  <Cheep
-                    onClick={onClickTagCheepWrapper(
-                      item,
-                      tags.findIndex((i) => i.id === item.id) === -1 ? 'add' : 'del'
-                    )}
-                    postfix={item.PhraseTag.length.toString()}
-                    add={tags.findIndex((i) => i.id === item.id) === -1}
-                    disabled={item.PhraseTag.length === 0}
-                    theme={theme}
-                  >
-                    {item.text}
-                  </Cheep>
-                </span>
-              ))}
+            <div
+              className={clsx(s.filters, filterTags ? s.filters__open : '')}
+              style={{ backgroundColor: theme.active }}
+            >
+              <div className={s.filters_tags}>
+                {allTags.map((item) => (
+                  <span key={item.id}>
+                    <Cheep
+                      onClick={onClickTagCheepWrapper(
+                        item,
+                        tags.findIndex((i) => i.id === item.id) === -1 ? 'add' : 'del'
+                      )}
+                      postfix={item.PhraseTag.length.toString()}
+                      add={tags.findIndex((i) => i.id === item.id) === -1}
+                      disabled={item.PhraseTag.length === 0}
+                      theme={theme}
+                    >
+                      {item.text}
+                    </Cheep>
+                  </span>
+                ))}
+              </div>
+              <Checkbox
+                theme={theme}
+                label={locale.strongAccord}
+                id="filter-tags-strong"
+                checked={strongTags}
+                onChange={setStrongTags}
+                cb={changeStrongCb}
+              />
             </div>
-            <Checkbox
-              theme={theme}
-              label={locale.strongAccord}
-              id="filter-tags-strong"
-              checked={strongTags}
-              onChange={setStrongTags}
-              cb={changeStrongCb}
-            />
-          </div>
-        </Spoiler>
+          </Spoiler>
+        )}
         <div className={s.search}>
           <Input
             type="text"

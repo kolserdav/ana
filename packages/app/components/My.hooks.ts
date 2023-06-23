@@ -14,7 +14,7 @@ import {
   DateFilter,
 } from '../types/interfaces';
 import Request from '../utils/request';
-import { getFormatDistance, log } from '../utils/lib';
+import { checkRouterPath, getFormatDistance, log } from '../utils/lib';
 import {
   DATE_FILTER_ALL,
   LEARN_LANG_DEFAULT,
@@ -52,6 +52,7 @@ export const usePhrases = ({
   strongTags,
   gt,
   learnLang,
+  isTrash,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tags: TagFindManyResult;
@@ -62,6 +63,7 @@ export const usePhrases = ({
   strongTags: boolean;
   gt: string | undefined;
   learnLang: string | undefined;
+  isTrash: boolean;
 }) => {
   const router = useRouter();
   const lastRef = useRef<HTMLDivElement>(null);
@@ -138,6 +140,7 @@ export const usePhrases = ({
         search: _search,
         gt,
         learnLang,
+        isTrash: isTrash ? '1' : '0',
       });
       setLoad(false);
       if (_phrases.status !== 'info') {
@@ -156,7 +159,19 @@ export const usePhrases = ({
         _load = false;
       }, 0);
     })();
-  }, [orderBy, skip, setLoad, tags, strongTags, tagsIsSet, search, gt, learnLang, restart]);
+  }, [
+    orderBy,
+    skip,
+    setLoad,
+    tags,
+    strongTags,
+    tagsIsSet,
+    search,
+    gt,
+    learnLang,
+    restart,
+    isTrash,
+  ]);
 
   const onClickSortByDate = () => {
     const _orderBy = orderBy === 'asc' ? 'desc' : 'asc';
@@ -241,6 +256,7 @@ export const usePhraseDelete = ({
   setSkip,
   selectedPhrases,
   setSelected,
+  isTrash,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setRestart: React.Dispatch<React.SetStateAction<boolean>>;
@@ -248,6 +264,7 @@ export const usePhraseDelete = ({
   setSelected: React.Dispatch<React.SetStateAction<string[]>>;
   restart: boolean;
   selectedPhrases: string[];
+  isTrash: boolean;
 }) => {
   const [deletePhrase, setDeletePhrase] = useState<boolean>(false);
   const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[0] | null>(null);
@@ -277,11 +294,23 @@ export const usePhraseDelete = ({
       return;
     }
     setLoad(true);
-    const delRes = await request.phraseDelete({ phraseId: phraseToDelete.id });
-    setLoad(false);
-    log(delRes.status, delRes.message, delRes, true);
-    if (delRes.status !== 'info') {
-      return;
+    if (isTrash) {
+      const delRes = await request.phraseDelete({ phraseId: phraseToDelete.id });
+      setLoad(false);
+      log(delRes.status, delRes.message, delRes, true);
+      if (delRes.status !== 'info') {
+        return;
+      }
+    } else {
+      const delRes = await request.phraseUpdate({
+        phraseId: phraseToDelete.id,
+        data: { deleted: true },
+      });
+      setLoad(false);
+      log(delRes.status, delRes.message, delRes, true);
+      if (delRes.status !== 'info') {
+        return;
+      }
     }
     setPhraseToDelete(null);
     setDeletePhrase(false);
@@ -291,11 +320,23 @@ export const usePhraseDelete = ({
 
   const onClickDeleteSelectedPhrases = async () => {
     setLoad(true);
-    const delRes = await request.phraseDeleteMany({ phrases: selectedPhrases });
-    setLoad(false);
-    log(delRes.status, delRes.message, delRes, true);
-    if (delRes.status !== 'info') {
-      return;
+    if (isTrash) {
+      const delRes = await request.phraseDeleteMany({ phrases: selectedPhrases });
+      setLoad(false);
+      log(delRes.status, delRes.message, delRes, true);
+      if (delRes.status !== 'info') {
+        return;
+      }
+    } else {
+      const delRes = await request.phraseUpdateMany({
+        phrases: selectedPhrases,
+        data: { deleted: true },
+      });
+      setLoad(false);
+      log(delRes.status, delRes.message, delRes, true);
+      if (delRes.status !== 'info') {
+        return;
+      }
     }
     setRestart(!restart);
     setDeleteSelectedPhrases(false);
@@ -437,8 +478,10 @@ export const useTags = () => {
 
 export const useLangFilter = ({
   setSkip,
+  isTrash,
 }: {
   setSkip: React.Dispatch<React.SetStateAction<number>>;
+  isTrash: boolean;
 }) => {
   const [learnLangs, setLearnLangs] = useState<string[]>([]);
   const [langFilter, setLangFilter] = useState<string>();
@@ -458,14 +501,17 @@ export const useLangFilter = ({
    */
   useEffect(() => {
     (async () => {
-      const res = await request.phraseDistinct({ distinct: ['learnLang'] });
+      const res = await request.phraseDistinct({
+        distinct: ['learnLang'],
+        isTrash: isTrash ? '1' : '0',
+      });
       if (res.status !== 'info') {
         log(res.status, res.message, res);
         return;
       }
       setLearnLangs(res.data);
     })();
-  }, []);
+  }, [isTrash]);
 
   const langs = useMemo(
     () => _langs.filter((item) => learnLangs.includes(item.code)),
@@ -770,4 +816,12 @@ export const usePlayOne = ({
   }, [forSpeech, speechText]);
 
   return { synthAllow, volumeIcon, speechText, clickForPlayWrapper, forSpeech, ticker };
+};
+
+export const useCheckPage = () => {
+  const router = useRouter();
+
+  const isTrash = checkRouterPath(router.asPath, Pages.trash);
+
+  return { isTrash };
 };

@@ -22,7 +22,7 @@ const lang: Locale = {
     unauthorized: 'Недостаточно прав',
     notImplement: 'Устаревшая версия запроса',
     sendToSupport: 'Обратитесь в техподдержку',
-    phraseSaved: 'Текст сохранен',
+    phraseSaved: 'Текст(ы) сохранен(ы)',
     tagExists: 'Метка была создана ранее',
     tagSaved: 'Метка сохранена',
     phraseDeleted: 'Текст(ы) удалена(ы)',
@@ -101,6 +101,7 @@ const lang: Locale = {
         subjectMustBeNotEmpty: 'Тема обращения не должна быть пустой',
         minimalLengthOfTextIs: `Минимум ${MINIMAL_SUPPORT_TEXT_LENGTH} символов`,
       },
+      trash: 'Корзина',
     },
     confirmEmail: {
       title: 'Подтверждение почты',
@@ -194,6 +195,7 @@ const lang: Locale = {
       selectPhrase: 'Выбрать текст',
       translation: 'Перевод',
       reTranslation: 'Обратный перевод',
+      trash: 'Корзина',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',

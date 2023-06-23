@@ -174,6 +174,13 @@ function AppBar({
               </div>
             </Link>
           )}
+          {!checkRouterPath(router.asPath, Pages.trash) && user && (
+            <Link withoutHover fullWidth theme={theme} href={Pages.trash}>
+              <div className={clsx(s.menu__item, s.active)}>
+                <div style={{ color: theme.text }}>{locale.trash}</div>
+              </div>
+            </Link>
+          )}
           {user && <Hr theme={theme} />}
           <div className={clsx(s.menu__item)}>
             <div style={{ color: theme.text }}>{locale.darkTheme}</div>

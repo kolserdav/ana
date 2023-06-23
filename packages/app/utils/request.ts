@@ -59,6 +59,8 @@ import {
   GetStatisticsResult,
   SelectorCreateBody,
   SelectorCreateResult,
+  PhraseUpdateManyBody,
+  PhraseUpdateManyResult,
 } from '../types/interfaces';
 import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -259,6 +261,16 @@ class Request {
     });
   }
 
+  public async phraseUpdateMany(
+    body: PhraseUpdateManyBody
+  ): Promise<Result<PhraseUpdateManyResult>> {
+    return this.send({
+      url: Api.putPhraseUpdateMany,
+      method: 'PUT',
+      body,
+    });
+  }
+
   public async phraseFindFirst({
     phraseId,
   }: PhraseFindFirstQuery): Promise<Result<PhraseFindFirstResult>> {
@@ -270,11 +282,12 @@ class Request {
 
   public async phraseDistinct({
     distinct,
+    isTrash,
   }: PhraseDistinctQuery): Promise<Result<PhraseDistinctResult>> {
     return this.send({
       url: `${Api.getPhraseDistinct}?distinct=${(distinct as string[]).join(
         QUERY_STRING_ARRAY_SPLITTER
-      )}`,
+      )}&isTrash=${isTrash}`,
       method: 'GET',
     });
   }
@@ -368,9 +381,11 @@ class Request {
     search,
     gt,
     learnLang,
+    isTrash,
   }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
     return this.send({
-      url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}&gt=${gt}&learnLang=${learnLang}`,
+      url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}\
+&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}&gt=${gt}&learnLang=${learnLang}&isTrash=${isTrash}`,
       method: 'GET',
     });
   }

@@ -469,15 +469,6 @@ export const useSavePhrase = ({
   reTranslate: string;
 }) => {
   const router = useRouter();
-  const [saveDialog, setSaveDialog] = useState<boolean>(false);
-
-  const onClickSavePhrase = () => {
-    setSaveDialog(true);
-  };
-
-  const onClickCancelSave = () => {
-    setSaveDialog(false);
-  };
 
   const onClickSave = async () => {
     if (!learnLang || !nativeLang) {
@@ -496,7 +487,6 @@ export const useSavePhrase = ({
     setLoad(false);
     log(saveRes.status, saveRes.message, saveRes, true);
     if (saveRes.status === 'info' && saveRes.data) {
-      setSaveDialog(false);
       setTags([]);
       setRestart(!restart);
       setTagRestart(!tagRestart);
@@ -518,25 +508,21 @@ export const useSavePhrase = ({
         nativeLang,
         translate,
         reTranslate,
+        deleted: false,
         tags: addTags ? tags.map((item) => item.id) : [],
       },
     });
     setLoad(false);
     log(saveRes.status, saveRes.message, saveRes, true);
     if (saveRes.status === 'info') {
-      setSaveDialog(false);
       setRestart(!restart);
       setTagRestart(!tagRestart);
     }
   };
 
   return {
-    onClickSavePhrase,
-    saveDialog,
-    setSaveDialog,
     onClickSave,
     onClickUpdate,
-    onClickCancelSave,
   };
 };
 

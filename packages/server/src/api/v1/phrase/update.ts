@@ -21,7 +21,7 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
 
   const {
     phraseId,
-    data: { text, translate, tags, learnLang, nativeLang, reTranslate },
+    data: { text, translate, tags, learnLang, nativeLang, reTranslate, deleted },
   } = body;
 
   const getRes = await orm.phraseFindFirst({
@@ -45,27 +45,16 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
     };
   }
 
-  const _data: Prisma.PhraseUpdateArgs['data'] = {};
-  if (text) {
-    _data.text = text;
-  }
-  if (learnLang) {
-    _data.learnLang = learnLang;
-  }
-  if (nativeLang) {
-    _data.nativeLang = nativeLang;
-  }
-  if (translate) {
-    _data.translate = translate;
-  } else {
-    _data.translate = '';
-  }
-  if (reTranslate) {
-    _data.reTranslate = reTranslate;
-  } else {
-    _data.reTranslate = '';
-  }
-  if (tags) {
+  const _data: Prisma.PhraseUpdateArgs['data'] = {
+    text,
+    learnLang,
+    nativeLang,
+    translate,
+    reTranslate,
+    deleted,
+  };
+
+  if (tags || deleted) {
     const updRes = await orm.phraseUpdate({
       where: {
         id: phraseId,
@@ -84,11 +73,13 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
         data: null,
       };
     }
-    _data.PhraseTag = {
-      createMany: {
-        data: tags.map((item) => ({ tagId: item })),
-      },
-    };
+    if (tags) {
+      _data.PhraseTag = {
+        createMany: {
+          data: tags.map((item) => ({ tagId: item })),
+        },
+      };
+    }
   }
   _data.updated = new Date();
 

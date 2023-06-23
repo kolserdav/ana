@@ -101,6 +101,15 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public phraseUpdateMany: Database['phraseUpdateMany'] = async (args) => {
+    prisma.phrase.updateMany;
+    return this.runFromWorker({
+      args,
+      model: 'phrase',
+      command: 'updateMany',
+    });
+  };
+
   public phraseTagDeleteMany: Database['phraseTagDeleteMany'] = async (args) => {
     return this.runFromWorker({
       args,

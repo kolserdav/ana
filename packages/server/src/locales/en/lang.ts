@@ -22,7 +22,7 @@ const lang: Locale = {
     unauthorized: 'Insufficient rights',
     notImplement: 'Obsolete request version',
     sendToSupport: 'Contact support',
-    phraseSaved: 'Text Saved',
+    phraseSaved: 'Text(s) Saved',
     tagExists: 'The tag was previously created',
     tagSaved: 'Tag Saved',
     phraseDeleted: 'Text(s) deleted',
@@ -102,6 +102,7 @@ const lang: Locale = {
         subjectMustBeNotEmpty: 'Subject must not be empty',
         minimalLengthOfTextIs: `Minimum is ${MINIMAL_SUPPORT_TEXT_LENGTH} characters`,
       },
+      trash: 'Trash',
     },
     confirmEmail: {
       title: 'Mail Confirmation',
@@ -194,6 +195,7 @@ const lang: Locale = {
       selectPhrase: 'Select Text',
       translation: 'Translation',
       reTranslation: 'Reverse translation',
+      trash: 'Trash',
     },
     app: {
       connectionRefused: 'Connection to server lost',

@@ -43,6 +43,7 @@ export enum Api {
   getPhraseFindByText = '/v1/phrase-find-by-text',
   getPhraseDistinct = '/v1/phrase-distinct',
   deletePhraseDeleteMany = '/v1/phrase-delete-many',
+  putPhraseUpdateMany = '/v1/phrase-update-many',
   postSendConfirmEmail = '/v1/send-confirm-email',
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
@@ -243,6 +244,7 @@ export interface PhraseCreateBody {
   nativeLang: string;
   translate: string;
   reTranslate: string;
+  deleted?: boolean;
 }
 export type PhraseCreateResult = Phrase | null;
 
@@ -255,6 +257,14 @@ export interface PhraseDeleteManyBody {
   phrases: string[];
 }
 export type PhraseDeleteManyResult = Phrase[];
+
+export interface PhraseUpdateManyBody {
+  phrases: string[];
+  data: {
+    deleted?: boolean;
+  };
+}
+export type PhraseUpdateManyResult = Phrase[];
 
 export interface PhraseUpdateBody {
   phraseId: string;
@@ -294,6 +304,7 @@ export type PhraseFindFirstResult = PhraseFull | null;
 
 export interface PhraseDistinctQuery {
   distinct: Prisma.Enumerable<Prisma.PhraseScalarFieldEnum>;
+  isTrash: Bool;
 }
 export type PhraseDistinctResult = string[];
 
@@ -310,6 +321,7 @@ export interface PhraseFindManyQuery {
   strongTags: Bool;
   search: string;
   gt: string;
+  isTrash: Bool;
   learnLang: string;
 }
 export type PhraseFindManyResult = PhraseFull[];
@@ -440,6 +452,7 @@ export interface Locale {
         subjectMustBeNotEmpty: string;
         minimalLengthOfTextIs: string;
       };
+      trash: string;
     };
     confirmEmail: {
       title: string;
@@ -539,6 +552,7 @@ export interface Locale {
       selectPhrase: string;
       translation: string;
       reTranslation: string;
+      trash: string;
     };
     app: {
       connectionRefused: string;

@@ -18,7 +18,7 @@ const phraseCreate: RequestHandler<{ Body: PhraseCreateBody }, Result<PhraseCrea
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const { tags, text, translate, learnLang, nativeLang, reTranslate } = body;
+  const { tags, text, translate, learnLang, nativeLang, reTranslate, deleted } = body;
 
   const _tags = await orm.tagFindMany({
     where: {
@@ -44,6 +44,7 @@ const phraseCreate: RequestHandler<{ Body: PhraseCreateBody }, Result<PhraseCrea
       userId: id,
       learnLang,
       nativeLang,
+      deleted,
       PhraseTag: {
         createMany: {
           data: _tags.data.map((item) => ({ tagId: item.id })),

@@ -42,6 +42,8 @@ export enum Pages {
   settings = '/settings',
   // eslint-disable-next-line no-unused-vars
   statistics = '/statistics',
+  // eslint-disable-next-line no-unused-vars
+  trash = '/trash',
 }
 
 const now = new Date();

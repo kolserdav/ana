@@ -30,6 +30,7 @@ const phraseFindMany: RequestHandler<
     search: _search,
     gt: _gt,
     learnLang: _learnLang,
+    isTrash: _isTrash,
   } = query;
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
@@ -44,6 +45,7 @@ const phraseFindMany: RequestHandler<
     gt = undefined;
   }
   const strongTags = _strongTags === '1';
+  const isTrash = _isTrash === '1';
   const tagsFilter = strongTags ? 'AND' : 'OR';
   const search =
     _search?.length >= SEARCH_MIN_LENGTH ? _search.replace(/[\s\n\t]/g, ' | ') : undefined;
@@ -52,6 +54,7 @@ const phraseFindMany: RequestHandler<
     where: {
       AND: [
         { userId: id },
+        { deleted: isTrash },
         {
           [tagsFilter]: tags.map((item) => ({
             PhraseTag: {

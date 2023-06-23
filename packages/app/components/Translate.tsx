@@ -145,14 +145,7 @@ function Translate({
     textareaRef,
   });
 
-  const {
-    saveDialog,
-    onClickSavePhrase,
-    setSaveDialog,
-    onClickSave,
-    onClickUpdate,
-    onClickCancelSave,
-  } = useSavePhrase({
+  const { onClickSave, onClickUpdate } = useSavePhrase({
     translate,
     text,
     setLoad,
@@ -415,50 +408,23 @@ function Translate({
                 </div>
               </Spoiler>
             )}
+            {!user && (
+              <Typography align="center" theme={theme} variant="h4">
+                {locale.savePhraseDesc}
+              </Typography>
+            )}
             <Button
               className={s.save_button}
               title={!user ? locale.needLogin : ''}
               disabled={load}
               theme={theme}
-              onClick={user ? onClickSavePhrase : loginRedirect}
+              onClick={user ? (edit ? onClickUpdate : onClickSave) : loginRedirect}
             >
               {edit ? locale.savePhrase : locale.createPhrase}
             </Button>
           </div>
         )}
       </div>
-      {user && (
-        <Dialog className={p.dialog} theme={theme} open={saveDialog} onClose={setSaveDialog}>
-          <Typography align="center" theme={theme} variant="h2">
-            {locale.savePhrase}
-          </Typography>
-          <Typography align="center" theme={theme} variant="h4">
-            {locale.savePhraseDesc}
-          </Typography>
-          <div className={s.active} style={{ backgroundColor: theme.active }}>
-            <Typography align="center" theme={theme} variant="p">
-              {text}
-            </Typography>
-          </div>
-          <div className={s.tags_created}>
-            {tags.map((tag) => (
-              <div key={tag.id} className={s.tag_item}>
-                <Typography variant="span" theme={theme} small disabled>
-                  {`#${tag.text}`}
-                </Typography>
-              </div>
-            ))}
-          </div>
-          <div className={p.dialog__actions}>
-            <Button className={s.button} onClick={onClickCancelSave} theme={theme}>
-              {cancel}
-            </Button>
-            <Button theme={theme} onClick={edit ? onClickUpdate : onClickSave} disabled={load}>
-              {save}
-            </Button>
-          </div>
-        </Dialog>
-      )}
       {user && (
         <Dialog
           className={s.dialog}

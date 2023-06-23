@@ -39,6 +39,7 @@ import support from './api/v1/user/support';
 import getStatistics from './api/v1/user/get-statistics';
 import selectorCreate from './api/localhost/selector/create';
 import onlyLocals from './api/middlewares/onlyLocal';
+import phraseUpdateMany from './api/v1/phrase/updateMany';
 
 const prisma = new PrismaClient();
 
@@ -104,7 +105,7 @@ process.on('unhandledRejection', (err: Error) => {
   );
 
   await fastify.use(
-    [Api.deletePhraseDeleteMany],
+    [Api.deletePhraseDeleteMany, Api.putPhraseUpdateMany],
     checkAccessMiddlewareWrapper(prisma, {
       model: 'Phrase',
       bodyField: 'userId',
@@ -170,6 +171,7 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.get(Api.getPhraseFindByText, phraseFindByText);
   fastify.get(Api.getPhraseDistinct, phraseDistinct);
   fastify.delete(Api.deletePhraseDeleteMany, phraseDeleteMany);
+  fastify.put(Api.putPhraseUpdateMany, phraseUpdateMany);
   fastify.post(Api.postSendConfirmEmail, sendConfirmEmail);
   fastify.post(Api.postSupport, support);
   fastify.get(Api.getStatistics, getStatistics);

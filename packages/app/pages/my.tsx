@@ -1,5 +1,4 @@
 import { GetStaticPropsContext } from 'next';
-import Head from 'next/head';
 import AppBar from '../components/AppBar';
 import { AppProps, PageFull } from '../types';
 import { Locale, LocaleValue } from '../types/interfaces';
@@ -8,6 +7,7 @@ import Request from '../utils/request';
 import s from '../styles/Page.module.scss';
 import My from '../components/My';
 import useCloseAuth from '../hooks/useCloseAuth';
+import Head from '../components/Head';
 
 const request = new Request();
 
@@ -29,11 +29,7 @@ export default function MyPage({
 
   return (
     <>
-      <Head>
-        <title>{page.title}</title>
-        <meta name="description" content={page.description} />
-        <meta name="keywords" content={page.keywords} />
-      </Head>
+      <Head title={page.title} description={page.description} keywords={page.keywords} noIndex />
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <My

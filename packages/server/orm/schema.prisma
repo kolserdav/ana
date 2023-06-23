@@ -80,6 +80,7 @@ model Phrase {
   text        String      @db.VarChar(1000)
   translate   String      @db.VarChar(1500)
   reTranslate String      @db.VarChar(1500)
+  deleted     Boolean     @default(false)
   userId      String
   nativeLang  String      @db.VarChar(2)
   learnLang   String      @db.VarChar(2)

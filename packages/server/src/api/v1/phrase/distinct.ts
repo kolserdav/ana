@@ -18,9 +18,10 @@ const phraseDistinct: RequestHandler<
   Result<PhraseDistinctResult>
 > = async ({ headers, query }, reply) => {
   const { lang, id } = parseHeaders(headers);
-  const { distinct: _distinct } = query;
+  const { distinct: _distinct, isTrash: _isTrash } = query;
   const locale = getLocale(lang).server;
 
+  const isTrash = _isTrash === '1';
   let distinct: Prisma.Enumerable<Prisma.PhraseScalarFieldEnum> = [];
   if (_distinct) {
     distinct = (_distinct as string).split(
@@ -46,7 +47,7 @@ const phraseDistinct: RequestHandler<
 
   const res = await orm.phraseFindMany({
     where: {
-      userId: id,
+      AND: [{ userId: id }, { deleted: isTrash }],
     },
     distinct,
     select: {
