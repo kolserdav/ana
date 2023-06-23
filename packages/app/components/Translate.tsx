@@ -250,7 +250,6 @@ function Translate({
               {undo ? <UndoIcon color={theme.text} /> : <CloseIcon color={theme.text} />}
             </IconButton>
           </div>
-
           <div className={s.micro_button} title={locale.startRecognize}>
             {text && (
               <div className={clsx(s.copy_button, allowRecogn ? s.copy_button__allow_recogn : '')}>
