@@ -111,7 +111,7 @@ const getStatistics: RequestHandler<
 
   const groupPhrases = await orm.$queryRawUnsafe<GroupBySummaryDateItemCount[]>(
     `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
-    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date;`,
+    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date ORDER BY summary_date ASC;`,
     id,
     gt
   );
@@ -126,7 +126,7 @@ const getStatistics: RequestHandler<
 
   const groupOnline = await orm.$queryRawUnsafe<GroupBySummaryDateItemSum[]>(
     `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, SUM(EXTRACT(MICROSECONDS from updated::timestamp - created::timestamp)) FROM "OnlineStatistic" 
-    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date;`,
+    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date ORDER BY summary_date ASC;`,
     id,
     gt
   );

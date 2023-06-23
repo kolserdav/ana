@@ -25,7 +25,7 @@ export const isoToDate = ({
       _format = 'hh';
       break;
     case 'day':
-      _format = 'EEEE';
+      _format = 'EEEE dd LLLL';
       break;
     case 'year':
       _format = 'yyyy';
