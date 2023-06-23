@@ -372,14 +372,15 @@ export class ORM extends Service implements Database {
     };
   }
 
-  private runFromWorker = async ({ args, model, command }: DBCommandProps) => {
+  private runFromWorker = async (msg: DBCommandProps) => {
     const id = v4();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new Promise<any>((resolve) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { master, handler } = this.listenMasterMessages<Result<any>>(({ id: _id, msg }) => {
         if (id === _id) {
           if (msg.status === this.errorStatus) {
-            log('error', 'Database request failed', { args, model, command });
+            log('error', 'Database request failed', { ...msg });
           }
           master.removeListener('message', handler);
           resolve(msg);
@@ -387,11 +388,7 @@ export class ORM extends Service implements Database {
       });
       this.sendMessageToMaster<DBCommandProps>({
         id,
-        msg: {
-          model,
-          command,
-          args,
-        },
+        msg,
       });
     });
   };

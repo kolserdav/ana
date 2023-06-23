@@ -1,5 +1,6 @@
 import HeadNext from 'next/head';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import useLoad from '../hooks/useLoad';
 import { DocumentProps } from '../types';
 import AppBar from './AppBar';
@@ -15,6 +16,7 @@ function DocumentPage({
   app: { user, theme },
   localeAppBar,
 }: DocumentProps) {
+  const router = useRouter();
   useLoad();
 
   const { isCanonical } = useIsCanonical();
@@ -34,8 +36,8 @@ function DocumentPage({
   return (
     <div className={s.wrapper} style={{ backgroundColor: theme.paper, color: theme.text }}>
       <HeadNext>
-        <Head title={title} keywords={keywords} description={description} noIndex />
-        {isCanonical && <link rel="canonical" href={`${ORIGIN}/policy`} />}
+        <Head title={title} keywords={keywords} description={description} />
+        {isCanonical && <link rel="canonical" href={`${ORIGIN}${router.asPath}`} />}
       </HeadNext>
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <div className={s.container}>

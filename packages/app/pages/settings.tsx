@@ -28,7 +28,7 @@ export default function SettingsPage({
 }: SettingsPageProps) {
   return (
     <>
-      <Head title={page.title} description={page.description} keywords={page.keywords} />
+      <Head title={page.title} description={page.description} keywords={page.keywords} noIndex />
       <AppBar user={user} theme={theme} locale={localeAppBar} full />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Settings

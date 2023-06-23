@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { GetStaticPropsContext } from 'next';
 import s from '../../styles/Page.module.scss';
 import Login from '../../components/Login';
@@ -6,6 +5,7 @@ import { LoginProps } from '../../types';
 import AppBar from '../../components/AppBar';
 import { getStaticPropsLogin } from '../../utils/getStaticProps';
 import LoaderFull from '../../components/ui/LoaderFull';
+import Head from '../../components/Head';
 
 export default function HomePage({
   localeLogin,
@@ -16,11 +16,7 @@ export default function HomePage({
 }: LoginProps) {
   return (
     <>
-      <Head>
-        <title>{page.title}</title>
-        <meta name="description" content={page.description} />
-        <meta name="keywords" content={page.keywords} />
-      </Head>
+      <Head title={page.title} description={page.description} keywords={page.keywords} noIndex />
       <AppBar theme={theme} withoutExpandLess locale={localeAppBar} user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Login
