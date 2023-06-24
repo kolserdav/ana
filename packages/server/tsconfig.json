@@ -15,7 +15,7 @@
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-
+    "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
