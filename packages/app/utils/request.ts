@@ -61,6 +61,7 @@ import {
   SelectorCreateResult,
   PhraseUpdateManyBody,
   PhraseUpdateManyResult,
+  PhraseFindManyResultLight,
 } from '../types/interfaces';
 import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -372,7 +373,7 @@ class Request {
     });
   }
 
-  public async phraseFindMany({
+  public async phraseFindMany<T extends PhraseFindManyQuery>({
     orderBy,
     skip,
     take,
@@ -382,10 +383,13 @@ class Request {
     gt,
     learnLang,
     isTrash,
-  }: PhraseFindManyQuery): Promise<Result<PhraseFindManyResult>> {
+    light,
+  }: T): Promise<
+    Result<T['light'] extends '1' ? PhraseFindManyResultLight : PhraseFindManyResult>
+  > {
     return this.send({
       url: `${Api.getPhraseFindMany}?search=${search}&orderBy=${orderBy}\
-&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}&gt=${gt}&learnLang=${learnLang}&isTrash=${isTrash}`,
+&skip=${skip}&take=${take}&tags=${tags}&strongTags=${strongTags}&gt=${gt}&learnLang=${learnLang}&isTrash=${isTrash}&light=${light}`,
       method: 'GET',
     });
   }

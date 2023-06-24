@@ -48,6 +48,10 @@
       right: 80px;
       display: flex;
       align-items: center;
+
+      .translate_icon {
+        margin-right: 0.3rem;
+      }
     }
 
     @media (max-width: $translate-container-max) {

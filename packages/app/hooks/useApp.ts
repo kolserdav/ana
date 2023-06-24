@@ -20,6 +20,9 @@ import { CookieName, getCookie, setCookie } from '../utils/cookies';
 import { WS_ADDRESS } from '../utils/constants';
 import useLoad from './useLoad';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
+import storeMenuOpen from '../store/menuOpen';
+
+let oldPath: string;
 
 export default function useApp({
   user,
@@ -56,6 +59,21 @@ export default function useApp({
       setShowAcceptCookeis(true);
     }
   }, []);
+
+  /**
+   * Listen change router.pathname
+   */
+  useEffect(() => {
+    const _oldPath = router.pathname;
+    if (!oldPath) {
+      oldPath = _oldPath;
+    }
+    const { menuOpen } = storeMenuOpen.getState();
+    if (menuOpen && oldPath !== _oldPath) {
+      oldPath = _oldPath;
+      storeClick.dispatch(changeClick({ clientX: 0, clientY: 0 }));
+    }
+  }, [router.pathname]);
 
   const ws = useMemo(() => {
     if (!userLoad) {

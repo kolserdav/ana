@@ -22,6 +22,14 @@ $search-input-wudth-coeff: 1.5;
     padding: 0 $container-padding;
     margin-top: 2rem;
 
+    .title {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+
     .global_filters {
       display: flex;
       flex-flow: row wrap;
@@ -203,7 +211,7 @@ $search-input-wudth-coeff: 1.5;
         border-style: groove;
         border-radius: 4px;
         margin: $phrase-item-margin 0 0 0;
-        padding: 0 1rem;
+        padding: 0 1rem 1rem;
 
         .item__content {
           width: 100%;
@@ -216,6 +224,10 @@ $search-input-wudth-coeff: 1.5;
 
             summary {
               cursor: pointer;
+
+              &.blur {
+                opacity: $blur-opacity;
+              }
             }
           }
 

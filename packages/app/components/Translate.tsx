@@ -442,9 +442,14 @@ function Translate({
           <Typography theme={theme} variant="h3">
             {`${locale.deleteTag}?`}
           </Typography>
-          <Typography variant="p" theme={theme}>
+          <Typography variant="p" theme={theme} blur large>
             {tagToDelete?.text || ''}
           </Typography>
+          {tagToDelete?.PhraseTag.length !== 0 && (
+            <Typography theme={theme} variant="p">
+              {`${locale.deleteTagDesc}: ${tagToDelete?.PhraseTag.length}`}
+            </Typography>
+          )}
           <div className={s.actions}>
             <Button className={s.button} onClick={onClickCancelDeleteTag} theme={theme}>
               {cancel}

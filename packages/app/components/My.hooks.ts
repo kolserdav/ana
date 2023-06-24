@@ -12,6 +12,7 @@ import {
   TagFindManyResult,
   UNDEFINED_QUERY_STRING,
   DateFilter,
+  PhraseFindManyResultLight,
 } from '../types/interfaces';
 import Request from '../utils/request';
 import { checkRouterPath, getFormatDistance, log } from '../utils/lib';
@@ -21,6 +22,7 @@ import {
   ORDER_BY_DEFAULT,
   PLAY_ALL_ITEM_PAUSE,
   Pages,
+  TAKE_ALL,
   TAKE_PHRASES_DEFAULT,
 } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
@@ -141,6 +143,7 @@ export const usePhrases = ({
         gt,
         learnLang,
         isTrash: isTrash ? '1' : '0',
+        light: '0',
       });
       setLoad(false);
       if (_phrases.status !== 'info') {
@@ -222,7 +225,11 @@ export const usePhrases = ({
       phrases.map((item) => {
         const _item = { ...item };
         _item.text = changeLinks(item.text);
+        const isCreated = item.updated === item.created;
         _item.updated = getFormatDistance(item.updated, router.locale as LocaleValue) as any;
+        if (isCreated) {
+          _item.created = _item.updated;
+        }
         if (sePieces.length !== 0) {
           _item.text = setMatchesBold({ text: _item.text, matches: sePieces });
           if (_item.translate) {
@@ -269,15 +276,58 @@ export const usePhraseDelete = ({
   const [deletePhrase, setDeletePhrase] = useState<boolean>(false);
   const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[0] | null>(null);
   const [deleteSelectedPhrases, setDeleteSelectedPhrases] = useState<boolean>(false);
+  const [deleteImmediatly, setDeleteImmediatly] = useState<boolean>(false);
+  const [emptyTrash, setEmptyTrash] = useState<boolean>(false);
+  const [allInTrash, setAllInTrash] = useState<PhraseFindManyResultLight>([]);
 
   const onClickDeletePhraseWrapper = (phrase: PhraseFindManyResult[0]) => () => {
     setPhraseToDelete(phrase);
     setDeletePhrase(true);
   };
 
+  const onClickOpenEmptyTrash = async () => {
+    setEmptyTrash(true);
+    const _phrases = await request.phraseFindMany({
+      orderBy: 'asc',
+      skip: '0',
+      take: TAKE_ALL.toString(),
+      tags: '',
+      strongTags: '0',
+      search: '',
+      gt: DATE_FILTER_ALL,
+      learnLang: '',
+      isTrash: '1',
+      light: '1',
+    });
+    if (_phrases.status !== 'info' || !_phrases.data) {
+      log(_phrases.status, _phrases.message, _phrases, true);
+      return;
+    }
+
+    setAllInTrash(_phrases.data);
+  };
+
+  const onClickCloseEmptyTrash = () => {
+    setEmptyTrash(false);
+  };
+
+  const onClickEmptyTrash = async () => {
+    setLoad(true);
+    const delRes = await request.phraseDeleteMany({ phrases: allInTrash });
+    setLoad(false);
+    log(delRes.status, delRes.message, delRes, true);
+    if (delRes.status !== 'info') {
+      return;
+    }
+    setEmptyTrash(false);
+    setAllInTrash([]);
+    setRestart(!restart);
+  };
+
   const onClickCloseDelete = () => {
     setPhraseToDelete(null);
     setDeletePhrase(false);
+    setDeleteImmediatly(false);
   };
 
   const onClickOpenDeleteSeleted = () => {
@@ -286,6 +336,7 @@ export const usePhraseDelete = ({
 
   const onClickCloseDeleteSelected = () => {
     setDeleteSelectedPhrases(false);
+    setDeleteImmediatly(false);
   };
 
   const onClickDeletePhrase = async () => {
@@ -294,7 +345,7 @@ export const usePhraseDelete = ({
       return;
     }
     setLoad(true);
-    if (isTrash) {
+    if (isTrash || deleteImmediatly) {
       const delRes = await request.phraseDelete({ phraseId: phraseToDelete.id });
       setLoad(false);
       log(delRes.status, delRes.message, delRes, true);
@@ -314,13 +365,14 @@ export const usePhraseDelete = ({
     }
     setPhraseToDelete(null);
     setDeletePhrase(false);
+    setDeleteImmediatly(false);
     setRestart(!restart);
     setSkip(0);
   };
 
   const onClickDeleteSelectedPhrases = async () => {
     setLoad(true);
-    if (isTrash) {
+    if (isTrash || deleteImmediatly) {
       const delRes = await request.phraseDeleteMany({ phrases: selectedPhrases });
       setLoad(false);
       log(delRes.status, delRes.message, delRes, true);
@@ -341,6 +393,7 @@ export const usePhraseDelete = ({
     setRestart(!restart);
     setDeleteSelectedPhrases(false);
     setSelected([]);
+    setDeleteImmediatly(false);
     setSkip(0);
   };
 
@@ -356,6 +409,14 @@ export const usePhraseDelete = ({
     onClickDeleteSelectedPhrases,
     onClickCloseDeleteSelected,
     onClickOpenDeleteSeleted,
+    deleteImmediatly,
+    setDeleteImmediatly,
+    emptyTrash,
+    onClickOpenEmptyTrash,
+    onClickCloseEmptyTrash,
+    onClickEmptyTrash,
+    setEmptyTrash,
+    allInTrash,
   };
 };
 

@@ -40,12 +40,22 @@ const tagDelete: RequestHandler<{ Body: TagDeleteBody }, Result<TagDeleteResult>
       data: null,
     };
   }
-  const { length } = tag.data.PhraseTag;
-  if (length !== 0) {
-    reply.type(APPLICATION_JSON).code(409);
+
+  const tagU = await orm.tagUpdate({
+    where: {
+      id: tagId,
+    },
+    data: {
+      PhraseTag: {
+        deleteMany: tag.data.PhraseTag,
+      },
+    },
+  });
+  if (tagU.status !== 'info' || !tagU.data) {
+    reply.type(APPLICATION_JSON).code(getHttpCode(tagU.status));
     return {
-      status: 'warn',
-      message: `${locale.tagDeleteConflict}: ${length}`,
+      status: tagU.status,
+      message: tagU.status === 'error' ? locale.error : locale.notFound,
       data: null,
     };
   }

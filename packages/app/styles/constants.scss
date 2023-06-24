@@ -42,6 +42,7 @@ $label-left: calc($input-padding + $label-padding);
 $translate-container-max: 760px;
 $dialog-max-width: 720px;
 $dialog-padding: 2rem;
+$dialog-padding-mobile: 1rem;
 
 // Deps HTML_EDITOR_HEIGHT
 $html-editor-height: 300px;
@@ -69,3 +70,4 @@ $textarea-padding: 0.6rem;
 
 // Deps SCALE_ICONS_COEFF
 $text-area-activities-coeff: 1.5;
+$blur-opacity: 0.7;

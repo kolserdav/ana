@@ -38,7 +38,6 @@ import Button from './ui/Button';
 import Input from './ui/Input';
 import useLoad from '../hooks/useLoad';
 import Textarea from './ui/Textarea';
-import CopyIcon from './icons/Copy';
 import ChartLineIcon from './icons/ChartLine';
 import NotebookIcon from './icons/Notebook';
 import TranslateVariantIcon from './icons/TranslateVariant';
@@ -48,7 +47,7 @@ import SupportIcon from './icons/Support';
 import InformationIcon from './icons/Information';
 import LoginIcon from './icons/Login';
 import LogoutIcon from './icons/Logout';
-import CloseIcon from './icons/Close';
+import CloseOctagonIcon from './icons/CloseOctagon';
 
 function AppBar({
   theme,
@@ -145,7 +144,9 @@ function AppBar({
             </div>
             {typeof isMobile === 'boolean' && !isMobile && (
               <div className={s.actions}>
-                <TranslateIcon withoutScale color={theme.text} />
+                <div className={s.translate_icon}>
+                  <TranslateIcon withoutScale color={theme.text} />
+                </div>
                 <Select
                   ref={localeRef}
                   onChange={onChangeLang}
@@ -203,7 +204,7 @@ function AppBar({
           </div>
           {(isMobile || !full) && (
             <div className={s.menu__item}>
-              <TranslateIcon color={theme.text} />
+              <TranslateIcon color={theme.text} withoutScale />
               <Select ref={localeRef} onChange={onChangeLang} active theme={theme} value={language}>
                 {(locales as LocaleValue[])?.map((item) => (
                   <option value={item} key={item}>
@@ -270,7 +271,7 @@ function AppBar({
             {android && (
               <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">
                 <div className={clsx(s.menu__item, s.active)}>
-                  <CloseIcon color={theme.text} withoutScale />
+                  <CloseOctagonIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.closeApp}</div>
                 </div>
               </Link>

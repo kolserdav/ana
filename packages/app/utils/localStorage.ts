@@ -33,6 +33,8 @@ export enum LocalStorageName {
   // eslint-disable-next-line no-unused-vars
   FILTER_BY_DATE_STAT = 'FILTER_BY_DATE_STAT',
   // eslint-disable-next-line no-unused-vars
+  FILTER_BY_DATE_TRASH = 'FILTER_BY_DATE_TRASH',
+  // eslint-disable-next-line no-unused-vars
   LANG_VOICES = 'LANG_VOICES',
 }
 
@@ -63,6 +65,8 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   : T extends LocalStorageName.SERVER_RELOAD
   ? boolean
   : T extends LocalStorageName.FILTER_BY_DATE_STAT
+  ? DateFilter
+  : T extends LocalStorageName.FILTER_BY_DATE_TRASH
   ? DateFilter
   : T extends LocalStorageName.LANG_VOICES
   ? Record<string, string>

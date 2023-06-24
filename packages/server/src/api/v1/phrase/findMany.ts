@@ -4,6 +4,7 @@ import {
   APPLICATION_JSON,
   PhraseFindManyQuery,
   PhraseFindManyResult,
+  PhraseFindManyResultLight,
   QUERY_STRING_ARRAY_SPLITTER,
   Result,
   SEARCH_MIN_LENGTH,
@@ -17,7 +18,9 @@ const orm = new ORM();
 
 const phraseFindMany: RequestHandler<
   { Querystring: PhraseFindManyQuery },
-  Result<PhraseFindManyResult>
+  Result<
+    PhraseFindManyQuery['light'] extends '1' ? PhraseFindManyResultLight : PhraseFindManyResult
+  >
 > = async ({ headers, query }, reply) => {
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
@@ -31,6 +34,7 @@ const phraseFindMany: RequestHandler<
     gt: _gt,
     learnLang: _learnLang,
     isTrash: _isTrash,
+    light: _light,
   } = query;
 
   const skip = _skip ? parseInt(_skip, 10) : undefined;
@@ -44,11 +48,14 @@ const phraseFindMany: RequestHandler<
   if (Number.isNaN(gt.getTime())) {
     gt = undefined;
   }
+  const light = _light === '1';
   const strongTags = _strongTags === '1';
   const isTrash = _isTrash === '1';
   const tagsFilter = strongTags ? 'AND' : 'OR';
   const search =
     _search?.length >= SEARCH_MIN_LENGTH ? _search.replace(/[\s\n\t]/g, ' | ') : undefined;
+
+  const select: any = 'select';
 
   const res = await orm.phraseFindMany({
     where: {
@@ -139,21 +146,28 @@ const phraseFindMany: RequestHandler<
           }))
         : undefined,
     },
-    include: {
-      PhraseTag: {
-        include: {
-          Tag: {
+    include: light
+      ? undefined
+      : {
+          PhraseTag: {
             include: {
-              PhraseTag: {
-                select: {
-                  phraseId: true,
+              Tag: {
+                include: {
+                  PhraseTag: {
+                    select: {
+                      phraseId: true,
+                    },
+                  },
                 },
               },
             },
           },
         },
-      },
-    },
+    [select]: light
+      ? {
+          id: true,
+        }
+      : undefined,
     orderBy: {
       updated: orderBy,
     },
@@ -171,10 +185,15 @@ const phraseFindMany: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(200);
 
+  let data: any = res.data;
+  if (light) {
+    data = res.data.map((item) => item.id);
+  }
+
   return {
     status: 'info',
     message: locale.success,
-    data: res.data,
+    data,
     count: res.count,
     skip: res.skip,
     take: res.take,

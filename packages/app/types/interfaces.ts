@@ -323,8 +323,10 @@ export interface PhraseFindManyQuery {
   gt: string;
   isTrash: Bool;
   learnLang: string;
+  light: Bool;
 }
 export type PhraseFindManyResult = PhraseFull[];
+export type PhraseFindManyResultLight = string[];
 
 export interface GetStatisticsQuery {
   userId: string;
@@ -379,7 +381,6 @@ export interface Locale {
     tagSaved: string;
     phraseDeleted: string;
     phraseLoad: string;
-    tagDeleteConflict: string;
     tagDeleted: string;
     tagUpdated: string;
     serverReload: string;
@@ -509,6 +510,7 @@ export interface Locale {
       updatePhrase: string;
       createPhrase: string;
       deleteTag: string;
+      deleteTagDesc: string;
       updateTag: string;
       changeTag: string;
       textareaPlaceholder: string;
@@ -541,6 +543,7 @@ export interface Locale {
       selectAll: string;
       unselectAll: string;
       deleteSelected: string;
+      moveSelectedToTrash: string;
       /**
        * @description
        * Required to change LocaleVars.count
@@ -553,6 +556,10 @@ export interface Locale {
       translation: string;
       reTranslation: string;
       trash: string;
+      moveToTrash: string;
+      deleteImmediatly: string;
+      cleanTrash: string;
+      cleanTrashDesc: string;
     };
     app: {
       connectionRefused: string;

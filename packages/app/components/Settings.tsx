@@ -221,20 +221,22 @@ function Settings({
                 </option>
               ))}
             </Select>
-            <div className={s.lang_select__voice}>
-              <Select
-                onChange={changeVoice}
-                value={voice}
-                aria-label={locale.speechVoice}
-                theme={theme}
-              >
-                {voices.map((item) => (
-                  <option key={item.lang} value={item.lang}>
-                    {item.value}
-                  </option>
-                ))}
-              </Select>
-            </div>
+            {voices.length !== 0 && (
+              <div className={s.lang_select__voice}>
+                <Select
+                  onChange={changeVoice}
+                  value={voice}
+                  aria-label={locale.speechVoice}
+                  theme={theme}
+                >
+                  {voices.map((item) => (
+                    <option key={item.lang} value={item.lang}>
+                      {item.value}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+            )}
           </div>
           {!synthAllow && (
             <div className={s.test_input__item}>
@@ -401,6 +403,7 @@ function Settings({
             >
               {locale.deleteAccountTitle}
             </span>
+            <Hr theme={theme} />
           </div>
         )}
       </div>

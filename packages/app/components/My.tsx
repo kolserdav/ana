@@ -1,6 +1,5 @@
-import { createRef, useEffect, useRef } from 'react';
+import { createRef, useRef } from 'react';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, LocaleVars, UNDEFINED_QUERY_STRING, UserCleanResult } from '../types/interfaces';
@@ -100,7 +99,11 @@ function My({
     gt,
     date,
     resetFilterByDate,
-  } = useFilterByDate({ localStorageName: LocalStorageName.FILTER_BY_DATE });
+  } = useFilterByDate({
+    localStorageName: isTrash
+      ? LocalStorageName.FILTER_BY_DATE_TRASH
+      : LocalStorageName.FILTER_BY_DATE,
+  });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
     _onChangeDateFilter(e);
@@ -160,6 +163,14 @@ function My({
     onClickCloseDeleteSelected,
     onClickOpenDeleteSeleted,
     onClickDeleteSelectedPhrases,
+    deleteImmediatly,
+    setDeleteImmediatly,
+    emptyTrash,
+    onClickCloseEmptyTrash,
+    onClickEmptyTrash,
+    setEmptyTrash,
+    onClickOpenEmptyTrash,
+    allInTrash,
   } = usePhraseDelete({
     setLoad,
     restart,
@@ -209,9 +220,21 @@ function My({
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
-        <Typography theme={theme} variant="h1" align="center">
-          {isTrash ? locale.trash : locale.title}
-        </Typography>
+        <div className={s.title}>
+          <Typography theme={theme} variant="h1" align="center">
+            {isTrash ? locale.trash : locale.title}
+          </Typography>
+          {isTrash && (
+            <IconButton
+              disabled={phrases.length === 0}
+              onClick={onClickOpenEmptyTrash}
+              theme={theme}
+              title={locale.cleanTrash}
+            >
+              <DeleteIcon color={theme.red} />
+            </IconButton>
+          )}
+        </div>
         <div className={s.global_filters}>
           <div className={s.global_filters__item}>
             <SelectDateFilter
@@ -469,12 +492,18 @@ function My({
                         </Typography>
                       </details>
                       <details className={s.item__content__details}>
-                        <summary>
+                        <summary className={clsx(item.text === item.reTranslate ? s.blur : '')}>
                           <Typography variant="label" theme={theme} small>
                             {locale.reTranslation}
                           </Typography>
                         </summary>
-                        <Typography className={s.translate} variant="p" theme={theme} small>
+                        <Typography
+                          className={s.translate}
+                          variant="p"
+                          theme={theme}
+                          blur={item.text === item.reTranslate}
+                          small
+                        >
                           {item.reTranslate}
                         </Typography>
                       </details>
@@ -502,7 +531,13 @@ function My({
                       ))}
                     </div>
                     <div className={s.date}>
-                      <Typography variant="span" theme={theme} small disabled>
+                      <Typography
+                        variant="span"
+                        theme={theme}
+                        small
+                        blur
+                        styleName={item.updated === item.created ? 'info' : 'blue'}
+                      >
                         {item.updated.toString()}
                       </Typography>
                     </div>
@@ -532,11 +567,22 @@ function My({
       </div>
       <Dialog className={p.dialog} theme={theme} onClose={setDeletePhrase} open={deletePhrase}>
         <Typography variant="h3" theme={theme} align="center">
-          {`${locale.deletePhrase}?`}
+          {`${isTrash || deleteImmediatly ? locale.deletePhrase : locale.moveToTrash}?`}
         </Typography>
         <Typography variant="p" theme={theme}>
           {phraseToDelete?.text || ''}
         </Typography>
+        <div className={p.dialog__actions}>
+          {!isTrash && (
+            <Checkbox
+              theme={theme}
+              label={locale.deleteImmediatly}
+              id="delete-immediatly"
+              checked={deleteImmediatly}
+              onChange={setDeleteImmediatly}
+            />
+          )}
+        </div>
         <div className={p.dialog__actions}>
           <Button className={s.button} onClick={onClickCloseDelete} theme={theme}>
             {cancel}
@@ -554,17 +600,56 @@ function My({
         open={deleteSelectedPhrases}
       >
         <Typography variant="h3" theme={theme} align="center">
-          {`${locale.deleteSelected}?`}
+          {`${isTrash || deleteImmediatly ? locale.deleteSelected : locale.moveSelectedToTrash}?`}
         </Typography>
         <Typography variant="p" theme={theme}>
           {locale.willDelete.replace(LocaleVars.count, selected.length.toString())}
         </Typography>
+        <div className={p.dialog__actions}>
+          {!isTrash && (
+            <Checkbox
+              theme={theme}
+              label={locale.deleteImmediatly}
+              id="delete-all-immediatly"
+              checked={deleteImmediatly}
+              onChange={setDeleteImmediatly}
+            />
+          )}
+        </div>
         <div className={p.dialog__actions}>
           <Button className={s.button} onClick={onClickCloseDeleteSelected} theme={theme}>
             {cancel}
           </Button>
           <div className={s.button_margin} />
           <Button className={s.button} onClick={onClickDeleteSelectedPhrases} theme={theme}>
+            {_delete}
+          </Button>
+        </div>
+      </Dialog>
+      <Dialog className={p.dialog} theme={theme} onClose={setEmptyTrash} open={emptyTrash}>
+        <Typography variant="h3" theme={theme} align="center">
+          {`${locale.cleanTrash}?`}
+        </Typography>
+        <div className={p.dialog__actions}>
+          {allInTrash.length !== 0 ? (
+            <Typography variant="p" theme={theme}>
+              {`${locale.cleanTrashDesc}: ${allInTrash.length}`}
+            </Typography>
+          ) : (
+            <LoadIcon color={theme.blue} />
+          )}
+        </div>
+        <div className={p.dialog__actions}>
+          <Button className={s.button} onClick={onClickCloseEmptyTrash} theme={theme}>
+            {cancel}
+          </Button>
+          <div className={s.button_margin} />
+          <Button
+            className={s.button}
+            disabled={allInTrash.length === 0}
+            onClick={onClickEmptyTrash}
+            theme={theme}
+          >
             {_delete}
           </Button>
         </div>

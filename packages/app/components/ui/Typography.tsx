@@ -29,7 +29,7 @@ function Typography({
   small?: boolean;
   large?: boolean;
   align?: 'center' | 'right' | 'justify';
-  styleName?: Status | 'vice-versa';
+  styleName?: Status | 'vice-versa' | 'blue';
   disabled?: boolean;
   blur?: boolean;
   datatype?: string;
@@ -71,6 +71,8 @@ function Typography({
             ? theme.green
             : styleName === 'vice-versa'
             ? theme.paper
+            : styleName === 'blue'
+            ? theme.blue
             : theme.text,
       }}
       dangerouslySetInnerHTML={{
