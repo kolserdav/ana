@@ -1,12 +1,12 @@
 import { GetStaticPropsContext } from 'next';
-import AppBar from '../components/AppBar';
-import { AppProps } from '../types';
-import { Locale } from '../types/interfaces';
-import Request from '../utils/request';
-import s from '../styles/Page.module.scss';
-import Head from '../components/Head';
-import Statistics from '../components/Statistics';
-import useCloseAuth from '../hooks/useCloseAuth';
+import AppBar from '../../components/AppBar';
+import { AppProps } from '../../types';
+import { Locale } from '../../types/interfaces';
+import Request from '../../utils/request';
+import s from '../../styles/Page.module.scss';
+import Head from '../../components/Head';
+import Statistics from '../../components/Statistics';
+import useCloseAuth from '../../hooks/useCloseAuth';
 
 const request = new Request();
 

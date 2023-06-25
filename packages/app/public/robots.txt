@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /ru/account/*
+Disallow: /en/account/*
+Disallow: /account/*

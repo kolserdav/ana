@@ -1,13 +1,13 @@
 import { GetStaticPropsContext } from 'next';
-import AppBar from '../components/AppBar';
-import { AppProps, PageFull } from '../types';
-import { Locale, LocaleValue } from '../types/interfaces';
-import { prepagePage } from '../utils/lib';
-import Request from '../utils/request';
-import s from '../styles/Page.module.scss';
-import My from '../components/My';
-import useCloseAuth from '../hooks/useCloseAuth';
-import Head from '../components/Head';
+import AppBar from '../../components/AppBar';
+import { AppProps, PageFull } from '../../types';
+import { Locale, LocaleValue } from '../../types/interfaces';
+import { prepagePage } from '../../utils/lib';
+import Request from '../../utils/request';
+import s from '../../styles/Page.module.scss';
+import My from '../../components/My';
+import useCloseAuth from '../../hooks/useCloseAuth';
+import Head from '../../components/Head';
 
 const request = new Request();
 
@@ -18,7 +18,7 @@ interface PageProps extends AppProps {
   page: PageFull;
 }
 
-export default function MyPage({
+export default function MyTextsPage({
   app: { user, theme, userLoad },
   localeAppBar,
   page,

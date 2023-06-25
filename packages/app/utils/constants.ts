@@ -29,8 +29,6 @@ export enum Pages {
   // eslint-disable-next-line no-unused-vars
   translate = '/',
   // eslint-disable-next-line no-unused-vars
-  myDictionary = '/my',
-  // eslint-disable-next-line no-unused-vars
   about = '/about',
   // eslint-disable-next-line no-unused-vars
   policy = '/policy',
@@ -41,9 +39,11 @@ export enum Pages {
   // eslint-disable-next-line no-unused-vars
   settings = '/settings',
   // eslint-disable-next-line no-unused-vars
-  statistics = '/statistics',
+  statistics = '/my/statistics',
   // eslint-disable-next-line no-unused-vars
-  trash = '/trash',
+  trash = '/my/trash',
+  // eslint-disable-next-line no-unused-vars
+  myDictionary = '/my/texts',
 }
 
 const now = new Date();

@@ -40,15 +40,6 @@ function Template() {
         <td>Наименование налогового органа:</td>
         <td>Управление Федеральной налоговойслужбы по Республике Хакасия</td>
       </tr>
-
-      <tr>
-        <td>Сайт:</td>
-        <td>
-          <a href="https://portfolio.uyem.ru" target="_blank" rel="noreferrer">
-            portfolio.uyem.ru
-          </a>
-        </td>
-      </tr>
     </table>
   );
 }
