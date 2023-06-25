@@ -21,6 +21,7 @@ $search-input-wudth-coeff: 1.5;
     max-width: $translate-container-max;
     padding: 0 $container-padding;
     margin-top: 2rem;
+    padding-bottom: $app-bar-height;
 
     .title {
       position: relative;
