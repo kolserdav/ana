@@ -222,7 +222,7 @@ const compareDates = (
       return array.indexOf(value) === index;
     })
     .sort((_a, _b) => {
-      if (new Date(_a).getTime() > new Date(_b).getDate()) {
+      if (new Date(_a).getTime() < new Date(_b).getDate()) {
         return -1;
       }
       return 1;
