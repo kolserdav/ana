@@ -51,33 +51,6 @@ const phraseUpdateMany: RequestHandler<
     };
   }
 
-  if (deleted) {
-    for (let i = 0; getRes.data[i]; i++) {
-      const phrase = getRes.data[i];
-      if (!phrase) {
-        continue;
-      }
-      const updRes = await orm.phraseUpdate({
-        where: {
-          id: phrase.id,
-        },
-        data: {
-          PhraseTag: {
-            deleteMany: phrase.PhraseTag,
-          },
-        },
-      });
-      if (updRes.status === 'error') {
-        reply.type(APPLICATION_JSON).code(500);
-        return {
-          status: 'error',
-          message: locale.error,
-          data: [],
-        };
-      }
-    }
-  }
-
   const updRes = await orm.phraseUpdateMany({
     where: {
       id: {

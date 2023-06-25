@@ -546,7 +546,9 @@ export const useTags = ({
   const [tagToDelete, setTagToDelete] = useState<TagFindManyResult[0] | null>(null);
   const [tagToUpdate, setTagToUpdate] = useState<TagFindManyResult[0] | null>(null);
 
-  const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({ restart: tagRestart });
+  const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({
+    restart: tagRestart,
+  });
 
   const createTag = async (text: string) => {
     const res = await request.tagCreate({ text });

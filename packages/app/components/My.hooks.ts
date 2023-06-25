@@ -264,6 +264,7 @@ export const usePhraseDelete = ({
   selectedPhrases,
   setSelected,
   isTrash,
+  restartGetTags,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   setRestart: React.Dispatch<React.SetStateAction<boolean>>;
@@ -272,6 +273,7 @@ export const usePhraseDelete = ({
   restart: boolean;
   selectedPhrases: string[];
   isTrash: boolean;
+  restartGetTags: () => void;
 }) => {
   const [deletePhrase, setDeletePhrase] = useState<boolean>(false);
   const [phraseToDelete, setPhraseToDelete] = useState<PhraseFindManyResult[0] | null>(null);
@@ -319,6 +321,7 @@ export const usePhraseDelete = ({
     if (delRes.status !== 'info') {
       return;
     }
+    restartGetTags();
     setEmptyTrash(false);
     setAllInTrash([]);
     setRestart(!restart);
@@ -363,6 +366,7 @@ export const usePhraseDelete = ({
         return;
       }
     }
+    restartGetTags();
     setPhraseToDelete(null);
     setDeletePhrase(false);
     setDeleteImmediatly(false);
@@ -430,10 +434,11 @@ export const usePhraseUpdate = () => {
   return { onClickPhraseUpdateWraper };
 };
 
-export const useTags = () => {
+export const useTags = ({ isTrash }: { isTrash: boolean }) => {
   const [filterTags, setFilterTags] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [strongTags, setStrongTags] = useState<boolean>(false);
+  const [tagsRestart, setTagsRestart] = useState<boolean>(false);
 
   /**
    * Set saved strong tags
@@ -455,7 +460,13 @@ export const useTags = () => {
         _tags.map((item) => item.id)
       );
     },
+    deleted: isTrash,
+    restart: tagsRestart,
   });
+
+  const restartGetTags = () => {
+    setTagsRestart(!tagsRestart);
+  };
 
   /**
    * Clean tags
@@ -534,6 +545,7 @@ export const useTags = () => {
     setStrongTags,
     resetTags,
     onClickFilterTags,
+    restartGetTags,
   };
 };
 

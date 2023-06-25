@@ -92,7 +92,8 @@ function My({
     setStrongTags,
     resetTags,
     onClickFilterTags,
-  } = useTags();
+    restartGetTags,
+  } = useTags({ isTrash });
 
   const {
     onChangeDateFilter: _onChangeDateFilter,
@@ -179,6 +180,7 @@ function My({
     selectedPhrases: selected,
     setSelected,
     isTrash,
+    restartGetTags,
   });
 
   const { resetAllFilters, showResetFilters } = useResetAllFilters({
@@ -257,47 +259,45 @@ function My({
             </div>
           )}
         </div>
-        {!isTrash && (
-          <Spoiler
-            theme={theme}
-            className={s.filters_spoiler}
-            setOpen={onClickFilterTags}
-            open={filterTags}
-            summary={locale.filterByTags}
+        <Spoiler
+          theme={theme}
+          className={s.filters_spoiler}
+          setOpen={onClickFilterTags}
+          open={filterTags}
+          summary={locale.filterByTags}
+        >
+          <div
+            className={clsx(s.filters, filterTags ? s.filters__open : '')}
+            style={{ backgroundColor: theme.active }}
           >
-            <div
-              className={clsx(s.filters, filterTags ? s.filters__open : '')}
-              style={{ backgroundColor: theme.active }}
-            >
-              <div className={s.filters_tags}>
-                {allTags.map((item) => (
-                  <span key={item.id}>
-                    <Cheep
-                      onClick={onClickTagCheepWrapper(
-                        item,
-                        tags.findIndex((i) => i.id === item.id) === -1 ? 'add' : 'del'
-                      )}
-                      postfix={item.PhraseTag.length.toString()}
-                      add={tags.findIndex((i) => i.id === item.id) === -1}
-                      disabled={item.PhraseTag.length === 0}
-                      theme={theme}
-                    >
-                      {item.text}
-                    </Cheep>
-                  </span>
-                ))}
-              </div>
-              <Checkbox
-                theme={theme}
-                label={locale.strongAccord}
-                id="filter-tags-strong"
-                checked={strongTags}
-                onChange={setStrongTags}
-                cb={changeStrongCb}
-              />
+            <div className={s.filters_tags}>
+              {allTags.map((item) => (
+                <span key={item.id}>
+                  <Cheep
+                    onClick={onClickTagCheepWrapper(
+                      item,
+                      tags.findIndex((i) => i.id === item.id) === -1 ? 'add' : 'del'
+                    )}
+                    postfix={item.PhraseTag.length.toString()}
+                    add={tags.findIndex((i) => i.id === item.id) === -1}
+                    disabled={item.PhraseTag.length === 0}
+                    theme={theme}
+                  >
+                    {item.text}
+                  </Cheep>
+                </span>
+              ))}
             </div>
-          </Spoiler>
-        )}
+            <Checkbox
+              theme={theme}
+              label={locale.strongAccord}
+              id="filter-tags-strong"
+              checked={strongTags}
+              onChange={setStrongTags}
+              cb={changeStrongCb}
+            />
+          </div>
+        </Spoiler>
         <div className={s.search}>
           <Input
             type="text"

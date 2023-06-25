@@ -54,7 +54,7 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
     deleted,
   };
 
-  if (tags || deleted) {
+  if (tags) {
     const updRes = await orm.phraseUpdate({
       where: {
         id: phraseId,
@@ -73,13 +73,12 @@ const phraseUpdate: RequestHandler<{ Body: PhraseUpdateBody }, Result<PhraseUpda
         data: null,
       };
     }
-    if (tags) {
-      _data.PhraseTag = {
-        createMany: {
-          data: tags.map((item) => ({ tagId: item })),
-        },
-      };
-    }
+
+    _data.PhraseTag = {
+      createMany: {
+        data: tags.map((item) => ({ tagId: item })),
+      },
+    };
   }
   _data.updated = new Date();
 

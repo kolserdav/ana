@@ -62,6 +62,7 @@ import {
   PhraseUpdateManyBody,
   PhraseUpdateManyResult,
   PhraseFindManyResultLight,
+  UNDEFINED_QUERY_STRING,
 } from '../types/interfaces';
 import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -366,9 +367,11 @@ class Request {
     });
   }
 
-  public async tagFindMany(query: TagFindManyQuery): Promise<Result<TagFindManyResult>> {
+  public async tagFindMany({ deleted }: TagFindManyQuery): Promise<Result<TagFindManyResult>> {
     return this.send({
-      url: Api.getTagsFindMany,
+      url: `${Api.getTagsFindMany}?deleted=${
+        deleted === undefined ? UNDEFINED_QUERY_STRING : deleted
+      }`,
       method: 'GET',
     });
   }

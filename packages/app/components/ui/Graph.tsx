@@ -13,6 +13,7 @@ function Graph({
   width,
   height,
   tickFormatter,
+  allowDecimals,
 }: {
   width: number;
   height: number;
@@ -25,6 +26,7 @@ function Graph({
   formatter?: (d: any) => React.ReactNode;
   // eslint-disable-next-line no-unused-vars
   tickFormatter?: (value: any, index: number) => string;
+  allowDecimals?: boolean;
 }) {
   return (
     <div className={s.wrapper}>
@@ -38,7 +40,7 @@ function Graph({
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={GRAPH_XAXIS_DATA_KEY} />
-        <YAxis tickFormatter={tickFormatter} />
+        <YAxis allowDecimals={allowDecimals} tickFormatter={tickFormatter} />
         <Tooltip
           contentStyle={{ color: 'blue', maxWidth: 'calc(100vw / 1.5)', whiteSpace: 'pre-wrap' }}
           labelFormatter={labelFormatter}
@@ -68,6 +70,7 @@ Graph.defaultProps = {
   labelFormatter: undefined,
   formatter: undefined,
   tickFormatter: undefined,
+  allowDecimals: undefined,
 };
 
 export default Graph;

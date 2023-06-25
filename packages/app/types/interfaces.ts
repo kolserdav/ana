@@ -295,7 +295,9 @@ export interface TagDeleteBody {
 }
 export type TagDeleteResult = Tag | null;
 
-export type TagFindManyQuery = void;
+export type TagFindManyQuery = {
+  deleted?: Bool;
+};
 export type TagFindManyResult = FullTag[];
 
 export type SelectorCreateBody = {

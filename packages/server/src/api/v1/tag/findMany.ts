@@ -5,6 +5,7 @@ import {
   Result,
   TagFindManyQuery,
   TagFindManyResult,
+  UNDEFINED_QUERY_STRING,
 } from '../../../types/interfaces';
 import getLocale from '../../../utils/getLocale';
 import { parseHeaders } from '../../../utils/lib';
@@ -14,16 +15,42 @@ const orm = new ORM();
 const tagFindMany: RequestHandler<
   { Querystring: TagFindManyQuery },
   Result<TagFindManyResult>
-> = async ({ headers }, reply) => {
+> = async ({ headers, query }, reply) => {
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
+  const { deleted: _deleted } = query;
+  const deleted = _deleted === (UNDEFINED_QUERY_STRING as any) ? undefined : _deleted === '1';
+
+  console.log(_deleted);
   const tags = await orm.tagFindMany({
     where: {
-      userId: id,
+      AND: [
+        { userId: id },
+        {
+          PhraseTag:
+            deleted !== undefined
+              ? {
+                  some: {
+                    Phrase: {
+                      deleted,
+                    },
+                  },
+                }
+              : undefined,
+        },
+      ],
     },
     include: {
       PhraseTag: {
+        where:
+          deleted !== undefined
+            ? {
+                Phrase: {
+                  deleted,
+                },
+              }
+            : undefined,
         select: {
           phraseId: true,
         },

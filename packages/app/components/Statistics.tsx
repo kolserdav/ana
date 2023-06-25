@@ -69,8 +69,9 @@ function Statistics({
         {graphWidth && graphCountHeight && (
           <div className={s.graph_item}>
             <Graph
+              allowDecimals={false}
               width={graphWidth}
-              height={graphCountHeight}
+              height={graphCountHeight * 1.5}
               data={countGraphData}
               dataKey={[locale.newTexts, locale.updatedTexts, locale.trashedText]}
               stroke={[theme.green, theme.blue, theme.red]}
