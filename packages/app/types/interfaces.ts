@@ -112,8 +112,13 @@ export interface GroupBySummaryDateItemCount {
   summary_date: string;
   updated: number;
   created: number;
+  deleted: number;
   count: number;
 }
+export type GroupBySummaryDateItemCountRaw = Omit<
+  GroupBySummaryDateItemCount,
+  'updated' | 'created' | 'deleted'
+>;
 
 export interface GroupBySummaryDateItemSum {
   summary_date: string;
@@ -598,6 +603,7 @@ export interface Locale {
       description: string;
       newTexts: string;
       updatedTexts: string;
+      trashedText: string;
       studyTime: string;
       dateDuration: {
         days: string;

@@ -10,6 +10,7 @@ import {
   GroupBySummaryDateItemSum,
   QUERY_STRING_PLUS_SYMBOL,
   QUERY_STRING_MINUS_SYMBOL,
+  GroupBySummaryDateItemCountRaw,
 } from '../../../types/interfaces';
 import { getHttpCode, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
@@ -131,11 +132,9 @@ const getStatistics: RequestHandler<
     .replace(QUERY_STRING_PLUS_SYMBOL, '+')
     .replace(QUERY_STRING_MINUS_SYMBOL, '-');
 
-  const groupPhrasesCreated = await orm.$queryRawUnsafe<
-    Omit<GroupBySummaryDateItemCount, 'contain'>[]
-  >(
+  const groupPhrasesCreated = await orm.$queryRawUnsafe<GroupBySummaryDateItemCountRaw[]>(
     `SELECT DATE_TRUNC('${truncArg}', created at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
-    WHERE "userId"=$1 AND created::timestamp>$2::timestamp AND updated = created GROUP BY summary_date ORDER BY summary_date ASC;`,
+    WHERE "userId"=$1 AND created::timestamp>$2::timestamp AND updated = created AND deleted = false GROUP BY summary_date ORDER BY summary_date ASC;`,
     id,
     gt
   );
@@ -148,15 +147,28 @@ const getStatistics: RequestHandler<
     };
   }
 
-  const groupPhrasesUpdated = await orm.$queryRawUnsafe<
-    Omit<GroupBySummaryDateItemCount, 'contain'>[]
-  >(
+  const groupPhrasesUpdated = await orm.$queryRawUnsafe<GroupBySummaryDateItemCountRaw[]>(
     `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
-    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp AND NOT(updated = created) GROUP BY summary_date ORDER BY summary_date ASC;`,
+    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp AND NOT(updated = created) AND deleted = false GROUP BY summary_date ORDER BY summary_date ASC;`,
     id,
     gt
   );
   if (groupPhrasesUpdated.status === 'error') {
+    reply.type(APPLICATION_JSON).code(500);
+    return {
+      status: 'error',
+      data: null,
+      message: locale.error,
+    };
+  }
+
+  const groupPhrasesDeleted = await orm.$queryRawUnsafe<GroupBySummaryDateItemCountRaw[]>(
+    `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
+  WHERE "userId"=$1 AND updated::timestamp>$2::timestamp AND deleted = true GROUP BY summary_date ORDER BY summary_date ASC;`,
+    id,
+    gt
+  );
+  if (groupPhrasesDeleted.status === 'error') {
     reply.type(APPLICATION_JSON).code(500);
     return {
       status: 'error',
@@ -188,7 +200,11 @@ const getStatistics: RequestHandler<
     return _item;
   });
 
-  const groupPhrases = compareOrderByCounts(groupPhrasesUpdated.data, groupPhrasesCreated.data);
+  const groupPhrases = compareOrderByCounts(
+    groupPhrasesUpdated.data,
+    groupPhrasesCreated.data,
+    groupPhrasesDeleted.data
+  );
 
   return {
     status: 'info',
@@ -207,16 +223,19 @@ const getStatistics: RequestHandler<
   };
 };
 
-const getDateItem = (
-  arr: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[],
-  date: string
-) => arr.find((item) => item.summary_date === date);
+const getDateItem = (arr: GroupBySummaryDateItemCountRaw[], date: string) =>
+  arr.find((item) => item.summary_date === date);
 
 const compareDates = (
-  a: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[],
-  b: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[]
+  a: GroupBySummaryDateItemCountRaw[],
+  b: GroupBySummaryDateItemCountRaw[],
+  c: GroupBySummaryDateItemCountRaw[]
 ): string[] => {
-  return [a.map((item) => item.summary_date), b.map((item) => item.summary_date)]
+  return [
+    a.map((item) => item.summary_date),
+    b.map((item) => item.summary_date),
+    c.map((item) => item.summary_date),
+  ]
     .flat()
     .filter((value: string, index: number, array: string[]) => {
       return array.indexOf(value) === index;
@@ -230,18 +249,21 @@ const compareDates = (
 };
 
 function compareOrderByCounts(
-  updated: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[],
-  created: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[]
+  updated: GroupBySummaryDateItemCountRaw[],
+  created: GroupBySummaryDateItemCountRaw[],
+  deleted: GroupBySummaryDateItemCountRaw[]
 ): GroupBySummaryDateItemCount[] {
-  const compared = compareDates(updated, created);
+  const compared = compareDates(updated, created, deleted);
   return compared.map((item) => {
     const _created = getDateItem(created, item);
     const _updated = getDateItem(updated, item);
+    const _deleted = getDateItem(deleted, item);
     const _item: GroupBySummaryDateItemCount = {
       summary_date: item,
       count: 0,
       updated: _updated?.count || 0,
       created: _created?.count || 0,
+      deleted: _deleted?.count || 0,
     };
     return _item;
   });

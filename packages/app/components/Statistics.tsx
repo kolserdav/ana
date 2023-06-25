@@ -44,6 +44,7 @@ function Statistics({
     updatedTexts: locale.updatedTexts,
     studyTime: locale.studyTime,
     localeDateDuration: locale.dateDuration,
+    trashedTexts: locale.trashedText,
   });
 
   <SelectDateFilter onChange={onChangeDateFilter} locale={dateFilter} date={date} theme={theme} />;
@@ -71,8 +72,8 @@ function Statistics({
               width={graphWidth}
               height={graphCountHeight}
               data={countGraphData}
-              dataKey={[locale.newTexts, locale.updatedTexts]}
-              stroke={[theme.green, theme.blue]}
+              dataKey={[locale.newTexts, locale.updatedTexts, locale.trashedText]}
+              stroke={[theme.green, theme.blue, theme.red]}
             />
           </div>
         )}

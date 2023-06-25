@@ -17,6 +17,7 @@ export const useStatistics = ({
   dateFilter,
   newTexts,
   updatedTexts,
+  trashedTexts,
   studyTime,
   localeDateDuration,
 }: {
@@ -26,6 +27,7 @@ export const useStatistics = ({
   dateFilter: DateFilter | undefined;
   newTexts: string;
   updatedTexts: string;
+  trashedTexts: string;
   studyTime: string;
   localeDateDuration: Locale['app']['statistics']['dateDuration'];
 }) => {
@@ -96,10 +98,18 @@ export const useStatistics = ({
             });
             res[updatedTexts] = item.updated;
             res[newTexts] = item.created;
+            res[trashedTexts] = item.deleted;
             return res;
           })
         : [],
-    [statistics?.groupPhrases, statistics?.truncArg, router.locale, updatedTexts, newTexts]
+    [
+      statistics?.groupPhrases,
+      statistics?.truncArg,
+      router.locale,
+      updatedTexts,
+      newTexts,
+      trashedTexts,
+    ]
   );
 
   const onlineGraphData = useMemo(
