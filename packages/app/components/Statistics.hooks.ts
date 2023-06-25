@@ -4,7 +4,7 @@ import { DateFilter, GetStatisticsResult, Locale, UserCleanResult } from '../typ
 import Request from '../utils/request';
 import { log } from '../utils/lib';
 import { GraphData } from './ui/Graph';
-import { getTimeZone, isoToDate, timestampToTime } from './Statistics.lib';
+import { getTimeZone, isoToDate, secondsToTime, timestampToTime } from './Statistics.lib';
 import { CONTAINER_PADDING, GRAPH_HEIGHT_COEFF, GRAPH_WIDTH_DEFAULT } from '../utils/constants';
 
 const request = new Request();
@@ -16,6 +16,7 @@ export const useStatistics = ({
   gt,
   dateFilter,
   newTexts,
+  updatedTexts,
   studyTime,
   localeDateDuration,
 }: {
@@ -24,6 +25,7 @@ export const useStatistics = ({
   gt: string | undefined;
   dateFilter: DateFilter | undefined;
   newTexts: string;
+  updatedTexts: string;
   studyTime: string;
   localeDateDuration: Locale['app']['statistics']['dateDuration'];
 }) => {
@@ -92,11 +94,12 @@ export const useStatistics = ({
               trunkArg: statistics.truncArg,
               locale: router.locale as any,
             });
-            res[newTexts] = item.count;
+            res[updatedTexts] = item.updated;
+            res[newTexts] = item.created;
             return res;
           })
         : [],
-    [statistics?.groupPhrases, statistics?.truncArg, router.locale, newTexts]
+    [statistics?.groupPhrases, statistics?.truncArg, router.locale, updatedTexts, newTexts]
   );
 
   const onlineGraphData = useMemo(
@@ -130,6 +133,20 @@ export const useStatistics = ({
     [localeDateDuration, statistics]
   );
 
+  const onlineYFormatter = useCallback(
+    (value: any, index: number) => {
+      if (!statistics) {
+        return '';
+      }
+      return secondsToTime({
+        date: parseInt(value, 10),
+        trunkArg: statistics.truncArg,
+        locale: localeDateDuration,
+      });
+    },
+    [localeDateDuration, statistics]
+  );
+
   return {
     statistics,
     countGraphData,
@@ -137,5 +154,6 @@ export const useStatistics = ({
     onlineLabelFormatter,
     graphWidth,
     graphCountHeight,
+    onlineYFormatter,
   };
 };

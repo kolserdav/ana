@@ -110,6 +110,8 @@ export interface RequestContext {
 
 export interface GroupBySummaryDateItemCount {
   summary_date: string;
+  updated: number;
+  created: number;
   count: number;
 }
 
@@ -338,11 +340,9 @@ export type GetStatisticsResult = {
   phrasesCount: number;
   user: UserCleanResult;
   groupPhrases: {
-    max: number;
     items: GroupBySummaryDateItemCount[];
   };
   groupOnline: {
-    max: number;
     items: GroupBySummaryDateItemSum[];
   };
   truncArg: DateTruncateArgument;
@@ -595,7 +595,9 @@ export interface Locale {
     };
     statistics: {
       title: string;
+      description: string;
       newTexts: string;
+      updatedTexts: string;
       studyTime: string;
       dateDuration: {
         days: string;

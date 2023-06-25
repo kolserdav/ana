@@ -1,4 +1,4 @@
-import { format, intervalToDuration } from 'date-fns';
+import { format, intervalToDuration, secondsToHours, secondsToMinutes } from 'date-fns';
 import {
   DateTruncateArgument,
   Locale,
@@ -19,7 +19,7 @@ export const isoToDate = ({
   let _format = 'MM.dd';
   switch (trunkArg) {
     case 'week':
-      _format = 'dd LLLL';
+      _format = 'wo dd LLLL';
       break;
     case 'hour':
       _format = 'hh';
@@ -36,6 +36,37 @@ export const isoToDate = ({
     default:
   }
   return format(new Date(date), _format, { locale: DATE_LOCALE[locale] });
+};
+
+export const secondsToTime = ({
+  date,
+  trunkArg,
+  locale,
+}: {
+  date: number;
+  trunkArg: DateTruncateArgument;
+  locale: Locale['app']['statistics']['dateDuration'];
+}) => {
+  let result = '0';
+  switch (trunkArg) {
+    case 'week':
+      result = `${secondsToHours(date)} ${locale.hours}`;
+      break;
+    case 'hour':
+      result = `${date} ${locale.seconds}`;
+      break;
+    case 'day':
+      result = `${secondsToMinutes(date)} ${locale.minutes}`;
+      break;
+    case 'year':
+      result = `${secondsToHours(date)} ${locale.hours}`;
+      break;
+    case 'month':
+      result = `${secondsToHours(date)} ${locale.hours}`;
+      break;
+    default:
+  }
+  return result;
 };
 
 export const timestampToTime = ({

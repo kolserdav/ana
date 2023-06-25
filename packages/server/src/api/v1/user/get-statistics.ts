@@ -103,19 +103,60 @@ const getStatistics: RequestHandler<
     };
   }
 
+  const onlineS = await orm.onlineStatisticAggregate({
+    _max: {
+      created: true,
+    },
+    where: {
+      userId: id,
+    },
+  });
+  if (onlineS.data && onlineS.data._max.created) {
+    const onS = await orm.onlineStatisticFindFirst({
+      where: { created: onlineS.data._max.created },
+    });
+    if (onlineS.status === 'info' && onS.data) {
+      await orm.onlineStatisticUpdate({
+        where: { id: onS.data.id },
+        data: {
+          updated: new Date(),
+        },
+      });
+    }
+  }
+
   const truncArg = getDateTruncArg(dateFilter);
 
   const timeZone = _timeZone
     .replace(QUERY_STRING_PLUS_SYMBOL, '+')
     .replace(QUERY_STRING_MINUS_SYMBOL, '-');
 
-  const groupPhrases = await orm.$queryRawUnsafe<GroupBySummaryDateItemCount[]>(
-    `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
-    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp GROUP BY summary_date ORDER BY summary_date ASC;`,
+  const groupPhrasesCreated = await orm.$queryRawUnsafe<
+    Omit<GroupBySummaryDateItemCount, 'contain'>[]
+  >(
+    `SELECT DATE_TRUNC('${truncArg}', created at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
+    WHERE "userId"=$1 AND created::timestamp>$2::timestamp AND updated = created GROUP BY summary_date ORDER BY summary_date ASC;`,
     id,
     gt
   );
-  if (groupPhrases.status === 'error') {
+  if (groupPhrasesCreated.status === 'error') {
+    reply.type(APPLICATION_JSON).code(500);
+    return {
+      status: 'error',
+      data: null,
+      message: locale.error,
+    };
+  }
+
+  const groupPhrasesUpdated = await orm.$queryRawUnsafe<
+    Omit<GroupBySummaryDateItemCount, 'contain'>[]
+  >(
+    `SELECT DATE_TRUNC('${truncArg}', updated at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
+    WHERE "userId"=$1 AND updated::timestamp>$2::timestamp AND NOT(updated = created) GROUP BY summary_date ORDER BY summary_date ASC;`,
+    id,
+    gt
+  );
+  if (groupPhrasesUpdated.status === 'error') {
     reply.type(APPLICATION_JSON).code(500);
     return {
       status: 'error',
@@ -146,23 +187,64 @@ const getStatistics: RequestHandler<
     _item.sum = parseInt(item.sum.toString() as string, 10);
     return _item;
   });
+
+  const groupPhrases = compareOrderByCounts(groupPhrasesUpdated.data, groupPhrasesCreated.data);
+
   return {
     status: 'info',
     data: {
       phrasesCount: phrasesCount.data,
       user: cleanData,
       groupPhrases: {
-        items: groupPhrases.data,
-        max: Math.max(...groupPhrases.data.map((item) => item.count)),
+        items: groupPhrases,
       },
       truncArg,
       groupOnline: {
         items: _groupOnline,
-        max: Math.max(..._groupOnline.map((item) => item.sum)),
       },
     },
     message: locale.success,
   };
 };
+
+const getDateItem = (
+  arr: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[],
+  date: string
+) => arr.find((item) => item.summary_date === date);
+
+const compareDates = (
+  a: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[],
+  b: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[]
+): string[] => {
+  return [a.map((item) => item.summary_date), b.map((item) => item.summary_date)]
+    .flat()
+    .filter((value: string, index: number, array: string[]) => {
+      return array.indexOf(value) === index;
+    })
+    .sort((_a, _b) => {
+      if (new Date(_a).getTime() > new Date(_b).getDate()) {
+        return -1;
+      }
+      return 1;
+    });
+};
+
+function compareOrderByCounts(
+  updated: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[],
+  created: Omit<GroupBySummaryDateItemCount, 'updated' | 'created'>[]
+): GroupBySummaryDateItemCount[] {
+  const compared = compareDates(updated, created);
+  return compared.map((item) => {
+    const _created = getDateItem(created, item);
+    const _updated = getDateItem(updated, item);
+    const _item: GroupBySummaryDateItemCount = {
+      summary_date: item,
+      count: 0,
+      updated: _updated?.count || 0,
+      created: _created?.count || 0,
+    };
+    return _item;
+  });
+}
 
 export default getStatistics;

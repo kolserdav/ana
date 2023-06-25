@@ -168,6 +168,10 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<Phrase | null>, Promise<Result<Prisma.PhraseGetPayload<T> | null>>>
   >;
 
+  public abstract onlineStatisticAggregate<T extends Prisma.OnlineStatisticAggregateArgs>(
+    args: Prisma.Subset<T, Prisma.OnlineStatisticAggregateArgs>
+  ): Promise<Result<Prisma.GetOnlineStatisticAggregateType<T> | null>>;
+
   public abstract phraseCreate<T extends Prisma.PhraseCreateArgs>(
     args: Prisma.SelectSubset<T, Prisma.PhraseCreateArgs>
   ): Promise<
@@ -218,6 +222,16 @@ abstract class Database {
 
   public abstract onlineStatisticCreate<T extends Prisma.OnlineStatisticCreateArgs>(
     args: Prisma.SelectSubset<T, Prisma.OnlineStatisticCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<OnlineStatistic | null>,
+      Promise<Result<Prisma.OnlineStatisticGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract onlineStatisticFindFirst<T extends Prisma.OnlineStatisticFindFirstArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OnlineStatisticFindFirstArgs>
   ): Promise<
     Prisma.CheckSelect<
       T,

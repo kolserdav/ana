@@ -239,7 +239,9 @@ const lang: Locale = {
     },
     statistics: {
       title: 'Statistics',
+      description: 'Track your stats to better control your curriculum',
       newTexts: 'Texts created',
+      updatedTexts: 'Texts updated',
       studyTime: 'Study time',
       dateDuration: {
         days: 'days',

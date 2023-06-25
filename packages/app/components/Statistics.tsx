@@ -28,16 +28,23 @@ function Statistics({
     localStorageName: LocalStorageName.FILTER_BY_DATE_STAT,
   });
 
-  const { countGraphData, onlineGraphData, onlineLabelFormatter, graphWidth, graphCountHeight } =
-    useStatistics({
-      user,
-      setLoad,
-      gt,
-      dateFilter: date,
-      newTexts: locale.newTexts,
-      studyTime: locale.studyTime,
-      localeDateDuration: locale.dateDuration,
-    });
+  const {
+    countGraphData,
+    onlineGraphData,
+    onlineLabelFormatter,
+    graphWidth,
+    graphCountHeight,
+    onlineYFormatter,
+  } = useStatistics({
+    user,
+    setLoad,
+    gt,
+    dateFilter: date,
+    newTexts: locale.newTexts,
+    updatedTexts: locale.updatedTexts,
+    studyTime: locale.studyTime,
+    localeDateDuration: locale.dateDuration,
+  });
 
   <SelectDateFilter onChange={onChangeDateFilter} locale={dateFilter} date={date} theme={theme} />;
 
@@ -46,6 +53,9 @@ function Statistics({
       <div className={s.container}>
         <Typography variant="h1" theme={theme} align="center" fullWidth>
           {locale.title}
+        </Typography>
+        <Typography variant="p" theme={theme} align="center" fullWidth>
+          {locale.description}
         </Typography>
         <div className={s.global_filters__item}>
           <SelectDateFilter
@@ -61,8 +71,8 @@ function Statistics({
               width={graphWidth}
               height={graphCountHeight}
               data={countGraphData}
-              dataKey={locale.newTexts}
-              stroke={theme.blue}
+              dataKey={[locale.newTexts, locale.updatedTexts]}
+              stroke={[theme.green, theme.blue]}
             />
           </div>
         )}
@@ -75,6 +85,7 @@ function Statistics({
               data={onlineGraphData}
               dataKey={locale.studyTime}
               stroke={theme.red}
+              tickFormatter={onlineYFormatter}
             />
           </div>
         )}

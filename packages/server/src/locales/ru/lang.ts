@@ -239,7 +239,9 @@ const lang: Locale = {
     },
     statistics: {
       title: 'Статистика',
+      description: 'Следите за вашей статистикой, чтобы лучше контролировать свой учебный план',
       newTexts: 'Создано текстов',
+      updatedTexts: 'Отредактировано текстов',
       studyTime: 'Времени в занятиях',
       dateDuration: {
         days: 'дней',

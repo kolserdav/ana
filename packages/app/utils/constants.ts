@@ -7,6 +7,7 @@ export const LOCALE_NAMES: Record<LocaleValue, string> = {
   ru: 'Русский',
 };
 export const DATE_FILTER_ALL: DateFilter = 'all-time';
+export const DATE_FILTER_STATISTICS_DEFAULT: DateFilter = 'week';
 export const SERVER_LOCAL_ADDRESS = process.env.SERVER_LOCAL_ADDRESS as string;
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
 export const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN as string;

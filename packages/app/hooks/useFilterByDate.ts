@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
-import { DATE_FILTER_ALL } from '../utils/constants';
+import { DATE_FILTER_ALL, DATE_FILTER_STATISTICS_DEFAULT } from '../utils/constants';
 import { DateFilter } from '../types/interfaces';
 
 export const getGTDate = (filter: DateFilter) => {
@@ -48,7 +48,7 @@ const useFilterByDate = ({ localStorageName }: { localStorageName: LocalStorageN
    */
   useEffect(() => {
     const savedDate = getLocalStorage(localStorageName);
-    setDate((savedDate as DateFilter | null) || DATE_FILTER_ALL);
+    setDate((savedDate as DateFilter | null) || DATE_FILTER_STATISTICS_DEFAULT);
   }, [localStorageName]);
 
   /**

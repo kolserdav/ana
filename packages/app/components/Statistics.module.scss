@@ -16,6 +16,13 @@
     flex-direction: column;
     padding: $container-padding;
 
+    .global_filters__item {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+      justify-content: space-around;
+    }
+
     .graph_item {
       margin-top: 1rem;
     }

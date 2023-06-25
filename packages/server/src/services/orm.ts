@@ -284,11 +284,27 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public onlineStatisticAggregate: Database['onlineStatisticAggregate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'onlineStatistic',
+      command: 'aggregate',
+    });
+  };
+
   public onlineStatisticCreate: Database['onlineStatisticCreate'] = async (args) => {
     return this.runFromWorker({
       args,
       model: 'onlineStatistic',
       command: 'create',
+    });
+  };
+
+  public onlineStatisticFindFirst: Database['onlineStatisticFindFirst'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'onlineStatistic',
+      command: 'findFirst',
     });
   };
 
