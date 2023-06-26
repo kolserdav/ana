@@ -22,7 +22,7 @@ export const isoToDate = ({
       _format = 'wo dd LLLL';
       break;
     case 'hour':
-      _format = 'hh';
+      _format = 'HH:mm';
       break;
     case 'day':
       _format = 'EEEE dd LLLL';

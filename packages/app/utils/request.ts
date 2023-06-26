@@ -367,11 +367,11 @@ class Request {
     });
   }
 
-  public async tagFindMany({ deleted }: TagFindManyQuery): Promise<Result<TagFindManyResult>> {
+  public async tagFindMany({ deleted, gt }: TagFindManyQuery): Promise<Result<TagFindManyResult>> {
     return this.send({
       url: `${Api.getTagsFindMany}?deleted=${
         deleted === undefined ? UNDEFINED_QUERY_STRING : deleted
-      }`,
+      }&gt=${gt}`,
       method: 'GET',
     });
   }

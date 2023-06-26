@@ -200,7 +200,7 @@ const lang: Locale = {
       moveToTrash: 'Переместить в выученное',
       deleteImmediatly: 'Удалить сразу',
       cleanTrash: 'Очистить выученное',
-      cleanTrashDesc: 'Все тексты будут безвозвратно удалены из корзины',
+      cleanTrashDesc: 'Все тексты будут безвозвратно удалены из выученного',
     },
     app: {
       connectionRefused: 'Соединение с сервером потеряно',

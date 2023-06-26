@@ -434,7 +434,7 @@ export const usePhraseUpdate = () => {
   return { onClickPhraseUpdateWraper };
 };
 
-export const useTags = ({ isTrash }: { isTrash: boolean }) => {
+export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefined }) => {
   const [filterTags, setFilterTags] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [strongTags, setStrongTags] = useState<boolean>(false);
@@ -462,6 +462,7 @@ export const useTags = ({ isTrash }: { isTrash: boolean }) => {
     },
     deleted: isTrash,
     restart: tagsRestart,
+    gt,
   });
 
   const restartGetTags = () => {

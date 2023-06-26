@@ -297,6 +297,7 @@ export type TagDeleteResult = Tag | null;
 
 export type TagFindManyQuery = {
   deleted?: Bool;
+  gt: string;
 };
 export type TagFindManyResult = FullTag[];
 

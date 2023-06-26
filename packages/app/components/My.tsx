@@ -80,6 +80,17 @@ function My({
   const { onClickPhraseUpdateWraper } = usePhraseUpdate();
 
   const {
+    onChangeDateFilter: _onChangeDateFilter,
+    gt,
+    date,
+    resetFilterByDate,
+  } = useFilterByDate({
+    localStorageName: isTrash
+      ? LocalStorageName.FILTER_BY_DATE_TRASH
+      : LocalStorageName.FILTER_BY_DATE,
+  });
+
+  const {
     filterTags,
     tags,
     onClickTagCheepWrapper,
@@ -93,18 +104,7 @@ function My({
     resetTags,
     onClickFilterTags,
     restartGetTags,
-  } = useTags({ isTrash });
-
-  const {
-    onChangeDateFilter: _onChangeDateFilter,
-    gt,
-    date,
-    resetFilterByDate,
-  } = useFilterByDate({
-    localStorageName: isTrash
-      ? LocalStorageName.FILTER_BY_DATE_TRASH
-      : LocalStorageName.FILTER_BY_DATE,
-  });
+  } = useTags({ isTrash, gt });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
     _onChangeDateFilter(e);

@@ -6,10 +6,12 @@ import { log } from '../utils/lib';
 const request = new Request();
 
 export default function useTags({
+  gt,
   restart,
   onChangeTags,
   deleted,
 }: {
+  gt: string | undefined;
   restart?: boolean;
   // eslint-disable-next-line no-unused-vars
   onChangeTags?: (tags: TagFindManyResult) => void;
@@ -23,14 +25,18 @@ export default function useTags({
    * Set all tags
    */
   useEffect(() => {
+    if (!gt) {
+      return;
+    }
     (async () => {
       const _allTags = await request.tagFindMany({
         deleted: deleted === undefined ? undefined : deleted ? '1' : '0',
+        gt,
       });
       setAllTags(_allTags.data);
       setTagsIsSet(true);
     })();
-  }, [restart, deleted]);
+  }, [restart, deleted, gt]);
 
   const onClickTagCheepWrapper = (tag: TagFindManyResult[0], command: 'add' | 'del') => () => {
     const _tags = tags.slice();

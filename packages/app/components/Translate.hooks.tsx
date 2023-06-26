@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Request from '../utils/request';
 import { cleanPath, copyText, log, shortenString } from '../utils/lib';
 import {
+  DATE_FILTER_ALL,
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
   PHRASE_MAX_LENGTH,
@@ -52,6 +53,7 @@ export const useLanguages = ({
   const [learnLang, setLearnLang] = useState<string>();
   const [changeLang, setChangeLang] = useState<boolean>(false);
   const [oldText, setOldText] = useState<string>('');
+  const [loadText, setLoadText] = useState<string>();
 
   const { langs } = useLangs();
 
@@ -67,15 +69,25 @@ export const useLanguages = ({
   }, [connId]);
 
   /**
+   * Set load text
+   */
+  useEffect(() => {
+    if (loadText) {
+      return;
+    }
+    setLoadText(text);
+  }, [text, loadText]);
+
+  /**
    * Load phrase from database
    */
   useEffect(() => {
-    if (!connId || !user || !text || edit) {
+    if (!connId || !user || !loadText || edit) {
       return;
     }
-    log('info', 'Text is', { oldText, text });
+    log('info', 'Text is', { oldText, loadText });
     (async () => {
-      const phrase = await request.phraseFindByText({ text });
+      const phrase = await request.phraseFindByText({ text: loadText });
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
@@ -83,7 +95,7 @@ export const useLanguages = ({
         router.push(`${router.asPath}?edit=${phrase.data.id}`);
       }
     })();
-  }, [text, user, connId, oldText, edit, router]);
+  }, [loadText, user, connId, oldText, edit, router]);
 
   /**
    * Set default langs
@@ -122,6 +134,7 @@ export const useLanguages = ({
     setNativeLang(learnLang);
     setLearnLang(nativeLang);
     setText(translate);
+    setLocalStorage(LocalStorageName.TEXT, translate);
     setOldText(translate);
     if (undo) {
       setUndo(false);
@@ -548,6 +561,7 @@ export const useTags = ({
 
   const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({
     restart: tagRestart,
+    gt: DATE_FILTER_ALL,
   });
 
   const createTag = async (text: string) => {

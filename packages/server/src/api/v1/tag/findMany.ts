@@ -19,10 +19,11 @@ const tagFindMany: RequestHandler<
   const { lang, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
 
-  const { deleted: _deleted } = query;
+  const { deleted: _deleted, gt: _gt } = query;
   const deleted = _deleted === (UNDEFINED_QUERY_STRING as any) ? undefined : _deleted === '1';
 
-  console.log(_deleted);
+  const gt = new Date(_gt);
+
   const tags = await orm.tagFindMany({
     where: {
       AND: [
@@ -34,10 +35,21 @@ const tagFindMany: RequestHandler<
                   some: {
                     Phrase: {
                       deleted,
+                      updated: {
+                        gt,
+                      },
                     },
                   },
                 }
-              : undefined,
+              : {
+                  some: {
+                    Phrase: {
+                      updated: {
+                        gt,
+                      },
+                    },
+                  },
+                },
         },
       ],
     },
@@ -48,9 +60,18 @@ const tagFindMany: RequestHandler<
             ? {
                 Phrase: {
                   deleted,
+                  updated: {
+                    gt,
+                  },
                 },
               }
-            : undefined,
+            : {
+                Phrase: {
+                  updated: {
+                    gt,
+                  },
+                },
+              },
         select: {
           phraseId: true,
         },

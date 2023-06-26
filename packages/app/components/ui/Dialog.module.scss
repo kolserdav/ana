@@ -21,7 +21,7 @@
 
   .container {
     position: relative;
-    display: grid;
+    display: block;
     width: auto;
     min-width: $small-width;
     height: auto;
@@ -34,7 +34,6 @@
 
     @media (max-width: $mobile-width) {
       max-width: 95vw;
-      padding: $dialog-padding-mobile;
     }
 
     @media (max-height: $mobile-width) {
