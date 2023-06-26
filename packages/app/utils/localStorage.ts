@@ -53,7 +53,7 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   : T extends LocalStorageName.ACCEPT_POLICY
   ? boolean
   : T extends LocalStorageName.SPEECH_SPEED
-  ? LocaleValue
+  ? number
   : T extends LocalStorageName.FILTER_BY_LANG
   ? string
   : T extends LocalStorageName.FILTER_BY_DATE
