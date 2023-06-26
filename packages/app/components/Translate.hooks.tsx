@@ -97,7 +97,7 @@ export const useLanguages = ({
     if (!nativeLang) {
       return;
     }
-    setLocalStorage(LocalStorageName.LEARN_LANG, nativeLang);
+    setLocalStorage(LocalStorageName.NATIVE_LANG, nativeLang);
   }, [nativeLang]);
 
   /**
