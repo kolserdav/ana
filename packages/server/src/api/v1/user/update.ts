@@ -24,7 +24,7 @@ const userUpdate: RequestHandler<{ Body: UserUpdateBody }, Result<UserCleanResul
 
   const locale = getLocale(lang).server;
 
-  if (!checkEmail(email) || userId !== id) {
+  if ((email && !checkEmail(email)) || userId !== id) {
     reply.type(APPLICATION_JSON).code(400);
     return {
       status: 'warn',
@@ -73,6 +73,7 @@ const userUpdate: RequestHandler<{ Body: UserUpdateBody }, Result<UserCleanResul
       salt: password?.newPassword ? salt : undefined,
       updated: new Date(),
       confirm: user.data.email !== email ? false : undefined,
+      lang,
     },
   });
 

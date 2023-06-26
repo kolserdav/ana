@@ -5,16 +5,12 @@ import {
   checkEmail,
   UserCreateBody,
   UserCleanResult,
-  PAGE_CONFIRM_EMAIL,
-  EMAIL_QS,
-  KEY_QS,
 } from '../../../types/interfaces';
 import { getConfirmEmailLink, getHttpCode, log, parseHeaders } from '../../../utils/lib';
 import { ORM } from '../../../services/orm';
 import { createPasswordHash, createRandomSalt } from '../../../utils/auth';
 import { Prisma } from '@prisma/client';
 import { sendEmail } from '../../../utils/email';
-import { APP_URL } from '../../../utils/constants';
 import { cleanUserFields } from '../../../components/lib';
 import getLocale from '../../../utils/getLocale';
 
@@ -44,6 +40,7 @@ const userCreate: RequestHandler<{ Body: UserCreateBody }, Result<UserCleanResul
   const hash = createPasswordHash({ salt, password });
   data.password = hash;
   data.salt = salt;
+  data.lang = lang;
   const user = await orm.userCreate({
     data: {
       ...data,

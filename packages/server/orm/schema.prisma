@@ -53,6 +53,7 @@ model User {
   salt            String            @db.VarChar(32)
   updated         DateTime          @default(now())
   created         DateTime          @default(now())
+  lang            Lang              @default(en)
   RestoreLink     RestoreLink[]
   ConfirmLink     ConfirmLink[]
   Phrase          Phrase[]

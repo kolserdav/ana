@@ -23,8 +23,6 @@ export enum LocalStorageName {
   // eslint-disable-next-line no-unused-vars
   SPEECH_SPEED = 'SPEECH_SPEED',
   // eslint-disable-next-line no-unused-vars
-  INTERFACE_LANGUAGE = 'INTERFACE_LANGUAGE',
-  // eslint-disable-next-line no-unused-vars
   FILTER_BY_DATE = 'FILTER_BY_DATE',
   // eslint-disable-next-line no-unused-vars
   FILTER_BY_LANG = 'FILTER_BY_LANG',
@@ -55,8 +53,6 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   : T extends LocalStorageName.ACCEPT_POLICY
   ? boolean
   : T extends LocalStorageName.SPEECH_SPEED
-  ? number
-  : T extends LocalStorageName.INTERFACE_LANGUAGE
   ? LocaleValue
   : T extends LocalStorageName.FILTER_BY_LANG
   ? string

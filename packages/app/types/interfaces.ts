@@ -213,7 +213,7 @@ export type SupportResult = UserCleanResult;
 
 export interface UserUpdateBody {
   userId: string;
-  email: string;
+  email?: string;
   password?: {
     oldPassword: string;
     newPassword: string;

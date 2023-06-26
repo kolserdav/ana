@@ -11,7 +11,7 @@ import {
   SUPPORT_TEXT_MAX_LENGHT,
   TEXTAREA_ROWS_DEFAULT,
 } from '../utils/constants';
-import { CookieName, setCookie } from '../utils/cookies';
+import { CookieName, getCookie, setCookie } from '../utils/cookies';
 import { getLocalStorage, LocalStorageName, setLocalStorage } from '../utils/localStorage';
 import storeTouchEvent from '../store/touchEvent';
 import {
@@ -206,7 +206,7 @@ export const useAndroid = () => {
   return { android, closeApp };
 };
 
-export const useLanguage = () => {
+export const useLanguage = ({ user }: { user: UserCleanResult | null }) => {
   const router = useRouter();
   const { locales, locale: lang } = router;
 
@@ -225,19 +225,25 @@ export const useLanguage = () => {
   useEffect(() => {
     if (lang !== language) {
       router.push(router.asPath, router.asPath, { locale: language });
-      setLocalStorage(LocalStorageName.INTERFACE_LANGUAGE, language);
+      setCookie(CookieName.lang, language);
+
+      if (user) {
+        (async () => {
+          await request.userUpdate({ userId: user.id });
+        })();
+      }
 
       if (typeof androidCommon !== 'undefined') {
         androidCommon.setInterfaceLanguage(language);
       }
     }
-  }, [router, lang, language]);
+  }, [router, lang, language, user]);
 
   /**
    * Set lang
    */
   useEffect(() => {
-    const savedLang = getLocalStorage(LocalStorageName.INTERFACE_LANGUAGE);
+    const savedLang = getCookie(CookieName.lang);
     if (savedLang && savedLang !== lang) {
       setLanguage(savedLang);
     }
