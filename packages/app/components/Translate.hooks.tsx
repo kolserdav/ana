@@ -7,12 +7,13 @@ import {
   DATE_FILTER_ALL,
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
-  PHRASE_MAX_LENGTH,
+  PHRASE_MAX_LENGTH_DEFAULT,
   PROCESS_TEXT_QUERY_STRING,
   Pages,
   TEXTAREA_MAX_ROWS,
   TEXTAREA_ROWS_DEFAULT,
   TRANSLATE_DELAY,
+  TRANSLATE_MAX_SYMBOLS,
 } from '../utils/constants';
 import {
   Locale,
@@ -184,6 +185,7 @@ export const useTranslate = ({
   setOldText,
   oldText,
   textareaRef,
+  user,
 }: {
   learnLang: string | undefined;
   nativeLang: string | undefined;
@@ -203,6 +205,7 @@ export const useTranslate = ({
   setOldText: React.Dispatch<React.SetStateAction<string>>;
   oldText: string;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
+  user: UserCleanResult | null;
 }) => {
   const router = useRouter();
 
@@ -214,6 +217,23 @@ export const useTranslate = ({
   const [restart, setRestart] = useState<boolean>(false);
   const [phraseToUpdate, setPhraseToUpdate] = useState<PhraseUpdateResult>(null);
   const [checkRows, setCheckRows] = useState<boolean>(false);
+  const [phraseSettings, setPhraseSettings] = useState<{
+    maxSymbols: number;
+  }>({ maxSymbols: PHRASE_MAX_LENGTH_DEFAULT });
+
+  /**
+   * Set phrase settings
+   */
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    if (user.role === 'admin') {
+      setPhraseSettings({
+        maxSymbols: TRANSLATE_MAX_SYMBOLS,
+      });
+    }
+  }, [user]);
 
   /**
    * Clean other if text is empty
@@ -361,9 +381,13 @@ export const useTranslate = ({
       setUndo(false);
     }
     let _value = value;
-    if (value.length > PHRASE_MAX_LENGTH) {
-      _value = shortenString(value, PHRASE_MAX_LENGTH);
+
+    if (phraseSettings.maxSymbols === PHRASE_MAX_LENGTH_DEFAULT) {
+      if (value.length > PHRASE_MAX_LENGTH_DEFAULT) {
+        _value = shortenString(value, PHRASE_MAX_LENGTH_DEFAULT);
+      }
     }
+
     saveText(_value);
   };
 
@@ -456,6 +480,7 @@ export const useTranslate = ({
     setRestart,
     phraseToUpdate,
     revertText,
+    phraseSettings,
   };
 };
 

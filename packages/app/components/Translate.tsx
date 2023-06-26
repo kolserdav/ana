@@ -30,7 +30,6 @@ import DeleteIcon from './icons/Delete';
 import SwapHorizontalIcon from './icons/SwapHorisontal';
 import MicrophoneIcon from './icons/Microphone';
 import UndoIcon from './icons/Undo';
-import { PHRASE_MAX_LENGTH } from '../utils/constants';
 import Spoiler from './ui/Spoiler';
 import PlaySoundButton from './ui/PlaySoundButton';
 import CopyIcon from './icons/Copy';
@@ -40,7 +39,6 @@ function Translate({
   theme,
   locale,
   user,
-  save,
   showHelp,
   _edit,
   _delete,
@@ -55,7 +53,6 @@ function Translate({
   locale: Locale['app']['translate'];
   copyText: Locale['app']['common']['copyText'];
   user: UserCleanResult | null;
-  save: string;
   showHelp: string;
   _edit: string;
   _delete: string;
@@ -122,6 +119,7 @@ function Translate({
     edit,
     restart,
     setRestart,
+    phraseSettings,
   } = useTranslate({
     undo,
     nativeLang,
@@ -141,6 +139,7 @@ function Translate({
     oldText,
     setOldText,
     textareaRef,
+    user,
   });
 
   const { onClickSave, onClickUpdate } = useSavePhrase({
@@ -228,7 +227,7 @@ function Translate({
             rows={rows}
             theme={theme}
             disabled={load}
-            maxLength={PHRASE_MAX_LENGTH}
+            maxLength={phraseSettings.maxSymbols}
           />
           <div className={s.close_button}>
             <IconButton

@@ -39,7 +39,6 @@ export default function TranslatePage({
           _edit={localeCommon.edit}
           _delete={localeCommon.delete}
           showHelp={localeCommon.showHelp}
-          save={localeCommon.save}
           user={user}
           theme={theme}
           locale={localeTranslate}

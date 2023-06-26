@@ -44,6 +44,11 @@ model Page {
   lang  Lang
 }
 
+enum UserRole {
+  admin
+  user
+}
+
 model User {
   id              String            @id @default(uuid())
   name            String?           @db.VarChar(24)
@@ -54,6 +59,7 @@ model User {
   updated         DateTime          @default(now())
   created         DateTime          @default(now())
   lang            Lang              @default(en)
+  role            UserRole          @default(user)
   RestoreLink     RestoreLink[]
   ConfirmLink     ConfirmLink[]
   Phrase          Phrase[]

@@ -109,7 +109,8 @@ export const LICENSE = {
   link: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };
 // deps packages/server/orm/schema.prisma.Phrase.text
-export const PHRASE_MAX_LENGTH = 1000;
+export const PHRASE_MAX_LENGTH_DEFAULT = 1000;
+export const TRANSLATE_MAX_SYMBOLS = 10000;
 export const TEST_TEXT_DEFAULT = 'Test';
 export const SPEECH_SPEED_DEFAULT = 1;
 export const SPEECH_SPEED_MAX = 1.5;
