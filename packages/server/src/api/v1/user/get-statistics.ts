@@ -241,7 +241,7 @@ const compareDates = (
       return array.indexOf(value) === index;
     })
     .sort((_a, _b) => {
-      if (new Date(_a).getTime() < new Date(_b).getDate()) {
+      if (new Date(_a).getTime() < new Date(_b).getTime()) {
         return -1;
       }
       return 1;
@@ -254,6 +254,7 @@ function compareOrderByCounts(
   deleted: GroupBySummaryDateItemCountRaw[]
 ): GroupBySummaryDateItemCount[] {
   const compared = compareDates(updated, created, deleted);
+
   return compared.map((item) => {
     const _created = getDateItem(created, item);
     const _updated = getDateItem(updated, item);
