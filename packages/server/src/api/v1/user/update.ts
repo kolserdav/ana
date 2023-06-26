@@ -72,7 +72,7 @@ const userUpdate: RequestHandler<{ Body: UserUpdateBody }, Result<UserCleanResul
       password: password?.newPassword ? _hash : undefined,
       salt: password?.newPassword ? salt : undefined,
       updated: new Date(),
-      confirm: user.data.email !== email ? false : undefined,
+      confirm: email && user.data.email !== email ? false : undefined,
       lang,
     },
   });
