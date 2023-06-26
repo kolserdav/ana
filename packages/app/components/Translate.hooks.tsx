@@ -29,6 +29,7 @@ import {
   setLocalStorage,
 } from '../utils/localStorage';
 import useLangs from '../hooks/useLangs';
+import { getGTDate } from '../hooks/useFilterByDate';
 
 const request = new Request();
 
@@ -561,7 +562,7 @@ export const useTags = ({
 
   const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({
     restart: tagRestart,
-    gt: DATE_FILTER_ALL,
+    gt: getGTDate(DATE_FILTER_ALL),
   });
 
   const createTag = async (text: string) => {
