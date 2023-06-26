@@ -81,6 +81,26 @@ export const useLanguages = ({
   }, [text, loadText]);
 
   /**
+   * On change learn lang
+   */
+  useEffect(() => {
+    if (!learnLang) {
+      return;
+    }
+    setLocalStorage(LocalStorageName.LEARN_LANG, learnLang);
+  }, [learnLang]);
+
+  /**
+   * On change native lang
+   */
+  useEffect(() => {
+    if (!nativeLang) {
+      return;
+    }
+    setLocalStorage(LocalStorageName.LEARN_LANG, nativeLang);
+  }, [nativeLang]);
+
+  /**
    * Load phrase from database
    */
   useEffect(() => {
@@ -118,11 +138,9 @@ export const useLanguages = ({
       switch (type) {
         case 'native':
           setNativeLang(value);
-          setLocalStorage(LocalStorageName.NATIVE_LANG, value);
           break;
         case 'learn':
           setLearnLang(value);
-          setLocalStorage(LocalStorageName.LEARN_LANG, value);
           break;
         default:
       }
@@ -228,6 +246,7 @@ export const useTranslate = ({
     if (!user) {
       return;
     }
+
     if (user.role === 'admin') {
       setPhraseSettings({
         maxSymbols: TRANSLATE_MAX_SYMBOLS,

@@ -98,7 +98,7 @@ class Translate:
             filter(lambda x: x != '', re.split(self.sentence_sym_reg, text)))
         logger.info(matches)
         for i in range(0, len(matches)):
-            sentences.append(matches[i])
+            sentences[i] += matches[i]
         return sentences
 
     def tokenize(self, package_path: Path, text: str):
