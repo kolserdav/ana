@@ -41,15 +41,7 @@ const tagFindMany: RequestHandler<
                     },
                   },
                 }
-              : {
-                  some: {
-                    Phrase: {
-                      updated: {
-                        gt,
-                      },
-                    },
-                  },
-                },
+              : undefined,
         },
       ],
     },

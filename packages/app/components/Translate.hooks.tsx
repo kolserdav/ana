@@ -548,6 +548,8 @@ export const useSavePhrase = ({
   };
 };
 
+const gt = getGTDate(DATE_FILTER_ALL);
+
 export const useTags = ({
   setLoad,
 }: {
@@ -562,7 +564,7 @@ export const useTags = ({
 
   const { tags, setTags, onClickTagCheepWrapper, allTags } = useTagsGlobal({
     restart: tagRestart,
-    gt: getGTDate(DATE_FILTER_ALL),
+    gt,
   });
 
   const createTag = async (text: string) => {
