@@ -2,6 +2,8 @@
 
 Application for easy composing texts in the foreign language.
 
+[Installation](./docs/INSTALLATION.md)
+
 ![Android 5.0](https://img.shields.io/badge/android-5.0+-brightgreen)
 ![License](https://img.shields.io/github/license/kolserdav/ana)
 
