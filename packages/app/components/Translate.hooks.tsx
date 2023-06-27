@@ -184,6 +184,9 @@ let timeout = setTimeout(() => {
   /**/
 }, 0);
 
+let saveTime = new Date();
+saveTime.setMinutes(saveTime.getMinutes() - 1);
+
 export const useTranslate = ({
   learnLang,
   nativeLang,
@@ -284,7 +287,9 @@ export const useTranslate = ({
     }
     (async () => {
       const phrase = await request.phraseFindFirst({ phraseId: edit as string });
-      log(phrase.status, phrase.message, phrase, true);
+      if (new Date().getTime() - saveTime.getTime() > 1000) {
+        log(phrase.status, phrase.message, phrase, true);
+      }
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
@@ -541,6 +546,7 @@ export const useSavePhrase = ({
       return;
     }
 
+    saveTime = new Date();
     setLoad(true);
     const saveRes = await request.phraseCreate({
       text,
@@ -565,6 +571,7 @@ export const useSavePhrase = ({
       log('warn', 'This is not editable phrase', { edit });
       return;
     }
+    saveTime = new Date();
     setLoad(true);
     const saveRes = await request.phraseUpdate({
       phraseId: edit,
@@ -775,12 +782,12 @@ export const useSpeechRecognize = ({
    * Set recognition
    */
   useEffect(() => {
-    if (typeof allowMicro === 'boolean' && !allowMicro) {
-      log('warn', locale.microNotPermitted, {}, true);
-      return;
-    }
     if (!('webkitSpeechRecognition' in window)) {
       log('warn', locale.recognizeNotSupport, {}, allowMicro);
+      return;
+    }
+    if (typeof allowMicro === 'boolean' && !allowMicro) {
+      log('warn', locale.microNotPermitted, {}, true);
       return;
     }
 

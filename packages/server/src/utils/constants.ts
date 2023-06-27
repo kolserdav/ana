@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
-import { log } from './lib';
+import { log } from 'console';
 dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 
 export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
