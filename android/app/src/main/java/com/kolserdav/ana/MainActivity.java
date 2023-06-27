@@ -98,13 +98,15 @@ public class MainActivity extends Activity {
             }
             url = url.concat(_text);
         }
-
+        Log.d("PATH", db.app.schema.path);
         // Parse deep link
         Uri path = intent.getData();
         if (path != null) {
             url = url.concat(path.getPath());
             url = url.concat("?");
             url = url.concat(path.getQuery());
+        } else {
+            url.concat(db.app.schema.path);
         }
 
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -125,7 +127,13 @@ public class MainActivity extends Activity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d("PATH", "Change path " + url);
+                AppInterface _app = new AppInterface(db.app.schema.id, db.app.schema.url, db.app.schema.path);
+                _app.path = url.replace(_app.url, "");
+                db.app.setPath(_app);
                 view.loadUrl(url);
+
+
                 return true;
             }
 
@@ -135,6 +143,10 @@ public class MainActivity extends Activity {
 
         this.setContentView(mWebView);
 
+        microphoneAccess();
+    }
+
+    private void microphoneAccess() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             // Permission has not been granted, request permission
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);

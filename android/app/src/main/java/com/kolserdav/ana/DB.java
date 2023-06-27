@@ -25,17 +25,21 @@ abstract class Table {
         projections = _projections;
         db = _db;
     }
-
-    public void  onCreate() {}
 }
 
 class AppInterface {
     Integer id = 1;
     String url = "https://uyem.ru";
+    String path = "/";
 
-    public AppInterface(Integer _id, String _url) {
+    public AppInterface(Integer _id, String _url, String _path) {
         id = _id;
         url = _url;
+        path = _path;
+    }
+
+    public AppInterface() {
+
     }
 
 }
@@ -45,46 +49,41 @@ class App extends Table {
     public static final String TABLE_NAME = "app";
     public static final String APP_COLUMN_ID = "id";
     public static final String APP_COLUMN_URL = "url";
+    public static final String APP_COLUMN_PATH = "path";
 
     public AppInterface schema;
 
     public App(SQLiteDatabase db) {
         super(db, new String[]{
                 APP_COLUMN_ID,
-                APP_COLUMN_URL});
+                APP_COLUMN_URL,
+                APP_COLUMN_PATH});
+        schema = new AppInterface();
 
     }
 
     public void onCreate() {
-        db.execSQL("CREATE TABLE " + TABLE_NAME + " (" +
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 APP_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                APP_COLUMN_URL + " TEXT" + ")");
+                APP_COLUMN_URL + " TEXT, " +  APP_COLUMN_PATH + " TEXT" + ")");
+        init();
     }
 
-    public void setApp(AppInterface options) {
+    public void setUrl(AppInterface options) {
         db.execSQL("UPDATE " + TABLE_NAME +
                 " SET " + APP_COLUMN_URL + options.url +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
+        schema.url = options.url;
     }
 
-    public void insert() {
-        Cursor cursor = db.query(
-                TABLE_NAME,
-                projections,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-        if (cursor.getCount() == 0) {
-            db.execSQL("INSERT INTO " + TABLE_NAME +
-                    " (" + APP_COLUMN_ID + ", " + APP_COLUMN_URL + ") VALUES" + " (" + null + ", '" + schema.url + "')");
-        }
+    public void setPath(AppInterface options) {
+        db.execSQL("UPDATE " + TABLE_NAME +
+                " SET " + APP_COLUMN_PATH + "='" + options.path + "'" +
+                " WHERE " + APP_COLUMN_ID + "=" + options.id);
+        schema.path = options.path;
     }
 
     public AppInterface init() {
-        insert();
         // String selection = APP_COLUMN_ID + "=?";
         // String[] selectionArgs = {"%" + id + "%"};
         Cursor cursor = db.query(
@@ -96,13 +95,18 @@ class App extends Table {
                 null,
                 null
         );
-        Integer id = 1;
-        String url = "";
-        while (cursor.moveToNext()) {
-            id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));
-            url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
+        if (cursor.getCount() == 0) {
+            db.execSQL("INSERT INTO " + TABLE_NAME +
+                    " (" + APP_COLUMN_ID + ", " + APP_COLUMN_URL + ", " + APP_COLUMN_PATH +  ") " +
+                    "VALUES" + " (" + null + ", '" + schema.url + "',  '" + schema.path + "')");
+            return init();
         }
-        schema = new AppInterface(id, url);
+
+        while (cursor.moveToNext()) {
+            schema.id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));
+            schema.url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
+            schema.path = cursor.getString(getAppColumnIndex(APP_COLUMN_PATH));
+        }
         return schema;
     }
 
@@ -122,14 +126,13 @@ public class DB extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         sqLiteDatabase = getWritableDatabase();
         app = new App(sqLiteDatabase);
+        app.onCreate();
         app.init();
     }
 
     @Override
     public void onCreate(SQLiteDatabase _sqLiteDatabase) {
         sqLiteDatabase = _sqLiteDatabase;
-
-        app.onCreate();
     }
 
 
