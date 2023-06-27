@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,15 +34,14 @@ import androidx.core.content.ContextCompat;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.URLDecoder;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
-
 public class MainActivity extends Activity {
     private WebView mWebView;
+
+    private DB db;
 
 
     @Override
@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
+        db = new DB(this);
 
 
         mWebView = new WebView(this);
@@ -75,7 +76,10 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
 
-        String url = "https://uyem.ru";
+
+
+
+        String url = db.app.schema.url;
         Intent intent = getIntent();
 
         // Parse process text
