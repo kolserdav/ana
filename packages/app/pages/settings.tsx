@@ -46,6 +46,7 @@ export default function SettingsPage({
           emailIsSend={localeCommon.emailIsSend}
           urlDefault={urlDefault}
           url={_url}
+          wrongUrlFormat={localeCommon.wrongUrlFormat}
         />
       </main>
     </>

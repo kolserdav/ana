@@ -138,6 +138,7 @@ const lang: Locale = {
         forYear: 'за год',
         forAllTime: 'за всё время',
       },
+      wrongUrlFormat: 'Неверный формат адреса',
     },
     translate: {
       title: 'Составление предложений',

@@ -15,6 +15,7 @@ import { Locale, UserCleanResult } from '../types/interfaces';
 import { log } from '../utils/lib';
 import useLogin from '../hooks/useLogin';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
+import { checkUrl } from './Settings.lib';
 
 const request = new Request();
 
@@ -408,14 +409,28 @@ export const useConfirmEmail = ({
   };
 };
 
-export const useChangeNode = ({ url }: { urlDefault: string; url: null | string }) => {
+export const useChangeNode = ({
+  url,
+  urlDefault,
+  wrongUrlFormat,
+}: {
+  urlDefault: string;
+  url: null | string;
+  wrongUrlFormat: string;
+}) => {
   const [isDefaultNode, setIsDefaultNode] = useState(false);
   const [isNode, setIsNode] = useState(false);
-  const [node, setNode] = useState(url);
+  const [node, setNode] = useState(url || '');
+  const [nodeError, setNodeError] = useState('');
+  const [nodeSuccess, setNodeSuccess] = useState(false);
 
   const onClickDefaultRadio = () => {
     if (!isDefaultNode) {
       setIsDefaultNode(!isDefaultNode);
+
+      if (typeof androidCommon !== 'undefined') {
+        androidCommon.setUrl(urlDefault);
+      }
     }
     if (isNode) {
       setIsNode(false);
@@ -435,6 +450,16 @@ export const useChangeNode = ({ url }: { urlDefault: string; url: null | string 
     const {
       target: { value },
     } = e;
+    if (!checkUrl(value)) {
+      setNodeError(wrongUrlFormat);
+    } else {
+      setNodeError('');
+      setNodeSuccess(true);
+
+      if (typeof androidCommon !== 'undefined') {
+        androidCommon.setUrl(value);
+      }
+    }
     setNode(value);
   };
 
@@ -444,10 +469,20 @@ export const useChangeNode = ({ url }: { urlDefault: string; url: null | string 
   useEffect(() => {
     if (url) {
       setIsNode(true);
+      setNodeSuccess(true);
     } else {
       setIsDefaultNode(true);
     }
   }, [url]);
 
-  return { isDefaultNode, onClickDefaultRadio, onChangeNewNode, node, onClickNodeRadio, isNode };
+  return {
+    isDefaultNode,
+    onClickDefaultRadio,
+    onChangeNewNode,
+    node,
+    onClickNodeRadio,
+    isNode,
+    nodeError,
+    nodeSuccess,
+  };
 };

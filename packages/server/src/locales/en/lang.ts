@@ -139,6 +139,7 @@ const lang: Locale = {
         forYear: 'for the year',
         forAllTime: 'for all time',
       },
+      wrongUrlFormat: 'Invalid address format',
     },
     translate: {
       title: 'Creation of sentences',

@@ -499,6 +499,7 @@ export interface Locale {
         forYear: string;
         forAllTime: string;
       };
+      wrongUrlFormat: string;
     };
     translate: {
       title: string;

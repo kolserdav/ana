@@ -6,3 +6,5 @@ export const getSpeechSpeeds = () => {
   }
   return speeds;
 };
+
+export const checkUrl = (url: string) => /https:\/\/[a-zA-Z0-9-_.]+\.\w+/.test(url);

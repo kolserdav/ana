@@ -73,6 +73,8 @@ declare global {
     setInterfaceLanguage: (languageCode: string) => void;
 
     getUrlDefault: (props: keyof GlobalProps) => void;
+
+    setUrl: (url: string) => void;
   }
 
   const androidCommon: AndroidCommon | undefined;

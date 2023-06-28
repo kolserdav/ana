@@ -44,6 +44,7 @@ function Settings({
   emailIsSend,
   url,
   urlDefault,
+  wrongUrlFormat,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -59,6 +60,7 @@ function Settings({
   emailIsSend: string;
   url: string | null;
   urlDefault: string;
+  wrongUrlFormat: string;
 }) {
   const { load, setLoad } = useLoad();
   const { testText, onChangeTestText } = useTestSpeech();
@@ -208,11 +210,20 @@ function Settings({
     onClickOpenConfirmEmail,
   } = useConfirmEmail({ user, setLoad, emailIsSend });
 
-  const { onClickDefaultRadio, onChangeNewNode, onClickNodeRadio, isDefaultNode, isNode } =
-    useChangeNode({
-      url,
-      urlDefault,
-    });
+  const {
+    onClickDefaultRadio,
+    onChangeNewNode,
+    onClickNodeRadio,
+    isDefaultNode,
+    isNode,
+    node,
+    nodeError,
+    nodeSuccess,
+  } = useChangeNode({
+    url,
+    urlDefault,
+    wrongUrlFormat,
+  });
 
   return (
     <div className={s.wrapper}>
@@ -240,6 +251,9 @@ function Settings({
                 type="text"
                 id={s.select_node}
                 theme={theme}
+                error={nodeError}
+                value={node}
+                success={nodeSuccess}
                 name={locale.customNode}
                 onChange={onChangeNewNode}
                 disabled={!isNode}
