@@ -122,6 +122,7 @@ class App extends Table {
 }
 
 
+
 public class DB extends SQLiteOpenHelper {
 
     SQLiteDatabase sqLiteDatabase;
@@ -151,5 +152,9 @@ public class DB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + app.TABLE_NAME);
         onCreate(sqLiteDatabase);
+    }
+
+    public void startPage() {
+        //
     }
 }

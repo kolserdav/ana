@@ -1,6 +1,7 @@
 package com.kolserdav.ana;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -19,15 +20,16 @@ import org.chromium.net.UrlRequest;
 import java.util.EventListener;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class MainActivity extends Activity {
 
+    MainActivity context;
     private static final String TAG = "MainActivity";
+
+    private static String URL_DEFAULT;
     private WebView mWebView;
 
     private EventListener event = new Event();
@@ -42,13 +44,18 @@ public class MainActivity extends Activity {
 
     private Request request = new Request(this);
 
+    public interface Check {
+        void onGetStatusCode(int a);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         db = new DB(this);
+        URL_DEFAULT = db.app.schema.url;
 
         helper = new Helper(this, this);
 
@@ -81,17 +88,40 @@ public class MainActivity extends Activity {
         webViewListeners();
 
         Intent intent = getIntent();
+
         String url =  helper.listenProcessText(intent, db.app.schema);
-        checkUrl(url + config.CHECK_URL_PATH);
-        mWebView.loadUrl(url);
+        setContentView(mWebView);
 
-        this.setContentView(mWebView);
+        Check check = new Check(){
+            public void onGetStatusCode(int status) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG,"Status is " + status);
 
-        helper.microphoneAccess();
+                        String _url = context.db.app.schema.url;
+                        if (status != 200) {
+                            Log.w(TAG, "Url replaced " + _url);
+                            _url = url.replace(_url, URL_DEFAULT);
+                        }
+                        mWebView.loadUrl(_url);
+                        Log.d(TAG,"Load url " + _url);
+                        helper.microphoneAccess();
+                    }
+                });
+            }
+        };
+
+        checkUrl(url + config.CHECK_URL_PATH, check);
+
     }
 
-        public void checkUrl(String url) {
-            CronetEngine cronetEngine = request.buildRequest();
+
+
+        public void checkUrl(String url, Check check) {
+
+
+            CronetEngine cronetEngine = request.buildRequest(check);
             Executor executor = Executors.newSingleThreadExecutor();
             UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
                     url, request, executor);

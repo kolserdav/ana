@@ -9,7 +9,9 @@ import org.chromium.net.UrlRequest;
 import org.chromium.net.UrlResponseInfo;
 
 import java.nio.ByteBuffer;
-
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 
 class Request extends UrlRequest.Callback {
@@ -18,7 +20,7 @@ class Request extends UrlRequest.Callback {
 
     ByteBuffer buffer;
 
-    Config config = new Config();
+    MainActivity.Check callback;
 
     public static final String CHARSET = "UTF-8";
 
@@ -27,7 +29,8 @@ class Request extends UrlRequest.Callback {
         context = _context;
     }
 
-    public CronetEngine buildRequest() {
+    public CronetEngine buildRequest(MainActivity.Check _callback) {
+        callback = _callback;
         CronetEngine.Builder myBuilder = new CronetEngine.Builder(context);
         CronetEngine cronetEngine = myBuilder.build();
         return cronetEngine;
@@ -61,11 +64,23 @@ class Request extends UrlRequest.Callback {
     @Override
     public void onReadCompleted(UrlRequest request, UrlResponseInfo info, ByteBuffer byteBuffer) {
         buffer = byteBuffer;
+        List<Map.Entry<String, String>> headers = info.getAllHeadersAsList();
 
-        String data = new String(buffer.array(), 0, config.CHECK_URL_RESPONSE_LENGTH);
-        Log.i(TAG, "onReadCompleted method called: " + data + " from url " + info.getUrl() + " and status " + info.getHttpStatusText());
+        Integer length = 0;
+        for (int i = 0; i < headers.size(); i++ ) {
+            Map.Entry<String, String> header =  headers.get(i);
+            if (header.getKey().equals("Content-Length")) {
+                length = Integer.parseInt(header.getValue());
+            };
+        }
+
+        String data = new String(buffer.array(), 0, length + 8);
+        Log.i(TAG, "onReadCompleted method called: " + data.trim() +
+                " from url " + info.getUrl() + " and status " + info.getHttpStatusText());
         byteBuffer.clear();
         request.read(byteBuffer);
+
+        callback.onGetStatusCode(info.getHttpStatusCode());
     }
 
     @Override
