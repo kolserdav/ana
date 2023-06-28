@@ -70,8 +70,6 @@ export default function useApp({
     }
   }, []);
 
-  console.log(urlDefault);
-
   const onClickAcceptCookies = () => {
     setAcceptCookies(true);
     setLocalStorage(LocalStorageName.ACCEPT_POLICY, true);
