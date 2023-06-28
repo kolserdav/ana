@@ -87,8 +87,8 @@ public class MainActivity extends Activity {
         db = new DB(this) {
             @Override
             public void onCreate(SQLiteDatabase _sqLiteDatabase) {
-                //db.app.clear();
-                //db.app.drop();
+                // this.app.clear();
+                //this.app.drop();
                 Intent intent = getIntent();
                 try {
                     Thread.sleep(1000);

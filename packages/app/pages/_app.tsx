@@ -25,6 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
     showAcceptCookies,
     url,
     urlDefault,
+    isAndroid,
   } = useApp({
     user,
     connectionRefused: locale?.connectionRefused || 'Connection refused',
@@ -63,6 +64,7 @@ export default function App({ Component, pageProps }: AppProps) {
           connId,
           url: url === 'null' ? null : url,
           urlDefault,
+          isAndroid,
         }}
       />
       {showAcceptCookies && (
