@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 
+import java.util.function.Function;
+
 class AndroidTextToSpeech {
 
     TTS tts;
@@ -118,11 +120,15 @@ class AndroidTextToSpeech {
         });
     }
 
+
+
 }
 
 class AndroidCommon {
 
     MainActivity main;
+
+    String urlDefault;
 
     Helper helper;
     AndroidCommon(MainActivity _main) {
@@ -176,5 +182,18 @@ class AndroidCommon {
             }
         });
     }
+
+    @JavascriptInterface
+    public void getUrlDefault(final String cb) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                urlDefault = main.URL_DEFAULT;
+                main.mWebView.loadUrl("javascript:" + cb + "('" + urlDefault + "', true)");
+            }
+        });
+    }
+
+
 
 }

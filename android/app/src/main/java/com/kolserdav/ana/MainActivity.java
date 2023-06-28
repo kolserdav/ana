@@ -1,7 +1,6 @@
 package com.kolserdav.ana;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -29,8 +28,8 @@ public class MainActivity extends Activity {
     MainActivity context;
     private static final String TAG = "MainActivity";
 
-    private static String URL_DEFAULT;
-    private WebView mWebView;
+    public static String URL_DEFAULT;
+    public WebView mWebView;
 
     private EventListener event = new Event();
 

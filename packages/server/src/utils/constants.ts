@@ -6,6 +6,8 @@ dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 
 export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
+const CONFIG_ARRAY_DELIMITER = ',';
+
 export const NODE_ENV = process.env.NODE_ENV as string;
 log('info', 'NODE_ENV:', NODE_ENV);
 
@@ -56,6 +58,11 @@ export const APP_URL = process.env.APP_URL as string;
 if (!APP_URL) {
   log('warn', 'APP_URL:', APP_URL);
 }
+if (!APP_URL) {
+  log('warn', 'APP_URL:', APP_URL);
+}
+export const CORS = (process.env.CORS || APP_URL).split(CONFIG_ARRAY_DELIMITER);
+
 export const JSONWEBTOKEN_KEY = process.env.JSONWEBTOKEN_KEY as string;
 if (!JSONWEBTOKEN_KEY) {
   log('warn', 'JSONWEBTOKEN_KEY:', JSONWEBTOKEN_KEY);

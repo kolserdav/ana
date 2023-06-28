@@ -2,7 +2,15 @@ import Fastify from 'fastify';
 import cors from 'cors';
 import serveStatic from 'serve-static';
 import proxy from '@fastify/http-proxy';
-import { APP_URL, CLOUD_PATH, FASTIFY_LOGGER, HOST, PORT, TRANSLATE_URL } from './utils/constants';
+import {
+  APP_URL,
+  CLOUD_PATH,
+  CORS,
+  FASTIFY_LOGGER,
+  HOST,
+  PORT,
+  TRANSLATE_URL,
+} from './utils/constants';
 import { createDir, log } from './utils/lib';
 import getTestHandler from './api/v1/get-test';
 import { Api, CLOUD_PREFIX, TRANSLATE_PREFIX } from './types/interfaces';
@@ -67,7 +75,7 @@ process.on('unhandledRejection', (err: Error) => {
   });
 
   await fastify.register(import('@fastify/middie'), { hook: 'preHandler' });
-  await fastify.use(cors({ origin: [APP_URL] }));
+  await fastify.use(cors({ origin: CORS.concat([APP_URL]) }));
   await fastify.use(
     [
       Api.getUserFindFirst,

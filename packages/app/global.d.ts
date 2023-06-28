@@ -65,6 +65,8 @@ declare global {
     copyToClipboard: (text: string) => void;
 
     setInterfaceLanguage: (languageCode: string) => void;
+
+    getUrlDefault: (defaultUrl: (url: string) => void) => void;
   }
 
   const androidCommon: AndroidCommon | undefined;
