@@ -76,7 +76,12 @@ class App extends Table {
         schema.url = options.url;
     }
 
+    public void clear() {
+        db.execSQL("DELETE FROM " + TABLE_NAME);
+    }
+
     public void setPath(AppInterface options) {
+        Log.d("INFO", "Update path " + options.path + " with id " + options.id);
         db.execSQL("UPDATE " + TABLE_NAME +
                 " SET " + APP_COLUMN_PATH + "='" + options.path + "'" +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
@@ -95,12 +100,14 @@ class App extends Table {
                 null,
                 null
         );
-        if (cursor.getCount() == 0) {
+        int count = cursor.getCount();
+        if (count == 0) {
             db.execSQL("INSERT INTO " + TABLE_NAME +
                     " (" + APP_COLUMN_ID + ", " + APP_COLUMN_URL + ", " + APP_COLUMN_PATH +  ") " +
                     "VALUES" + " (" + null + ", '" + schema.url + "',  '" + schema.path + "')");
             return init();
         }
+        Log.d("INFO","App cursor count is " + count);
 
         while (cursor.moveToNext()) {
             schema.id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));
@@ -127,7 +134,6 @@ public class DB extends SQLiteOpenHelper {
         sqLiteDatabase = getWritableDatabase();
         app = new App(sqLiteDatabase);
         app.onCreate();
-        app.init();
     }
 
     @Override

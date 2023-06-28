@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Helper {
 
@@ -31,7 +32,10 @@ public class Helper {
     public Helper() {
         //
     }
+
+
     public String listenProcessText(Intent intent, AppInterface options) {
+        Log.d("INFO", "Listen process text with url " + options.url + " and path " + options.path);
         String url = options.url;
 
 
