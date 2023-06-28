@@ -51,6 +51,15 @@ export default function useApp({
   const [showAcceptCookies, setShowAcceptCookeis] = useState<boolean>(false);
   const [urlDefault, setUrlDefault] = useState<string>();
   const [url, setUrl] = useState<string>();
+  const [isAndroid, setIsAndroid] = useState(false);
+
+  /**
+   * Set is android
+   */
+  useEffect(() => {
+    const _isAndroid = typeof androidCommon !== 'undefined';
+    setIsAndroid(_isAndroid);
+  }, []);
 
   /**
    * Set url default
@@ -319,5 +328,6 @@ export default function useApp({
     showAcceptCookies,
     url,
     urlDefault,
+    isAndroid,
   };
 }

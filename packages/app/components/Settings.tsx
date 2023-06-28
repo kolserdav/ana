@@ -45,6 +45,7 @@ function Settings({
   url,
   urlDefault,
   wrongUrlFormat,
+  isAndroid,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -61,6 +62,7 @@ function Settings({
   url: string | null;
   urlDefault: string;
   wrongUrlFormat: string;
+  isAndroid: boolean;
 }) {
   const { load, setLoad } = useLoad();
   const { testText, onChangeTestText } = useTestSpeech();
@@ -224,8 +226,6 @@ function Settings({
     urlDefault,
     wrongUrlFormat,
   });
-
-  const isAndroid = typeof androidCommon !== 'undefined';
 
   return (
     <div className={s.wrapper}>

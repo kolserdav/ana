@@ -42,6 +42,7 @@ export interface AppProps {
     connId: string | null;
     _url: string | null;
     urlDefault: string;
+    isAndroid: boolean;
   };
 }
 

@@ -19,7 +19,7 @@ interface SettingsPageProps extends AppProps {
 }
 
 export default function SettingsPage({
-  app: { user, theme, urlDefault, _url },
+  app: { user, theme, urlDefault, _url, isAndroid },
   localeSettings,
   localeAppBar,
   localeCommon,
@@ -46,6 +46,7 @@ export default function SettingsPage({
           emailIsSend={localeCommon.emailIsSend}
           urlDefault={urlDefault}
           url={_url}
+          isAndroid={isAndroid}
           wrongUrlFormat={localeCommon.wrongUrlFormat}
         />
       </main>

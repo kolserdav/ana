@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
 
-                if (url != context.db.app.schema.url + context.db.app.schema.path && matchFound) {
+                if (!url.equals(context.db.app.schema.url + context.db.app.schema.path) && matchFound) {
                     url = context.db.app.schema.url + context.db.app.schema.path;
                 }
                 view.loadUrl(url);
