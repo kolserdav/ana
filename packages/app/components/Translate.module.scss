@@ -110,7 +110,13 @@
 
     .trans_container {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
+
+      .trans_container__result {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+      }
 
       // name used in packages/app/components/Translate.tsx.createSelector
       .learn_res {

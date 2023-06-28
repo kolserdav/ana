@@ -42,7 +42,7 @@ export default function App({ Component, pageProps }: AppProps) {
           }}
         />
       )}
-      <LoaderLine open={load} />
+      <LoaderLine open={load} color={theme.cyan} />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Component {...pageProps} app={{ theme, user, userLoad, touchpad, connId }} />
       {showAcceptCookies && (

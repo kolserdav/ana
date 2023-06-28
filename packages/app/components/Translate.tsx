@@ -34,6 +34,7 @@ import Spoiler from './ui/Spoiler';
 import PlaySoundButton from './ui/PlaySoundButton';
 import CopyIcon from './icons/Copy';
 import createSelector from '../backend/createSelector';
+import LoaderLine from './ui/LoaderLine';
 
 function Translate({
   theme,
@@ -120,6 +121,8 @@ function Translate({
     restart,
     setRestart,
     phraseSettings,
+    translateLoad,
+    reTranslateLoad,
   } = useTranslate({
     undo,
     nativeLang,
@@ -277,56 +280,62 @@ function Translate({
           </div>
         </div>
         <div className={s.trans_container}>
-          <div style={{ color: theme.text }} className={s.native_res}>
-            <Typography variant="p" theme={theme} id={s.native_res}>
-              {translate}
-            </Typography>
-          </div>
-          {translate && (
-            <div className={s.translate_actions}>
-              <IconButton
-                title={copyText.title}
-                theme={theme}
-                onClick={onClickCopyTextWrapper(translate)}
-              >
-                <CopyIcon color={theme.text} withoutScale />
-              </IconButton>
+          <div className={s.trans_container__result}>
+            <div style={{ color: theme.text }} className={s.native_res}>
+              <Typography variant="p" theme={theme} id={s.native_res}>
+                {translate}
+              </Typography>
             </div>
-          )}
+            {translate && (
+              <div className={s.translate_actions}>
+                <IconButton
+                  title={copyText.title}
+                  theme={theme}
+                  onClick={onClickCopyTextWrapper(translate)}
+                >
+                  <CopyIcon color={theme.text} withoutScale />
+                </IconButton>
+              </div>
+            )}
+          </div>
+          <LoaderLine open={translateLoad} local color={theme.blue} slow />
         </div>
         <div className={s.trans_container}>
-          <div
-            role="button"
-            tabIndex={-1}
-            onKeyDown={onKeyDownReTranslate}
-            onClick={onClickRetranslate}
-            style={{ color: theme.text }}
-            className={clsx(s.learn_res, reTranslate === text ? s.disabled : '')}
-            title={locale.allowRecomend}
-          >
-            <Typography variant="p" theme={theme} id={s.learn_res}>
-              {reTranslate}
-            </Typography>
-          </div>
-          {reTranslate && (
-            <div className={s.translate_actions}>
-              <PlaySoundButton
-                theme={theme}
-                title={playSound}
-                text={reTranslate}
-                lang={learnLang}
-                voiceNotFound={voiceNotFound}
-                changeLinkTo={changeLinkTo}
-              />
-              <IconButton
-                title={copyText.title}
-                theme={theme}
-                onClick={onClickCopyTextWrapper(reTranslate)}
-              >
-                <CopyIcon color={theme.text} withoutScale />
-              </IconButton>
+          <div className={s.trans_container__result}>
+            <div
+              role="button"
+              tabIndex={-1}
+              onKeyDown={onKeyDownReTranslate}
+              onClick={onClickRetranslate}
+              style={{ color: theme.text }}
+              className={clsx(s.learn_res, reTranslate === text ? s.disabled : '')}
+              title={locale.allowRecomend}
+            >
+              <Typography variant="p" theme={theme} id={s.learn_res}>
+                {reTranslate}
+              </Typography>
             </div>
-          )}
+            {reTranslate && (
+              <div className={s.translate_actions}>
+                <PlaySoundButton
+                  theme={theme}
+                  title={playSound}
+                  text={reTranslate}
+                  lang={learnLang}
+                  voiceNotFound={voiceNotFound}
+                  changeLinkTo={changeLinkTo}
+                />
+                <IconButton
+                  title={copyText.title}
+                  theme={theme}
+                  onClick={onClickCopyTextWrapper(reTranslate)}
+                >
+                  <CopyIcon color={theme.text} withoutScale />
+                </IconButton>
+              </div>
+            )}
+          </div>
+          <LoaderLine open={reTranslateLoad} local color={theme.blue} slow />
         </div>
 
         {reTranslate && (

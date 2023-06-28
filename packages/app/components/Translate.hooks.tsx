@@ -241,6 +241,8 @@ export const useTranslate = ({
   const [phraseSettings, setPhraseSettings] = useState<{
     maxSymbols: number;
   }>({ maxSymbols: PHRASE_MAX_LENGTH_DEFAULT });
+  const [translateLoad, setTranslateLoad] = useState<boolean>(false);
+  const [reTranslateLoad, setReTranslateLoad] = useState<boolean>(false);
 
   /**
    * Set phrase settings
@@ -342,6 +344,7 @@ export const useTranslate = ({
     if (!text || !learnLang || !nativeLang || !connId) {
       return;
     }
+    setTranslateLoad(true);
     const runTranslate = async (q: string) => {
       const data = await request.translate({
         q,
@@ -350,6 +353,7 @@ export const useTranslate = ({
         connId,
       });
 
+      setTranslateLoad(false);
       if (data.status === 'error' || !data.translatedText) {
         if (data.message) {
           log('error', data.message, data, true);
@@ -449,6 +453,7 @@ export const useTranslate = ({
       return;
     }
     const runRetranslate = async (q: string) => {
+      setReTranslateLoad(true);
       const data = await request.translate({
         q,
         source: nativeLang,
@@ -456,6 +461,7 @@ export const useTranslate = ({
         connId,
       });
 
+      setReTranslateLoad(false);
       if (data.status === 'error' || !data.translatedText) {
         if (data.message) {
           log('error', data.message, data, true);
@@ -504,6 +510,8 @@ export const useTranslate = ({
     setRestart,
     phraseToUpdate,
     revertText,
+    translateLoad,
+    reTranslateLoad,
     phraseSettings,
   };
 };
