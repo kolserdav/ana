@@ -188,8 +188,7 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                urlDefault = main.URL_DEFAULT;
-                main.mWebView.loadUrl("javascript:" + cb + "('" + urlDefault + "', true)");
+                main.mWebView.loadUrl("javascript:" + cb + "('" + "dasd" + "', true)");
             }
         });
     }

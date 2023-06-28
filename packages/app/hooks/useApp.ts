@@ -24,7 +24,7 @@ import storeMenuOpen from '../store/menuOpen';
 
 let global: GlobalProps = {};
 if (typeof window !== 'undefined') {
-  global = {};
+  global = window as any;
 }
 
 let oldPath: string;
@@ -51,11 +51,6 @@ export default function useApp({
   const [showAcceptCookies, setShowAcceptCookeis] = useState<boolean>(false);
   const [urlDefault, setUrlDefault] = useState<string>();
 
-  const getUrlDefault = useCallback((d: string) => {
-    log('info', 'Set url default is', d);
-    setUrlDefault(d);
-  }, []);
-
   /**
    * Set url default
    */
@@ -66,9 +61,13 @@ export default function useApp({
     if (typeof androidCommon === 'undefined') {
       setUrlDefault(window.location.origin);
     } else if (androidCommon.getUrlDefault) {
+      global.getUrlDefault = (d: string) => {
+        log('info', 'Set url default is', d);
+        setUrlDefault(d);
+      };
       androidCommon.getUrlDefault('getUrlDefault');
     }
-  }, [getUrlDefault]);
+  }, []);
 
   const onClickAcceptCookies = () => {
     setAcceptCookies(true);

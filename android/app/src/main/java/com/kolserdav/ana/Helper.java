@@ -36,8 +36,12 @@ public class Helper extends Config {
 
 
     public String listenProcessText(Intent intent, AppInterface options) {
-        Log.d("INFO", "Listen process text with url " + options.url + " and path " + options.path);
         String url = options.url;
+        if (url.equals("null")) {
+            url = options.urlDefault;
+        }
+        Log.d("INFO", "Listen process text with url: " + url + ", path: " +
+                options.path + ", default:  " + options.urlDefault);
 
 
         CharSequence text = intent

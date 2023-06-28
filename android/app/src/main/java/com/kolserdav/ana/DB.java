@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import androidx.core.content.res.TypedArrayUtils;
 
-import java.sql.Array;
 import java.util.Arrays;
 
 abstract class Table {
@@ -27,28 +25,15 @@ abstract class Table {
     }
 }
 
-class AppInterface {
-    Integer id = 1;
-    String url = "https://uyem.ru";
-    String path = "/";
 
-    public AppInterface(Integer _id, String _url, String _path) {
-        id = _id;
-        url = _url;
-        path = _path;
-    }
-
-    public AppInterface() {
-
-    }
-
-}
 
 class App extends Table {
 
     public static final String TABLE_NAME = "app";
     public static final String APP_COLUMN_ID = "id";
     public static final String APP_COLUMN_URL = "url";
+
+    public static final String APP_COLUMN_URL_DEFAULT = "urlDefault";
     public static final String APP_COLUMN_PATH = "path";
 
     private static final String TAG = "App";
@@ -59,7 +44,9 @@ class App extends Table {
         super(db, new String[]{
                 APP_COLUMN_ID,
                 APP_COLUMN_URL,
-                APP_COLUMN_PATH});
+                APP_COLUMN_URL_DEFAULT,
+                APP_COLUMN_PATH
+        });
         schema = new AppInterface();
 
     }
@@ -67,7 +54,8 @@ class App extends Table {
     public void onCreate() {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 APP_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                APP_COLUMN_URL + " TEXT, " +  APP_COLUMN_PATH + " TEXT" + ")");
+                APP_COLUMN_URL + " TEXT, " + APP_COLUMN_URL_DEFAULT + " TEXT, " +
+                APP_COLUMN_PATH + " TEXT" + ")");
         init();
     }
 
@@ -80,6 +68,11 @@ class App extends Table {
 
     public void clear() {
         db.execSQL("DELETE FROM " + TABLE_NAME);
+    }
+
+    public void drop() {
+        clear();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
 
     public void setPath(AppInterface options) {
@@ -104,9 +97,20 @@ class App extends Table {
         );
         int count = cursor.getCount();
         if (count == 0) {
-            db.execSQL("INSERT INTO " + TABLE_NAME +
-                    " (" + APP_COLUMN_ID + ", " + APP_COLUMN_URL + ", " + APP_COLUMN_PATH +  ") " +
-                    "VALUES" + " (" + null + ", '" + schema.url + "',  '" + schema.path + "')");
+            db.execSQL(
+                    "INSERT INTO " + TABLE_NAME +
+                    " (" +
+                            APP_COLUMN_ID + ", " +
+                            APP_COLUMN_URL + ", " +
+                            APP_COLUMN_URL_DEFAULT + ", " +
+                            APP_COLUMN_PATH +  ") " +
+                    "VALUES" +
+                    " (" +
+                    null + ", '" +
+                    schema.url + "', '" +
+                    schema.urlDefault + "', '" +
+                    schema.path + "')"
+            );
             return init();
         }
         Log.d(TAG,"App cursor count is " + count);
@@ -114,6 +118,7 @@ class App extends Table {
         while (cursor.moveToNext()) {
             schema.id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));
             schema.url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
+            schema.urlDefault = cursor.getString(getAppColumnIndex(APP_COLUMN_URL_DEFAULT));
             schema.path = cursor.getString(getAppColumnIndex(APP_COLUMN_PATH));
         }
         return schema;
@@ -129,7 +134,7 @@ public class DB extends SQLiteOpenHelper {
 
     App app;
 
-    public static final Integer DATABASE_VERSION = 2;
+    public static final Integer DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "db";
 
     public DB(Context context) {
@@ -137,6 +142,7 @@ public class DB extends SQLiteOpenHelper {
         sqLiteDatabase = getWritableDatabase();
         app = new App(sqLiteDatabase);
         app.onCreate();
+        this.onCreate(sqLiteDatabase);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.kolserdav.ana;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.webkit.WebViewClient;
 import org.chromium.net.CronetEngine;
 import org.chromium.net.UrlRequest;
 
+import java.net.URL;
 import java.util.EventListener;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -28,12 +30,11 @@ public class MainActivity extends Activity {
     MainActivity context;
     private static final String TAG = "MainActivity";
 
-    public static String URL_DEFAULT;
     public WebView mWebView;
 
     private EventListener event = new Event();
 
-    private DB db;
+    public DB db;
 
     private Config config = new Config();
 
@@ -52,9 +53,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         context = this;
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
-        db = new DB(this);
-        URL_DEFAULT = db.app.schema.url;
 
         helper = new Helper(this, this);
 
@@ -86,40 +84,45 @@ public class MainActivity extends Activity {
 
         webViewListeners();
 
-        Intent intent = getIntent();
+        db = new DB(this) {
+            @Override
+            public void onCreate(SQLiteDatabase _sqLiteDatabase) {
+                // db.app.clear();
+                // db.app.drop();
+                Log.d(TAG, "On create DB");
+                Intent intent = getIntent();
+                String url =  helper.listenProcessText(intent, this.app.schema);
+                setContentView(mWebView);
 
-        String url =  helper.listenProcessText(intent, db.app.schema);
-        setContentView(mWebView);
-
-        Check check = new Check(){
-            public void onGetStatusCode(int status) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG,"Status is " + status);
-
-                        String _url = context.db.app.schema.url;
-                        if (status != 200) {
-                            Log.w(TAG, "Url replaced " + _url);
-                            _url = url.replace(_url, URL_DEFAULT);
-                        }
-                        mWebView.loadUrl(_url);
-                        Log.d(TAG,"Load url " + _url);
-                        helper.microphoneAccess();
+                Check check = new Check(){
+                    public void onGetStatusCode(int status) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String _url = url;
+                                if (status != 200) {
+                                    Log.w(TAG, "Url replaced " + _url);
+                                    _url = url.replace(_url, context.db.app.schema.urlDefault);
+                                }
+                                Log.d(TAG,"Status is " + status + ", load url " + _url);
+                                mWebView.loadUrl(_url);
+                                Log.d(TAG,"Load url " + _url);
+                                helper.microphoneAccess();
+                            }
+                        });
                     }
-                });
+                };
+
+                checkUrl(url + config.CHECK_URL_PATH, check);
             }
         };
 
-        checkUrl(url + config.CHECK_URL_PATH, check);
 
     }
 
 
 
         public void checkUrl(String url, Check check) {
-
-
             CronetEngine cronetEngine = request.buildRequest(check);
             Executor executor = Executors.newSingleThreadExecutor();
             UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
@@ -186,7 +189,9 @@ public class MainActivity extends Activity {
                 super.doUpdateVisitedHistory(view, url, isReload);
 
                 if (!firstLoad) {
-                    AppInterface _app = new AppInterface(db.app.schema.id, db.app.schema.url, db.app.schema.path);
+                    AppInterface _app = new AppInterface(db.app.schema.id,
+                            db.app.schema.url,
+                            db.app.schema.urlDefault, db.app.schema.path);
                     _app.path = url.replace(_app.url, "");
                     db.app.setPath(_app);
                     Log.d(TAG, "Change path  from " + _app.path + " to " + db.app.schema.path);
