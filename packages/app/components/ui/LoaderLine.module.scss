@@ -27,6 +27,10 @@
     position: relative;
     display: block;
     width: calc($translate-container-max - $container-padding * 2);
+
+    @media (max-width: $mobile-width) {
+      width: calc(100% - $container-padding * 2);
+    }
   }
 }
 
