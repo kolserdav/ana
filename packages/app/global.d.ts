@@ -3,7 +3,7 @@
 
 declare global {
   interface GlobalProps {
-    getUrlDefault?: (d: string) => void;
+    getUrlDefault?: (def: string, url: string) => void;
   }
 
   class webkitSpeechRecognition {
@@ -72,7 +72,7 @@ declare global {
 
     setInterfaceLanguage: (languageCode: string) => void;
 
-    getUrlDefault: GlobalProps['getUrlDefault'];
+    getUrlDefault: (props: keyof GlobalProps) => void;
   }
 
   const androidCommon: AndroidCommon | undefined;

@@ -61,8 +61,8 @@ export default function useApp({
     if (typeof androidCommon === 'undefined') {
       setUrlDefault(window.location.origin);
     } else if (androidCommon.getUrlDefault) {
-      global.getUrlDefault = (d: string) => {
-        log('info', 'Set url default is', d);
+      global.getUrlDefault = (d: string, u: string) => {
+        log('info', 'Set url default is', { d, u });
         setUrlDefault(d);
       };
       androidCommon.getUrlDefault('getUrlDefault');

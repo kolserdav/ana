@@ -184,11 +184,11 @@ class AndroidCommon {
     }
 
     @JavascriptInterface
-            public void getUrlDefault(final String cb) {
+    public void getUrlDefault(final String cb) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                main.mWebView.loadUrl("javascript:" + cb + "('" + "dasd" + "', true)");
+                main.mWebView.loadUrl("javascript:" + cb + "('" + main.db.app.schema.urlDefault + "', '" + main.db.app.schema.url + "')");
             }
         });
     }
