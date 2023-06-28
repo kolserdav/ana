@@ -104,7 +104,7 @@ export default function useApp({
     if (!userLoad) {
       return null;
     }
-    log('info', 'Creating WS connection', { restart, userLoad });
+    log('info', 'Creating WS connection', { restart, userLoad, WS_ADDRESS });
     return typeof WebSocket !== 'undefined' ? new WebSocket(WS_ADDRESS) : null;
   }, [restart, userLoad]);
 
