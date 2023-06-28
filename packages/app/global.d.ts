@@ -1,5 +1,11 @@
 /* eslint-disable no-unused-vars */
+// eslint-disable-next-line max-classes-per-file
+
 declare global {
+  interface GlobalProps {
+    getUrlDefault?: (d: string) => void;
+  }
+
   class webkitSpeechRecognition {
     public continuous: boolean;
 
@@ -66,7 +72,7 @@ declare global {
 
     setInterfaceLanguage: (languageCode: string) => void;
 
-    getUrlDefault: (defaultUrl: (url: string) => void) => void;
+    getUrlDefault: GlobalProps['getUrlDefault'];
   }
 
   const androidCommon: AndroidCommon | undefined;

@@ -184,7 +184,7 @@ class AndroidCommon {
     }
 
     @JavascriptInterface
-    public void getUrlDefault(final String cb) {
+            public void getUrlDefault(final String cb) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

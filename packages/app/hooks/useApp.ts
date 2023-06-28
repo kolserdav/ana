@@ -22,6 +22,11 @@ import useLoad from './useLoad';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import storeMenuOpen from '../store/menuOpen';
 
+let global: GlobalProps = {};
+if (typeof window !== 'undefined') {
+  global = {};
+}
+
 let oldPath: string;
 
 export default function useApp({
@@ -44,6 +49,28 @@ export default function useApp({
     getLocalStorage(LocalStorageName.ACCEPT_POLICY) || false
   );
   const [showAcceptCookies, setShowAcceptCookeis] = useState<boolean>(false);
+  const [urlDefault, setUrlDefault] = useState<string>();
+
+  /**
+   * Set url default
+   */
+  useEffect(() => {
+    if (!global) {
+      return;
+    }
+    if (typeof androidCommon === 'undefined') {
+      setUrlDefault(window.location.origin);
+    } else {
+      global.getUrlDefault = (d) => {
+        setUrlDefault(d);
+      };
+      if (androidCommon.getUrlDefault) {
+        androidCommon.getUrlDefault('getUrlDefault');
+      }
+    }
+  }, []);
+
+  console.log(urlDefault);
 
   const onClickAcceptCookies = () => {
     setAcceptCookies(true);
