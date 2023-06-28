@@ -236,6 +236,9 @@ const lang: Locale = {
       changePassword: 'Change password',
       emailIsConfirmed: 'Mail confirmed',
       sendConfirmEmail: 'Send confirmation email',
+      selectNode: 'Select node',
+      defaultNode: 'Default Node',
+      customNode: 'Custom Node',
     },
     statistics: {
       title: 'Statistics',

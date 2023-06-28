@@ -15,13 +15,22 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const { locale } = useLocale();
 
-  const { load, theme, touchpad, connId, acceptCookies, onClickAcceptCookies, showAcceptCookies } =
-    useApp({
-      user,
-      connectionRefused: locale?.connectionRefused || 'Connection refused',
-      connectionReOpened: locale?.connectionReOpened || 'Connection re-established',
-      userLoad,
-    });
+  const {
+    load,
+    theme,
+    touchpad,
+    connId,
+    acceptCookies,
+    onClickAcceptCookies,
+    showAcceptCookies,
+    url,
+    urlDefault,
+  } = useApp({
+    user,
+    connectionRefused: locale?.connectionRefused || 'Connection refused',
+    connectionReOpened: locale?.connectionReOpened || 'Connection re-established',
+    userLoad,
+  });
 
   return (
     <>
@@ -44,7 +53,18 @@ export default function App({ Component, pageProps }: AppProps) {
       )}
       <LoaderLine open={load} color={theme.cyan} />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <Component {...pageProps} app={{ theme, user, userLoad, touchpad, connId }} />
+      <Component
+        {...pageProps}
+        app={{
+          theme,
+          user,
+          userLoad,
+          touchpad,
+          connId,
+          url: url === 'null' ? null : url,
+          urlDefault,
+        }}
+      />
       {showAcceptCookies && (
         <AcceptCookies
           open={!acceptCookies}

@@ -407,3 +407,36 @@ export const useConfirmEmail = ({
     onClickOpenConfirmEmail,
   };
 };
+
+export const useChangeNode = ({ url }: { urlDefault: string; url: null | string }) => {
+  const [isDefaultNode, setIsDefaultNode] = useState(false);
+  const [isNode, setIsNode] = useState(false);
+  const [node, setNode] = useState(url);
+
+  const onClickDefaultRadio = () => {
+    if (!isDefaultNode) {
+      setIsDefaultNode(!isDefaultNode);
+    }
+    if (isNode) {
+      setIsNode(false);
+    }
+  };
+
+  const onClickNodeRadio = () => {
+    if (!isNode) {
+      setIsNode(!isNode);
+    }
+    if (isDefaultNode) {
+      setIsDefaultNode(false);
+    }
+  };
+
+  const onChangeNewNode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setNode(value);
+  };
+
+  return { isDefaultNode, onClickDefaultRadio, onChangeNewNode, node, onClickNodeRadio, isNode };
+};

@@ -188,7 +188,19 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                main.mWebView.loadUrl("javascript:" + cb + "('" + main.db.app.schema.urlDefault + "', '" + main.db.app.schema.url + "')");
+                main.mWebView.loadUrl("javascript:" + cb + "('" +
+                        main.db.app.schema.urlDefault + "', '" + main.db.app.schema.url + "')");
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void setUrl(String url) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                main.db.app.schema.url = url;
+                main.db.app.setUrl(main.db.app.schema);
             }
         });
     }

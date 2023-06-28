@@ -52,7 +52,6 @@ export default function useApp({
   const [urlDefault, setUrlDefault] = useState<string>();
   const [url, setUrl] = useState<string>();
 
-  console.log(urlDefault, url);
   /**
    * Set url default
    */
@@ -64,7 +63,6 @@ export default function useApp({
       setUrlDefault(window.location.origin);
     } else if (androidCommon.getUrlDefault) {
       global.getUrlDefault = (d: string, u: string) => {
-        log('info', 'Set url default is', { d, u });
         setUrlDefault(d);
         setUrl(u);
       };
@@ -319,5 +317,7 @@ export default function useApp({
     acceptCookies,
     onClickAcceptCookies,
     showAcceptCookies,
+    url,
+    urlDefault,
   };
 }

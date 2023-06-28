@@ -18,6 +18,12 @@ $settings-margin-left: 1rem;
     max-width: $translate-container-max;
     padding: 1rem;
 
+    .select_node {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
     
 
     .email_input {

@@ -600,6 +600,9 @@ export interface Locale {
       changePassword: string;
       emailIsConfirmed: string;
       sendConfirmEmail: string;
+      selectNode: string;
+      defaultNode: string;
+      customNode: string;
     };
     statistics: {
       title: string;

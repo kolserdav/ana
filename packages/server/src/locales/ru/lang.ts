@@ -236,6 +236,9 @@ const lang: Locale = {
       changePassword: 'Сменить пароль',
       emailIsConfirmed: 'Почта подтверждена',
       sendConfirmEmail: 'Отправить письмо для подтверждения почты',
+      selectNode: 'Выбрать источник',
+      defaultNode: 'Источник по умолчанию',
+      customNode: 'Пользовательский источник',
     },
     statistics: {
       title: 'Статистика',

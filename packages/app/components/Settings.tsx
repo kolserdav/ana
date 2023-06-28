@@ -5,6 +5,7 @@ import { Locale, UserCleanResult } from '../types/interfaces';
 import { SPEECH_SPEED_MAX } from '../utils/constants';
 import { useEmailInput, useNameInput, usePasswordInput } from './Login.hooks';
 import {
+  useChangeNode,
   useClean,
   useConfirmEmail,
   useDeleteAccount,
@@ -26,6 +27,7 @@ import Spoiler from './ui/Spoiler';
 import IconButton from './ui/IconButton';
 import EmailCheckIcon from './icons/EmailCheck';
 import EmailAlertIcon from './icons/EmailAlert';
+import Radio from './ui/Radio';
 
 function Settings({
   locale,
@@ -40,6 +42,8 @@ function Settings({
   _delete,
   sendMail,
   emailIsSend,
+  url,
+  urlDefault,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -53,6 +57,8 @@ function Settings({
   _delete: string;
   sendMail: string;
   emailIsSend: string;
+  url: string | null;
+  urlDefault: string;
 }) {
   const { load, setLoad } = useLoad();
   const { testText, onChangeTestText } = useTestSpeech();
@@ -202,12 +208,46 @@ function Settings({
     onClickOpenConfirmEmail,
   } = useConfirmEmail({ user, setLoad, emailIsSend });
 
+  const { onClickDefaultRadio, onChangeNewNode, onClickNodeRadio, isDefaultNode, isNode } =
+    useChangeNode({
+      url,
+      urlDefault,
+    });
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
+        {typeof androidCommon !== 'undefined' && (
+          <>
+            <Hr theme={theme} />
+            <Typography variant="h4" theme={theme}>
+              {locale.selectNode}
+            </Typography>
+            <div className={s.select_node}>
+              <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
+                {locale.defaultNode}
+              </Typography>
+              <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
+                {urlDefault}
+              </Typography>
+              <Radio checked={isDefaultNode} onClick={onClickDefaultRadio} />
+            </div>
+            <div className={s.select_node}>
+              <Input
+                type="text"
+                id={s.select_node}
+                theme={theme}
+                name={locale.customNode}
+                onChange={onChangeNewNode}
+                disabled={!isNode}
+              />
+              <Radio checked={isNode} onClick={onClickNodeRadio} />
+            </div>
+          </>
+        )}
         <Hr theme={theme} />
         <Typography variant="h4" theme={theme}>
           {locale.speechSettings}
