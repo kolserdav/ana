@@ -13,6 +13,11 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 
+import org.chromium.net.CronetEngine;
+import org.chromium.net.UrlRequest;
+
+import java.util.EventListener;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -21,13 +26,21 @@ import java.util.regex.Pattern;
 
 
 public class MainActivity extends Activity {
+
+    private static final String TAG = "MainActivity";
     private WebView mWebView;
 
+    private EventListener event = new Event();
+
     private DB db;
+
+    private Config config = new Config();
 
     private Helper helper;
 
     private Boolean firstLoad = true;
+
+    private Request request = new Request(this);
 
 
     @Override
@@ -69,12 +82,23 @@ public class MainActivity extends Activity {
 
         Intent intent = getIntent();
         String url =  helper.listenProcessText(intent, db.app.schema);
+        checkUrl(url + config.CHECK_URL_PATH);
         mWebView.loadUrl(url);
 
         this.setContentView(mWebView);
 
         helper.microphoneAccess();
     }
+
+        public void checkUrl(String url) {
+            CronetEngine cronetEngine = request.buildRequest();
+            Executor executor = Executors.newSingleThreadExecutor();
+            UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
+                    url, request, executor);
+            UrlRequest request = requestBuilder.build();
+            request.start();
+        }
+
 
 
     private void webViewListeners() {
@@ -99,7 +123,7 @@ public class MainActivity extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, String _url) {
                 String url = _url;
 
-                Log.d("INFO", "Should override url " + url +
+                Log.d(TAG, "Should override url " + url +
                         " with saved " + db.app.schema.path);
 
                 Pattern pattern = Pattern.compile(db.app.schema.url, Pattern.CASE_INSENSITIVE);
@@ -116,10 +140,10 @@ public class MainActivity extends Activity {
                         public void run() {
                             try {
                                 Thread.sleep(helper.FIRST_LOAD_DURATION);
-                                Log.d("INFO", "First load is " + firstLoad);
+                                Log.d(TAG, "First load is " + firstLoad);
                                 firstLoad = false;
                             } catch(InterruptedException v) {
-                                Log.e("ERROR", v.toString());
+                                Log.e(TAG, v.toString());
                             }
                         }
                     };
@@ -136,7 +160,7 @@ public class MainActivity extends Activity {
                     AppInterface _app = new AppInterface(db.app.schema.id, db.app.schema.url, db.app.schema.path);
                     _app.path = url.replace(_app.url, "");
                     db.app.setPath(_app);
-                    Log.d("PATH", "Change path  from " + _app.path + " to " + db.app.schema.path);
+                    Log.d(TAG, "Change path  from " + _app.path + " to " + db.app.schema.path);
                 }
             }
         });

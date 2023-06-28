@@ -51,6 +51,8 @@ class App extends Table {
     public static final String APP_COLUMN_URL = "url";
     public static final String APP_COLUMN_PATH = "path";
 
+    private static final String TAG = "App";
+
     public AppInterface schema;
 
     public App(SQLiteDatabase db) {
@@ -107,7 +109,7 @@ class App extends Table {
                     "VALUES" + " (" + null + ", '" + schema.url + "',  '" + schema.path + "')");
             return init();
         }
-        Log.d("INFO","App cursor count is " + count);
+        Log.d(TAG,"App cursor count is " + count);
 
         while (cursor.moveToNext()) {
             schema.id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));

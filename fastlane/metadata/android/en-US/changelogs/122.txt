@@ -2,3 +2,4 @@
 - Screen rotation has been disabled
 - Made discovery from cache if internet is down
 - Open the last page while app is opening
+- Fixed some bugs
