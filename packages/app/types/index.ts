@@ -40,6 +40,8 @@ export interface AppProps {
     userLoad: boolean;
     touchpad: boolean;
     connId: string | null;
+    _url: string | null;
+    urlDefault: string;
   };
 }
 
