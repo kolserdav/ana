@@ -43,7 +43,7 @@ export const isTest = () => /http:\/\/192\.168\.0\.\d{1,3}/.test(window?.locatio
 
 export const prepagePage = (pages: Page[]) => {
   const page: Record<string, string> = {};
-  pages.forEach((item) => {
+  pages?.forEach((item) => {
     page[item.field] = item.value;
   });
   return page as PageFull;

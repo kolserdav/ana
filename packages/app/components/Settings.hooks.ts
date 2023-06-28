@@ -438,5 +438,16 @@ export const useChangeNode = ({ url }: { urlDefault: string; url: null | string 
     setNode(value);
   };
 
+  /**
+   * Select node
+   */
+  useEffect(() => {
+    if (url) {
+      setIsNode(true);
+    } else {
+      setIsDefaultNode(true);
+    }
+  }, [url]);
+
   return { isDefaultNode, onClickDefaultRadio, onChangeNewNode, node, onClickNodeRadio, isNode };
 };
