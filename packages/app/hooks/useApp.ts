@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import useTheme from './useTheme';
 import storeClick, { changeClick } from '../store/click';
@@ -51,6 +51,11 @@ export default function useApp({
   const [showAcceptCookies, setShowAcceptCookeis] = useState<boolean>(false);
   const [urlDefault, setUrlDefault] = useState<string>();
 
+  const getUrlDefault = useCallback((d: string) => {
+    log('info', 'Set url default is', d);
+    setUrlDefault(d);
+  }, []);
+
   /**
    * Set url default
    */
@@ -60,15 +65,10 @@ export default function useApp({
     }
     if (typeof androidCommon === 'undefined') {
       setUrlDefault(window.location.origin);
-    } else {
-      global.getUrlDefault = (d) => {
-        setUrlDefault(d);
-      };
-      if (androidCommon.getUrlDefault) {
-        androidCommon.getUrlDefault('getUrlDefault');
-      }
+    } else if (androidCommon.getUrlDefault) {
+      androidCommon.getUrlDefault('getUrlDefault');
     }
-  }, []);
+  }, [getUrlDefault]);
 
   const onClickAcceptCookies = () => {
     setAcceptCookies(true);

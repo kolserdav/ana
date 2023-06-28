@@ -10,9 +10,6 @@ const nextConfig = {
     defaultLocale: 'en',
     localeDetection: true,
   },
-  getUrlDefault: () => {
-    console.log(23);
-  },
 };
 
 module.exports = nextConfig;
