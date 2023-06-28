@@ -3,6 +3,7 @@ package com.kolserdav.ana;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -19,9 +20,12 @@ class AndroidTextToSpeech {
 
     Boolean speaking = false;
 
+    Helper helper;
 
-    AndroidTextToSpeech(TTS tts) {
-        this.tts = tts;
+
+    AndroidTextToSpeech(TTS _tts) {
+        tts = _tts;
+        helper = new Helper();
     }
 
     @JavascriptInterface
@@ -119,8 +123,11 @@ class AndroidTextToSpeech {
 class AndroidCommon {
 
     MainActivity main;
-    AndroidCommon(MainActivity main) {
-        this.main = main;
+
+    Helper helper;
+    AndroidCommon(MainActivity _main) {
+        main = _main;
+        helper = new Helper();
     }
     @JavascriptInterface
     public void closeApp() {
@@ -161,10 +168,11 @@ class AndroidCommon {
 
     @JavascriptInterface
     public void setInterfaceLanguage(String languageCode) {
+        Resources resources = main.getResources();
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                main.setLocale(languageCode);
+                helper.setLocale(resources, languageCode);
             }
         });
     }

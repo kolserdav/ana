@@ -1,13 +1,8 @@
 package com.kolserdav.ana;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,17 +13,13 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Locale;
 
 public class MainActivity extends Activity {
     private WebView mWebView;
 
     private DB db;
+
+    private Helper helper;
 
 
     @Override
@@ -37,6 +28,7 @@ public class MainActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         db = new DB(this);
+        helper = new Helper(this, this);
 
 
         mWebView = new WebView(this);
@@ -64,38 +56,18 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
 
 
+        webViewListeners();
 
-
-        String url = db.app.schema.url;
         Intent intent = getIntent();
+        String url =  helper.listenProcessText(intent, db.app.schema);
+        mWebView.loadUrl(url);
 
-        // Parse process text
-        CharSequence text = intent
-                .getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
-        if (text != null) {
-            // Dependency PROCESS_TEXT_QUERY_STRING in packages/app/utils/constants.ts
-            url = url.concat("?process_text=");
-            String _text = text.toString();
-            try {
-                _text = URLDecoder.decode(_text, "UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
-                _text = text.toString();
-                Log.e("Error decode URI", e.getMessage());
-            }
-            url = url.concat(_text);
-        }
-        Log.d("PATH", db.app.schema.path);
-        // Parse deep link
-        Uri path = intent.getData();
-        if (path != null) {
-            url = url.concat(path.getPath());
-            url = url.concat("?");
-            url = url.concat(path.getQuery());
-        } else {
-            url.concat(db.app.schema.path);
-        }
+        this.setContentView(mWebView);
 
+        helper.microphoneAccess();
+    }
+
+    private void webViewListeners() {
         mWebView.setWebChromeClient(new WebChromeClient() {
 
             @Override
@@ -112,6 +84,7 @@ public class MainActivity extends Activity {
         });
 
         mWebView.setWebViewClient(new WebViewClient() {
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d("PATH", "Change path " + url);
@@ -125,32 +98,8 @@ public class MainActivity extends Activity {
             }
 
         });
-
-        mWebView.loadUrl(url);
-
-        this.setContentView(mWebView);
-
-        microphoneAccess();
     }
 
-    private void microphoneAccess() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            // Permission has not been granted, request permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-        } else {
-            // Permission has already been granted
-            // Setup audio recording
-        }
-    }
-
-    public void setLocale(String languageCode) {
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Resources resources = this.getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
-    }
 
     @Override
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {
