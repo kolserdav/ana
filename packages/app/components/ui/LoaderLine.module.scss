@@ -26,6 +26,7 @@
   &.local {
     position: relative;
     display: block;
+    z-index: 1;
     width: calc($translate-container-max - $container-padding * 2);
 
     @media (max-width: $mobile-width) {
