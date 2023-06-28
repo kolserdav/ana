@@ -18,7 +18,8 @@ import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class Helper {
+public class Helper extends Config {
+
 
     Context context = null;
 

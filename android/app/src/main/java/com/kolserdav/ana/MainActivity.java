@@ -115,7 +115,7 @@ public class MainActivity extends Activity {
                     Thread task = new Thread() {
                         public void run() {
                             try {
-                                Thread.sleep(3000);
+                                Thread.sleep(helper.FIRST_LOAD_DURATION);
                                 Log.d("INFO", "First load is " + firstLoad);
                                 firstLoad = false;
                             } catch(InterruptedException v) {

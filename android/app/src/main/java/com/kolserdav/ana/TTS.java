@@ -87,7 +87,11 @@ class TTS {
     }
 
     public void stopSpeak() {
-        textToSpeech.stop();
+        try {
+            textToSpeech.stop();
+        } catch (Throwable e) {
+            Log.e("ERROR", e.getMessage());
+        }
     }
 
     public String getLanguage() {
