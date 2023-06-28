@@ -17,7 +17,6 @@ import android.webkit.WebViewClient;
 import org.chromium.net.CronetEngine;
 import org.chromium.net.UrlRequest;
 
-import java.net.URL;
 import java.util.EventListener;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -27,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends Activity {
 
-    MainActivity context;
+    MainActivity context = this;
     private static final String TAG = "MainActivity";
 
     public WebView mWebView;
@@ -51,7 +50,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
+
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         helper = new Helper(this, this);
@@ -82,7 +81,7 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
 
 
-        webViewListeners();
+
 
         db = new DB(this) {
             @Override
@@ -125,6 +124,7 @@ public class MainActivity extends Activity {
             }
         };
 
+        webViewListeners();
 
     }
 
@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
 
-                if (!url.equals(context.db.app.schema.url + context.db.app.schema.path) && matchFound) {
+                if (url != context.db.app.schema.url + context.db.app.schema.path && matchFound) {
                     url = context.db.app.schema.url + context.db.app.schema.path;
                 }
                 view.loadUrl(url);
@@ -197,12 +197,12 @@ public class MainActivity extends Activity {
                 super.doUpdateVisitedHistory(view, url, isReload);
 
                 if (!firstLoad) {
-                    AppInterface _app = new AppInterface(context.db.app.schema.id,
+                    context.db.app.schema = new AppInterface(context.db.app.schema.id,
                             context.db.app.schema.url,
                             context.db.app.schema.urlDefault, context.db.app.schema.path);
-                    _app.path = url.replace(url, "");
-                    context.db.app.setPath(_app);
-                    Log.d(TAG, "Change path  from " + _app.path + " to " + context.db.app.schema.path);
+                    context.db.app.schema.path = url.replace(context.db.app.schema.url, "");
+                    context.db.app.setPath(context.db.app.schema);
+                    Log.d(TAG, "Change path  from " + context.db.app.schema.path + " to " + context.db.app.schema.path);
                 }
             }
         });
