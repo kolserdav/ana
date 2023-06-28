@@ -16,10 +16,12 @@ import androidx.core.content.ContextCompat;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+
 
 public class Helper extends Config {
 
+
+    public static final String TAG = "Helper";
 
     Context context = null;
 
@@ -40,7 +42,7 @@ public class Helper extends Config {
         if (url.equals("null")) {
             url = options.urlDefault;
         }
-        Log.d("INFO", "Listen process text with url: " + url + ", path: " +
+        Log.d(TAG, "Listen process text with url: " + url + ", path: " +
                 options.path + ", default:  " + options.urlDefault);
 
 
@@ -59,7 +61,6 @@ public class Helper extends Config {
             }
             url = url.concat(_text);
         }
-        Log.d("PATH", options.path);
         // Parse deep link
         Uri path = intent.getData();
         if (path != null) {
@@ -74,7 +75,7 @@ public class Helper extends Config {
 
     public void microphoneAccess() {
         if (context == null || activity == null) {
-            Log.w("NOT_IMPLEMENT", "Context or activity is missing");
+            Log.w(TAG, "Context or activity is missing");
             return;
         }
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {

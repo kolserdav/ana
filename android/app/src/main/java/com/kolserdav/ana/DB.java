@@ -61,7 +61,7 @@ class App extends Table {
 
     public void setUrl(AppInterface options) {
         db.execSQL("UPDATE " + TABLE_NAME +
-                " SET " + APP_COLUMN_URL + options.url +
+                " SET " + APP_COLUMN_URL + "='" + options.url + "'" +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
         schema.url = options.url;
     }
@@ -117,7 +117,10 @@ class App extends Table {
 
         while (cursor.moveToNext()) {
             schema.id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));
-            schema.url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
+            String url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
+            if (url != "null") {
+                schema.url = url;
+            }
             schema.urlDefault = cursor.getString(getAppColumnIndex(APP_COLUMN_URL_DEFAULT));
             schema.path = cursor.getString(getAppColumnIndex(APP_COLUMN_PATH));
         }
@@ -148,6 +151,7 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase _sqLiteDatabase) {
         sqLiteDatabase = _sqLiteDatabase;
+        app.init();
     }
 
 

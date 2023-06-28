@@ -87,11 +87,16 @@ public class MainActivity extends Activity {
         db = new DB(this) {
             @Override
             public void onCreate(SQLiteDatabase _sqLiteDatabase) {
-                // db.app.clear();
-                // db.app.drop();
-                Log.d(TAG, "On create DB");
+                //db.app.clear();
+                //db.app.drop();
                 Intent intent = getIntent();
-                String url =  helper.listenProcessText(intent, this.app.schema);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, e.getMessage() + e.getCause());
+                }
+                Log.d(TAG, "On create DB" + this.app);
+                String url = helper.listenProcessText(intent, this.app.schema);
                 setContentView(mWebView);
 
                 Check check = new Check(){
@@ -99,14 +104,17 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                String _url = url;
+                                String _url = context.db.app.schema.url;
                                 if (status != 200) {
                                     Log.w(TAG, "Url replaced " + _url);
-                                    _url = url.replace(_url, context.db.app.schema.urlDefault);
+                                    _url = _url.replace(_url, context.db.app.schema.urlDefault);
+                                }
+                                if (_url.equals("null")) {
+                                    _url = context.db.app.schema.urlDefault;
                                 }
                                 Log.d(TAG,"Status is " + status + ", load url " + _url);
                                 mWebView.loadUrl(_url);
-                                Log.d(TAG,"Load url " + _url);
+                                Log.d(TAG,"Loaded url " + _url);
                                 helper.microphoneAccess();
                             }
                         });
@@ -156,14 +164,14 @@ public class MainActivity extends Activity {
                 String url = _url;
 
                 Log.d(TAG, "Should override url " + url +
-                        " with saved " + db.app.schema.path);
+                        " with saved " + context.db.app.schema.path);
 
-                Pattern pattern = Pattern.compile(db.app.schema.url, Pattern.CASE_INSENSITIVE);
+                Pattern pattern = Pattern.compile(context.db.app.schema.url, Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
 
-                if (url != db.app.schema.url + db.app.schema.path && matchFound) {
-                    url = db.app.schema.url + db.app.schema.path;
+                if (url != context.db.app.schema.url + context.db.app.schema.path && matchFound) {
+                    url = context.db.app.schema.url + context.db.app.schema.path;
                 }
                 view.loadUrl(url);
 
@@ -189,12 +197,12 @@ public class MainActivity extends Activity {
                 super.doUpdateVisitedHistory(view, url, isReload);
 
                 if (!firstLoad) {
-                    AppInterface _app = new AppInterface(db.app.schema.id,
-                            db.app.schema.url,
-                            db.app.schema.urlDefault, db.app.schema.path);
-                    _app.path = url.replace(_app.url, "");
-                    db.app.setPath(_app);
-                    Log.d(TAG, "Change path  from " + _app.path + " to " + db.app.schema.path);
+                    AppInterface _app = new AppInterface(context.db.app.schema.id,
+                            context.db.app.schema.url,
+                            context.db.app.schema.urlDefault, context.db.app.schema.path);
+                    _app.path = url.replace(url, "");
+                    context.db.app.setPath(_app);
+                    Log.d(TAG, "Change path  from " + _app.path + " to " + context.db.app.schema.path);
                 }
             }
         });

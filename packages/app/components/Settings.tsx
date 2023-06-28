@@ -225,13 +225,15 @@ function Settings({
     wrongUrlFormat,
   });
 
+  const isAndroid = typeof androidCommon !== 'undefined';
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
-        {typeof androidCommon !== 'undefined' && (
+        {isAndroid && (
           <>
             <Hr theme={theme} />
             <Typography variant="h4" theme={theme}>

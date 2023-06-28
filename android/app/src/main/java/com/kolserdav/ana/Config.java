@@ -1,13 +1,13 @@
 package com.kolserdav.ana;
 
 class AppInterface {
-    Integer id = 1;
+    int id = 1;
     String url = null;
     String path = "/";
 
-    String urlDefault = "https://test.uyem.ru";
+    String urlDefault = "https://uyem.ru";
 
-    public AppInterface(Integer _id, String _url, String _urlDefault, String _path) {
+    public AppInterface(int _id, String _url, String _urlDefault, String _path) {
         id = _id;
         url = _url;
         urlDefault = _urlDefault;
@@ -26,7 +26,6 @@ public class Config {
 
     public static final String CHECK_URL_PATH = "/api/check";
 
-    public static final int CHECK_URL_RESPONSE_LENGTH = 100;
 
 }
 
