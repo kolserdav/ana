@@ -7,7 +7,7 @@
   background-color: transparent;
   top: 0;
   width: 100%;
-  height: 4px;
+  height: $loader-hight-fixed;
 
   .container {
     &.open {
@@ -28,6 +28,7 @@
     display: block;
     z-index: 1;
     width: calc($translate-container-max - $container-padding * 2);
+    height: $loader-hight-local;
 
     @media (max-width: $mobile-width) {
       width: calc(100% - $container-padding * 2);
