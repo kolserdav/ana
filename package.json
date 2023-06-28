@@ -25,7 +25,7 @@
     "generate": "prisma generate",
     "format": "prisma format",
     "translate": "python packages/translate2/main.py",
-    "postinstall": "install:node && npm run install:translate",
+    "postinstall": "npm run install:node && npm run install:translate",
     "dev:server": "cd packages/server && npm run dev",
     "dev:app": "cd packages/app && npm run dev",
     "dev": "concurrently \"npm run dev:node\" \"npm run translate\"",
