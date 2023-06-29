@@ -227,7 +227,7 @@ function Settings({
     wrongUrlFormat,
   });
 
-  console.log(url, node);
+  console.log(1, url, node);
 
   return (
     <div className={s.wrapper}>

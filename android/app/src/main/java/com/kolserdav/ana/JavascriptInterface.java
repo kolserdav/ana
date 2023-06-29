@@ -192,9 +192,7 @@ class AndroidCommon {
                 AppInterface schemaApp = main.db.app.init(new AppInterface());
                 Log.d(TAG, "Run callback " + cb + " (" + schemaApp.urlDefault + ", " + schemaApp.url + ")");
                 main.mWebView.loadUrl("javascript:" + cb + "('" +
-                        schemaApp.urlDefault + "', true)");
-                main.mWebView.loadUrl("javascript:" + cb + "('" +
-                        schemaApp.url + "', false)");
+                        schemaApp.urlDefault + "', '" + schemaApp.url + "')");
             }
         });
     }
