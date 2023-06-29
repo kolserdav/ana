@@ -58,6 +58,7 @@ class App extends Table {
         db.execSQL("UPDATE " + TABLE_NAME +
                 " SET " + APP_COLUMN_URL + "='" + options.url + "'" +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
+        Log.d(TAG, "Url saved " + options.url);
     }
 
     public void clear() {
@@ -106,15 +107,14 @@ class App extends Table {
             );
             return init(options);
         }
-        Log.d(TAG,"App cursor count is " + count);
+        if (count != 1) {
+            Log.w(TAG,"App cursor count is " + count);
+        }
 
         AppInterface schema = options;
         while (cursor.moveToNext()) {
             schema.id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));
-            String url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
-            if (url != "null") {
-                schema.url = url;
-            }
+            schema.url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
             schema.urlDefault = cursor.getString(getAppColumnIndex(APP_COLUMN_URL_DEFAULT));
             schema.path = cursor.getString(getAppColumnIndex(APP_COLUMN_PATH));
         }
@@ -131,7 +131,7 @@ public class DB extends SQLiteOpenHelper {
 
     App app;
 
-    public static final Integer DATABASE_VERSION = 10;
+    public static final Integer DATABASE_VERSION = 12;
     public static final String DATABASE_NAME = "db";
 
     public DB(Context context) {

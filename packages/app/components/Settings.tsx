@@ -233,7 +233,7 @@ function Settings({
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
-        {isAndroid && (
+        {isAndroid && user?.role === 'admin' && (
           <>
             <Hr theme={theme} />
             <Typography variant="h4" theme={theme}>

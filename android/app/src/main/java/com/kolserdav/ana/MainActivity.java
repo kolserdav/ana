@@ -190,6 +190,7 @@ public class MainActivity extends Activity {
                 if (matchFound && !schema.path.equals("/")) {
                     url = url.replaceAll("\\/[a-z]+$", "") + schema.path;
                 }
+                Log.d(TAG, "Replaced url " + url);
                 view.loadUrl(url);
 
                 if (firstLoad) {

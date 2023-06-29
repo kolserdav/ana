@@ -470,8 +470,9 @@ export const useChangeNode = ({
     if (url) {
       setIsNode(true);
       setNodeSuccess(true);
+      setNode(url);
     } else {
-      setIsDefaultNode(true);
+      setIsDefaultNode(false);
     }
   }, [url]);
 

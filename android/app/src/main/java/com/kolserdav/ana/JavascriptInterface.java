@@ -128,7 +128,7 @@ class AndroidCommon {
 
     MainActivity main;
 
-    String urlDefault;
+    private static final String TAG = "AndroidCommon";
 
     Helper helper;
     AndroidCommon(MainActivity _main) {
@@ -188,7 +188,9 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+
                 AppInterface schemaApp = main.db.app.init(new AppInterface());
+                Log.d(TAG, "Run callback " + cb + " (" + schemaApp.urlDefault + ", " + schemaApp.url + ")");
                 main.mWebView.loadUrl("javascript:" + cb + "('" +
                         schemaApp.urlDefault + "', '" + schemaApp.url + "')");
             }
