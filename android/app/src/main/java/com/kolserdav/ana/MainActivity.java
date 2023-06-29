@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.EventListener;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,20 +31,12 @@ public class MainActivity extends Activity {
 
     public WebView mWebView;
 
-    private EventListener event = new Event();
-
     public DB db;
-
-    private Config config = new Config();
 
     private Helper helper;
 
     private Boolean firstLoad = true;
 
-
-    public interface Check {
-        void onGetStatusCode(int a);
-    }
 
     private static class Request extends AsyncTask<Void, Void, String> {
 
@@ -60,21 +51,22 @@ public class MainActivity extends Activity {
         public static final String TAG = "Request";
 
         protected String doInBackground(Void... params) {
+            AppInterface dataApp = db.app.init(new AppInterface());
             try {
-                // Create a URL object with the target URL
-                String useUrl = "https://uyem.ru/api/check";
+                if (dataApp.url.equals("null")) {
+                    return "Error";
+                }
+
+                String useUrl = dataApp.url + Config.CHECK_URL_PATH;
+                Log.d(TAG, "Try request " + useUrl);
                 URL url = new URL(useUrl);
 
-                // Open a connection to the URL
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                // Set the request method to GET
                 connection.setRequestMethod("GET");
 
-                // Get the response code
                 status = connection.getResponseCode();
 
-                // Read the response from the input stream
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder response = new StringBuilder();
                 String line;
@@ -83,7 +75,6 @@ public class MainActivity extends Activity {
                 }
                 reader.close();
 
-                // Return the response as a string
                 return response.toString();
             } catch (Exception e) {
                 e.printStackTrace();
