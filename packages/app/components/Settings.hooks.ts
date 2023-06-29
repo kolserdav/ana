@@ -470,6 +470,9 @@ export const useChangeNode = ({
    * Select node
    */
   useEffect(() => {
+    if (!urlDefault) {
+      return;
+    }
     const {
       location: { origin },
     } = window;
@@ -479,7 +482,7 @@ export const useChangeNode = ({
       setNodeSuccess(true);
       setNode(origin);
     } else {
-      setIsDefaultNode(false);
+      setIsDefaultNode(true);
     }
   }, [urlDefault]);
 
