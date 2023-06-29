@@ -413,10 +413,12 @@ export const useChangeNode = ({
   url,
   urlDefault,
   wrongUrlFormat,
+  serverIsNotRespond,
 }: {
   urlDefault: string;
   url: null | string;
   wrongUrlFormat: string;
+  serverIsNotRespond: string;
 }) => {
   const [isDefaultNode, setIsDefaultNode] = useState(false);
   const [isNode, setIsNode] = useState(false);
@@ -449,18 +451,22 @@ export const useChangeNode = ({
     }
   };
 
-  const onChangeNewNode = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeNewNode = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
     if (!checkUrl(value)) {
       setNodeError(wrongUrlFormat);
-    } else {
-      setNodeError('');
-      setNodeSuccess(true);
-
-      if (typeof androidCommon !== 'undefined') {
+    }
+    if (typeof androidCommon !== 'undefined') {
+      const result = await request.checkNewUrl();
+      if (result.status === 'info') {
         androidCommon.setUrl(value);
+        setNodeError('');
+        setNodeSuccess(true);
+      } else {
+        setNodeError(serverIsNotRespond);
+        setNodeSuccess(false);
       }
     }
     setNode(value);

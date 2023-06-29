@@ -63,6 +63,7 @@ import {
   PhraseUpdateManyResult,
   PhraseFindManyResultLight,
   UNDEFINED_QUERY_STRING,
+  CHECK_URL_PATH,
 } from '../types/interfaces';
 import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -434,6 +435,13 @@ class Request {
       server: SERVER_LOCAL_ADDRESS,
       method: 'POST',
       body,
+    });
+  }
+
+  public async checkNewUrl(): Promise<Result<null>> {
+    return this.send({
+      url: CHECK_URL_PATH,
+      method: 'GET',
     });
   }
 }

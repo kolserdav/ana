@@ -64,6 +64,8 @@ export enum LocaleVars {
   count = '%count',
 }
 
+// Deps android/app/src/main/java/com/kolserdav/ana/Config.java
+export const CHECK_URL_PATH = '/api/check';
 export const MINIMAL_SUPPORT_TEXT_LENGTH = 10;
 export const UNDEFINED_QUERY_STRING = 'undefined';
 export const QUERY_STRING_ARRAY_SPLITTER = ',';
@@ -604,6 +606,7 @@ export interface Locale {
       selectNode: string;
       defaultNode: string;
       customNode: string;
+      serverIsNotRespond: string;
     };
     statistics: {
       title: string;

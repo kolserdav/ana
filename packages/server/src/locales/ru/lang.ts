@@ -240,6 +240,7 @@ const lang: Locale = {
       selectNode: 'Выбрать источник',
       defaultNode: 'Источник по умолчанию',
       customNode: 'Пользовательский источник',
+      serverIsNotRespond: 'Сервер не отвечает',
     },
     statistics: {
       title: 'Статистика',

@@ -206,18 +206,6 @@ public class MainActivity extends Activity {
 
     }
 
-
-   /* public void checkUrl(String url, Check check) {
-        CronetEngine cronetEngine = request.buildRequest(check);
-        Executor executor = Executors.newSingleThreadExecutor();
-        UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
-                url, request, executor);
-        UrlRequest request = requestBuilder.build();
-        request.start();
-    }*/
-
-
-
     private void webViewListeners() {
         mWebView.setWebChromeClient(new WebChromeClient() {
 

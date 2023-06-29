@@ -240,6 +240,7 @@ const lang: Locale = {
       selectNode: 'Select node',
       defaultNode: 'Default Node',
       customNode: 'Custom Node',
+      serverIsNotRespond: 'Server not responding',
     },
     statistics: {
       title: 'Statistics',
