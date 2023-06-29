@@ -461,10 +461,12 @@ export const useChangeNode = ({
     if (typeof androidCommon !== 'undefined') {
       const result = await request.checkNewUrl();
       if (result.status === 'info') {
+        log('info', 'Success check', {});
         androidCommon.setUrl(value);
         setNodeError('');
         setNodeSuccess(true);
       } else {
+        log('error', 'Error check', { result });
         setNodeError(serverIsNotRespond);
         setNodeSuccess(false);
       }
