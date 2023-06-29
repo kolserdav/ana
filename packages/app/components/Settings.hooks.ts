@@ -467,15 +467,18 @@ export const useChangeNode = ({
    * Select node
    */
   useEffect(() => {
-    log('info', 'Android url is', url);
-    if (url) {
+    const {
+      location: { origin },
+    } = window;
+    log('info', 'Android url is', { origin, urlDefault });
+    if (urlDefault !== origin) {
       setIsNode(true);
       setNodeSuccess(true);
-      setNode(url);
+      setNode(origin);
     } else {
       setIsDefaultNode(false);
     }
-  }, [url]);
+  }, [urlDefault]);
 
   return {
     isDefaultNode,
