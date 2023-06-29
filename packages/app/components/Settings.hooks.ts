@@ -429,7 +429,7 @@ export const useChangeNode = ({
       setIsDefaultNode(!isDefaultNode);
 
       if (typeof androidCommon !== 'undefined') {
-        androidCommon.setUrl(urlDefault);
+        androidCommon.setUrl('null');
       }
     }
     if (isNode) {
@@ -440,6 +440,9 @@ export const useChangeNode = ({
   const onClickNodeRadio = () => {
     if (!isNode) {
       setIsNode(!isNode);
+      if (typeof androidCommon !== 'undefined' && node) {
+        androidCommon.setUrl(node);
+      }
     }
     if (isDefaultNode) {
       setIsDefaultNode(false);
