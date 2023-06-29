@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -14,12 +15,12 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 
-import org.chromium.net.CronetEngine;
-import org.chromium.net.UrlRequest;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.EventListener;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,11 +42,69 @@ public class MainActivity extends Activity {
 
     private Boolean firstLoad = true;
 
-    private Request request = new Request(this);
 
     public interface Check {
         void onGetStatusCode(int a);
     }
+
+    private static class Request extends AsyncTask<Void, Void, String> {
+
+        public int status = 500;
+
+        private DB db;
+
+        Request(DB _db) {
+            db = _db;
+        }
+
+        public static final String TAG = "Request";
+
+        protected String doInBackground(Void... params) {
+            try {
+                // Create a URL object with the target URL
+                String useUrl = "https://uyem.ru/api/check";
+                URL url = new URL(useUrl);
+
+                // Open a connection to the URL
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                // Set the request method to GET
+                connection.setRequestMethod("GET");
+
+                // Get the response code
+                status = connection.getResponseCode();
+
+                // Read the response from the input stream
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+
+                // Return the response as a string
+                return response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        protected void onGetStatus(Integer code) {
+            Log.d(TAG, "Code is " + code);
+        }
+
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                Log.d(MainActivity.TAG, "Status " + this.status);
+
+                onGetStatus(status);
+            }
+
+        }
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,17 +138,13 @@ public class MainActivity extends Activity {
         TTS tts = new TTS(this);
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
-
-
+        setContentView(mWebView);
 
 
         db = new DB(this) {
 
             @Override
             public void onCreate(SQLiteDatabase _sqLiteDatabase) {
-                // this.app.clear();
-                //this.app.drop();
-                Intent intent = getIntent();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -102,34 +157,48 @@ public class MainActivity extends Activity {
 
                 AppInterface schemaApp = app.init(new AppInterface());
                 Log.d(TAG, "On create DB " + schemaApp);
+
+                Intent intent = getIntent();
                 String url = helper.listenProcessText(intent, schemaApp);
-                setContentView(mWebView);
 
-                Check check = new Check(){
-                    public void onGetStatusCode(int status) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                String _url = schemaApp.url;
-                                if (status != 200) {
-                                    Log.w(TAG, "Url replaced " + _url);
-                                    _url = _url.replace(_url, schemaApp.urlDefault);
-                                }
-                                if (_url.equals("null")) {
-                                    _url = schemaApp.urlDefault;
-                                }
 
-                                Log.d(TAG,"Status is " + status + ", load url " + _url);
-                                mWebView.loadUrl(_url);
-                                Log.d(TAG,"Loaded url " + _url);
+                String data = null;
+                try {
+                    try {
+                       new Request(this) {
+                           @Override
+                           protected void onGetStatus(Integer code) {
+                               super.onGetStatus(code);
+                               context.runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       AppInterface schemaApp = db.app.init(new AppInterface());
+                                       String _url = url;
+                                       if (status != 200) {
+                                           Log.w(TAG, "Url replaced " + _url);
+                                           _url = _url.replace(_url, schemaApp.urlDefault);
+                                       }
+                                       if (_url.equals("null")) {
+                                           _url = schemaApp.urlDefault;
+                                       }
 
-                                helper.microphoneAccess();
-                            }
-                        });
+                                       Log.d(TAG,"Status is " + status + ", load url " + _url);
+                                       context.mWebView.loadUrl(_url);
+                                       Log.d(TAG,"Loaded url " + _url);
+
+                                       context.helper.microphoneAccess();
+                                   }
+                               });
+                           }
+                       }.execute().get();
+
+                    } catch (ExecutionException e) {
+                        Log.e(TAG, "Error request E " + e.getMessage());
                     }
-                };
-
-                checkUrl(url + config.CHECK_URL_PATH, check);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "Error request I " + e.getMessage());
+                }
+                Log.d(TAG, "Data is " + data);
             }
         };
 
@@ -138,15 +207,14 @@ public class MainActivity extends Activity {
     }
 
 
-
-        public void checkUrl(String url, Check check) {
-            CronetEngine cronetEngine = request.buildRequest(check);
-            Executor executor = Executors.newSingleThreadExecutor();
-            UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
-                    url, request, executor);
-            UrlRequest request = requestBuilder.build();
-            request.start();
-        }
+   /* public void checkUrl(String url, Check check) {
+        CronetEngine cronetEngine = request.buildRequest(check);
+        Executor executor = Executors.newSingleThreadExecutor();
+        UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
+                url, request, executor);
+        UrlRequest request = requestBuilder.build();
+        request.start();
+    }*/
 
 
 
