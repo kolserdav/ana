@@ -1,3 +1,4 @@
+- Added the ability to select your node
 - Correct toolbar color set
 - Screen rotation has been disabled
 - Made discovery from cache if internet is down
