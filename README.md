@@ -18,6 +18,7 @@ Without sign in
 - Translation (English, Arabic, Azerbaijani, Catalan, Chinese, Czech, Danish, Dutch, Esperanto, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Indonesian, Irish, Italian, Japanese, Korean , Persian, Polish, Portuguese, Russian, Slovak, Spanish, Swedish, Thai, Turkish, Ukrainian.)
 - Speech recognize
 - Synth speech
+- Select custom node
 
 ---
 
