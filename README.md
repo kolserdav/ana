@@ -41,6 +41,8 @@ With sign in
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg" width="200"/>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot5.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot5.jpeg" width="200"/>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot6.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot6.jpeg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot7.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot7.jpeg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot8.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot8.jpeg" width="200"/>
 </div>
 
 ## Localization
