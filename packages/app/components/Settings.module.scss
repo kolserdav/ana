@@ -58,8 +58,7 @@ $settings-margin-left: 1rem;
       }
 
       .lang_select {
-        margin-bottom: $speech-select-shift;
-        margin: $settings-margin-left;
+        margin: $settings-margin-left $settings-margin-left $settings-margin-shift ;
 
         .lang_select__voice {
           margin-top: 2rem;
@@ -71,8 +70,7 @@ $settings-margin-left: 1rem;
         width: 100%;
         display: flex;
         flex-direction: column;
-        margin-bottom: $speech-select-shift;
-        margin: $settings-margin-left;
+        margin: $settings-margin-left $settings-margin-left $settings-margin-shift;
       }
     }
 

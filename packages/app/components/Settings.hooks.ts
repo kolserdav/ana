@@ -467,6 +467,7 @@ export const useChangeNode = ({
    * Select node
    */
   useEffect(() => {
+    log('info', 'Android url is', url);
     if (url) {
       setIsNode(true);
       setNodeSuccess(true);
