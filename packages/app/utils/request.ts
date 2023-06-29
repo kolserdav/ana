@@ -441,6 +441,7 @@ class Request {
   public async checkNewUrl(): Promise<Result<null>> {
     return this.send({
       url: CHECK_URL_PATH,
+      server: '',
       method: 'GET',
     });
   }
