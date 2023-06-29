@@ -188,8 +188,9 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                AppInterface schemaApp = main.db.app.init(new AppInterface());
                 main.mWebView.loadUrl("javascript:" + cb + "('" +
-                        main.db.app.schema.urlDefault + "', '" + main.db.app.schema.url + "')");
+                        schemaApp.urlDefault + "', '" + schemaApp.url + "')");
             }
         });
     }
@@ -199,8 +200,9 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                main.db.app.schema.url = url;
-                main.db.app.setUrl(main.db.app.schema);
+                AppInterface schemaApp = main.db.app.init(new AppInterface());
+                schemaApp.url = url;
+                main.db.app.setUrl(schemaApp);
             }
         });
     }

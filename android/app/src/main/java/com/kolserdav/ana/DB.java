@@ -38,8 +38,6 @@ class App extends Table {
 
     private static final String TAG = "App";
 
-    public AppInterface schema;
-
     public App(SQLiteDatabase db) {
         super(db, new String[]{
                 APP_COLUMN_ID,
@@ -47,8 +45,6 @@ class App extends Table {
                 APP_COLUMN_URL_DEFAULT,
                 APP_COLUMN_PATH
         });
-        schema = new AppInterface();
-
     }
 
     public void onCreate() {
@@ -56,14 +52,12 @@ class App extends Table {
                 APP_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 APP_COLUMN_URL + " TEXT, " + APP_COLUMN_URL_DEFAULT + " TEXT, " +
                 APP_COLUMN_PATH + " TEXT" + ")");
-        init();
     }
 
     public void setUrl(AppInterface options) {
         db.execSQL("UPDATE " + TABLE_NAME +
                 " SET " + APP_COLUMN_URL + "='" + options.url + "'" +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
-        schema.url = options.url;
     }
 
     public void clear() {
@@ -80,10 +74,9 @@ class App extends Table {
         db.execSQL("UPDATE " + TABLE_NAME +
                 " SET " + APP_COLUMN_PATH + "='" + options.path + "'" +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
-        schema.path = options.path;
     }
 
-    public AppInterface init() {
+    public AppInterface init(AppInterface options) {
         // String selection = APP_COLUMN_ID + "=?";
         // String[] selectionArgs = {"%" + id + "%"};
         Cursor cursor = db.query(
@@ -107,14 +100,15 @@ class App extends Table {
                     "VALUES" +
                     " (" +
                     null + ", '" +
-                    schema.url + "', '" +
-                    schema.urlDefault + "', '" +
-                    schema.path + "')"
+                    options.url + "', '" +
+                    options.urlDefault + "', '" +
+                    options.path + "')"
             );
-            return init();
+            return init(options);
         }
         Log.d(TAG,"App cursor count is " + count);
 
+        AppInterface schema = options;
         while (cursor.moveToNext()) {
             schema.id = cursor.getInt(getAppColumnIndex(APP_COLUMN_ID));
             String url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
@@ -137,7 +131,7 @@ public class DB extends SQLiteOpenHelper {
 
     App app;
 
-    public static final Integer DATABASE_VERSION = 3;
+    public static final Integer DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "db";
 
     public DB(Context context) {
@@ -151,7 +145,6 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase _sqLiteDatabase) {
         sqLiteDatabase = _sqLiteDatabase;
-        app.init();
     }
 
 

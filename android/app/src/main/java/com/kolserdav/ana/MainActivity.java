@@ -84,6 +84,7 @@ public class MainActivity extends Activity {
 
 
         db = new DB(this) {
+
             @Override
             public void onCreate(SQLiteDatabase _sqLiteDatabase) {
                 // this.app.clear();
@@ -94,8 +95,9 @@ public class MainActivity extends Activity {
                 } catch (InterruptedException e) {
                     Log.e(TAG, e.getMessage() + e.getCause());
                 }
-                Log.d(TAG, "On create DB" + this.app);
-                String url = helper.listenProcessText(intent, this.app.schema);
+                AppInterface schemaApp = app.init(new AppInterface());
+                Log.d(TAG, "On create DB " + schemaApp);
+                String url = helper.listenProcessText(intent, schemaApp);
                 setContentView(mWebView);
 
                 Check check = new Check(){
@@ -103,13 +105,13 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                String _url = context.db.app.schema.url;
+                                String _url = schemaApp.url;
                                 if (status != 200) {
                                     Log.w(TAG, "Url replaced " + _url);
-                                    _url = _url.replace(_url, context.db.app.schema.urlDefault);
+                                    _url = _url.replace(_url, schemaApp.urlDefault);
                                 }
                                 if (_url.equals("null")) {
-                                    _url = context.db.app.schema.urlDefault;
+                                    _url = schemaApp.urlDefault;
                                 }
                                 Log.d(TAG,"Status is " + status + ", load url " + _url);
                                 mWebView.loadUrl(_url);
@@ -159,19 +161,21 @@ public class MainActivity extends Activity {
 
         mWebView.setWebViewClient(new WebViewClient() {
 
+            AppInterface schema = context.db.app.init(new AppInterface());
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String _url) {
                 String url = _url;
 
                 Log.d(TAG, "Should override url " + url +
-                        " with saved " + context.db.app.schema.path);
+                        " with saved " + schema.path);
 
-                Pattern pattern = Pattern.compile(context.db.app.schema.url, Pattern.CASE_INSENSITIVE);
+                Pattern pattern = Pattern.compile(schema.url, Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
 
-                if (url != context.db.app.schema.url + context.db.app.schema.path && matchFound) {
-                    url = context.db.app.schema.url + context.db.app.schema.path;
+                if (url != schema.url + schema.path && matchFound) {
+                    url = schema.url + schema.path;
                 }
                 view.loadUrl(url);
 
@@ -196,13 +200,14 @@ public class MainActivity extends Activity {
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
                 super.doUpdateVisitedHistory(view, url, isReload);
 
+                AppInterface schemaApp = context.db.app.init(new AppInterface());
                 if (!firstLoad) {
-                    context.db.app.schema = new AppInterface(context.db.app.schema.id,
-                            context.db.app.schema.url,
-                            context.db.app.schema.urlDefault, context.db.app.schema.path);
-                    context.db.app.schema.path = url.replace(context.db.app.schema.url, "");
-                    context.db.app.setPath(context.db.app.schema);
-                    Log.d(TAG, "Change path  from " + context.db.app.schema.path + " to " + context.db.app.schema.path);
+                    new AppInterface(schemaApp.id,
+                            schemaApp.url,
+                            schemaApp.urlDefault, schemaApp.path);
+                    url.replace(schemaApp.url, "");
+                    context.db.app.setPath(schemaApp);
+                    Log.d(TAG, "Change path  from " + schemaApp.path + " to " + schemaApp.path);
                 }
             }
         });
