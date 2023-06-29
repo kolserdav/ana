@@ -72,8 +72,11 @@ export default function useApp({
       setUrlDefault(window.location.origin);
     } else if (androidCommon.getUrlDefault) {
       global.getUrlDefault = (d: string, u: string) => {
-        setUrlDefault(d);
-        setUrl(u);
+        if (u) {
+          setUrlDefault(d);
+        } else {
+          setUrl(d);
+        }
       };
       androidCommon.getUrlDefault('getUrlDefault');
     }

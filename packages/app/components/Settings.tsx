@@ -227,6 +227,8 @@ function Settings({
     wrongUrlFormat,
   });
 
+  console.log(url, node);
+
   return (
     <div className={s.wrapper}>
       <div className={s.container}>
