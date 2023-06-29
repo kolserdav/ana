@@ -131,7 +131,7 @@ public class DB extends SQLiteOpenHelper {
 
     App app;
 
-    public static final Integer DATABASE_VERSION = 4;
+    public static final Integer DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "db";
 
     public DB(Context context) {
@@ -157,7 +157,4 @@ public class DB extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void startPage() {
-        //
-    }
 }

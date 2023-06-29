@@ -95,6 +95,11 @@ public class MainActivity extends Activity {
                 } catch (InterruptedException e) {
                     Log.e(TAG, e.getMessage() + e.getCause());
                 }
+                if (app == null) {
+                    Log.w(TAG, "App is null");
+                    return;
+                }
+
                 AppInterface schemaApp = app.init(new AppInterface());
                 Log.d(TAG, "On create DB " + schemaApp);
                 String url = helper.listenProcessText(intent, schemaApp);
@@ -113,9 +118,11 @@ public class MainActivity extends Activity {
                                 if (_url.equals("null")) {
                                     _url = schemaApp.urlDefault;
                                 }
+
                                 Log.d(TAG,"Status is " + status + ", load url " + _url);
                                 mWebView.loadUrl(_url);
                                 Log.d(TAG,"Loaded url " + _url);
+
                                 helper.microphoneAccess();
                             }
                         });
@@ -161,21 +168,27 @@ public class MainActivity extends Activity {
 
         mWebView.setWebViewClient(new WebViewClient() {
 
-            AppInterface schema = context.db.app.init(new AppInterface());
+
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String _url) {
+                AppInterface schema = context.db.app.init(new AppInterface());
                 String url = _url;
 
                 Log.d(TAG, "Should override url " + url +
                         " with saved " + schema.path);
 
-                Pattern pattern = Pattern.compile(schema.url, Pattern.CASE_INSENSITIVE);
+                String __url = schema.url;
+                if (__url.equals("null")) {
+                    __url = schema.urlDefault;
+                }
+                Pattern pattern = Pattern.compile(__url, Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
 
-                if (url != schema.url + schema.path && matchFound) {
-                    url = schema.url + schema.path;
+
+                if (matchFound && !schema.path.equals("/")) {
+                    url = url.replaceAll("\\/[a-z]+$", "") + schema.path;
                 }
                 view.loadUrl(url);
 
@@ -205,9 +218,15 @@ public class MainActivity extends Activity {
                     new AppInterface(schemaApp.id,
                             schemaApp.url,
                             schemaApp.urlDefault, schemaApp.path);
-                    url.replace(schemaApp.url, "");
+                    String _url = schemaApp.url;
+                    if (_url.equals("null")) {
+                        _url = schemaApp.urlDefault;
+                    }
+                    String path = url.replace(_url, "");
+                    schemaApp.path = path+"";
                     context.db.app.setPath(schemaApp);
-                    Log.d(TAG, "Change path  from " + schemaApp.path + " to " + schemaApp.path);
+                    Log.d(TAG, "Change path  from " + schemaApp.path + " to " + path +
+                            ", url: " + schemaApp.url + ", _url: " + _url);
                 }
             }
         });
