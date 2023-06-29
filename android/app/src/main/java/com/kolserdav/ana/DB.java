@@ -132,7 +132,7 @@ public class DB extends SQLiteOpenHelper {
 
     App app;
 
-    public static final Integer DATABASE_VERSION = 12;
+    public static final Integer DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "db";
 
     MainActivity context;

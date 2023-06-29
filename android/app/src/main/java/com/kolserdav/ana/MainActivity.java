@@ -173,7 +173,7 @@ public class MainActivity extends Activity {
                                    @Override
                                    public void run() {
                                        AppInterface schemaApp = db.app.init(new AppInterface());
-                                       String _url = url;
+                                           String _url = url;
                                        if (status != 200) {
                                            Log.w(TAG, "Url replaced " + _url);
                                            _url = _url.replace(_url, schemaApp.urlDefault);
