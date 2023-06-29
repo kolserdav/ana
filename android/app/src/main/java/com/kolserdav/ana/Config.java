@@ -24,6 +24,7 @@ public class Config {
 
     public static final int FIRST_LOAD_DURATION = 3000;
 
+    // Dependency packages/app/types/interfaces.ts.CHECK_URL_PATH
     public static final String CHECK_URL_PATH = "/api/check";
 
 }

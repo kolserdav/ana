@@ -1,6 +1,5 @@
 package com.kolserdav.ana;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -61,10 +60,12 @@ class App extends Table {
         Log.d(TAG, "Url saved " + options.url);
     }
 
+    @Deprecated
     public void clear() {
         db.execSQL("DELETE FROM " + TABLE_NAME);
     }
 
+    @Deprecated
     public void drop() {
         clear();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
@@ -131,15 +132,18 @@ public class DB extends SQLiteOpenHelper {
 
     App app;
 
-    public static final Integer DATABASE_VERSION = 12;
+    public static final Integer DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "db";
 
-    public DB(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    MainActivity context;
+
+    public DB(MainActivity _context) {
+        super(_context, DATABASE_NAME, null, DATABASE_VERSION);
+        context = _context;
         sqLiteDatabase = getWritableDatabase();
         app = new App(sqLiteDatabase);
         app.onCreate();
-        this.onCreate(sqLiteDatabase);
+        onCreate(sqLiteDatabase);
     }
 
     @Override

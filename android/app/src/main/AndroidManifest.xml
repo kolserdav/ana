@@ -29,7 +29,7 @@
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <data android:scheme="https" android:host="test.uyem.ru"/>
+                <data android:scheme="com.kolserdav.ana"/>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />

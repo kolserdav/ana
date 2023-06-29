@@ -225,6 +225,7 @@ function Settings({
     url,
     urlDefault,
     wrongUrlFormat,
+    serverIsNotRespond: locale.serverIsNotRespond,
   });
 
   return (
