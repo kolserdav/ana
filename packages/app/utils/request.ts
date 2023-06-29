@@ -438,10 +438,10 @@ class Request {
     });
   }
 
-  public async checkNewUrl(): Promise<Result<null>> {
+  public async checkNewUrl(origin: string): Promise<Result<null>> {
     return this.send({
       url: CHECK_URL_PATH,
-      server: window.location.origin,
+      server: origin,
       method: 'GET',
     });
   }

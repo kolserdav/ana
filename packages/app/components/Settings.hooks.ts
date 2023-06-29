@@ -457,11 +457,12 @@ export const useChangeNode = ({
     } = e;
     if (!checkUrl(value)) {
       setNodeError(wrongUrlFormat);
+      return;
     }
     if (typeof androidCommon !== 'undefined') {
-      const result = await request.checkNewUrl();
+      const result = await request.checkNewUrl(value);
       if (result.status === 'info') {
-        log('info', 'Success check', {});
+        log('info', 'Success check', { result });
         androidCommon.setUrl(value);
         setNodeError('');
         setNodeSuccess(true);
