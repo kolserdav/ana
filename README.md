@@ -34,8 +34,8 @@ With sign in
 ## Screenshots
 
 <div style="position:relative;width:100%;display:flex;flex-flow:row wrap;">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpg" width="200"/>
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot.jpeg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpeg" width="200"/>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg" width="200"/>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg" width="200"/>
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot5.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot5.jpeg" width="200"/>
