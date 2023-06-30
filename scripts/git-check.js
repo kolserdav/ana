@@ -200,9 +200,9 @@ ${args
     /**
      * @type {any}
      */
-    const _diff = diff;
-    if (!diff) {
-      log('warn', 'Diffs are not found', { diff });
+    const _diff = diff.data;
+    if (!_diff) {
+      log('warn', 'Diffs are not found', { _diff });
       return exit(1);
     }
 
