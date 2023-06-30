@@ -5,4 +5,4 @@ if [ $NEED_INSTALL -eq 1 ]; then
 fi
 
 npm run build:server
-systemctl restart anaserver
+systemctl restart anaserver-test

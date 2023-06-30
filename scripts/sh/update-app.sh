@@ -5,4 +5,4 @@ if [ $NEED_INSTALL -eq 1 ]; then
 fi
 
 npm run build:app
-systemctl restart ana
+systemctl restart ana-test
