@@ -214,11 +214,20 @@ ${args
       checkPackage = true;
     }
 
+    let needInstall = false;
+    if (new RegExp(`${item?.replace(/\/$/, '')}/package.json` || '').test(_diff)) {
+      needInstall = true;
+    }
+
     if (!checkPackage) {
       log('info', 'Package ' + item + ' is not changed, skipping...');
       continue;
     }
-    const result = await spawnCommand('sh', [_exec[i] || ''], { env: process.env });
+    const { env } = process;
+    env.NEED_INSTALL = needInstall ? '1' : '0';
+    const execI = _exec[i];
+    const command = execI ? `${/^\//.test(execI) ? '' : './'}${execI.replace(/^\.\//, '')}` : 'sh';
+    const result = await spawnCommand(command, [], { env });
     if (result.code !== 0) {
       return exit(result.code);
     }
