@@ -232,7 +232,7 @@ function Settings({
     <div className={s.wrapper}>
       <div className={s.container}>
         <Typography variant="h1" theme={theme}>
-          {`${locale.title},`}
+          {locale.title}
         </Typography>
         {isAndroid && (
           <>
