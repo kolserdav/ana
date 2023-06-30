@@ -129,12 +129,8 @@ ${args
         return exit(0);
         break;
       case 'branch':
-        if (BRANCH) {
-          props.branch = BRANCH;
-          log('info', 'Used env.BRANCH', BRANCH);
-        } else {
-          props.branch = item.data;
-        }
+        props.branch = item.data;
+
         break;
       case 'exec':
         props.exec = item.data.split(',');
@@ -144,6 +140,11 @@ ${args
         break;
     }
   });
+
+  if (BRANCH) {
+    props.branch = BRANCH;
+    log('info', 'Used env.BRANCH', BRANCH);
+  }
 
   log('info', 'Selected options:\n', args.map((item) => `\r${item.name}: ${item.data}`).join('\n'));
 
