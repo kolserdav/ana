@@ -185,6 +185,6 @@ const needSplitNext = ({ argv, index }, symbol = '=') => {
  * ```
  * @param {string} branch
  */
-const gitHeadRemote = (branch) => new RegExp(`[a-zA-Z0-9]+\s+refs\/heads\/${branch}\n`);
+const gitHeadRemote = (branch) => new RegExp(`[a-zA-Z0-9]+\\t+refs\/heads\/${branch}\n`);
 
 module.exports = { getPage, startServer, spawnCommand, needSplitNext, gitHeadRemote };

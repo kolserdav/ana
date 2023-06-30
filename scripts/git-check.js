@@ -2,7 +2,7 @@
 const { log } = require('../packages/server/dist/utils/lib');
 const { spawnCommand, needSplitNext, gitHeadRemote } = require('../src/lib');
 const { repository, version } = require('../package.json');
-const { GIT_HEAD_REGEXP, BRANCH_NAME_DEFAULT } = require('../src/constants');
+const { GIT_HEAD_REGEXP, BRANCH_NAME_DEFAULT, BRANCH } = require('../src/constants');
 
 const value = typeof Infinity;
 /**
@@ -46,7 +46,7 @@ const prepareArgs = () => {
       name: 'branch',
       aliases: ['-b', '--branch'],
       value: 'string',
-      description: 'Branch name',
+      description: 'Branch name <env.BRANCH>',
       default: `: [${BRANCH_NAME_DEFAULT}]`,
       data: BRANCH_NAME_DEFAULT,
     },
@@ -129,7 +129,12 @@ ${args
         return exit(0);
         break;
       case 'branch':
-        props.branch = item.data;
+        if (BRANCH) {
+          props.branch = BRANCH;
+          log('info', 'Used env.BRANCH', BRANCH);
+        } else {
+          props.branch = item.data;
+        }
         break;
       case 'exec':
         props.exec = item.data.split(',');
