@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "homepage": "https://uyem.ru",
-  "repository": "https://github.com/kolserdav/ana.git",
+  "repository": "git@github.com:kolserdav/ana.git",
   "prisma": {
     "schema": "./packages/server/orm/schema.prisma"
   },
