@@ -125,7 +125,7 @@ export const getFilePath = ({
 export const getCloudPath = (id: string) => path.resolve(CLOUD_PATH, id);
 
 const cleanLastSlush = (text: string) => text.replace(/\/$/, '');
-//
+
 export const getConfirmEmailLink = ({
   user,
   lang,
