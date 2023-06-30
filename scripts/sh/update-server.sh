@@ -6,3 +6,4 @@ fi
 
 npm run build:server
 systemctl restart anaserver-test
+exit 0

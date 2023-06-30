@@ -6,3 +6,4 @@ fi
 
 npm run build:app
 systemctl restart ana-test
+exit 0
