@@ -209,16 +209,12 @@ ${args
       return exit(1);
     }
 
+    console.log(diff);
+
     let checkPackage = false;
-    /**
-     * @type {string[]}
-     */
-    const diffs = _diff.split('\n');
-    diffs.every((_item) => {
-      if (new RegExp(item).test(_item)) {
-        checkPackage = true;
-      }
-    });
+    if (new RegExp(item).test(_diff.data)) {
+      checkPackage = true;
+    }
 
     if (!checkPackage) {
       log('info', 'Package ' + item + ' is not changed, skipping...');
