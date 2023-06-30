@@ -1,9 +1,10 @@
 {
-  "name": "safe",
-  "version": "1.0.0",
+  "name": "ana",
+  "version": "1.24.0",
   "description": "",
   "main": "index.js",
   "homepage": "https://uyem.ru",
+  "repository": "https://github.com/kolserdav/ana.git",
   "prisma": {
     "schema": "./packages/server/orm/schema.prisma"
   },

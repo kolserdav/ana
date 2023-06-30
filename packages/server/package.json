@@ -1,6 +1,6 @@
 {
-  "name": "safe-backend",
-  "version": "1.0.0",
+  "name": "ana-server",
+  "version": "1.24.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
