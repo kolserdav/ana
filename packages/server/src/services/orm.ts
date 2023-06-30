@@ -285,6 +285,7 @@ export class ORM extends Service implements Database {
   };
 
   public onlineStatisticAggregate: Database['onlineStatisticAggregate'] = async (args) => {
+    prisma.tag.findMany;
     return this.runFromWorker({
       args,
       model: 'onlineStatistic',

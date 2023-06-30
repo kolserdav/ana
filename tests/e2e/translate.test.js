@@ -2,15 +2,21 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { wait } = require('../../packages/server/dist/utils/lib');
 const { APP_URL, TIMEOUT } = require('../constants.json');
-const { getPage, startServer, spawnCommand } = require('../lib');
+const { getPage, startServer, spawnCommand } = require('../../src/lib');
 const { log } = require('../../packages/server/dist/utils/lib');
 const { PrismaClient } = require('@prisma/client');
-const { CI } = require('../constants');
+const { CI } = require('../../src/constants');
 
 const prisma = new PrismaClient();
 
 const test1 = async () => {
   await startServer();
+
+  const { page, browser } = await getPage({ url: `${APP_URL}` });
+  if (!page) {
+    log('error', 'Page not found in browser');
+    return;
+  }
 
   /**
    * @param {number} code
@@ -22,8 +28,6 @@ const test1 = async () => {
     process.exit(code);
     return code;
   };
-
-  const { page, browser } = await getPage({ url: `${APP_URL}` });
   await page.waitForSelector('main');
   await wait(TIMEOUT);
   let sels = await prisma.selector.findFirst({
@@ -89,7 +93,7 @@ const test1 = async () => {
 
   if (error) {
     if (CI) {
-      await spawnCommand('docker', ['logs', 'translate']);
+      await spawnCommand('docker', ['logs', 'translate'], {});
     }
     return exit(1);
   }

@@ -1,9 +1,11 @@
 {
-  "name": "safe",
-  "version": "1.0.0",
+  "name": "ana",
+  "version": "1.24.0",
   "description": "",
   "main": "index.js",
   "homepage": "https://uyem.ru",
+  "repository": "git@github.com:kolserdav/ana.git",
+  "types": "types",
   "prisma": {
     "schema": "./packages/server/orm/schema.prisma"
   },
@@ -34,9 +36,11 @@
     "scripts:create-interfaces-symlink": "node scripts/create-interfaces-symlink.js",
     "scripts:copy-test-constants": "node scripts/copy-test-constants.js",
     "scripts:copy-env": "node scripts/copy-env.js",
+    "scripts:git-check": "env-cmd -f ./.env node scripts/git-check.js -e ./scripts/sh/update-server.sh,scripts/sh/update-app.sh -p packages/server,packages/app",
     "scripts": "npm run scripts:create-interfaces-symlink && npm run scripts:copy-test-constants && npm run scripts:copy-env",
     "test": "node --test tests/unit/*.test.js",
-    "test:translate": "env-cmd -f ./.env node tests/e2e/translate.test.js"
+    "test:translate": "env-cmd -f ./.env node tests/e2e/translate.test.js",
+    "types": "tsc -p ./jsconfig.json"
   },
   "keywords": [],
   "author": "kolserdav",

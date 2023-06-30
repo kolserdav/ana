@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { format } from 'date-fns';
 import fs from 'fs';
 import { IncomingHttpHeaders } from 'http';
@@ -33,15 +33,16 @@ enum LogLevel {
   error = 3,
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const log = (type: keyof typeof LogLevel, text: string, _data?: any, cons?: boolean) => {
   const date = IS_DEV ? format(new Date(), 'hh:mm:ss') : '';
+  const data = _data === undefined ? '' : _data;
   if (cons) {
     // eslint-disable-next-line no-console
-    console[type](IS_DEV ? date : '', type, text, _data);
+    console[type](IS_DEV ? date : '', type, text, data);
   } else if (LogLevel[type] >= LOG_LEVEL || Number.isNaN(LOG_LEVEL)) {
     // eslint-disable-next-line no-console
-    console[type](IS_DEV ? date : '', type, text, _data, '\n');
+    console[type](IS_DEV ? date : '', type, text, data, '\n');
   }
 };
 

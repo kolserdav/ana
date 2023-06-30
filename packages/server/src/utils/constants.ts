@@ -8,8 +8,21 @@ export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
 const CONFIG_ARRAY_DELIMITER = ',';
 
+let logLevel = parseInt(process.env.LOG_LEVEL as string, 10);
+if (isNaN(logLevel)) {
+  logLevel = 0;
+}
+export const LOG_LEVEL = logLevel;
+if (LOG_LEVEL < 2) {
+  log('info', 'LOG_LEVEL:', LOG_LEVEL);
+}
+if (LOG_LEVEL < 2) {
+  log('info', 'Load environment variables:');
+}
 export const NODE_ENV = process.env.NODE_ENV as string;
-log('info', 'NODE_ENV:', NODE_ENV);
+if (LOG_LEVEL < 2) {
+  log('info', 'NODE_ENV:', NODE_ENV);
+}
 
 export const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL as string;
 if (!SUPPORT_EMAIL) {
@@ -68,9 +81,10 @@ if (!JSONWEBTOKEN_KEY) {
   log('warn', 'JSONWEBTOKEN_KEY:', JSONWEBTOKEN_KEY);
 }
 export const PORT = parseInt(process.env.PORT as string, 10);
-log('info', 'PORT:', PORT);
-export const LOG_LEVEL = parseInt(process.env.LOG_LEVEL as string, 10);
-log('info', 'LOG_LEVEL:', LOG_LEVEL);
+if (LOG_LEVEL < 2) {
+  log('info', 'PORT:', PORT);
+}
+
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const FASTIFY_LOGGER = process.env.FASTIFY_LOGGER === 'true';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
