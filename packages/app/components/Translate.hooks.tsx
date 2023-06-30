@@ -344,8 +344,8 @@ export const useTranslate = ({
     if (!text || !learnLang || !nativeLang || !connId) {
       return;
     }
-    setTranslateLoad(true);
     const runTranslate = async (q: string) => {
+      setTranslateLoad(true);
       const data = await request.translate({
         q,
         source: learnLang,

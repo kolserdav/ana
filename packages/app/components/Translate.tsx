@@ -14,6 +14,7 @@ import {
   useUndo,
 } from './Translate.hooks';
 import s from './Translate.module.scss';
+import p from '../styles/Page.module.scss';
 import CloseIcon from './icons/Close';
 import IconButton from './ui/IconButton';
 import Select from './ui/Select';
@@ -442,7 +443,7 @@ function Translate({
       </div>
       {user && (
         <Dialog
-          className={s.dialog}
+          className={p.dialog}
           onClose={setDeleteTagDialog}
           theme={theme}
           open={deleteTagDialog}
@@ -458,11 +459,11 @@ function Translate({
               {`${locale.deleteTagDesc}: ${tagToDelete?.PhraseTag.length}`}
             </Typography>
           )}
-          <div className={s.actions}>
-            <Button className={s.button} onClick={onClickCancelDeleteTag} theme={theme}>
+          <div className={p.dialog__actions}>
+            <Button className={p.button} onClick={onClickCancelDeleteTag} theme={theme}>
               {cancel}
             </Button>
-            <Button className={s.button} onClick={onClickDeleteTag} theme={theme}>
+            <Button className={p.button} onClick={onClickDeleteTag} theme={theme}>
               {_delete}
             </Button>
           </div>
