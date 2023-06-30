@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 // @ts-check
 const { log } = require('../packages/server/dist/utils/lib');
 const { spawnCommand, needSplitNext, gitHeadRemote } = require('../src/lib');
@@ -14,7 +16,7 @@ const value = typeof Infinity;
  * @param {number | null} code
  */
 const exit = (code) => {
-  log(code === 0 ? 'info' : 'error', 'Process exit with code', code);
+  log(code === 0 ? 'info' : 'error', 'Process exit with code', code, true);
   process.exit(code ? code : -1);
 };
 
@@ -121,7 +123,12 @@ Usage:
 
 Options:
 ${args
-  .map((__item) => `${__item.aliases.join(' | ')} ${__item.default || ''} : ${__item.description}`)
+  .map(
+    (__item) =>
+      `${__item.aliases.join(' | ')} <${__item.value}> ${__item.default || ''} : ${
+        __item.description
+      }`
+  )
   .join('\n')}
 `;
         break;
@@ -146,7 +153,12 @@ ${args
     log('info', 'Used env.BRANCH', BRANCH);
   }
 
-  log('info', 'Selected options:\n', args.map((item) => `\r${item.name}: ${item.data}`).join('\n'));
+  log(
+    'info',
+    'Selected options:\n',
+    args.map((item) => `\r${item.name}: ${item.data}`).join('\n'),
+    true
+  );
 
   const { branch, exec, packages } = props;
 
@@ -177,14 +189,19 @@ ${args
   }
 
   if (remote.data === local.data) {
-    log('info', 'Repository commits are match', { local: local.data, remote: remote.data });
+    log('info', 'Repository commits are match', { local: local.data, remote: remote.data }, true);
     return exit(0);
   }
-  log('info', 'Repository commits are not match', {
-    props,
-    local: local.data,
-    remote: remote.data,
-  });
+  log(
+    'info',
+    'Repository commits are not match',
+    {
+      props,
+      local: local.data,
+      remote: remote.data,
+    },
+    true
+  );
 
   /**
    * @type {string[]}
@@ -220,7 +237,7 @@ ${args
     }
 
     if (!checkPackage) {
-      log('info', 'Package ' + item + ' is not changed, skipping...');
+      log('info', 'Package ' + item + ' is not changed, skipping...', true);
       continue;
     }
     const { env } = process;

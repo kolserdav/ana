@@ -8,7 +8,11 @@ export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
 const CONFIG_ARRAY_DELIMITER = ',';
 
-export const LOG_LEVEL = parseInt(process.env.LOG_LEVEL as string, 10);
+let logLevel = parseInt(process.env.LOG_LEVEL as string, 10);
+if (isNaN(logLevel)) {
+  logLevel = 0;
+}
+export const LOG_LEVEL = logLevel;
 if (LOG_LEVEL < 2) {
   log('info', 'LOG_LEVEL:', LOG_LEVEL);
 }
