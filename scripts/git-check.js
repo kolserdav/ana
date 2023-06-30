@@ -6,8 +6,8 @@ const { GIT_HEAD_REGEXP } = require('../src/constants');
 
 const value = typeof Infinity;
 /**
- * @typedef {'help' | 'quiet'} ArgName
- * @typedef {{name: ArgName; aliases: string[]; value: typeof value; data: any; description: string}} Args
+ * @typedef {'help' | 'quiet' | 'branch'} ArgName
+ * @typedef {{name: ArgName; aliases: string[]; value: typeof value; data: any; description: string; default?: any}} Args
  */
 
 /**
@@ -23,7 +23,7 @@ const prepareArgs = () => {
       name: 'help',
       aliases: ['-h', '--help'],
       value: 'boolean',
-      description: 'Show help',
+      description: 'Open help page',
       data: null,
     },
     {
@@ -32,6 +32,14 @@ const prepareArgs = () => {
       value: 'boolean',
       description: 'Hide aditional logs',
       data: null,
+    },
+    {
+      name: 'branch',
+      aliases: ['-b', '--branch'],
+      value: 'string',
+      description: 'Branch name',
+      default: ': [master]',
+      data: 'master',
     },
   ];
 
@@ -51,7 +59,11 @@ const prepareArgs = () => {
         const argItem = { ..._item };
 
         const shift = needSplitNext({ argv, index });
-        let data = argv[index + shift] || _item.data;
+
+        /**
+         * @type {any}
+         */
+        let data = '';
         switch (_item.value) {
           case 'number':
             data = parseInt(data);
@@ -60,6 +72,7 @@ const prepareArgs = () => {
             data = true;
             break;
           default:
+            data = argv[index + shift] || _item.data;
         }
 
         switch (_item.name) {
@@ -73,8 +86,10 @@ Usage:
       git-check [options]
 
 Options:
-      ${args.map((__item) => `${__item.aliases.join(' | ')}: ${__item.description}`).join('\n')}
-      `;
+${args
+  .map((__item) => `${__item.aliases.join(' | ')} ${__item.default || ''} : ${__item.description}`)
+  .join('\n')}
+`;
             break;
         }
 
@@ -91,18 +106,29 @@ Options:
 (async () => {
   const args = prepareArgs();
 
-  let quiet = false;
+  /**
+   * @type {Record<ArgName, any>}
+   */
+  const props = {
+    quiet: false,
+    branch: 'master',
+    help: false,
+  };
   args.forEach((item) => {
     switch (item.name) {
       case 'help':
         console.log(item.data);
+        process.exit(0);
         break;
       case 'quiet':
-        quiet = true;
+        props.quiet = true;
         break;
+      case 'branch':
+        props.branch = item.data;
     }
   });
-  console.log(quiet);
+
+  const { quiet } = props;
 
   const head = await spawnCommand('git', ['rev-parse', 'HEAD'], { quiet });
   if (head.code !== 0) {
@@ -113,6 +139,7 @@ Options:
     match: GIT_HEAD_REGEXP,
     quiet,
   });
+  console.log(remote.data, head.data);
   if (remote.code !== 0) {
     log('error', 'Command "' + head.commandDesc + '" failed ', { head, quiet });
     return;

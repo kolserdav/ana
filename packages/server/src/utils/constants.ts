@@ -8,6 +8,7 @@ export const CLOUD_PATH = path.resolve(__dirname, '../../../../cloud');
 
 const CONFIG_ARRAY_DELIMITER = ',';
 
+log('info', 'Load environment variables:');
 export const NODE_ENV = process.env.NODE_ENV as string;
 log('info', 'NODE_ENV:', NODE_ENV);
 
