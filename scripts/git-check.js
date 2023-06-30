@@ -194,9 +194,30 @@ ${args
     const item = packages[i];
     await spawnCommand('git', ['remote', 'update'], {});
     const diff = await spawnCommand('git', ['status'], {
-      prepareData: /(modified:.*\n)/g,
+      prepareData: /(modified:.*\n)+/g,
     });
-    if (!diff.data) {
+
+    /**
+     * @type {any}
+     */
+    const _diff = diff;
+    if (!diff) {
+      log('warn', 'Diffs are not found', { diff });
+      return exit(1);
+    }
+
+    let checkPackage = false;
+    /**
+     * @type {string[]}
+     */
+    const diffs = _diff.split('\n');
+    diffs.every((_item) => {
+      if (new RegExp(item).test(_item)) {
+        checkPackage = true;
+      }
+    });
+
+    if (!checkPackage) {
       log('info', 'Package ' + item + ' is not changed, skipping...');
       continue;
     }
