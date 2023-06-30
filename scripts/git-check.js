@@ -2,15 +2,11 @@
 const { log } = require('../packages/server/dist/utils/lib');
 const { spawnCommand, needSplitNext, gitHeadRemote } = require('../src/lib');
 const { repository, version } = require('../package.json');
-const {
-  GIT_HEAD_REGEXP,
-  BRANCH_NAME_DEFAULT,
-  EXECUTABLE_PATH_DEFAULT,
-} = require('../src/constants');
+const { GIT_HEAD_REGEXP, BRANCH_NAME_DEFAULT } = require('../src/constants');
 
 const value = typeof Infinity;
 /**
- * @typedef {'help' | 'branch' | 'exec'} ArgName
+ * @typedef {'help' | 'branch' | 'exec' | 'packages'} ArgName
  * @typedef {{name: ArgName; aliases: string[]; value: typeof value; data: any; description: string; default?: any}} Args
  */
 
@@ -26,7 +22,15 @@ const exit = (code) => {
  * @returns {Args[]}
  */
 const prepareArgs = () => {
-  const { argv } = process;
+  const { argv: _argv } = process;
+  const argv = _argv
+    .map((item) => {
+      if (/=/.test(item)) {
+        return item.split('=');
+      }
+      return item;
+    })
+    .flat();
   /**
    * @type {Args[]}
    */
@@ -49,10 +53,16 @@ const prepareArgs = () => {
     {
       name: 'exec',
       aliases: ['-e', '--exec'],
-      value: 'string',
+      value: 'object',
       description: 'Bash script file',
-      default: `: [${EXECUTABLE_PATH_DEFAULT}]`,
-      data: EXECUTABLE_PATH_DEFAULT,
+      data: null,
+    },
+    {
+      name: 'packages',
+      aliases: ['-p', '--packages'],
+      value: 'object',
+      description: 'Split scripts by changed packages',
+      data: null,
     },
   ];
 
@@ -73,43 +83,7 @@ const prepareArgs = () => {
 
         const shift = needSplitNext({ argv, index });
 
-        /**
-         * Casting types
-         * @type {any}
-         */
-        let data = argv[index + shift] || _item.data;
-        switch (_item.value) {
-          case 'number':
-            data = parseInt(data);
-            break;
-          case 'boolean':
-            data = true;
-            break;
-          case 'string':
-            data = data;
-            break;
-          default:
-            log('warn', 'Default case of data type', { data, _item, type: typeof _item.value });
-        }
-
-        // Prepare data
-        switch (_item.name) {
-          case 'help':
-            data = `
-Check git: ${version}:
-
-Check and update code from repository.
-
-Usage:
-      git-check [options]
-
-Options:
-${args
-  .map((__item) => `${__item.aliases.join(' | ')} ${__item.default || ''} : ${__item.description}`)
-  .join('\n')}
-`;
-            break;
-        }
+        const data = argv[index + shift] || _item.data || '';
 
         argItem.data = data;
         _args.push(argItem);
@@ -129,27 +103,55 @@ ${args
    * @type {Record<ArgName, any>}
    */
   const props = {
-    branch: 'master',
+    branch: BRANCH_NAME_DEFAULT,
     help: false,
-    exec: EXECUTABLE_PATH_DEFAULT,
+    exec: [],
+    packages: [],
   };
   args.forEach((item) => {
     switch (item.name) {
       case 'help':
-        console.log(item.data);
-        process.exit(0);
+        props.help = `
+Check git: ${version}:
+
+Check and update code from repository.
+
+Usage:
+      git-check [options]
+
+Options:
+${args
+  .map((__item) => `${__item.aliases.join(' | ')} ${__item.default || ''} : ${__item.description}`)
+  .join('\n')}
+`;
+        break;
+        console.log(props.help);
+        return exit(0);
         break;
       case 'branch':
         props.branch = item.data;
         break;
       case 'exec':
-        props.exec = item.data;
+        props.exec = item.data.split(',');
+        break;
+      case 'packages':
+        props.packages = item.data.split(',');
+        break;
     }
   });
 
   log('info', 'Selected options:\n', args.map((item) => `\r${item.name}: ${item.data}`).join('\n'));
 
-  const { branch, exec } = props;
+  const { branch, exec, packages } = props;
+
+  if (exec.length === 0 || packages.length === 0) {
+    log('error', 'Packages and exec options is required ', { packages, exec });
+    return exit(1);
+  }
+  if (packages.length !== exec.length) {
+    log('error', 'Packages length and exec length are not same ', { packages, exec });
+    return exit(1);
+  }
 
   const local = await spawnCommand('git', ['rev-parse', 'HEAD'], {
     match: GIT_HEAD_REGEXP,
@@ -168,15 +170,37 @@ ${args
     return exit(1);
   }
 
-  if (remote.data !== local.data) {
+  if (remote.data === local.data) {
     log('info', 'Repository commits are match', { local: local.data, remote: remote.data });
     return exit(0);
   }
-  log('info', 'Repository commits are not match', { local: local.data, remote: remote.data });
+  log('info', 'Repository commits are not match', {
+    props,
+    local: local.data,
+    remote: remote.data,
+  });
 
-  const result = await spawnCommand('sh', [exec], { env: process.env });
-  if (result.code !== 0) {
-    return exit(result.code);
+  /**
+   * @type {string[]}
+   */
+  const _packages = packages;
+
+  /**
+   * @type {string[]}
+   */
+  const _exec = exec;
+
+  for (let i = 0; _packages[i]; i++) {
+    const item = packages[i];
+    const diff = await spawnCommand('git', ['diff', local.data, remote.data, item], {});
+    if (!diff.data) {
+      log('info', 'Package ' + item + ' is not changed, skipping...');
+      continue;
+    }
+    const result = await spawnCommand('sh', [_exec[i] || ''], { env: process.env });
+    if (result.code !== 0) {
+      return exit(result.code);
+    }
   }
   return exit(0);
 })();
