@@ -33,7 +33,7 @@ enum LogLevel {
   error = 3,
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const log = (type: keyof typeof LogLevel, text: string, _data?: any, cons?: boolean) => {
   const date = IS_DEV ? format(new Date(), 'hh:mm:ss') : '';
   const data = _data === undefined ? '' : _data;
