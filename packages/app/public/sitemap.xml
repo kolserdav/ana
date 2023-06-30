@@ -8,7 +8,7 @@
 		<changefreq>monthly</changefreq>
 		<priority>0.4</priority>
 	</url>
-	<url> 
+	<url>
 		<loc>https://uyem.ru/about</loc>
 		<xhtml:link rel="alternate" hreflang="ru" href="https://uyem.ru/ru/about" />
 		<xhtml:link rel="alternate" hreflang="en" href="https://uyem.ru/en/about" />

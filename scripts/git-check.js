@@ -192,10 +192,7 @@ ${args
 
   for (let i = 0; _packages[i]; i++) {
     const item = packages[i];
-    await spawnCommand('git', ['remote', 'update'], {});
-    const diff = await spawnCommand('git', ['status'], {
-      prepareData: /(modified:.*\n)+/g,
-    });
+    const diff = await spawnCommand('git', ['pull', 'origin', branch], {});
 
     /**
      * @type {any}
@@ -212,7 +209,7 @@ ${args
      */
     const diffs = _diff.split('\n');
     diffs.every((_item) => {
-      if (new RegExp(item).test(_item)) {
+      if (new RegExp(`^${item}`).test(_item)) {
         checkPackage = true;
       }
     });
