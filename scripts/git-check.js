@@ -196,9 +196,9 @@ ${args
    */
   const _exec = exec;
 
+  const diff = await spawnCommand('git', ['pull', 'origin', branch], {});
   for (let i = 0; _packages[i]; i++) {
     const item = packages[i];
-    const diff = await spawnCommand('git', ['pull', 'origin', branch], {});
 
     /**
      * @type {any}
