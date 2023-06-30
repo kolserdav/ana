@@ -23,7 +23,7 @@ const changeMatch = (_data, _match) => {
   let data = _data;
   const match = data.match(_match);
   if (!match) {
-    log('warn', 'Check regexp is not match', { match });
+    log('warn', 'Check regexp is not match', { match, _match, _data });
   }
   return match ? match[0] : data;
 };
@@ -32,14 +32,18 @@ const changeMatch = (_data, _match) => {
  *
  * @param {string} executable
  * @param  {string[]} args
- * @param {{head?: boolean; match?: RegExp; env?: typeof process.env; noWait?: boolean; quiet?: boolean;} | undefined} options
+ * @param {{
+ *  head?: boolean;
+ *  match?: RegExp;
+ *  env?: typeof process.env;
+ *  noWait?: boolean;
+ *  prepareData?: RegExp;
+ * } | undefined} options
  * @returns {Promise<{code: number | null, commandDesc: string; data: string }>}
  */
 const spawnCommand = async (executable, args, options) => {
   const commandDesc = `${executable} ${args.join(' ')}`;
-  if (!options?.quiet) {
-    log('log', 'Run command:', commandDesc, true);
-  }
+  log('log', 'Run command:', commandDesc, true);
   let data = '';
   const command = spawn(executable, args, {
     env: options?.env,
@@ -47,16 +51,12 @@ const spawnCommand = async (executable, args, options) => {
   command.stdout.on('data', (d) => {
     const dStr = d.toString();
     data += dStr;
-    if (!options?.quiet) {
-      log('log', dStr, undefined, true);
-    }
+    log('log', dStr, undefined, true);
   });
   command.stderr.on('data', (d) => {
     const dStr = d.toString();
     data += dStr;
-    if (!options?.quiet) {
-      log('error', dStr, undefined, true);
-    }
+    log('error', dStr, undefined, true);
   });
 
   /**
@@ -66,6 +66,9 @@ const spawnCommand = async (executable, args, options) => {
 
   if (options) {
     if (options.noWait) {
+      if (options.prepareData) {
+        data = changeMatch(data, options.prepareData);
+      }
       if (options.match) {
         data = changeMatch(data, options.match);
       }
@@ -84,6 +87,9 @@ const spawnCommand = async (executable, args, options) => {
   });
 
   if (options) {
+    if (options.prepareData) {
+      data = changeMatch(data, options.prepareData);
+    }
     if (options.match) {
       data = changeMatch(data, options.match);
     }
@@ -172,4 +178,13 @@ const needSplitNext = ({ argv, index }, symbol = '=') => {
   return shift;
 };
 
-module.exports = { getPage, startServer, spawnCommand, needSplitNext };
+/**
+ * result of
+ * ```
+ * git ls-remote [repository]
+ * ```
+ * @param {string} branch
+ */
+const gitHeadRemote = (branch) => new RegExp(`[a-zA-Z0-9]+\trefs\/heads\/${branch}\n`);
+
+module.exports = { getPage, startServer, spawnCommand, needSplitNext, gitHeadRemote };

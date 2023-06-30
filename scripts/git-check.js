@@ -1,14 +1,26 @@
 // @ts-check
 const { log } = require('../packages/server/dist/utils/lib');
-const { spawnCommand, needSplitNext } = require('../src/lib');
+const { spawnCommand, needSplitNext, gitHeadRemote } = require('../src/lib');
 const { repository, version } = require('../package.json');
-const { GIT_HEAD_REGEXP } = require('../src/constants');
+const {
+  GIT_HEAD_REGEXP,
+  BRANCH_NAME_DEFAULT,
+  EXECUTABLE_PATH_DEFAULT,
+} = require('../src/constants');
 
 const value = typeof Infinity;
 /**
- * @typedef {'help' | 'quiet' | 'branch'} ArgName
+ * @typedef {'help' | 'branch' | 'exec'} ArgName
  * @typedef {{name: ArgName; aliases: string[]; value: typeof value; data: any; description: string; default?: any}} Args
  */
+
+/**
+ * @param {number | null} code
+ */
+const exit = (code) => {
+  log(code === 0 ? 'info' : 'error', 'Process exit with code', code);
+  process.exit(code ? code : -1);
+};
 
 /**
  * @returns {Args[]}
@@ -27,19 +39,20 @@ const prepareArgs = () => {
       data: null,
     },
     {
-      name: 'quiet',
-      aliases: ['-q', '--quiet'],
-      value: 'boolean',
-      description: 'Hide aditional logs',
-      data: null,
-    },
-    {
       name: 'branch',
       aliases: ['-b', '--branch'],
       value: 'string',
       description: 'Branch name',
-      default: ': [master]',
-      data: 'master',
+      default: `: [${BRANCH_NAME_DEFAULT}]`,
+      data: BRANCH_NAME_DEFAULT,
+    },
+    {
+      name: 'exec',
+      aliases: ['-e', '--exec'],
+      value: 'string',
+      description: 'Bash script file',
+      default: `: [${EXECUTABLE_PATH_DEFAULT}]`,
+      data: EXECUTABLE_PATH_DEFAULT,
     },
   ];
 
@@ -61,9 +74,10 @@ const prepareArgs = () => {
         const shift = needSplitNext({ argv, index });
 
         /**
+         * Casting types
          * @type {any}
          */
-        let data = '';
+        let data = argv[index + shift] || _item.data;
         switch (_item.value) {
           case 'number':
             data = parseInt(data);
@@ -71,10 +85,14 @@ const prepareArgs = () => {
           case 'boolean':
             data = true;
             break;
+          case 'string':
+            data = data;
+            break;
           default:
-            data = argv[index + shift] || _item.data;
+            log('warn', 'Default case of data type', { data, _item, type: typeof _item.value });
         }
 
+        // Prepare data
         switch (_item.name) {
           case 'help':
             data = `
@@ -104,15 +122,16 @@ ${args
 };
 
 (async () => {
+  log('info', 'Start check git script', undefined);
   const args = prepareArgs();
 
   /**
    * @type {Record<ArgName, any>}
    */
   const props = {
-    quiet: false,
     branch: 'master',
     help: false,
+    exec: EXECUTABLE_PATH_DEFAULT,
   };
   args.forEach((item) => {
     switch (item.name) {
@@ -120,28 +139,44 @@ ${args
         console.log(item.data);
         process.exit(0);
         break;
-      case 'quiet':
-        props.quiet = true;
-        break;
       case 'branch':
         props.branch = item.data;
+        break;
+      case 'exec':
+        props.exec = item.data;
     }
   });
 
-  const { quiet } = props;
+  log('info', 'Selected options:\n', args.map((item) => `\r${item.name}: ${item.data}`).join('\n'));
 
-  const head = await spawnCommand('git', ['rev-parse', 'HEAD'], { quiet });
-  if (head.code !== 0) {
-    log('error', 'Command "' + head.commandDesc + '" failed ', { head, quiet });
-    return;
+  const { branch, exec } = props;
+
+  const local = await spawnCommand('git', ['rev-parse', 'HEAD'], {
+    match: GIT_HEAD_REGEXP,
+  });
+  if (local.code !== 0) {
+    log('error', 'Command "' + local.commandDesc + '" failed ', { local, quiet: true });
+    return exit(1);
   }
   const remote = await spawnCommand('git', ['ls-remote', repository], {
     match: GIT_HEAD_REGEXP,
-    quiet,
+    prepareData: gitHeadRemote(branch),
   });
-  console.log(remote.data, head.data);
+
   if (remote.code !== 0) {
-    log('error', 'Command "' + head.commandDesc + '" failed ', { head, quiet });
-    return;
+    log('error', 'Command "' + local.commandDesc + '" failed ', { local });
+    return exit(1);
   }
+
+  if (remote.data !== local.data) {
+    log('info', 'Repository commits are match', { local: local.data, remote: remote.data });
+    return exit(0);
+  }
+  log('info', 'Repository commits are not match', { local: local.data, remote: remote.data });
+
+  const result = await spawnCommand('sh', [exec], { env: process.env });
+  if (result.code !== 0) {
+    return exit(result.code);
+  }
+  return exit(0);
 })();
