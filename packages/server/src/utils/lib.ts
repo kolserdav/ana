@@ -20,7 +20,7 @@ import {
 } from '../types/interfaces';
 import { APP_URL, CLOUD_PATH, IS_DEV, LOG_LEVEL } from './constants';
 import { PrismaCommand } from '../types';
-
+//test
 // eslint-disable-next-line no-unused-vars
 enum LogLevel {
   // eslint-disable-next-line no-unused-vars
