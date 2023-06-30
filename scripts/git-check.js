@@ -192,7 +192,11 @@ ${args
 
   for (let i = 0; _packages[i]; i++) {
     const item = packages[i];
-    const diff = await spawnCommand('git', ['diff', local.data, remote.data, item], {});
+    const diff = await spawnCommand(
+      'git',
+      ['diff', `$(git merge-base ${local.data} ${remote.data})`, item],
+      {}
+    );
     if (!diff.data) {
       log('info', 'Package ' + item + ' is not changed, skipping...');
       continue;
