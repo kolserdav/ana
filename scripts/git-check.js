@@ -198,7 +198,7 @@ ${args
 
   const diff = await spawnCommand('git', ['pull', 'origin', branch], {});
   for (let i = 0; _packages[i]; i++) {
-    const item = packages[i];
+    const item = _packages[i];
 
     /**
      * @type {any}
@@ -209,10 +209,8 @@ ${args
       return exit(1);
     }
 
-    console.log(diff);
-
     let checkPackage = false;
-    if (new RegExp(item).test(_diff.data)) {
+    if (new RegExp(item || '').test(_diff)) {
       checkPackage = true;
     }
 
