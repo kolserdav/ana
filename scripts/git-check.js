@@ -249,5 +249,4 @@ ${args
       return exit(result.code);
     }
   }
-  return exit(0);
 })();
