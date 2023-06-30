@@ -215,7 +215,7 @@ ${args
      */
     const diffs = _diff.split('\n');
     diffs.every((_item) => {
-      if (new RegExp(`^${item}`).test(_item)) {
+      if (new RegExp(item).test(_item)) {
         checkPackage = true;
       }
     });
