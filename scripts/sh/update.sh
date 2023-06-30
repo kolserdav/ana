@@ -1,1 +1,2 @@
-git diff packages/server && git diff packages/app
+#!/bin/bash
+echo "success script"
