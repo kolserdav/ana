@@ -7,7 +7,8 @@
   "repository": "git@github.com:kolserdav/ana.git",
   "types": "types",
   "prisma": {
-    "schema": "./packages/server/orm/schema.prisma"
+    "schema": "./packages/server/orm/schema.prisma",
+    "seed": "node ./scripts/seed/insert-pages.js"
   },
   "scripts": {
     "build:app": "cd packages/app && npm run build",
@@ -23,6 +24,7 @@
     "migrate": "npm run generate && prisma migrate deploy --preview-feature",
     "migrate:reset": "prisma migrate reset --preview-feature",
     "migrate:status": "prisma migrate status --preview-feature",
+    "seed": "prisma db seed",
     "studio": "prisma studio",
     "generate": "prisma generate",
     "format": "prisma format",
