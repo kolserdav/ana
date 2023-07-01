@@ -227,6 +227,9 @@ ${args
     }
 
     env.CWD = path.resolve(cwd, item);
+    env.PWD = env.CWD;
+
+    log('info', 'Working directory:', env.CWD);
 
     /**
      * @type {any}
@@ -252,12 +255,18 @@ ${args
       continue;
     }
 
+    log('info', 'Package will updated:', item);
+
     if (needInstall) {
+      log('info', 'Need install:', item);
       const install = await spawnCommand('npm', ['i'], { env });
       if (install.code != 0) {
         return exit(install.code);
       }
+    } else {
+      log('info', 'Installation skipped:', item);
     }
+
     const build = await spawnCommand('npm', ['run', 'build'], { env });
     if (build.code !== 0) {
       return exit(build.code);
