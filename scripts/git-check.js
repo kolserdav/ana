@@ -189,7 +189,7 @@ ${args
     return exit(1);
   }
 
-  if (remote.data !== local.data) {
+  if (remote.data === local.data) {
     log('info', 'Repository commits are match', { local: local.data, remote: remote.data }, true);
     return exit(0);
   }
