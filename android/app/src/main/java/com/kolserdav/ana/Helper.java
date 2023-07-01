@@ -49,8 +49,7 @@ public class Helper extends Config {
         CharSequence text = intent
                 .getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
         if (text != null) {
-            // Dependency PROCESS_TEXT_QUERY_STRING in packages/app/utils/constants.ts
-            url = url.concat("?process_text=");
+            url = url.concat("?" + Config.QUERY_STRING_PROCESS_TEXT + "=");
             String _text = text.toString();
             try {
                 _text = URLDecoder.decode(_text, "UTF-8");
