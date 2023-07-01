@@ -10,6 +10,8 @@ const path = require('path');
 const { env } = process;
 const cwd = `${env.CWD || env.PWD}`;
 
+log('log', 'PATH:', env.PATH);
+
 const value = typeof Infinity;
 /**
  * @typedef {'help' | 'branch' | 'exec' | 'packages'} ArgName
