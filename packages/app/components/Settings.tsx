@@ -213,9 +213,8 @@ function Settings({
   } = useConfirmEmail({ user, setLoad, emailIsSend });
 
   const {
-    onClickDefaultRadio,
+    onChangeRadioWrapper,
     onChangeNewNode,
-    onClickNodeRadio,
     isDefaultNode,
     isNode,
     node,
@@ -247,7 +246,7 @@ function Settings({
               <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
                 {urlDefault}
               </Typography>
-              <Radio checked={isDefaultNode} onClick={onClickDefaultRadio} />
+              <Radio checked={isDefaultNode} onChange={onChangeRadioWrapper('urlDefault')} />
             </div>
             <div className={s.select_node}>
               <Input
@@ -261,7 +260,7 @@ function Settings({
                 onChange={onChangeNewNode}
                 disabled={!isNode}
               />
-              <Radio checked={isNode} onClick={onClickNodeRadio} />
+              <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
             </div>
           </>
         )}
