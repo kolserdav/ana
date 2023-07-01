@@ -455,6 +455,7 @@ export const useChangeNode = ({
     const {
       target: { value },
     } = e;
+    setNode(value);
     if (!checkUrl(value)) {
       setNodeError(wrongUrlFormat);
       return;
@@ -472,7 +473,6 @@ export const useChangeNode = ({
         setNodeSuccess(false);
       }
     }
-    setNode(value);
   };
 
   /**

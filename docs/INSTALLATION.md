@@ -58,7 +58,7 @@ npm run install:node
    **or** renew `.env` from `.env.example`
 
    ```sh
-   npm run scripts:copy-env
+   npm run scripts:copy-env renew
    ```
 
 ---
