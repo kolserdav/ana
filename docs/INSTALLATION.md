@@ -69,6 +69,18 @@ npm run install:node
 npm run migrate
 ```
 
+---
+
+For first installation you can run
+
+```sh
+npm run seed
+```
+
+to populate the database with sample pages
+
+---
+
 7. Run in development mode:
 
 ---

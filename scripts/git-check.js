@@ -5,6 +5,7 @@ const { log } = require('../packages/server/dist/utils/lib');
 const { spawnCommand, needSplitNext, gitHeadRemote } = require('../src/lib');
 const { repository, version } = require('../package.json');
 const { GIT_HEAD_REGEXP, BRANCH_NAME_DEFAULT, BRANCH } = require('../src/constants');
+const path = require('path');
 
 const value = typeof Infinity;
 /**
@@ -56,7 +57,7 @@ const prepareArgs = () => {
       name: 'exec',
       aliases: ['-e', '--exec'],
       value: 'object',
-      description: 'Bash script file',
+      description: 'System unit names',
       data: null,
     },
     {
@@ -188,7 +189,7 @@ ${args
     return exit(1);
   }
 
-  if (remote.data === local.data) {
+  if (remote.data !== local.data) {
     log('info', 'Repository commits are match', { local: local.data, remote: remote.data }, true);
     return exit(0);
   }
@@ -216,6 +217,16 @@ ${args
   const diff = await spawnCommand('git', ['pull', 'origin', branch], {});
   for (let i = 0; _packages[i]; i++) {
     const item = _packages[i];
+    const { env } = process;
+
+    const execI = _exec[i];
+    const cwd = env.CWD || env.PWD;
+    if (!cwd || !execI || !item) {
+      log('error', 'Cwd or name of service or package path is missing', { cwd, execI, item });
+      return exit(1);
+    }
+
+    env.CWD = path.resolve(cwd, item);
 
     /**
      * @type {any}
@@ -240,13 +251,21 @@ ${args
       log('info', 'Package ' + item + ' is not changed, skipping...', true);
       continue;
     }
-    const { env } = process;
-    env.NEED_INSTALL = needInstall ? '1' : '0';
-    const execI = _exec[i];
-    const command = execI ? `${/^\//.test(execI) ? '' : './'}${execI.replace(/^\.\//, '')}` : 'sh';
-    const result = await spawnCommand(command, [], { env });
-    if (result.code !== 0) {
-      return exit(result.code);
+
+    if (needInstall) {
+      const install = await spawnCommand('npm', ['i'], { env });
+      if (install.code != 0) {
+        return exit(install.code);
+      }
+    }
+    const build = await spawnCommand('npm', ['run', 'build'], { env });
+    if (build.code !== 0) {
+      return exit(build.code);
+    }
+
+    const restart = await spawnCommand('systemctl', ['restart', execI], { env });
+    if (restart.code !== 0) {
+      return exit(restart.code);
     }
   }
 })();
