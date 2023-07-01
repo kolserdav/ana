@@ -281,4 +281,5 @@ ${args
       return exit(restart.code);
     }
   }
+  throw new Error('Update script end');
 })();
