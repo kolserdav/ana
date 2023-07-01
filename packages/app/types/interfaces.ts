@@ -48,6 +48,8 @@ export enum Api {
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
   localPostSelector = '/local/create-selector',
+  // Android
+  apiCheck = '/api/check',
 }
 
 // eslint-disable-next-line no-shadow
