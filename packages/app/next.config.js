@@ -16,7 +16,7 @@ const nextConfig = {
         source: '/api/check',
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
-          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Origin', value: 'uyem.ru' },
           { key: 'Access-Control-Allow-Methods', value: 'GET' },
           {
             key: 'Access-Control-Allow-Headers',

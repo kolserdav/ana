@@ -463,22 +463,24 @@ export const useChangeNode = ({
       target: { value },
     } = e;
     setNode(value);
+
     if (!checkUrl(value)) {
       setNodeError(wrongUrlFormat);
       return;
     }
-    if (typeof androidCommon !== 'undefined') {
-      const result = await request.checkNewUrl(value);
-      if (result.status === 'info') {
-        log('info', 'Success check', { result });
+
+    const result = await request.checkNewUrl(value);
+    if (result.status === 'info') {
+      log('info', 'Success check', { result });
+      if (typeof androidCommon !== 'undefined') {
         androidCommon.setUrl(value);
-        setNodeError('');
-        setNodeSuccess(true);
-      } else {
-        log('error', 'Error check', { result });
-        setNodeError(serverIsNotRespond);
-        setNodeSuccess(false);
       }
+      setNodeError('');
+      setNodeSuccess(true);
+    } else {
+      log('error', 'Error check', { result });
+      setNodeError(serverIsNotRespond);
+      setNodeSuccess(false);
     }
   };
 
