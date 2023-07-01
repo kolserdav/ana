@@ -7,6 +7,9 @@ const { repository, version } = require('../package.json');
 const { GIT_HEAD_REGEXP, BRANCH_NAME_DEFAULT, BRANCH } = require('../src/constants');
 const path = require('path');
 
+const { env } = process;
+const cwd = `${env.CWD || env.PWD}`;
+
 const value = typeof Infinity;
 /**
  * @typedef {'help' | 'branch' | 'exec' | 'packages'} ArgName
@@ -217,10 +220,9 @@ ${args
   const diff = await spawnCommand('git', ['pull', 'origin', branch], {});
   for (let i = 0; _packages[i]; i++) {
     const item = _packages[i];
-    const { env } = process;
 
     const execI = _exec[i];
-    const cwd = env.CWD || env.PWD;
+
     if (!cwd || !execI || !item) {
       log('error', 'Cwd or name of service or package path is missing', { cwd, execI, item });
       return exit(1);
