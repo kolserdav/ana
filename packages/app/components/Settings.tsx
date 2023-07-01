@@ -234,7 +234,7 @@ function Settings({
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
-        {isAndroid && (
+        {!isAndroid && (
           <>
             <Hr theme={theme} />
             <Typography variant="h4" theme={theme}>
