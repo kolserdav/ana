@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   FORM_ITEM_MARGIN_TOP,
@@ -426,52 +426,61 @@ export const useChangeNode = ({
   const [nodeError, setNodeError] = useState('');
   const [nodeSuccess, setNodeSuccess] = useState(false);
 
-  const onClickDefaultRadio = () => {
-    if (!isDefaultNode) {
-      setIsDefaultNode(!isDefaultNode);
-
-      if (typeof androidCommon !== 'undefined') {
-        androidCommon.setUrl('null');
+  const onChangeRadioWrapper = useCallback(
+    (name: 'url' | 'urlDefault') => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const {
+        target: { checked },
+      } = e;
+      switch (name) {
+        case 'url':
+          if (checked) {
+            setIsNode(checked);
+            if (typeof androidCommon !== 'undefined' && node) {
+              androidCommon.setUrl(node);
+            }
+          }
+          if (isDefaultNode) {
+            setIsDefaultNode(false);
+          }
+          break;
+        case 'urlDefault':
+          setIsDefaultNode(checked);
+          if (typeof androidCommon !== 'undefined') {
+            androidCommon.setUrl('null');
+          }
+          if (isNode) {
+            setIsNode(false);
+          }
+          break;
+        default:
       }
-    }
-    if (isNode) {
-      setIsNode(false);
-    }
-  };
-
-  const onClickNodeRadio = () => {
-    if (!isNode) {
-      setIsNode(!isNode);
-      if (typeof androidCommon !== 'undefined' && node) {
-        androidCommon.setUrl(node);
-      }
-    }
-    if (isDefaultNode) {
-      setIsDefaultNode(false);
-    }
-  };
+    },
+    [isDefaultNode, isNode, node]
+  );
 
   const onChangeNewNode = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
     setNode(value);
+
     if (!checkUrl(value)) {
       setNodeError(wrongUrlFormat);
       return;
     }
-    if (typeof androidCommon !== 'undefined') {
-      const result = await request.checkNewUrl(value);
-      if (result.status === 'info') {
-        log('info', 'Success check', { result });
+
+    const result = await request.checkNewUrl(value);
+    if (result.status === 'info') {
+      log('info', 'Success check', { result });
+      if (typeof androidCommon !== 'undefined') {
         androidCommon.setUrl(value);
-        setNodeError('');
-        setNodeSuccess(true);
-      } else {
-        log('error', 'Error check', { result });
-        setNodeError(serverIsNotRespond);
-        setNodeSuccess(false);
       }
+      setNodeError('');
+      setNodeSuccess(true);
+    } else {
+      log('error', 'Error check', { result });
+      setNodeError(serverIsNotRespond);
+      setNodeSuccess(false);
     }
   };
 
@@ -497,10 +506,9 @@ export const useChangeNode = ({
 
   return {
     isDefaultNode,
-    onClickDefaultRadio,
     onChangeNewNode,
     node,
-    onClickNodeRadio,
+    onChangeRadioWrapper,
     isNode,
     nodeError,
     nodeSuccess,

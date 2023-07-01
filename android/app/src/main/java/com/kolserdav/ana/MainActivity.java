@@ -89,7 +89,6 @@ public class MainActivity extends Activity {
         protected void onPostExecute(String response) {
             if (response != null) {
                 Log.d(MainActivity.TAG, "Status " + this.status);
-
                 onGetStatus(status);
             }
 
@@ -152,8 +151,6 @@ public class MainActivity extends Activity {
                 Intent intent = getIntent();
                 String url = helper.listenProcessText(intent, schemaApp);
 
-
-                String data = null;
                 try {
                     try {
                        new Request(this) {
@@ -189,7 +186,6 @@ public class MainActivity extends Activity {
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Error request I " + e.getMessage());
                 }
-                Log.d(TAG, "Data is " + data);
             }
         };
 
