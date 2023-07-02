@@ -120,7 +120,7 @@ const lang: Locale = {
       policyTitle: 'Privacy Policy',
       rulesTitle: 'Service Rules',
       and: 'and',
-      voiceNotFound: 'National voice not found',
+      voiceNotFound: 'Special voice not found',
       playSound: 'Play text',
       insertedLink: '...Link replaced...',
       sendMail: 'Send mail',

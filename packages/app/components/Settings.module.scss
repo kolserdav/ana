@@ -55,6 +55,7 @@ $settings-margin-left: 1rem;
 
       .test_input__item {
         position: relative;
+        width: cacl(100% - #{$container-margin});
         margin-left: 1rem;
         display: flex;
         flex-flow: row wrap;
@@ -64,6 +65,10 @@ $settings-margin-left: 1rem;
         padding: $input-padding;
         border-radius: $input-border-radius;
         
+        @media (max-width: $mobile-width) {
+          justify-content: center;
+          margin-top: 2rem;
+        }
       }
 
       .lang_select {
