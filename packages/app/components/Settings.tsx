@@ -336,9 +336,7 @@ function Settings({
                 />
               ) : (
                 <IconButton theme={theme} disabled title={voiceNotFound}>
-                  <div className={p.icon}>
-                    <VolumeOffIcon color={theme.text} />
-                  </div>
+                  <VolumeOffIcon color={theme.text} />
                 </IconButton>
               )}
             </div>
