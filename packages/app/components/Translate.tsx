@@ -373,7 +373,7 @@ function Translate({
                       name={tagToUpdate ? locale.changeTag : locale.newTag}
                       theme={theme}
                     />
-                    <IconButton theme={theme} title={showHelp} ref={helpTagRef}>
+                    <IconButton titleHide theme={theme} title={showHelp} ref={helpTagRef}>
                       <HelpIcon color={theme.text} />
                     </IconButton>
                   </div>

@@ -42,6 +42,11 @@ $disabled-opacity: 0.5;
     overflow: hidden;
   }
 
+  &.small {
+    width:  calc($icon-width-default / 1.5);
+    height: calc($icon-width-default / 1.5);
+  }
+
   @media (max-width: $mobile-width) {
     width: $icon-width-default;
   }

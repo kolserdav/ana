@@ -121,7 +121,7 @@ function AppBar({
         style={{
           color: theme.text,
           backgroundColor: full ? theme.active : 'transparent',
-          boxShadow: full ? `0px 1px 5px   ${theme.active}` : 'none',
+          boxShadow: full ? `0px 1px 2px   ${theme.active}` : 'none',
         }}
       >
         {full && (

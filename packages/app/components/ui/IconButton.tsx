@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import clsx from 'clsx';
 import s from './IconButton.module.scss';
 import { Theme } from '../../Theme';
 import Typography from './Typography';
@@ -11,18 +12,21 @@ const IconButton = forwardRef<
     touchStarted?: boolean;
     titleHide?: boolean;
     viceVersa?: boolean;
+    small?: boolean;
   }
 >((props, ref) => {
   const _props = useMemo(() => {
     const newProps = { ...props };
     delete newProps.touchStarted;
     delete newProps.titleHide;
+    delete newProps.viceVersa;
+    delete newProps.small;
     return newProps;
   }, [props]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [openTooltip, setOpenTooltip] = useState<boolean>(false);
-  const { theme, title, touchStarted, viceVersa } = props;
+  const { theme, title, touchStarted, viceVersa, small } = props;
   const onContextMenuOpen = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (title) {
       ev.preventDefault();
@@ -50,9 +54,9 @@ const IconButton = forwardRef<
 
   // eslint-disable-next-line react/jsx-props-no-spreading
   return (
-    <div className={s.icon}>
+    <div className={s.wrapper}>
       <div
-        className={s.icon}
+        className={clsx(s.icon, small ? s.small : '')}
         ref={containerRef}
         onClick={onClick}
         role="button"
@@ -100,6 +104,7 @@ IconButton.defaultProps = {
   touchStarted: undefined,
   titleHide: undefined,
   viceVersa: undefined,
+  small: undefined,
 };
 
 export default IconButton;
