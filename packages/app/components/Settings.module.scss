@@ -129,4 +129,8 @@ $settings-margin-left: 1rem;
   vertical-align: top;
   padding: 2rem;
   height: 100%;
+
+  @media (max-width: $mobile-width) {
+    padding: 0.5rem;
+  }
 }
