@@ -11,7 +11,7 @@ const lang: Locale = {
     badRequest: 'Bad Request',
     notFound: 'Not Found',
     success: 'Successful request',
-    wrongPassword: 'Invalid username or password',
+    wrongPassword: 'Invalid email or password',
     emailIsSend: 'An email with instructions has been sent to the specified email address.',
     linkExpired: 'Link expired',
     linkUnaccepted: 'Invalid link',

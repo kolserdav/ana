@@ -11,7 +11,7 @@ const lang: Locale = {
     badRequest: 'Неверный запрос',
     notFound: 'Не найдено',
     success: 'Успешный запрос',
-    wrongPassword: 'Неверный логин или пароль',
+    wrongPassword: 'Неверная почта или пароль',
     emailIsSend: 'На указанную почту отправлено письмо с инструкцией.',
     linkExpired: 'Просроченная ссылка',
     linkUnaccepted: 'Недействительная ссылка',
