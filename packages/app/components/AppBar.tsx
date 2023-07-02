@@ -197,7 +197,7 @@ function AppBar({
             </Link>
           ) : (
             user && (
-              <div className={clsx(s.menu__item, s.active)}>
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
                 <NotebookIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.myDictionary}</div>
               </div>
@@ -212,19 +212,24 @@ function AppBar({
             </Link>
           ) : (
             user && (
-              <div className={clsx(s.menu__item, s.active)}>
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
                 <ChartLineIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.statistics}</div>
               </div>
             )
           )}
-          {!checkRouterPath(router.asPath, Pages.trash) && user && (
+          {!checkRouterPath(router.asPath, Pages.trash) && user ? (
             <Link withoutHover fullWidth theme={theme} href={Pages.trash}>
               <div className={clsx(s.menu__item, s.active)}>
                 <TrashIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.trash}</div>
               </div>
             </Link>
+          ) : (
+            <div className={clsx(s.menu__item, s.active, s.disabled)}>
+              <TrashIcon color={theme.text} withoutScale />
+              <div style={{ color: theme.text }}>{locale.trash}</div>
+            </div>
           )}
           {user && <Hr theme={theme} />}
           <div className={clsx(s.menu__item)}>
@@ -251,7 +256,7 @@ function AppBar({
               </div>
             </Link>
           ) : (
-            <div className={clsx(s.menu__item, s.active)}>
+            <div className={clsx(s.menu__item, s.active, s.disabled)}>
               <SettingsIcon color={theme.text} withoutScale />
               <div style={{ color: theme.text }}>{locale.settings}</div>
             </div>
@@ -280,7 +285,7 @@ function AppBar({
                 </div>
               </Link>
             ) : (
-              <div className={clsx(s.menu__item, s.active)}>
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
                 <InformationIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.about}</div>
               </div>
@@ -294,7 +299,7 @@ function AppBar({
               </Link>
             ) : (
               !user && (
-                <div className={clsx(s.menu__item, s.active)}>
+                <div className={clsx(s.menu__item, s.active, s.disabled)}>
                   <LoginIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.login}</div>
                 </div>
