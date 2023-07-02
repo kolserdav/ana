@@ -6,30 +6,118 @@ import {
   INPUT_MARGIN_BOTTOM,
   LEARN_LANG_DEFAULT,
   Pages,
-  TEST_TEXT_DEFAULT,
+  SPEECH_TEST_TEXT_DEFAULT,
 } from '../utils/constants';
 import { ServerLanguage } from '../types';
 import Request from '../utils/request';
-import { LocalStorageName, getLocalStorage } from '../utils/localStorage';
+import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { log } from '../utils/lib';
+import { log, wait } from '../utils/lib';
 import useLogin from '../hooks/useLogin';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import { checkUrl } from './Settings.lib';
 
 const request = new Request();
 
-export const useTestSpeech = () => {
-  const [testText, setTestText] = useState<string>(TEST_TEXT_DEFAULT);
+export const useTestSpeech = ({ lang }: { lang: string }) => {
+  const [testText, setTestText] = useState<string>(SPEECH_TEST_TEXT_DEFAULT);
+  const [voiceTestText, setVoiceTestText] = useState<Record<string, string>>();
+  const [allTestText, setAllTestText] = useState<string>();
+  const [saveVoiceTestText, setSaveVoiceTestText] = useState(false);
+  const [saveAllTestText, setSaveAllTestText] = useState(false);
 
   const onChangeTestText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
     setTestText(value);
+    if (saveVoiceTestText) {
+      const _speechTestText = getLocalStorage(LocalStorageName.SPEECH_VOICE_TEST_TEXT) || {};
+      _speechTestText[lang] = value;
+      setLocalStorage(LocalStorageName.SPEECH_VOICE_TEST_TEXT, _speechTestText);
+      setVoiceTestText(_speechTestText);
+    }
+
+    if (saveAllTestText) {
+      let _speechTestText = getLocalStorage(LocalStorageName.SPEECH_TEST_TEXT) || '';
+      _speechTestText = value;
+      setLocalStorage(LocalStorageName.SPEECH_TEST_TEXT, _speechTestText);
+      setAllTestText(value);
+    }
   };
 
-  return { testText, onChangeTestText };
+  useEffect(() => {
+    if (!voiceTestText || !allTestText) {
+      return;
+    }
+    const _testText =
+      saveVoiceTestText && voiceTestText[lang]
+        ? voiceTestText[lang]
+        : saveAllTestText && allTestText
+        ? allTestText
+        : SPEECH_TEST_TEXT_DEFAULT;
+    setTestText(_testText);
+  }, [lang, saveVoiceTestText, saveAllTestText, allTestText, voiceTestText]);
+
+  /**
+   * Set test text
+   */
+  useEffect(() => {
+    if (!saveVoiceTestText && !saveAllTestText) {
+      setTestText(SPEECH_TEST_TEXT_DEFAULT);
+      return;
+    }
+    const _speechTestText =
+      getLocalStorage(
+        saveAllTestText
+          ? LocalStorageName.SPEECH_TEST_TEXT
+          : LocalStorageName.SPEECH_VOICE_TEST_TEXT
+      ) || (saveAllTestText ? '' : {});
+    log('info', 'Settings.hooks', { lang, _speechTestText });
+    if (typeof _speechTestText !== 'string' && _speechTestText[lang]) {
+      setTestText(_speechTestText[lang]);
+    } else if (typeof _speechTestText === 'string') {
+      setTestText(_speechTestText);
+    } else {
+      setTestText(SPEECH_TEST_TEXT_DEFAULT);
+    }
+  }, [lang, saveVoiceTestText, saveAllTestText]);
+
+  /**
+   * Set save test text
+   */
+  useEffect(() => {
+    const _saveVoiceTestText = getLocalStorage(LocalStorageName.SAVE_VOICE_TEXT_TEST) || false;
+    if (_saveVoiceTestText) {
+      setSaveVoiceTestText(_saveVoiceTestText);
+    }
+
+    const _saveAllTestText = getLocalStorage(LocalStorageName.SAVE_ALL_TEXT_TEST) || false;
+    if (_saveAllTestText) {
+      setSaveAllTestText(_saveAllTestText);
+    }
+  }, []);
+
+  const onChangeSaveVoiceTestText = () => {
+    const _saveTestText = !saveVoiceTestText;
+    setLocalStorage(LocalStorageName.SAVE_VOICE_TEXT_TEST, _saveTestText);
+    setSaveVoiceTestText(_saveTestText);
+  };
+
+  const onChangeSaveAllTestText = () => {
+    const _saveTestText = !saveAllTestText;
+    setLocalStorage(LocalStorageName.SAVE_ALL_TEXT_TEST, _saveTestText);
+    setSaveAllTestText(_saveTestText);
+  };
+
+  return {
+    testText,
+    onChangeTestText,
+    saveVoiceTestText,
+    onChangeSaveVoiceTestText,
+    onChangeSaveAllTestText,
+    saveAllTestText,
+  };
 };
 
 export const useLanguage = () => {
@@ -468,18 +556,20 @@ export const useChangeNode = ({
       setNodeError(wrongUrlFormat);
       return;
     }
+    setNodeError('');
 
+    if (nodeSuccess && value !== node) {
+      await wait(1000);
+    }
     const result = await request.checkNewUrl(value);
     if (result.status === 'info') {
       log('info', 'Success check', { result });
       if (typeof androidCommon !== 'undefined') {
         androidCommon.setUrl(value);
       }
-      setNodeError('');
       setNodeSuccess(true);
     } else {
-      log('error', 'Error check', { result });
-      setNodeError(serverIsNotRespond);
+      log('error', serverIsNotRespond, { result });
       setNodeSuccess(false);
     }
   };

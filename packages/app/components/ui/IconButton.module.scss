@@ -1,11 +1,16 @@
+@import '../../styles/constants';
+
 $disabled-opacity: 0.5;
+
 
 .wrapper {
   cursor: pointer;
-  position: relative;
   display: flex;
+  flex-direction: column;
+  font-size: small;
   align-items: center;
   justify-content: center;
+  max-width: 5rem;
   border-radius: 50%;
   border: none;
   background-color: transparent;
@@ -17,5 +22,27 @@ $disabled-opacity: 0.5;
   &:disabled {
     opacity: $disabled-opacity;
     cursor: default;
+  }
+
+ 
+
+  
+}
+
+.icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: smaller;
+  width: $icon-button-width;
+  height: $icon-button-width;
+ 
+  .text {
+    overflow: hidden;
+  }
+
+  @media (max-width: $mobile-width) {
+    width: $icon-width-default;
   }
 }

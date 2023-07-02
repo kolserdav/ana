@@ -4,7 +4,9 @@ import { Theme } from '../../Theme';
 import { Status } from '../../types/interfaces';
 import s from './Typography.module.scss';
 
-function Typography({
+type TypographyVariant = 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
+
+function Typography<T extends TypographyVariant>({
   variant,
   children,
   theme,
@@ -20,8 +22,9 @@ function Typography({
   nowrap,
   fullWidth,
   id,
+  smaller,
 }: {
-  variant: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
+  variant: TypographyVariant;
   children: string | React.ReactNode;
   theme: Theme;
   htmlFor?: string;
@@ -35,7 +38,8 @@ function Typography({
   datatype?: string;
   nowrap?: boolean;
   fullWidth?: boolean;
-  id?: string;
+  id?: T extends 'label' ? string : string | undefined;
+  smaller?: boolean;
 }) {
   return (
     <div
@@ -46,6 +50,7 @@ function Typography({
         ubuntu400.className,
         className,
         small ? s.small : '',
+        smaller ? s.smaller : '',
         large ? s.large : '',
         nowrap ? s.nowrap : '',
         fullWidth ? s.full_width : '',
@@ -112,6 +117,7 @@ Typography.defaultProps = {
   nowrap: undefined,
   fullWidth: undefined,
   id: undefined,
+  smaller: undefined,
 };
 
 export default Typography;

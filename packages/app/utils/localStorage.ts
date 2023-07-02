@@ -1,5 +1,5 @@
 import { ThemeType } from '../Theme';
-import { LocaleValue, OrderBy, DateFilter } from '../types/interfaces';
+import { OrderBy, DateFilter } from '../types/interfaces';
 import { log } from './lib';
 
 // eslint-disable-next-line no-shadow
@@ -32,6 +32,14 @@ export enum LocalStorageName {
   FILTER_BY_DATE_STAT = 'FILTER_BY_DATE_STAT',
   // eslint-disable-next-line no-unused-vars
   FILTER_BY_DATE_TRASH = 'FILTER_BY_DATE_TRASH',
+  // eslint-disable-next-line no-unused-vars
+  SPEECH_VOICE_TEST_TEXT = 'SPEECH_VOICE_TEST_TEXT',
+  // eslint-disable-next-line no-unused-vars
+  SPEECH_TEST_TEXT = 'SPEECH_TEST_TEXT',
+  // eslint-disable-next-line no-unused-vars
+  SAVE_VOICE_TEXT_TEST = 'SAVE_VOICE_TEXT_TEST',
+  // eslint-disable-next-line no-unused-vars
+  SAVE_ALL_TEXT_TEST = 'SAVE_ALL_TEXT_TEST',
   // eslint-disable-next-line no-unused-vars
   LANG_VOICES = 'LANG_VOICES',
 }
@@ -66,6 +74,14 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   ? DateFilter
   : T extends LocalStorageName.LANG_VOICES
   ? Record<string, string>
+  : T extends LocalStorageName.SPEECH_TEST_TEXT
+  ? string
+  : T extends LocalStorageName.SPEECH_VOICE_TEST_TEXT
+  ? Record<string, string>
+  : T extends LocalStorageName.SAVE_ALL_TEXT_TEST
+  ? boolean
+  : T extends LocalStorageName.SAVE_VOICE_TEXT_TEST
+  ? boolean
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(

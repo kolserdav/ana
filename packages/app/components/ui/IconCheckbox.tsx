@@ -13,6 +13,7 @@ function IconCheckbox({
   checked,
   minus,
   label,
+  titleHide,
 }: {
   onClick: () => void;
   theme: Theme;
@@ -20,10 +21,11 @@ function IconCheckbox({
   checked: boolean;
   minus?: boolean;
   label?: string;
+  titleHide?: boolean;
 }) {
   return (
     <div className={s.wrapper}>
-      <IconButton title={title} theme={theme} onClick={onClick}>
+      <IconButton titleHide={titleHide} title={title} theme={theme} onClick={onClick}>
         {minus ? (
           <MinusboxIcon color={theme.red} />
         ) : checked ? (
@@ -44,6 +46,7 @@ function IconCheckbox({
 IconCheckbox.defaultProps = {
   minus: undefined,
   label: undefined,
+  titleHide: undefined,
 };
 
 export default IconCheckbox;

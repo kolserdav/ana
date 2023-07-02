@@ -125,6 +125,7 @@ const lang: Locale = {
       insertedLink: '...Link replaced...',
       sendMail: 'Send mail',
       emailIsSend: 'If the email does not arrive for a long time, then check the Spam folder',
+      openTools: 'Open tools',
       copyText: {
         title: 'Copy text',
         textCopied: 'Text copied',
@@ -241,6 +242,8 @@ const lang: Locale = {
       defaultNode: 'Default Node',
       customNode: 'Custom Node',
       serverIsNotRespond: 'Server not responding',
+      saveVoiceTestText: 'Save for each voice',
+      saveAllTestText: 'Save for all voices',
     },
     statistics: {
       title: 'Statistics',

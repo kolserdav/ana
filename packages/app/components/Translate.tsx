@@ -203,7 +203,12 @@ function Translate({
             ))}
           </Select>
           <div className={s.swap_button}>
-            <IconButton theme={theme} onClick={onClickChangeLangs} title={locale.swapLangs}>
+            <IconButton
+              titleHide
+              theme={theme}
+              onClick={onClickChangeLangs}
+              title={locale.swapLangs}
+            >
               <SwapHorizontalIcon color={theme.text} />
             </IconButton>
           </div>
@@ -247,6 +252,7 @@ function Translate({
             {text && (
               <div className={clsx(s.copy_button, allowRecogn ? s.copy_button__allow_recogn : '')}>
                 <IconButton
+                  titleHide
                   title={copyText.title}
                   theme={theme}
                   onClick={onClickCopyTextWrapper(text)}
@@ -290,6 +296,7 @@ function Translate({
             {translate && (
               <div className={s.translate_actions}>
                 <IconButton
+                  titleHide
                   title={copyText.title}
                   theme={theme}
                   onClick={onClickCopyTextWrapper(translate)}
@@ -327,6 +334,7 @@ function Translate({
                   changeLinkTo={changeLinkTo}
                 />
                 <IconButton
+                  titleHide
                   title={copyText.title}
                   theme={theme}
                   onClick={onClickCopyTextWrapper(reTranslate)}

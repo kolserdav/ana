@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import s from './IconButton.module.scss';
 import { Theme } from '../../Theme';
+import Typography from './Typography';
 import Tooltip from './Tooltip';
 
 const IconButton = forwardRef<
@@ -8,17 +9,20 @@ const IconButton = forwardRef<
   React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
     theme: Theme;
     touchStarted?: boolean;
+    titleHide?: boolean;
+    viceVersa?: boolean;
   }
 >((props, ref) => {
   const _props = useMemo(() => {
     const newProps = { ...props };
     delete newProps.touchStarted;
+    delete newProps.titleHide;
     return newProps;
   }, [props]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [openTooltip, setOpenTooltip] = useState<boolean>(false);
-  const { theme, title, touchStarted } = props;
+  const { theme, title, touchStarted, viceVersa } = props;
   const onContextMenuOpen = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (title) {
       ev.preventDefault();
@@ -46,16 +50,36 @@ const IconButton = forwardRef<
 
   // eslint-disable-next-line react/jsx-props-no-spreading
   return (
-    <div className={s.wrapper}>
-      <div ref={containerRef}>
+    <div className={s.icon}>
+      <div
+        className={s.icon}
+        ref={containerRef}
+        onClick={onClick}
+        role="button"
+        tabIndex={-1}
+        onKeyDown={() => {
+          /** */
+        }}
+      >
         <button
-          onClick={onClick}
           onContextMenu={onContextMenuOpen}
           className={s.wrapper}
           type="button"
           ref={ref}
           {..._props}
         />
+        {!props.titleHide && (
+          <Typography
+            theme={theme}
+            variant="span"
+            className={s.text}
+            smaller
+            styleName={viceVersa ? 'vice-versa' : undefined}
+            align="center"
+          >
+            {title}
+          </Typography>
+        )}
       </div>
       <Tooltip
         withoutListenClick
@@ -74,6 +98,8 @@ IconButton.displayName = 'IconButton';
 
 IconButton.defaultProps = {
   touchStarted: undefined,
+  titleHide: undefined,
+  viceVersa: undefined,
 };
 
 export default IconButton;

@@ -1,8 +1,9 @@
+import { useRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import useSpeechSynth from '../hooks/useSpeechSynth';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { SPEECH_SPEED_MAX } from '../utils/constants';
+import { SPEECH_SPEED_MAX, URL_PLACEHOLDER } from '../utils/constants';
 import { useEmailInput, useNameInput, usePasswordInput } from './Login.hooks';
 import {
   useChangeNode,
@@ -28,6 +29,10 @@ import IconButton from './ui/IconButton';
 import EmailCheckIcon from './icons/EmailCheck';
 import EmailAlertIcon from './icons/EmailAlert';
 import Radio from './ui/Radio';
+import Switch from './ui/Switch';
+import Tooltip from './ui/Tooltip';
+import DotsHorisontalIcon from './icons/DotsHorisontal';
+import VolumeOffIcon from './icons/VolumeOff';
 
 function Settings({
   locale,
@@ -46,6 +51,7 @@ function Settings({
   urlDefault,
   wrongUrlFormat,
   isAndroid,
+  openTools,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -63,11 +69,20 @@ function Settings({
   urlDefault: string;
   wrongUrlFormat: string;
   isAndroid: boolean;
+  openTools: string;
 }) {
-  const { load, setLoad } = useLoad();
-  const { testText, onChangeTestText } = useTestSpeech();
+  const settingsSetSaveRef = useRef(null);
 
+  const { load, setLoad } = useLoad();
   const { lang, langs, changeLang } = useLanguage();
+  const {
+    testText,
+    onChangeTestText,
+    onChangeSaveVoiceTestText,
+    saveVoiceTestText,
+    onChangeSaveAllTestText,
+    saveAllTestText,
+  } = useTestSpeech({ lang });
 
   const {
     synthAllow,
@@ -233,37 +248,41 @@ function Settings({
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
-        {!isAndroid && (
-          <>
-            <Hr theme={theme} />
-            <Typography variant="h4" theme={theme}>
-              {locale.selectNode}
-            </Typography>
-            <div className={s.select_node}>
-              <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
-                {locale.defaultNode}
+        {isAndroid ||
+          (user?.role === 'admin' && (
+            <>
+              <Hr theme={theme} />
+              <Typography variant="h4" theme={theme}>
+                {locale.selectNode}
               </Typography>
-              <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
-                {urlDefault}
-              </Typography>
-              <Radio checked={isDefaultNode} onChange={onChangeRadioWrapper('urlDefault')} />
-            </div>
-            <div className={s.select_node}>
-              <Input
-                type="text"
-                id={s.select_node}
-                theme={theme}
-                error={nodeError}
-                value={node}
-                success={nodeSuccess}
-                name={locale.customNode}
-                onChange={onChangeNewNode}
-                disabled={!isNode}
-              />
-              <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
-            </div>
-          </>
-        )}
+              <div className={s.select_node}>
+                <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
+                  {locale.defaultNode}
+                </Typography>
+                <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
+                  {urlDefault}
+                </Typography>
+                <Radio checked={isDefaultNode} onChange={onChangeRadioWrapper('urlDefault')} />
+              </div>
+              <div className={s.select_node}>
+                <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
+                  {locale.customNode}
+                </Typography>
+                <Input
+                  type="text"
+                  id={s.select_node}
+                  theme={theme}
+                  error={nodeError}
+                  value={node}
+                  success={nodeSuccess}
+                  name={URL_PLACEHOLDER}
+                  onChange={onChangeNewNode}
+                  disabled={!isNode}
+                />
+                <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
+              </div>
+            </>
+          ))}
         <Hr theme={theme} />
         <Typography variant="h4" theme={theme}>
           {locale.speechSettings}
@@ -294,14 +313,7 @@ function Settings({
               </div>
             )}
           </div>
-          {!synthAllow && (
-            <div className={s.test_input__item}>
-              <Typography blur variant="p" theme={theme}>
-                {voiceNotFound}
-              </Typography>
-            </div>
-          )}
-          <div className={s.test_input__item}>
+          <div className={s.test_input__item} style={{ borderColor: theme.text }}>
             <Input
               type="text"
               id="test-speech"
@@ -311,8 +323,61 @@ function Settings({
               onChange={onChangeTestText}
               disabled={load}
             />
+            <IconButton title={openTools} titleHide theme={theme} ref={settingsSetSaveRef}>
+              <DotsHorisontalIcon color={theme.text} />
+            </IconButton>
+            <div className={s.speech_button}>
+              {synthAllow ? (
+                <SpeakIcon
+                  onClick={speechText}
+                  title={playSound}
+                  volumeIcon={volumeIcon}
+                  theme={theme}
+                />
+              ) : (
+                <IconButton theme={theme} disabled title={voiceNotFound}>
+                  <div className={p.icon}>
+                    <VolumeOffIcon color={theme.text} />
+                  </div>
+                </IconButton>
+              )}
+            </div>
+            <Tooltip parentRef={settingsSetSaveRef} theme={theme} length={140} withoutClose>
+              <div className={s.save_test_text_container}>
+                <div className={p.icon}>
+                  <IconButton
+                    viceVersa
+                    title={locale.saveAllTestText}
+                    theme={theme}
+                    onClick={onChangeSaveAllTestText}
+                  >
+                    <Switch
+                      viceVersa
+                      on={saveAllTestText}
+                      onClick={onChangeSaveAllTestText}
+                      theme={theme}
+                    />
+                  </IconButton>
+                </div>
+                <div className={p.icon}>
+                  <IconButton
+                    viceVersa
+                    onClick={onChangeSaveVoiceTestText}
+                    title={locale.saveVoiceTestText}
+                    theme={theme}
+                  >
+                    <Switch
+                      onClick={onChangeSaveVoiceTestText}
+                      viceVersa
+                      on={saveVoiceTestText}
+                      theme={theme}
+                    />
+                  </IconButton>
+                </div>
+              </div>
+            </Tooltip>
           </div>
-          <div className={s.speed_select}>
+          <div className={s.speed_select} style={{ borderColor: theme.active }}>
             <Typography variant="label" theme={theme}>
               {`${locale.speechSpeed}: ${speechSpeed}`}
             </Typography>
@@ -325,14 +390,6 @@ function Settings({
               name="tes"
               onChange={changeSpeechSpeed}
               id="speech-speed"
-            />
-          </div>
-          <div className={s.speech_button}>
-            <SpeakIcon
-              onClick={speechText}
-              title={playSound}
-              volumeIcon={volumeIcon}
-              theme={theme}
             />
           </div>
         </div>

@@ -113,7 +113,7 @@ export const useLanguages = ({
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
-      if (!edit) {
+      if (!edit && edit !== 'null') {
         router.push(`${router.asPath}?edit=${phrase.data.id}`);
       }
     })();
@@ -428,9 +428,9 @@ export const useTranslate = ({
     setAddTags(false);
     setTags([]);
     removeLocalStorage(LocalStorageName.TEXT);
-    if (edit) {
+    if (edit && edit !== 'null') {
       setEdit(null);
-      router.push(cleanPath(router.asPath));
+      router.push(`${router.pathname}?edit=null`);
     }
     if (text) {
       setUndo(true);
