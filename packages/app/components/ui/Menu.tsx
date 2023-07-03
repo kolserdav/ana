@@ -24,17 +24,21 @@ function Menu({
   const [open, setOpen] = useState<boolean>(false);
   const [_open, _setOpen] = useState<boolean>(false);
 
-  const onClickOpen = useCallback(() => {
-    storeMenuOpen.dispatch(
-      changeMenuOpen({
-        menuOpen: !open,
-      })
-    );
-    setOpen(!open);
-    setTimeout(() => {
-      _setOpen(!_open);
-    }, MENU_TRANSITION);
-  }, [open, _open]);
+  const onClickOpen = useCallback(
+    // eslint-disable-next-line no-unused-vars
+    (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      storeMenuOpen.dispatch(
+        changeMenuOpen({
+          menuOpen: !open,
+        })
+      );
+      setOpen(!open);
+      setTimeout(() => {
+        _setOpen(!_open);
+      }, MENU_TRANSITION);
+    },
+    [open, _open]
+  );
 
   /**
    * Listen document click

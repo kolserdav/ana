@@ -67,8 +67,8 @@ export const checkClickBy = ({
   clientY: number;
 }) => {
   const { x, y, height, width } = current.getBoundingClientRect();
-  const bottom = y + height;
-  const right = x + width;
+  const bottom = y + height + 1;
+  const right = x + width + 1;
   return !(clientX < x || clientY < y || clientY > bottom || clientX > right);
 };
 
