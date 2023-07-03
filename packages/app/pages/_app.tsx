@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
-import { GetStaticPropsContext } from 'next';
 import Alert from '../components/ui/Alert';
 import LoaderLine from '../components/ui/LoaderLine';
 import useApp from '../hooks/useApp';
@@ -10,20 +9,11 @@ import '../styles/globals.scss';
 import { ERUDA } from '../utils/constants';
 import useLocale from '../hooks/useLocale';
 import AcceptCookies from '../components/AcceptCookies';
-import Request from '../utils/request';
 
-const request = new Request();
-
-interface MyAppProps {
-  noInternet: boolean;
-}
-
-export default function App({ Component, pageProps, noInternet }: MyAppProps & AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   const { user, userLoad } = useUser();
 
   const { locale } = useLocale();
-
-  console.log(noInternet);
 
   const {
     load,
@@ -90,19 +80,4 @@ export default function App({ Component, pageProps, noInternet }: MyAppProps & A
       <Alert theme={theme} />
     </>
   );
-}
-
-export async function getStaticProps({
-  locale,
-}: GetStaticPropsContext): Promise<{ props: Omit<MyAppProps, 'app'> }> {
-  const localeCommon = await request.getLocale({ field: 'common', locale });
-  let noInternet = false;
-  if (!localeCommon) {
-    noInternet = true;
-  }
-  return {
-    props: {
-      noInternet,
-    },
-  };
 }

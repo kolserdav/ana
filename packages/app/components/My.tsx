@@ -408,7 +408,7 @@ function My({
             </div>
           </div>
           {(played || paused) && (
-            <IconButton theme={theme} onClick={onClickStopAll}>
+            <IconButton titleHide theme={theme} onClick={onClickStopAll}>
               <StopIcon color={theme.red} />
             </IconButton>
           )}
