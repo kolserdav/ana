@@ -23,7 +23,9 @@ const value = typeof Infinity;
  */
 const exit = (code) => {
   log(code === 0 ? 'info' : 'error', 'Process exit with code', code, true);
-  throw new Error('Exit with code ' + code);
+  if (code !== 0) {
+    throw new Error('Exit with code ' + code);
+  }
   process.exit(code ? code : -1);
 };
 
