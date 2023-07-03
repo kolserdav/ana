@@ -546,12 +546,11 @@ function My({
                         </div>
                       ))}
                     </div>
-                    <div className={s.date} style={{ textShadow: `1px 1px 1px ${theme.text}` }}>
+                    <div className={s.date}>
                       <Typography
                         variant="span"
                         theme={theme}
                         small
-                        blur
                         styleName={item.updated === item.created ? 'info' : 'blue'}
                       >
                         {item.updated.toString()}

@@ -22,11 +22,11 @@ function Switch({
         onClick(!on);
       }}
       className={clsx(s.wrapper)}
-      style={{ backgroundColor: viceVersa ? theme.paper : theme.text }}
+      style={{ backgroundColor: viceVersa ? theme.paper : on ? theme.text : theme.active }}
     >
       <div
-        className={clsx(s.round, on ? s.active : '')}
-        style={{ backgroundColor: on ? theme.cyan : theme.text, opacity: on ? 1 : 0.7 }}
+        className={clsx(s.round, on ? s.active : s.disabled)}
+        style={{ backgroundColor: on ? theme.cyan : theme.blue, opacity: on ? 1 : 0.4 }}
       />
     </div>
   );

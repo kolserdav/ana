@@ -158,6 +158,7 @@ function AppBar({
                   <TranslateIcon withoutScale color={theme.text} />
                 </div>
                 <Select
+                  viceVersa
                   ref={localeRef}
                   onChange={onChangeLang}
                   active

@@ -71,24 +71,26 @@ function Statistics({
         {graphWidth && graphCountHeight && (
           <div className={s.graph_item}>
             <Graph
+              theme={theme}
               allowDecimals={false}
               width={graphWidth}
               height={graphCountHeight * 1.5}
               data={countGraphData}
               dataKey={[locale.newTexts, locale.updatedTexts, locale.trashedText]}
-              stroke={[theme.green, theme.blue, theme.red]}
+              stroke={[theme.green, theme.blue, theme.yellow]}
             />
           </div>
         )}
         {graphWidth && graphCountHeight && (
           <div className={s.graph_item}>
             <Graph
+              theme={theme}
               width={graphWidth}
               height={graphCountHeight}
               formatter={onlineLabelFormatter}
               data={onlineGraphData}
               dataKey={locale.studyTime}
-              stroke={theme.red}
+              stroke={theme.green}
               tickFormatter={onlineYFormatter}
             />
           </div>
