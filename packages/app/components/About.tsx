@@ -9,12 +9,14 @@ import Typography from './ui/Typography';
 function About({
   locale,
   title,
+  description,
   theme,
   policyTitle,
   rulesTitle,
 }: {
   locale: Locale['app']['about'];
   title: string;
+  description: string;
   theme: Theme;
   policyTitle: string;
   rulesTitle: string;
@@ -28,6 +30,11 @@ function About({
             {title}
           </Typography>
         </div>
+        {description && (
+          <Typography theme={theme} variant="p">
+            {description}
+          </Typography>
+        )}
         <Typography variant="h3" theme={theme}>
           {locale.aboutProgram}
         </Typography>

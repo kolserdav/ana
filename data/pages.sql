@@ -18,6 +18,8 @@ INSERT INTO public."Page" VALUES (12, 'rules', 'content', '<p>правила и�
 
 INSERT INTO public."Page" VALUES (13, 'about', 'title', 'О программе и о сервисе', 'ru') ;
 INSERT INTO public."Page" VALUES (14, 'about', 'title', 'About the program and service', 'en') ;
+INSERT INTO public."Page" VALUES (23, 'about', 'description', 'Подробнее о программе и о сервисе', 'ru') ;
+INSERT INTO public."Page" VALUES (24, 'about', 'title', 'More about the program and service', 'en') ;
 
 INSERT INTO public."Page" VALUES (15, 'translate', 'title', 'Составление предложений', 'ru') ; 
 INSERT INTO public."Page" VALUES (16, 'translate', 'title', 'Making sentences', 'en') ;
