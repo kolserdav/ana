@@ -55,36 +55,28 @@ const IconButton = forwardRef<
   // eslint-disable-next-line react/jsx-props-no-spreading
   return (
     <div className={s.wrapper}>
-      <div
-        className={clsx(s.icon, small ? s.small : '')}
-        ref={containerRef}
-        onClick={onClick}
-        role="button"
-        tabIndex={-1}
-        onKeyDown={() => {
-          /** */
-        }}
-      >
+      <div className={clsx(s.icon, small ? s.small : '')} ref={containerRef}>
         <button
+          onClick={onClick}
           onContextMenu={onContextMenuOpen}
           className={s.wrapper}
           type="button"
           ref={ref}
           {..._props}
         />
-        {!props.titleHide && (
-          <Typography
-            theme={theme}
-            variant="span"
-            className={s.text}
-            smaller
-            styleName={viceVersa ? 'vice-versa' : undefined}
-            align="center"
-          >
-            {title}
-          </Typography>
-        )}
       </div>
+      {!props.titleHide && (
+        <Typography
+          theme={theme}
+          variant="span"
+          className={s.icon__text}
+          smaller
+          styleName={viceVersa ? 'vice-versa' : undefined}
+          align="center"
+        >
+          {title}
+        </Typography>
+      )}
       <Tooltip
         withoutListenClick
         remoteOpen={openTooltip}

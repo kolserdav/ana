@@ -240,6 +240,7 @@ function Translate({
           />
           <div className={s.close_button}>
             <IconButton
+              titleHide
               theme={theme}
               onClick={undo ? revertText : cleanText}
               title={edit ? locale.quitEdit : undo ? locale.undo : locale.cleanField}
@@ -261,6 +262,7 @@ function Translate({
                 </IconButton>
                 <div className={s.vert_margin} />
                 <PlaySoundButton
+                  titleHide
                   theme={theme}
                   title={playSound}
                   text={text}
@@ -272,6 +274,7 @@ function Translate({
             )}
             {allowRecogn && (
               <IconButton
+                titleHide
                 title={locale.startRecognize}
                 theme={theme}
                 disabled={load}
@@ -326,6 +329,7 @@ function Translate({
             {reTranslate && (
               <div className={s.translate_actions}>
                 <PlaySoundButton
+                  titleHide
                   theme={theme}
                   title={playSound}
                   text={reTranslate}
@@ -400,6 +404,7 @@ function Translate({
                             menuChildren={
                               <div className={s.menu_tooltip}>
                                 <IconButton
+                                  titleHide
                                   theme={theme}
                                   title={_edit}
                                   onClick={onClickTagUpdateWrapper(item)}
@@ -407,6 +412,7 @@ function Translate({
                                   <EditIcon color={theme.blue} />
                                 </IconButton>
                                 <IconButton
+                                  titleHide
                                   theme={theme}
                                   onClick={onClickTagDeleteWrapper(item)}
                                   title={_delete}

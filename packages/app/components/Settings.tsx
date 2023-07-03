@@ -391,12 +391,12 @@ function Settings({
             />
           </div>
         </div>
+        <Hr theme={theme} />
+        <Typography variant="h4" theme={theme}>
+          {locale.personalData}
+        </Typography>
         {user !== null && (
           <div className={s.personal_data}>
-            <Hr theme={theme} />
-            <Typography variant="h4" theme={theme}>
-              {locale.personalData}
-            </Typography>
             <Input
               theme={theme}
               onChange={onChangeName}
@@ -408,7 +408,6 @@ function Settings({
               error={nameError}
               disabled={load}
               name={localeLogin.name}
-              fullWidth
             />
             <div className={s.email_input}>
               <Input
@@ -514,9 +513,9 @@ function Settings({
             >
               {locale.deleteAccountTitle}
             </span>
-            <Hr theme={theme} />
           </div>
         )}
+        <Hr theme={theme} />
       </div>
       <Dialog className={p.dialog} theme={theme} onClose={setDeleteAccount} open={deleteAccount}>
         <Typography variant="h3" theme={theme} align="center">

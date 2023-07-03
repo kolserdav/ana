@@ -56,7 +56,7 @@ $settings-margin-left: 1rem;
       .test_input__item {
         position: relative;
         width: cacl(100% - #{$container-margin});
-        margin-left: 1rem;
+        margin: $settings-margin-left $settings-margin-left $speech-select-shift;
         display: flex;
         flex-flow: row wrap;
         align-items: center;
@@ -94,7 +94,7 @@ $settings-margin-left: 1rem;
     }
 
     .personal_data {
-      margin-top: 2rem;
+      margin: $settings-margin-left $settings-margin-left $speech-select-shift;
 
       
       .delete_button {
