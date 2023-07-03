@@ -40,6 +40,7 @@ export default function AboutPage({
           locale={localeAbout}
           title={page.title}
           theme={theme}
+          description={page.description}
         />
       </main>
     </>

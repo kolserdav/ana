@@ -1,11 +1,14 @@
 {
-  "name": "safe",
-  "version": "1.0.0",
+  "name": "ana",
+  "version": "1.24.0",
   "description": "",
   "main": "index.js",
   "homepage": "https://uyem.ru",
+  "repository": "git@github.com:kolserdav/ana.git",
+  "types": "types",
   "prisma": {
-    "schema": "./packages/server/orm/schema.prisma"
+    "schema": "./packages/server/orm/schema.prisma",
+    "seed": "node ./scripts/seed/insert-pages.js"
   },
   "scripts": {
     "build:app": "cd packages/app && npm run build",
@@ -21,6 +24,7 @@
     "migrate": "npm run generate && prisma migrate deploy --preview-feature",
     "migrate:reset": "prisma migrate reset --preview-feature",
     "migrate:status": "prisma migrate status --preview-feature",
+    "seed": "prisma db seed",
     "studio": "prisma studio",
     "generate": "prisma generate",
     "format": "prisma format",
@@ -34,9 +38,11 @@
     "scripts:create-interfaces-symlink": "node scripts/create-interfaces-symlink.js",
     "scripts:copy-test-constants": "node scripts/copy-test-constants.js",
     "scripts:copy-env": "node scripts/copy-env.js",
+    "scripts:git-check": "env-cmd -f ./.env node scripts/git-check.js -e anaserver,ana -p packages/server,packages/app",
     "scripts": "npm run scripts:create-interfaces-symlink && npm run scripts:copy-test-constants && npm run scripts:copy-env",
     "test": "node --test tests/unit/*.test.js",
-    "test:translate": "env-cmd -f ./.env node tests/e2e/translate.test.js"
+    "test:translate": "env-cmd -f ./.env node tests/e2e/translate.test.js",
+    "types": "tsc -p ./jsconfig.json"
   },
   "keywords": [],
   "author": "kolserdav",

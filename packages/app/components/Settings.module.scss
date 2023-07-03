@@ -16,7 +16,7 @@ $settings-margin-left: 1rem;
     position: relative;
     width: 100%;
     max-width: $translate-container-max;
-    padding: 1rem;
+    padding: 1rem 1rem 2rem ;
 
     .select_node {
       display: flex;
@@ -46,15 +46,29 @@ $settings-margin-left: 1rem;
       display: flex;
       flex-flow: row wrap;
       align-items: center;
+      justify-content: space-between;
       margin-top: 2rem;
 
       .speech_button {
-        margin-left: 1rem;
-        margin-top: 1rem;
+        margin-left: 2rem;
       }
 
       .test_input__item {
-        margin-left: 1rem;
+        position: relative;
+        width: cacl(100% - #{$container-margin});
+        margin: $settings-margin-left $settings-margin-left $speech-select-shift;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        border-style: groove;
+        border-width: 2px;
+        padding: $input-padding;
+        border-radius: $input-border-radius;
+        
+        @media (max-width: $mobile-width) {
+          justify-content: center;
+          margin-top: 2rem;
+        }
       }
 
       .lang_select {
@@ -71,11 +85,16 @@ $settings-margin-left: 1rem;
         display: flex;
         flex-direction: column;
         margin: $settings-margin-left $settings-margin-left $speech-select-shift;
+        border-style: groove;
+        border-radius: $input-border-radius;
+        padding: $input-padding;
+        border-width: 2px;
       }
+      
     }
 
     .personal_data {
-      margin-top: 2rem;
+      margin: $settings-margin-left $settings-margin-left $speech-select-shift;
 
       
       .delete_button {
@@ -103,4 +122,21 @@ $settings-margin-left: 1rem;
 
 .warning_delete {
   width: 80%;
+}
+
+
+
+.save_test_text_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  vertical-align: top;
+  padding: 2rem;
+  height: 100%;
+  width: 100%;
+
+  @media (max-width: $mobile-width) {
+    padding: 0.5rem;
+  }
 }

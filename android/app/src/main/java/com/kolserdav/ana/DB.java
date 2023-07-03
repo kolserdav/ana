@@ -132,13 +132,12 @@ public class DB extends SQLiteOpenHelper {
 
     App app;
 
-    public static final Integer DATABASE_VERSION = 13;
-    public static final String DATABASE_NAME = "db";
+
 
     MainActivity context;
 
     public DB(MainActivity _context) {
-        super(_context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(_context, Config.DATABASE_NAME, null, Config.DATABASE_VERSION);
         context = _context;
         sqLiteDatabase = getWritableDatabase();
         app = new App(sqLiteDatabase);

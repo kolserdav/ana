@@ -62,8 +62,8 @@
 
       .close_button {
         position: absolute;
-        top: $textare-button-indent;
-        right: $textare-button-indent;
+        top: 8px;
+        right: 0;
       }
 
       .copy_button {
@@ -76,8 +76,8 @@
 
       .micro_button {
         position: absolute;
-        bottom: calc($textare-button-indent + 1.5rem);
-        right: $textare-button-indent;
+        bottom: calc($textare-button-indent + 2rem);
+        right: 0;
         display: flex;
         flex-direction: column;
       }
@@ -98,13 +98,13 @@
 
     // name used in packages/app/components/Translate.tsx.createSelector
     .native_res {
-      margin: 1rem 0;
+      margin: 0.1rem 0  ;
       display: flex;
       flex-flow: row wrap;
       align-items: center;
 
       .copy_button {
-        margin: 0 0.5rem;
+        margin: 0;
       }
     }
 
@@ -181,7 +181,7 @@
     width: 100%;
 
     .tags {
-      border-width: 1px;
+      border-width: 2px;
       border-style: groove;
       width: 100%;
       padding: 1rem;

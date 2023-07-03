@@ -48,6 +48,8 @@ export enum Api {
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
   localPostSelector = '/local/create-selector',
+  // Android
+  apiCheck = '/api/check',
 }
 
 // eslint-disable-next-line no-shadow
@@ -487,6 +489,7 @@ export interface Locale {
       insertedLink: string;
       sendMail: string;
       emailIsSend: string;
+      openTools: string;
       copyText: {
         title: string;
         textCopied: string;
@@ -607,6 +610,8 @@ export interface Locale {
       defaultNode: string;
       customNode: string;
       serverIsNotRespond: string;
+      saveVoiceTestText: string;
+      saveAllTestText: string;
     };
     statistics: {
       title: string;

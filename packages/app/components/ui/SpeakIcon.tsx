@@ -11,14 +11,22 @@ function SpeakIcon({
   theme,
   title,
   volumeIcon,
+  titleHide,
 }: {
   onClick: () => void;
   theme: Theme;
   title: string;
   volumeIcon: VolumeIcon;
+  titleHide?: boolean;
 }) {
   return (
-    <IconButton theme={theme} datatype={DATA_TYPE_PLAY_BUTTON} onClick={onClick} title={title}>
+    <IconButton
+      theme={theme}
+      titleHide={titleHide}
+      datatype={DATA_TYPE_PLAY_BUTTON}
+      onClick={onClick}
+      title={title}
+    >
       {volumeIcon === 'high' ? (
         <VolumeHighIcon color={theme.text} />
       ) : volumeIcon === 'medium' ? (
@@ -29,5 +37,9 @@ function SpeakIcon({
     </IconButton>
   );
 }
+
+SpeakIcon.defaultProps = {
+  titleHide: undefined,
+};
 
 export default SpeakIcon;

@@ -20,31 +20,32 @@ export type Themes = {
   light: Theme;
 };
 
+// 035
 const colors: Themes = {
   dark: {
     type: 'dark',
-    paper: '#212121',
-    text: '#cfcfcf',
-    active: '#222f3e',
+    paper: '#222',
+    text: '#ccc ',
+    active: '#333',
     contrast: 'white',
     red: 'red',
     yellow: 'yellow',
     blue: '#1a6aaf',
-    green: '#02e721',
+    green: '#26a269',
     cyan: '#0ab1db',
     black: 'black',
     white: 'white',
   },
   light: {
     type: 'light',
-    red: 'red',
+    red: '#ed333b',
     yellow: 'orange',
-    blue: 'dodgerblue',
-    paper: '#fff',
-    text: '#5d5e60',
-    active: '#a9afb5',
+    blue: '#36c',
+    paper: '#eee',
+    text: '#333',
+    active: '#bbb',
     contrast: 'black',
-    green: 'green',
+    green: '#3c6',
     cyan: 'cyan',
     black: 'black',
     white: 'white',

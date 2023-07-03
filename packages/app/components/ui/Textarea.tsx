@@ -38,7 +38,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaDefaultProps & Textarea
           style={{
             background: theme.paper,
             color: theme.text,
-            borderColor: error ? theme.red : theme.text,
+            borderColor: error ? theme.red : theme.active,
           }}
           {...props}
         />

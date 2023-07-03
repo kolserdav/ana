@@ -311,10 +311,7 @@ function My({
           />
           <div className={s.sorts}>
             <div className={s.sort_item}>
-              <Typography small variant="span" theme={theme}>
-                {`${locale.byUpdateDate}:`}
-              </Typography>
-              <IconButton theme={theme} onClick={onClickSortByDate}>
+              <IconButton title={locale.byUpdateDate} theme={theme} onClick={onClickSortByDate}>
                 <FilterIcon
                   withoutScale
                   className={orderBy === 'asc' ? s.asc : s.desc}
@@ -397,7 +394,7 @@ function My({
             borderColor: theme.text,
           }}
         >
-          <IconButton theme={theme} onClick={played ? onClickPauseAll : onClickPlayAll}>
+          <IconButton titleHide theme={theme} onClick={played ? onClickPauseAll : onClickPlayAll}>
             {played ? <PauseIcon color={theme.yellow} /> : <PlayIcon color={theme.green} />}
           </IconButton>
           <div className={s.played_phrase}>
@@ -411,7 +408,7 @@ function My({
             </div>
           </div>
           {(played || paused) && (
-            <IconButton theme={theme} onClick={onClickStopAll}>
+            <IconButton titleHide theme={theme} onClick={onClickStopAll}>
               <StopIcon color={theme.red} />
             </IconButton>
           )}
@@ -427,13 +424,14 @@ function My({
                   className={s.item_container}
                 >
                   <div className={s.actions}>
-                    <IconButton title={locale.openTools} theme={theme} ref={ref}>
+                    <IconButton titleHide title={locale.openTools} theme={theme} ref={ref}>
                       <DotsHorisontalIcon color={theme.text} />
                     </IconButton>
 
-                    <Tooltip withoutClose closeOnClick theme={theme} parentRef={ref} length={60}>
+                    <Tooltip withoutClose closeOnClick theme={theme} parentRef={ref} length={100}>
                       <div className={s.menu_tooltip}>
                         <IconButton
+                          titleHide
                           theme={theme}
                           title={edit}
                           onClick={onClickPhraseUpdateWraper(item)}
@@ -441,6 +439,7 @@ function My({
                           <EditIcon color={theme.blue} />
                         </IconButton>
                         <IconButton
+                          titleHide
                           theme={theme}
                           onClick={onClickDeletePhraseWrapper(item)}
                           title={_delete}
@@ -448,6 +447,7 @@ function My({
                           <DeleteIcon color={theme.red} />
                         </IconButton>
                         <IconCheckbox
+                          titleHide
                           checked={selected.indexOf(item.id) !== -1}
                           onClick={onChangeSelectedWrapper(item.id)}
                           theme={theme}
@@ -469,6 +469,7 @@ function My({
                             datatype={DATA_TYPE_PLAY_BUTTON}
                           >
                             <SpeakIcon
+                              titleHide
                               onClick={clickForPlayWrapper({
                                 id: item.id,
                                 text: item.text,

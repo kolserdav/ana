@@ -1,6 +1,8 @@
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import clsx from 'clsx';
 import s from './IconButton.module.scss';
 import { Theme } from '../../Theme';
+import Typography from './Typography';
 import Tooltip from './Tooltip';
 
 const IconButton = forwardRef<
@@ -8,17 +10,23 @@ const IconButton = forwardRef<
   React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
     theme: Theme;
     touchStarted?: boolean;
+    titleHide?: boolean;
+    viceVersa?: boolean;
+    small?: boolean;
   }
 >((props, ref) => {
   const _props = useMemo(() => {
     const newProps = { ...props };
     delete newProps.touchStarted;
+    delete newProps.titleHide;
+    delete newProps.viceVersa;
+    delete newProps.small;
     return newProps;
   }, [props]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [openTooltip, setOpenTooltip] = useState<boolean>(false);
-  const { theme, title, touchStarted } = props;
+  const { theme, title, touchStarted, viceVersa, small } = props;
   const onContextMenuOpen = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (title) {
       ev.preventDefault();
@@ -47,7 +55,7 @@ const IconButton = forwardRef<
   // eslint-disable-next-line react/jsx-props-no-spreading
   return (
     <div className={s.wrapper}>
-      <div ref={containerRef}>
+      <div className={clsx(s.icon, small ? s.small : '')} ref={containerRef}>
         <button
           onClick={onClick}
           onContextMenu={onContextMenuOpen}
@@ -57,6 +65,18 @@ const IconButton = forwardRef<
           {..._props}
         />
       </div>
+      {!props.titleHide && (
+        <Typography
+          theme={theme}
+          variant="span"
+          className={s.icon__text}
+          smaller
+          styleName={viceVersa ? 'vice-versa' : undefined}
+          align="center"
+        >
+          {title}
+        </Typography>
+      )}
       <Tooltip
         withoutListenClick
         remoteOpen={openTooltip}
@@ -74,6 +94,9 @@ IconButton.displayName = 'IconButton';
 
 IconButton.defaultProps = {
   touchStarted: undefined,
+  titleHide: undefined,
+  viceVersa: undefined,
+  small: undefined,
 };
 
 export default IconButton;

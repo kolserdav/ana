@@ -58,7 +58,7 @@ npm run install:node
    **or** renew `.env` from `.env.example`
 
    ```sh
-   npm run scripts:copy-env
+   npm run scripts:copy-env renew
    ```
 
 ---
@@ -68,6 +68,18 @@ npm run install:node
 ```sh
 npm run migrate
 ```
+
+---
+
+For first installation you can run
+
+```sh
+npm run seed
+```
+
+to populate the database with sample pages
+
+---
 
 7. Run in development mode:
 

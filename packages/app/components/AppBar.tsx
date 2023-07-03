@@ -121,25 +121,35 @@ function AppBar({
         style={{
           color: theme.text,
           backgroundColor: full ? theme.active : 'transparent',
-          boxShadow: full ? `0px 1px 2px ${theme.active}` : 'none',
+          boxShadow: full ? `0px 1px 5px   ${theme.active}` : 'none',
         }}
       >
         {full && (
           <div className={s.links}>
             <div className={s.items}>
-              {!checkRouterPath(router.asPath, Pages.translate) && (
+              {!checkRouterPath(router.asPath, Pages.translate) ? (
                 <Link noWrap theme={theme} href={Pages.translate} className={s.item}>
                   <div className={s.menu__item}>
                     <div style={linkStyle}>{locale.translate}</div>
                   </div>
                 </Link>
+              ) : (
+                <div className={clsx(s.menu__item, s.item)}>
+                  <div style={linkStyle}>{locale.translate}</div>
+                </div>
               )}
-              {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
+              {!checkRouterPath(router.asPath, Pages.myDictionary) && user ? (
                 <Link noWrap theme={theme} href={Pages.myDictionary} className={s.item}>
                   <div className={s.menu__item}>
                     <div style={linkStyle}>{locale.myDictionary}</div>
                   </div>
                 </Link>
+              ) : (
+                user && (
+                  <div className={clsx(s.menu__item, s.item)}>
+                    <div style={linkStyle}>{locale.myDictionary}</div>
+                  </div>
+                )
               )}
             </div>
             {typeof isMobile === 'boolean' && !isMobile && (
@@ -165,37 +175,61 @@ function AppBar({
           </div>
         )}
         <Menu openMenu={menuOpen ? locale.closeMenu : locale.openMenu} theme={theme}>
-          {!checkRouterPath(router.asPath, Pages.translate) && (
+          {!checkRouterPath(router.asPath, Pages.translate) ? (
             <Link withoutHover fullWidth theme={theme} href={Pages.translate}>
               <div className={clsx(s.menu__item, s.active)}>
                 <TranslateVariantIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.translate}</div>
               </div>
             </Link>
+          ) : (
+            <div className={clsx(s.menu__item, s.active, s.disabled)}>
+              <TranslateVariantIcon color={theme.text} withoutScale />
+              <div style={{ color: theme.text }}>{locale.translate}</div>
+            </div>
           )}
-          {!checkRouterPath(router.asPath, Pages.myDictionary) && user && (
+          {!checkRouterPath(router.asPath, Pages.myDictionary) && user ? (
             <Link withoutHover fullWidth theme={theme} href={Pages.myDictionary}>
               <div className={clsx(s.menu__item, s.active)}>
                 <NotebookIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.myDictionary}</div>
               </div>
             </Link>
+          ) : (
+            user && (
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                <NotebookIcon color={theme.text} withoutScale />
+                <div style={{ color: theme.text }}>{locale.myDictionary}</div>
+              </div>
+            )
           )}
-          {!checkRouterPath(router.asPath, Pages.statistics) && user && (
+          {!checkRouterPath(router.asPath, Pages.statistics) && user ? (
             <Link withoutHover fullWidth theme={theme} href={Pages.statistics}>
               <div className={clsx(s.menu__item, s.active)}>
                 <ChartLineIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.statistics}</div>
               </div>
             </Link>
+          ) : (
+            user && (
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                <ChartLineIcon color={theme.text} withoutScale />
+                <div style={{ color: theme.text }}>{locale.statistics}</div>
+              </div>
+            )
           )}
-          {!checkRouterPath(router.asPath, Pages.trash) && user && (
+          {!checkRouterPath(router.asPath, Pages.trash) && user ? (
             <Link withoutHover fullWidth theme={theme} href={Pages.trash}>
               <div className={clsx(s.menu__item, s.active)}>
                 <TrashIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.trash}</div>
               </div>
             </Link>
+          ) : (
+            <div className={clsx(s.menu__item, s.active, s.disabled)}>
+              <TrashIcon color={theme.text} withoutScale />
+              <div style={{ color: theme.text }}>{locale.trash}</div>
+            </div>
           )}
           {user && <Hr theme={theme} />}
           <div className={clsx(s.menu__item)}>
@@ -214,13 +248,18 @@ function AppBar({
               </Select>
             </div>
           )}
-          {!checkRouterPath(router.asPath, [Pages.settings]) && (
+          {!checkRouterPath(router.asPath, [Pages.settings]) ? (
             <Link withoutHover fullWidth theme={theme} href={Pages.settings}>
               <div className={clsx(s.menu__item, s.active)}>
                 <SettingsIcon color={theme.text} withoutScale />
                 <div style={{ color: theme.text }}>{locale.settings}</div>
               </div>
             </Link>
+          ) : (
+            <div className={clsx(s.menu__item, s.active, s.disabled)}>
+              <SettingsIcon color={theme.text} withoutScale />
+              <div style={{ color: theme.text }}>{locale.settings}</div>
+            </div>
           )}
           <Hr theme={theme} />
           {user && (
@@ -238,21 +277,33 @@ function AppBar({
             </div>
           )}
           <div className={s.bottom}>
-            {!checkRouterPath(router.asPath, [Pages.about]) && (
+            {!checkRouterPath(router.asPath, [Pages.about]) ? (
               <Link withoutHover fullWidth theme={theme} href={Pages.about}>
                 <div className={clsx(s.menu__item, s.active)}>
                   <InformationIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.about}</div>
                 </div>
               </Link>
+            ) : (
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                <InformationIcon color={theme.text} withoutScale />
+                <div style={{ color: theme.text }}>{locale.about}</div>
+              </div>
             )}
-            {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user && (
+            {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user ? (
               <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
                 <div className={clsx(s.menu__item, s.active)}>
                   <LoginIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.login}</div>
                 </div>
               </Link>
+            ) : (
+              !user && (
+                <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                  <LoginIcon color={theme.text} withoutScale />
+                  <div style={{ color: theme.text }}>{locale.login}</div>
+                </div>
+              )
             )}
             {user && (
               <div

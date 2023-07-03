@@ -89,7 +89,6 @@ public class MainActivity extends Activity {
         protected void onPostExecute(String response) {
             if (response != null) {
                 Log.d(MainActivity.TAG, "Status " + this.status);
-
                 onGetStatus(status);
             }
 
@@ -152,8 +151,6 @@ public class MainActivity extends Activity {
                 Intent intent = getIntent();
                 String url = helper.listenProcessText(intent, schemaApp);
 
-
-                String data = null;
                 try {
                     try {
                        new Request(this) {
@@ -189,7 +186,6 @@ public class MainActivity extends Activity {
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Error request I " + e.getMessage());
                 }
-                Log.d(TAG, "Data is " + data);
             }
         };
 
@@ -234,8 +230,8 @@ public class MainActivity extends Activity {
                 boolean matchFound = matcher.find();
 
 
-                if (matchFound && !schema.path.equals("/")) {
-                    url = url.replaceAll("\\/[a-z]+$", "") + schema.path;
+                if (matchFound && !schema.path.equals("/") && firstLoad) {
+                    url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
                 Log.d(TAG, "Replaced url " + url);
                 view.loadUrl(url);

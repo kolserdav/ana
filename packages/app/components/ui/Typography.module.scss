@@ -4,6 +4,7 @@
   position: relative;
   display: inline-block;
   padding: 1px;
+  overflow: hidden;
 
   &.full_width {
     width: 100%;
@@ -54,6 +55,10 @@
 
   &.small {
     font-size: small;
+  }
+
+  &.smaller {
+    font-size: xx-small;
   }
 
   &.large {

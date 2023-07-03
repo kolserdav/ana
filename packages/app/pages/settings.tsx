@@ -48,6 +48,7 @@ export default function SettingsPage({
           url={_url}
           isAndroid={isAndroid}
           wrongUrlFormat={localeCommon.wrongUrlFormat}
+          openTools={localeCommon.openTools}
         />
       </main>
     </>
