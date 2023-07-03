@@ -248,41 +248,40 @@ function Settings({
         <Typography variant="h1" theme={theme}>
           {locale.title}
         </Typography>
-        {isAndroid ||
-          (user?.role === 'admin' && (
-            <>
-              <Hr theme={theme} />
-              <Typography variant="h4" theme={theme}>
-                {locale.selectNode}
+        {(isAndroid || user?.role === 'admin') && (
+          <>
+            <Hr theme={theme} />
+            <Typography variant="h4" theme={theme}>
+              {locale.selectNode}
+            </Typography>
+            <div className={s.select_node}>
+              <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
+                {locale.defaultNode}
               </Typography>
-              <div className={s.select_node}>
-                <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
-                  {locale.defaultNode}
-                </Typography>
-                <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
-                  {urlDefault}
-                </Typography>
-                <Radio checked={isDefaultNode} onChange={onChangeRadioWrapper('urlDefault')} />
-              </div>
-              <div className={s.select_node}>
-                <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
-                  {locale.customNode}
-                </Typography>
-                <Input
-                  type="text"
-                  id={s.select_node}
-                  theme={theme}
-                  error={nodeError}
-                  value={node}
-                  success={nodeSuccess}
-                  name={URL_PLACEHOLDER}
-                  onChange={onChangeNewNode}
-                  disabled={!isNode}
-                />
-                <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
-              </div>
-            </>
-          ))}
+              <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
+                {urlDefault}
+              </Typography>
+              <Radio checked={isDefaultNode} onChange={onChangeRadioWrapper('urlDefault')} />
+            </div>
+            <div className={s.select_node}>
+              <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
+                {locale.customNode}
+              </Typography>
+              <Input
+                type="text"
+                id={s.select_node}
+                theme={theme}
+                error={nodeError}
+                value={node}
+                success={nodeSuccess}
+                name={URL_PLACEHOLDER}
+                onChange={onChangeNewNode}
+                disabled={!isNode}
+              />
+              <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
+            </div>
+          </>
+        )}
         <Hr theme={theme} />
         <Typography variant="h4" theme={theme}>
           {locale.speechSettings}
