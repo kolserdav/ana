@@ -108,7 +108,7 @@ function AppBar({
   const { android, closeApp } = useAndroid();
 
   const { locales, language, onChangeLang } = useLanguage({ user });
-
+  console.log(user);
   return (
     <header>
       <div
@@ -226,10 +226,12 @@ function AppBar({
               </div>
             </Link>
           ) : (
-            <div className={clsx(s.menu__item, s.active, s.disabled)}>
-              <TrashIcon color={theme.text} withoutScale />
-              <div style={{ color: theme.text }}>{locale.trash}</div>
-            </div>
+            user && (
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                <TrashIcon color={theme.text} withoutScale />
+                <div style={{ color: theme.text }}>{locale.trash}</div>
+              </div>
+            )
           )}
           {user && <Hr theme={theme} />}
           <div className={clsx(s.menu__item)}>
