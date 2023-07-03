@@ -40,8 +40,7 @@ services:
       context: ./
       dockerfile: ./dockerfiles/Dockerfile.translate
     restart: always
-    ports:
-      - '8000:8000'
+    network_mode: host
     volumes:
       - ./packages/translate2:/usr/app
     command: python ./main.py

@@ -25,5 +25,8 @@ INSERT INTO public."Page" VALUES (17, 'translate', 'description', 'Прилож�
 Составляйте приложения на языке, который вы изучаете, а алгоритм перевода поправит вас в случае ошибки.', 'ru') ; 
 INSERT INTO public."Page" VALUES (18, 'translate', 'description', 'An application that helps you learn a foreign language. 
 Compose applications in the language you are learning and the translation algorithm will correct you if you make a mistake', 'en') ;
-INSERT INTO public."Page" VALUES (29, 'translate', 'keywords', 'блокнот,переводчик,писать предложения,изучать язык', 'ru');
+INSERT INTO public."Page" VALUES (19, 'translate', 'keywords', 'блокнот,переводчик,писать предложения,изучать язык', 'ru');
 INSERT INTO public."Page" VALUES (20, 'translate', 'keywords', 'notepad, translator, write sentences, learn language', 'en') ;
+
+INSERT INTO public."Page" VALUES (21, 'my', 'title', 'Мои тексты', 'ru') ;
+INSERT INTO public."Page" VALUES (22, 'my', 'title', 'My texts', 'en') ;
