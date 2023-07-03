@@ -25,7 +25,7 @@ const colors: Themes = {
     type: 'dark',
     paper: '#333',
     text: '#ccc ',
-    active: '#1a5fb4',
+    active: '#639',
     contrast: 'white',
     red: 'red',
     yellow: 'yellow',
