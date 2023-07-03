@@ -228,6 +228,7 @@ function My({
           </Typography>
           {isTrash && (
             <IconButton
+              titleHide
               disabled={phrases.length === 0}
               onClick={onClickOpenEmptyTrash}
               theme={theme}

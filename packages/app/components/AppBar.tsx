@@ -108,7 +108,7 @@ function AppBar({
   const { android, closeApp } = useAndroid();
 
   const { locales, language, onChangeLang } = useLanguage({ user });
-  console.log(user);
+
   return (
     <header>
       <div
