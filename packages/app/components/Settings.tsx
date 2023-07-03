@@ -391,10 +391,14 @@ function Settings({
             />
           </div>
         </div>
-        <Hr theme={theme} />
-        <Typography variant="h4" theme={theme}>
-          {locale.personalData}
-        </Typography>
+        {user !== null && (
+          <>
+            <Hr theme={theme} />
+            <Typography variant="h4" theme={theme}>
+              {locale.personalData}
+            </Typography>
+          </>
+        )}
         {user !== null && (
           <div className={s.personal_data}>
             <Input
