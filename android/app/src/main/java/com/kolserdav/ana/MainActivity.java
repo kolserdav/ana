@@ -230,8 +230,8 @@ public class MainActivity extends Activity {
                 boolean matchFound = matcher.find();
 
 
-                if (matchFound && !schema.path.equals("/")) {
-                    url = url.replaceAll("\\/[a-z]+$", "") + schema.path;
+                if (matchFound && !schema.path.equals("/") && firstLoad) {
+                    url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
                 Log.d(TAG, "Replaced url " + url);
                 view.loadUrl(url);
