@@ -49,7 +49,7 @@ const test1 = async () => {
   textarea.type('Tests').catch((e) => {
     log('error', 'Error type to textarea', e, true);
   });
-  await page.waitForTimeout(TRANSLATE_DOWNLOAD_TIMEOUT / 4);
+  await page.waitForTimeout(TRANSLATE_DOWNLOAD_TIMEOUT);
   let error = false;
 
   sels = await prisma.selector.findFirst({
