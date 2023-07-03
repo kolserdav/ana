@@ -7,6 +7,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 
   .container {
     position: relative;
@@ -15,6 +16,7 @@
     max-width: $translate-container-max;
     flex-direction: column;
     padding: $container-padding;
+    margin-bottom: 2rem;
 
     .global_filters__item {
       display: flex;

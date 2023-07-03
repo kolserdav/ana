@@ -203,7 +203,12 @@ function Translate({
             ))}
           </Select>
           <div className={s.swap_button}>
-            <IconButton theme={theme} onClick={onClickChangeLangs} title={locale.swapLangs}>
+            <IconButton
+              titleHide
+              theme={theme}
+              onClick={onClickChangeLangs}
+              title={locale.swapLangs}
+            >
               <SwapHorizontalIcon color={theme.text} />
             </IconButton>
           </div>
@@ -235,6 +240,7 @@ function Translate({
           />
           <div className={s.close_button}>
             <IconButton
+              titleHide
               theme={theme}
               onClick={undo ? revertText : cleanText}
               title={edit ? locale.quitEdit : undo ? locale.undo : locale.cleanField}
@@ -247,6 +253,7 @@ function Translate({
             {text && (
               <div className={clsx(s.copy_button, allowRecogn ? s.copy_button__allow_recogn : '')}>
                 <IconButton
+                  titleHide
                   title={copyText.title}
                   theme={theme}
                   onClick={onClickCopyTextWrapper(text)}
@@ -255,6 +262,7 @@ function Translate({
                 </IconButton>
                 <div className={s.vert_margin} />
                 <PlaySoundButton
+                  titleHide
                   theme={theme}
                   title={playSound}
                   text={text}
@@ -266,6 +274,7 @@ function Translate({
             )}
             {allowRecogn && (
               <IconButton
+                titleHide
                 title={locale.startRecognize}
                 theme={theme}
                 disabled={load}
@@ -290,6 +299,7 @@ function Translate({
             {translate && (
               <div className={s.translate_actions}>
                 <IconButton
+                  titleHide
                   title={copyText.title}
                   theme={theme}
                   onClick={onClickCopyTextWrapper(translate)}
@@ -319,6 +329,7 @@ function Translate({
             {reTranslate && (
               <div className={s.translate_actions}>
                 <PlaySoundButton
+                  titleHide
                   theme={theme}
                   title={playSound}
                   text={reTranslate}
@@ -327,6 +338,7 @@ function Translate({
                   changeLinkTo={changeLinkTo}
                 />
                 <IconButton
+                  titleHide
                   title={copyText.title}
                   theme={theme}
                   onClick={onClickCopyTextWrapper(reTranslate)}
@@ -365,7 +377,7 @@ function Translate({
                       name={tagToUpdate ? locale.changeTag : locale.newTag}
                       theme={theme}
                     />
-                    <IconButton theme={theme} title={showHelp} ref={helpTagRef}>
+                    <IconButton titleHide theme={theme} title={showHelp} ref={helpTagRef}>
                       <HelpIcon color={theme.text} />
                     </IconButton>
                   </div>
@@ -392,6 +404,7 @@ function Translate({
                             menuChildren={
                               <div className={s.menu_tooltip}>
                                 <IconButton
+                                  titleHide
                                   theme={theme}
                                   title={_edit}
                                   onClick={onClickTagUpdateWrapper(item)}
@@ -399,6 +412,7 @@ function Translate({
                                   <EditIcon color={theme.blue} />
                                 </IconButton>
                                 <IconButton
+                                  titleHide
                                   theme={theme}
                                   onClick={onClickTagDeleteWrapper(item)}
                                   title={_delete}

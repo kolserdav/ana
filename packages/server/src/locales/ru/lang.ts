@@ -11,7 +11,7 @@ const lang: Locale = {
     badRequest: 'Неверный запрос',
     notFound: 'Не найдено',
     success: 'Успешный запрос',
-    wrongPassword: 'Неверный логин или пароль',
+    wrongPassword: 'Неверная почта или пароль',
     emailIsSend: 'На указанную почту отправлено письмо с инструкцией.',
     linkExpired: 'Просроченная ссылка',
     linkUnaccepted: 'Недействительная ссылка',
@@ -124,6 +124,7 @@ const lang: Locale = {
       insertedLink: '...с...',
       sendMail: 'Отправить письмо',
       emailIsSend: 'Если письмо не приходит длительное время, то проверьте папку "Спам"',
+      openTools: 'Открыть инструменты',
       copyText: {
         title: 'Скопировать текст',
         textCopied: 'Текст скопирован',
@@ -241,6 +242,8 @@ const lang: Locale = {
       defaultNode: 'Источник по умолчанию',
       customNode: 'Пользовательский источник',
       serverIsNotRespond: 'Сервер не отвечает',
+      saveVoiceTestText: 'Сохранять для каждого голоса',
+      saveAllTestText: 'Сохранять для всех голосов',
     },
     statistics: {
       title: 'Статистика',

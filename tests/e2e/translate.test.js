@@ -5,7 +5,7 @@ const { APP_URL, TIMEOUT } = require('../constants.json');
 const { getPage, startServer, spawnCommand } = require('../../src/lib');
 const { log } = require('../../packages/server/dist/utils/lib');
 const { PrismaClient } = require('@prisma/client');
-const { CI } = require('../../src/constants');
+const { CI, TRANSLATE_DOWNLOAD_TIMEOUT } = require('../../src/constants');
 
 const prisma = new PrismaClient();
 
@@ -45,10 +45,11 @@ const test1 = async () => {
   if (!textarea) {
     return exit(1);
   }
+  await page.waitForTimeout(TRANSLATE_DOWNLOAD_TIMEOUT);
   textarea.type('Tests').catch((e) => {
     log('error', 'Error type to textarea', e, true);
   });
-  await page.waitForTimeout(15000);
+  await page.waitForTimeout(TRANSLATE_DOWNLOAD_TIMEOUT / 4);
   let error = false;
 
   sels = await prisma.selector.findFirst({

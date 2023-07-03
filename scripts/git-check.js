@@ -19,10 +19,13 @@ const value = typeof Infinity;
  */
 
 /**
- * @param {number | null} code
+ * @param {number | undefined} code
  */
 const exit = (code) => {
   log(code === 0 ? 'info' : 'error', 'Process exit with code', code, true);
+  if (code !== 0) {
+    throw new Error('Exit with code ' + code);
+  }
   process.exit(code ? code : -1);
 };
 
@@ -265,7 +268,7 @@ ${args
       log('info', 'Need install:', item);
       const install = await spawnCommand('npm', ['i'], { env });
       if (install.code != 0) {
-        return exit(install.code);
+        return exit(install.code || undefined);
       }
     } else {
       log('info', 'Installation skipped:', item);
@@ -273,12 +276,12 @@ ${args
 
     const build = await spawnCommand('npm', ['run', 'build'], { env });
     if (build.code !== 0) {
-      return exit(build.code);
+      return exit(build.code || undefined);
     }
 
     const restart = await spawnCommand('systemctl', ['restart', execI], { env });
     if (restart.code !== 0) {
-      return exit(restart.code);
+      return exit(restart.code || undefined);
     }
   }
   throw new Error('Update script end');

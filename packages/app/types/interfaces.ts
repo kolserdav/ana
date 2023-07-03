@@ -489,6 +489,7 @@ export interface Locale {
       insertedLink: string;
       sendMail: string;
       emailIsSend: string;
+      openTools: string;
       copyText: {
         title: string;
         textCopied: string;
@@ -609,6 +610,8 @@ export interface Locale {
       defaultNode: string;
       customNode: string;
       serverIsNotRespond: string;
+      saveVoiceTestText: string;
+      saveAllTestText: string;
     };
     statistics: {
       title: string;

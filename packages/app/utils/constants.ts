@@ -6,6 +6,7 @@ export const LOCALE_NAMES: Record<LocaleValue, string> = {
   en: 'English',
   ru: 'Русский',
 };
+export const URL_PLACEHOLDER = 'https://example.com';
 export const DATE_FILTER_ALL: DateFilter = 'all-time';
 export const DATE_FILTER_STATISTICS_DEFAULT: DateFilter = 'week';
 export const SERVER_LOCAL_ADDRESS = process.env.SERVER_LOCAL_ADDRESS as string;
@@ -111,7 +112,7 @@ export const LICENSE = {
 // deps packages/server/orm/schema.prisma.Phrase.text
 export const PHRASE_MAX_LENGTH_DEFAULT = 1000;
 export const TRANSLATE_MAX_SYMBOLS = 10000;
-export const TEST_TEXT_DEFAULT = 'Test';
+export const SPEECH_TEST_TEXT_DEFAULT = 'Test';
 export const SPEECH_SPEED_DEFAULT = 1;
 export const SPEECH_SPEED_MAX = 1.5;
 // deps $app-bar-transition
