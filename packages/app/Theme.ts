@@ -20,12 +20,13 @@ export type Themes = {
   light: Theme;
 };
 
+// 035
 const colors: Themes = {
   dark: {
     type: 'dark',
-    paper: '#333',
+    paper: '#222',
     text: '#ccc ',
-    active: '#639',
+    active: '#333',
     contrast: 'white',
     red: 'red',
     yellow: 'yellow',
@@ -40,9 +41,9 @@ const colors: Themes = {
     red: '#ed333b',
     yellow: 'orange',
     blue: '#36c',
-    paper: '#ccc',
+    paper: '#eee',
     text: '#333',
-    active: '#9cf',
+    active: '#bbb',
     contrast: 'black',
     green: '#3c6',
     cyan: 'cyan',
