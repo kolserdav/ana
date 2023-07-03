@@ -134,7 +134,7 @@ function AppBar({
                   </div>
                 </Link>
               ) : (
-                <div className={s.menu__item}>
+                <div className={clsx(s.menu__item, s.item)}>
                   <div style={linkStyle}>{locale.translate}</div>
                 </div>
               )}
@@ -146,7 +146,7 @@ function AppBar({
                 </Link>
               ) : (
                 user && (
-                  <div className={s.menu__item}>
+                  <div className={clsx(s.menu__item, s.item)}>
                     <div style={linkStyle}>{locale.myDictionary}</div>
                   </div>
                 )
