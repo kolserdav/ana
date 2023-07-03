@@ -8,6 +8,7 @@ import s from './Statistics.module.scss';
 import SelectDateFilter from './ui/SelectDateFilter';
 import Typography from './ui/Typography';
 import { LocalStorageName } from '../utils/localStorage';
+import { DATE_FILTER_STATISTICS_DEFAULT } from '../utils/constants';
 
 const Graph = dynamic(() => import('./ui/Graph'), { ssr: false });
 
@@ -26,6 +27,7 @@ function Statistics({
 
   const { onChangeDateFilter, gt, date } = useFilterByDate({
     localStorageName: LocalStorageName.FILTER_BY_DATE_STAT,
+    def: DATE_FILTER_STATISTICS_DEFAULT,
   });
 
   const {

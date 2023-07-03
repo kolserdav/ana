@@ -30,7 +30,13 @@ export const getGTDate = (filter: DateFilter) => {
   return date.toISOString();
 };
 
-const useFilterByDate = ({ localStorageName }: { localStorageName: LocalStorageName }) => {
+const useFilterByDate = ({
+  localStorageName,
+  def,
+}: {
+  localStorageName: LocalStorageName;
+  def: DateFilter;
+}) => {
   const [date, setDate] = useState<DateFilter>();
   const [gt, setGT] = useState<string>();
 
@@ -48,8 +54,8 @@ const useFilterByDate = ({ localStorageName }: { localStorageName: LocalStorageN
    */
   useEffect(() => {
     const savedDate = getLocalStorage(localStorageName);
-    setDate((savedDate as DateFilter | null) || DATE_FILTER_STATISTICS_DEFAULT);
-  }, [localStorageName]);
+    setDate((savedDate as DateFilter | null) || def || DATE_FILTER_ALL);
+  }, [localStorageName, def]);
 
   /**
    * Set gt

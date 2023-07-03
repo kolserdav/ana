@@ -34,6 +34,7 @@ import {
   APP_BAR_TRANSITION,
   DATA_TYPE_PHRASE,
   DATA_TYPE_PLAY_BUTTON,
+  DATE_FILTER_ALL,
   FIXED_TOOLS_HIGHT,
 } from '../utils/constants';
 import Input from './ui/Input';
@@ -85,6 +86,7 @@ function My({
     date,
     resetFilterByDate,
   } = useFilterByDate({
+    def: DATE_FILTER_ALL,
     localStorageName: isTrash
       ? LocalStorageName.FILTER_BY_DATE_TRASH
       : LocalStorageName.FILTER_BY_DATE,
@@ -532,7 +534,7 @@ function My({
                         </div>
                       ))}
                     </div>
-                    <div className={s.date}>
+                    <div className={s.date} style={{ textShadow: `1px 1px 1px ${theme.text}` }}>
                       <Typography
                         variant="span"
                         theme={theme}

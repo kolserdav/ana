@@ -45,7 +45,7 @@ const colors: Themes = {
     text: '#333',
     active: '#bbb',
     contrast: 'black',
-    green: '  ',
+    green: '#6f6',
     cyan: 'cyan',
     black: 'black',
     white: 'white',
