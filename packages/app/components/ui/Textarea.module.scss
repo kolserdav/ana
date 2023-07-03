@@ -10,6 +10,7 @@
     font-size: large;
     padding: $textarea-padding calc($icon-width-default * $text-area-activities-coeff) $textarea-padding $textarea-padding;
     border-radius: $input-border-radius;
+    border-style: solid;
 
     &:focus {
       outline: none !important;

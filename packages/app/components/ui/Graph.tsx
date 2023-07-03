@@ -1,6 +1,7 @@
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { GRAPH_XAXIS_DATA_KEY } from '../../utils/constants';
 import s from './Graph.module.scss';
+import { Theme } from '../../Theme';
 
 export type GraphData = Record<string, string | number>;
 
@@ -11,6 +12,7 @@ function Graph({
   labelFormatter,
   formatter,
   width,
+  theme,
   height,
   tickFormatter,
   allowDecimals,
@@ -20,6 +22,7 @@ function Graph({
   dataKey: string | string[];
   stroke: string | string[];
   data: GraphData[];
+  theme: Theme;
   // eslint-disable-next-line no-unused-vars
   labelFormatter?: (d: any) => React.ReactNode;
   // eslint-disable-next-line no-unused-vars
@@ -42,7 +45,14 @@ function Graph({
         <XAxis dataKey={GRAPH_XAXIS_DATA_KEY} />
         <YAxis allowDecimals={allowDecimals} tickFormatter={tickFormatter} />
         <Tooltip
-          contentStyle={{ color: 'blue', maxWidth: 'calc(100vw / 1.5)', whiteSpace: 'pre-wrap' }}
+          contentStyle={{
+            color: theme.red,
+            maxWidth: 'calc(100vw / 1.5)',
+            whiteSpace: 'pre-wrap',
+            backgroundColor: theme.active,
+            borderColor: theme.text,
+            textShadow: `1px 1px 1px ${theme.text}`,
+          }}
           labelFormatter={labelFormatter}
           formatter={formatter}
         />

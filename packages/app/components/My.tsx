@@ -34,6 +34,7 @@ import {
   APP_BAR_TRANSITION,
   DATA_TYPE_PHRASE,
   DATA_TYPE_PLAY_BUTTON,
+  DATE_FILTER_ALL,
   FIXED_TOOLS_HIGHT,
 } from '../utils/constants';
 import Input from './ui/Input';
@@ -85,6 +86,7 @@ function My({
     date,
     resetFilterByDate,
   } = useFilterByDate({
+    def: DATE_FILTER_ALL,
     localStorageName: isTrash
       ? LocalStorageName.FILTER_BY_DATE_TRASH
       : LocalStorageName.FILTER_BY_DATE,
@@ -228,6 +230,7 @@ function My({
           </Typography>
           {isTrash && (
             <IconButton
+              titleHide
               disabled={phrases.length === 0}
               onClick={onClickOpenEmptyTrash}
               theme={theme}
@@ -350,6 +353,7 @@ function My({
               }}
             >
               <IconCheckbox
+                titleHide
                 checked={phrases.length === selected.length}
                 onClick={selectAll}
                 theme={theme}
@@ -357,6 +361,7 @@ function My({
                 label={`${locale.selectAll}: ${phrases.length - selected.length}`}
               />
               <IconCheckbox
+                titleHide
                 checked={phrases.length === selected.length}
                 onClick={unSelectAll}
                 theme={theme}
@@ -365,6 +370,7 @@ function My({
                 minus
               />
               <IconButton
+                titleHide
                 theme={theme}
                 onClick={onClickOpenDeleteSeleted}
                 title={locale.deleteSelected}
@@ -394,7 +400,12 @@ function My({
             borderColor: theme.text,
           }}
         >
-          <IconButton titleHide theme={theme} onClick={played ? onClickPauseAll : onClickPlayAll}>
+          <IconButton
+            titleHide
+            title={locale.playAll}
+            theme={theme}
+            onClick={played ? onClickPauseAll : onClickPlayAll}
+          >
             {played ? <PauseIcon color={theme.yellow} /> : <PlayIcon color={theme.green} />}
           </IconButton>
           <div className={s.played_phrase}>
@@ -407,11 +418,15 @@ function My({
               </Typography>
             </div>
           </div>
-          {(played || paused) && (
-            <IconButton titleHide theme={theme} onClick={onClickStopAll}>
-              <StopIcon color={theme.red} />
-            </IconButton>
-          )}
+
+          <IconButton
+            titleHide
+            theme={theme}
+            disabled={!played && !paused}
+            onClick={onClickStopAll}
+          >
+            <StopIcon color={theme.red} />
+          </IconButton>
         </div>
         <div ref={phrasesRef} className={s.phrases}>
           {phrases.length !== 0 ? (
@@ -536,7 +551,6 @@ function My({
                         variant="span"
                         theme={theme}
                         small
-                        blur
                         styleName={item.updated === item.created ? 'info' : 'blue'}
                       >
                         {item.updated.toString()}

@@ -23,9 +23,13 @@ $switch-transition: 0.1s;
       left: calc($switch-width - $switch-round);
       transition: all $switch-transition ease-out;
     }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
   }
 
-  &.disabled {
-    cursor: default;
-  }
+ 
 }
