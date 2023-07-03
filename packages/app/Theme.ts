@@ -39,7 +39,7 @@ const colors: Themes = {
   light: {
     type: 'light',
     red: '#ed333b',
-    yellow: 'orange',
+    yellow: '#fc6',
     blue: '#69f',
     paper: '#eee',
     text: '#333',

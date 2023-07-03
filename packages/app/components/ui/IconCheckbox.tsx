@@ -31,7 +31,7 @@ function IconCheckbox({
         ) : checked ? (
           <CheckboxIcon color={theme.blue} />
         ) : (
-          <CheckboxBlankIcon color={theme.contrast} />
+          <CheckboxBlankIcon color={theme.yellow} />
         )}
       </IconButton>
       {label && (

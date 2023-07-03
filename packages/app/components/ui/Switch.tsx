@@ -26,7 +26,7 @@ function Switch({
     >
       <div
         className={clsx(s.round, on ? s.active : '')}
-        style={{ backgroundColor: on ? theme.cyan : theme.active, opacity: on ? 1 : 0.7 }}
+        style={{ backgroundColor: on ? theme.cyan : theme.text, opacity: on ? 1 : 0.7 }}
       />
     </div>
   );

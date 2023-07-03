@@ -353,6 +353,7 @@ function My({
               }}
             >
               <IconCheckbox
+                titleHide
                 checked={phrases.length === selected.length}
                 onClick={selectAll}
                 theme={theme}
@@ -360,6 +361,7 @@ function My({
                 label={`${locale.selectAll}: ${phrases.length - selected.length}`}
               />
               <IconCheckbox
+                titleHide
                 checked={phrases.length === selected.length}
                 onClick={unSelectAll}
                 theme={theme}
@@ -368,6 +370,7 @@ function My({
                 minus
               />
               <IconButton
+                titleHide
                 theme={theme}
                 onClick={onClickOpenDeleteSeleted}
                 title={locale.deleteSelected}
@@ -397,7 +400,12 @@ function My({
             borderColor: theme.text,
           }}
         >
-          <IconButton titleHide theme={theme} onClick={played ? onClickPauseAll : onClickPlayAll}>
+          <IconButton
+            titleHide
+            title={locale.playAll}
+            theme={theme}
+            onClick={played ? onClickPauseAll : onClickPlayAll}
+          >
             {played ? <PauseIcon color={theme.yellow} /> : <PlayIcon color={theme.green} />}
           </IconButton>
           <div className={s.played_phrase}>
@@ -410,11 +418,15 @@ function My({
               </Typography>
             </div>
           </div>
-          {(played || paused) && (
-            <IconButton titleHide theme={theme} onClick={onClickStopAll}>
-              <StopIcon color={theme.red} />
-            </IconButton>
-          )}
+
+          <IconButton
+            titleHide
+            theme={theme}
+            disabled={!played && !paused}
+            onClick={onClickStopAll}
+          >
+            <StopIcon color={theme.red} />
+          </IconButton>
         </div>
         <div ref={phrasesRef} className={s.phrases}>
           {phrases.length !== 0 ? (
