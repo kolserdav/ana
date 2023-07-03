@@ -27,7 +27,7 @@ $container-top: calc($app-bar-height / 2 - 6px);
 
     &.open {
       position: fixed;
-      top: calc($app-bar-height / 2 - $icon-width-default / 2 - 1px);
+      top: calc($app-bar-height / 2 - $icon-width-default / 2 + 2px);
       transition: all $menu-transition ease-out;
 
       @media (max-width: $translate-container-max) {

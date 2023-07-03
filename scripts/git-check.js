@@ -223,6 +223,8 @@ ${args
   const _exec = exec;
 
   const diff = await spawnCommand('git', ['pull', 'origin', branch], {});
+
+  const packs = [];
   for (let i = 0; _packages[i]; i++) {
     const item = _packages[i];
 
@@ -263,6 +265,7 @@ ${args
     }
 
     log('info', 'Package will updated:', item);
+    packs.push(item);
 
     if (needInstall) {
       log('info', 'Need install:', item);
@@ -284,5 +287,5 @@ ${args
       return exit(restart.code || undefined);
     }
   }
-  throw new Error('Update script end');
+  throw new Error(`Update script end for packs: ${packs.join(',')}`);
 })();
