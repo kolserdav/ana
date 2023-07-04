@@ -50,14 +50,9 @@ import SelectDateFilter from './ui/SelectDateFilter';
 import useFilterByDate from '../hooks/useFilterByDate';
 import { LocalStorageName } from '../utils/localStorage';
 import Hr from './ui/Hr';
-import SortAlphaAscIcon from './icons/SortAlphaAsc';
-import SortAlphaDescIcon from './icons/SortAlphaDesc';
-import SortNumericAscIcon from './icons/SortNumericAsc';
-import SortNumericDescIcon from './icons/SortNumericDesc';
 import SortTimeAscIcon from './icons/SortTimeAsc';
 import SortTimeDescIcon from './icons/SortTimeDesc';
 import SortTags from './ui/SortTags';
-import { SortName } from '../types';
 
 function My({
   locale,
@@ -568,12 +563,8 @@ function My({
                   <div className={s.info}>
                     <div className={s.tags}>
                       {item.PhraseTag.map((tag) => (
-                        <div
-                          key={tag.id}
-                          className={s.tag_item}
-                          style={{ textShadow: `1px 1px 1px ${theme.text}` }}
-                        >
-                          <Typography variant="span" theme={theme} small styleName="info">
+                        <div key={tag.id} className={s.tag_item}>
+                          <Typography variant="span" theme={theme} small styleName="blue">
                             {`#${tag.Tag.text}`}
                           </Typography>
                         </div>
@@ -584,7 +575,7 @@ function My({
                         variant="span"
                         theme={theme}
                         small
-                        styleName={item.updated === item.created ? 'info' : 'blue'}
+                        styleName={item.updated === item.created ? 'info' : 'warn'}
                       >
                         {item.updated.toString()}
                       </Typography>

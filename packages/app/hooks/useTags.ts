@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TagFindManyResult } from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
@@ -74,11 +74,37 @@ export default function useTags({
     setNumericDesc(!numericDesc);
   };
 
+  const _tags = useMemo(
+    () =>
+      allTags.sort((a, b) => {
+        if (alphaDesc && numericDesc) {
+          if (a.PhraseTag.length < b.PhraseTag.length) {
+            return -1;
+          }
+          return 1;
+        }
+        if (alphaDesc) {
+          if (a.text[0] < b.text[0]) {
+            return -1;
+          }
+          return 1;
+        }
+        if (numericDesc) {
+          if (a.PhraseTag.length < b.PhraseTag.length) {
+            return -1;
+          }
+          return 1;
+        }
+        return 1;
+      }),
+    [alphaDesc, numericDesc, allTags]
+  );
+
   return {
     tags,
     setTags,
     onClickTagCheepWrapper,
-    allTags,
+    allTags: _tags,
     tagsIsSet,
     onClickSortByApha,
     onClickSortByNumeric,
