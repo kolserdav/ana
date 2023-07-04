@@ -139,6 +139,10 @@ const lang: Locale = {
         forYear: 'за год',
         forAllTime: 'за всё время',
       },
+      sort: {
+        byAlpha: 'По алфавиту',
+        byNumeric: 'По количеству',
+      },
       wrongUrlFormat: 'Неверный формат адреса',
     },
     translate: {

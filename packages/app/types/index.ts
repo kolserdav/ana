@@ -3,6 +3,14 @@ import { PageField } from '@prisma/client';
 import { Theme } from '../Theme';
 import { Locale, Result, Status, UserCleanResult } from './interfaces';
 
+// eslint-disable-next-line no-shadow
+export enum SortName {
+  ALPHA_ASC = 'ALPHA_ASC',
+  ALPHA_DESC = 'ALPHA_DESC',
+  NUMERIC_ASC = 'NUMERIC_ASC',
+  NUMERIC_DESC = 'NUMERIC_DESC',
+}
+
 export type VolumeIcon = 'high' | 'medium' | 'low';
 
 export type PageFull = {

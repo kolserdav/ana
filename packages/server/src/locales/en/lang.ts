@@ -140,6 +140,10 @@ const lang: Locale = {
         forYear: 'for the year',
         forAllTime: 'for all time',
       },
+      sort: {
+        byAlpha: 'Alphabetically',
+        byNumeric: 'By number',
+      },
       wrongUrlFormat: 'Invalid address format',
     },
     translate: {

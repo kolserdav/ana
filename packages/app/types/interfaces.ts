@@ -504,6 +504,10 @@ export interface Locale {
         forYear: string;
         forAllTime: string;
       };
+      sort: {
+        byAlpha: string;
+        byNumeric: string;
+      };
       wrongUrlFormat: string;
     };
     translate: {

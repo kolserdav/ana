@@ -43,6 +43,7 @@ export default function MyTextsPage({
           voiceNotFound={localeCommon.voiceNotFound}
           changeLinkTo={localeCommon.insertedLink}
           dateFilter={localeCommon.dateFilter}
+          sort={localeCommon.sort}
         />
       </main>
     </>
