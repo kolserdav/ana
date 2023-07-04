@@ -55,12 +55,18 @@ function Cheep({
             }
           }}
         >
-          <span className={s.symbol} style={{ color: theme.contrast }}>
+          <span
+            className={s.symbol}
+            style={{ color: theme.text, textShadow: `0px 0px 1px ${theme.yellow}` }}
+          >
             {add ? '+' : '-'}{' '}
           </span>
           <span className={clsx(s.text, ubuntu300.className)}>{children}</span>
           {postfix && (
-            <div style={{ color: theme.contrast }} className={s.postfix}>
+            <div
+              style={{ color: theme.contrast, textShadow: `0px 0px 1px ${theme.yellow}` }}
+              className={s.postfix}
+            >
               {postfix}
             </div>
           )}
