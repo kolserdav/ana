@@ -50,14 +50,9 @@ import SelectDateFilter from './ui/SelectDateFilter';
 import useFilterByDate from '../hooks/useFilterByDate';
 import { LocalStorageName } from '../utils/localStorage';
 import Hr from './ui/Hr';
-import SortAlphaAscIcon from './icons/SortAlphaAsc';
-import SortAlphaDescIcon from './icons/SortAlphaDesc';
-import SortNumericAscIcon from './icons/SortNumericAsc';
-import SortNumericDescIcon from './icons/SortNumericDesc';
 import SortTimeAscIcon from './icons/SortTimeAsc';
 import SortTimeDescIcon from './icons/SortTimeDesc';
 import SortTags from './ui/SortTags';
-import { SortName } from '../types';
 
 function My({
   locale,

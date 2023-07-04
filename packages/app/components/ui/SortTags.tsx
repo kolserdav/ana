@@ -8,6 +8,7 @@ import SortNumericAscIcon from '../icons/SortNumericAsc';
 import SortNumericDescIcon from '../icons/SortNumericDesc';
 import IconButton from './IconButton';
 import { log } from '../../utils/lib';
+import s from './SortTags.module.scss';
 
 function SortTags({
   sort,
@@ -25,19 +26,20 @@ function SortTags({
   setNumericDesc: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const onClickSort = useCallback(
+    // eslint-disable-next-line no-unused-vars
     (name: SortName) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       switch (name) {
         case SortName.ALPHA_DESC:
-          setAlphaDesc(true);
-          break;
-        case SortName.ALPHA_ASC:
           setAlphaDesc(false);
           break;
+        case SortName.ALPHA_ASC:
+          setAlphaDesc(true);
+          break;
         case SortName.NUMERIC_DESC:
-          setNumericDesc(true);
+          setNumericDesc(false);
           break;
         case SortName.NUMERIC_ASC:
-          setNumericDesc(false);
+          setNumericDesc(true);
           break;
         default:
           log('warn', 'Default click sort tags', name);
@@ -47,7 +49,7 @@ function SortTags({
   );
 
   return (
-    <div>
+    <div className={s.wrapper}>
       <IconButton
         titleHide
         title={sort.byAlpha}
