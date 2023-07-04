@@ -1,4 +1,4 @@
-import { createRef, useRef } from 'react';
+import { createRef, useCallback, useRef } from 'react';
 import clsx from 'clsx';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
@@ -49,6 +49,15 @@ import SpeakIcon from './ui/SpeakIcon';
 import SelectDateFilter from './ui/SelectDateFilter';
 import useFilterByDate from '../hooks/useFilterByDate';
 import { LocalStorageName } from '../utils/localStorage';
+import Hr from './ui/Hr';
+import SortAlphaAscIcon from './icons/SortAlphaAsc';
+import SortAlphaDescIcon from './icons/SortAlphaDesc';
+import SortNumericAscIcon from './icons/SortNumericAsc';
+import SortNumericDescIcon from './icons/SortNumericDesc';
+import SortTimeAscIcon from './icons/SortTimeAsc';
+import SortTimeDescIcon from './icons/SortTimeDesc';
+import SortTags from './ui/SortTags';
+import { SortName } from '../types';
 
 function My({
   locale,
@@ -61,9 +70,11 @@ function My({
   voiceNotFound,
   changeLinkTo,
   dateFilter,
+  sort,
 }: {
   locale: Locale['app']['my'];
   dateFilter: Locale['app']['common']['dateFilter'];
+  sort: Locale['app']['common']['sort'];
   theme: Theme;
   edit: string;
   _delete: string;
@@ -106,6 +117,10 @@ function My({
     resetTags,
     onClickFilterTags,
     restartGetTags,
+    alphaDesc,
+    numericDesc,
+    setAlphaDesc,
+    setNumericDesc,
   } = useTags({ isTrash, gt });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -274,6 +289,15 @@ function My({
             style={{ backgroundColor: theme.active }}
           >
             <div className={s.filters_tags}>
+              <SortTags
+                setAlphaDesc={setAlphaDesc}
+                theme={theme}
+                sort={sort}
+                alphaDesc={alphaDesc}
+                numericDesc={numericDesc}
+                setNumericDesc={setNumericDesc}
+              />
+              <Hr theme={theme} viceVersa />
               {allTags.map((item) => (
                 <span key={item.id}>
                   <Cheep
@@ -314,12 +338,17 @@ function My({
           />
           <div className={s.sorts}>
             <div className={s.sort_item}>
-              <IconButton title={locale.byUpdateDate} theme={theme} onClick={onClickSortByDate}>
-                <FilterIcon
-                  withoutScale
-                  className={orderBy === 'asc' ? s.asc : s.desc}
-                  color={theme.text}
-                />
+              <IconButton
+                titleHide
+                title={locale.byUpdateDate}
+                theme={theme}
+                onClick={onClickSortByDate}
+              >
+                {orderBy === 'asc' ? (
+                  <SortTimeAscIcon color={theme.text} />
+                ) : (
+                  <SortTimeDescIcon color={theme.text} />
+                )}
               </IconButton>
             </div>
           </div>
