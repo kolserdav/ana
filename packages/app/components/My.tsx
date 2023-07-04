@@ -539,8 +539,12 @@ function My({
                   <div className={s.info}>
                     <div className={s.tags}>
                       {item.PhraseTag.map((tag) => (
-                        <div key={tag.id} className={s.tag_item}>
-                          <Typography variant="span" theme={theme} small disabled>
+                        <div
+                          key={tag.id}
+                          className={s.tag_item}
+                          style={{ textShadow: `1px 1px 1px ${theme.text}` }}
+                        >
+                          <Typography variant="span" theme={theme} small styleName="info">
                             {`#${tag.Tag.text}`}
                           </Typography>
                         </div>
