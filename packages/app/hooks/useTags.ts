@@ -20,6 +20,8 @@ export default function useTags({
   const [tags, setTags] = useState<TagFindManyResult>([]);
   const [allTags, setAllTags] = useState<TagFindManyResult>([]);
   const [tagsIsSet, setTagsIsSet] = useState<boolean>(false);
+  const [alphaDesc, setAlphaDesc] = useState<boolean>(false);
+  const [numericDesc, setNumericDesc] = useState<boolean>(false);
 
   /**
    * Set all tags
@@ -64,5 +66,25 @@ export default function useTags({
     setTags(_tags);
   };
 
-  return { tags, setTags, onClickTagCheepWrapper, allTags, tagsIsSet };
+  const onClickSortByApha = () => {
+    setAlphaDesc(!alphaDesc);
+  };
+
+  const onClickSortByNumeric = () => {
+    setNumericDesc(!numericDesc);
+  };
+
+  return {
+    tags,
+    setTags,
+    onClickTagCheepWrapper,
+    allTags,
+    tagsIsSet,
+    onClickSortByApha,
+    onClickSortByNumeric,
+    alphaDesc,
+    numericDesc,
+    setAlphaDesc,
+    setNumericDesc,
+  };
 }
