@@ -77,7 +77,7 @@ function Statistics({
               height={graphCountHeight * 1.5}
               data={countGraphData}
               dataKey={[locale.newTexts, locale.updatedTexts, locale.trashedText]}
-              stroke={[theme.green, theme.blue, theme.yellow]}
+              stroke={[theme.green, theme.yellow, theme.blue]}
             />
           </div>
         )}

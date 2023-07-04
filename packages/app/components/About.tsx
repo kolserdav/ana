@@ -3,6 +3,7 @@ import useLoad from '../hooks/useLoad';
 import { Locale } from '../types/interfaces';
 import { LICENSE, Pages, REPOSITORY_LINK } from '../utils/constants';
 import s from './About.module.scss';
+import Hr from './ui/Hr';
 import Link from './ui/Link';
 import Typography from './ui/Typography';
 
@@ -30,14 +31,15 @@ function About({
             {title}
           </Typography>
         </div>
+        <Hr theme={theme} />
+        <Typography variant="h3" theme={theme}>
+          {locale.aboutProgram}
+        </Typography>
         {description && (
           <Typography theme={theme} variant="p">
             {description}
           </Typography>
         )}
-        <Typography variant="h3" theme={theme}>
-          {locale.aboutProgram}
-        </Typography>
         <div className={s.item}>
           <Typography variant="h5" theme={theme}>
             {`${locale.licenseTitle}:`}
@@ -54,6 +56,7 @@ function About({
             <a href={REPOSITORY_LINK}>{REPOSITORY_LINK}</a>
           </span>
         </div>
+        <Hr theme={theme} />
         <Typography variant="h3" theme={theme}>
           {locale.aboutSite}
         </Typography>
