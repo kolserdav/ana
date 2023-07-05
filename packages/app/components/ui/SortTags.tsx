@@ -8,6 +8,8 @@ import SortNumericAscIcon from '../icons/SortNumericAsc';
 import SortNumericDescIcon from '../icons/SortNumericDesc';
 import IconButton from './IconButton';
 import s from './SortTags.module.scss';
+import SearchIcon from '../icons/Search';
+import Input from './Input';
 
 function SortTags({
   sort,
@@ -32,6 +34,15 @@ function SortTags({
 
   return (
     <div className={s.wrapper}>
+      <Input
+        classWrapper={s.input_wrapper}
+        className={s.input}
+        type="text"
+        id="tags-filter"
+        theme={theme}
+        name={<SearchIcon color={theme.text} />}
+        onChange={(e) => {}}
+      />
       <IconButton
         titleHide
         title={sort.byAlpha}

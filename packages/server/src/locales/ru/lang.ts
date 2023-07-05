@@ -105,6 +105,7 @@ const lang: Locale = {
     confirmEmail: {
       title: 'Подтверждение почты',
       paramsNotFound: 'Не найдены необходимые параметры страницы',
+      goBack: 'Назад',
     },
     common: {
       formDesc: 'Поля помеченные * обязательны для заполенения',

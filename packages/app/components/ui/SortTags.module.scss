@@ -4,8 +4,17 @@
   position: relative;
   display: flex;
   flex-grow: row wrap;
+  align-items: center;
 
   .item {
     margin: 0.2rem;
+  }
+
+  .input {
+    margin-bottom: 0;
+  }
+
+  .input_wrapper {
+    margin-top: 0;
   }
 }

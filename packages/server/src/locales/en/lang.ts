@@ -106,6 +106,7 @@ const lang: Locale = {
     confirmEmail: {
       title: 'Mail Confirmation',
       paramsNotFound: 'Required page parameters not found',
+      goBack: 'Back',
     },
     common: {
       formDesc: 'Fields marked with * are required',
