@@ -25,7 +25,6 @@ import Tooltip from './ui/Tooltip';
 import Typography from './ui/Typography';
 import Dialog from './ui/Dialog';
 import Button from './ui/Button';
-import FilterIcon from './icons/Filter';
 import Checkbox from './ui/Checkbox';
 import Cheep from './ui/Cheep';
 import LoadIcon from './icons/LoadIcon';
@@ -115,6 +114,8 @@ function My({
     alphaDesc,
     numericDesc,
     setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
   } = useTags({ isTrash, gt });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -289,6 +290,8 @@ function My({
                 alphaDesc={alphaDesc}
                 numericDesc={numericDesc}
                 setCurrentSort={setCurrentSort}
+                setFilterText={setFilterTagsText}
+                filterText={filterTagsText}
               />
               <Hr theme={theme} viceVersa />
               {allTags.map((item) => (

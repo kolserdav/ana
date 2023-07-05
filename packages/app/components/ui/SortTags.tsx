@@ -17,12 +17,16 @@ function SortTags({
   numericDesc,
   theme,
   setCurrentSort,
+  filterText,
+  setFilterText,
 }: {
   sort: Locale['app']['common']['sort'];
   alphaDesc: boolean;
   numericDesc: boolean;
   theme: Theme;
   setCurrentSort: React.Dispatch<React.SetStateAction<SortName>>;
+  filterText: string;
+  setFilterText: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const onClickSort = useCallback(
     // eslint-disable-next-line no-unused-vars
@@ -32,16 +36,22 @@ function SortTags({
     [setCurrentSort]
   );
 
+  const onChangeFilterText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setFilterText(value);
+  };
+
   return (
     <div className={s.wrapper}>
       <Input
-        classWrapper={s.input_wrapper}
-        className={s.input}
         type="text"
         id="tags-filter"
         theme={theme}
-        name={<SearchIcon color={theme.text} />}
-        onChange={(e) => {}}
+        value={filterText}
+        name={<SearchIcon withoutScale color={theme.text} />}
+        onChange={onChangeFilterText}
       />
       <IconButton
         titleHide
