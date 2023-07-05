@@ -11,6 +11,7 @@ import {
   useConfirmEmail,
   useDeleteAccount,
   useLanguage,
+  useListenFocus,
   usePersonalData,
   useTestSpeech,
 } from './Settings.hooks';
@@ -75,6 +76,9 @@ function Settings({
 
   const { load, setLoad } = useLoad();
   const { lang, langs, changeLang } = useLanguage();
+
+  useListenFocus();
+
   const {
     testText,
     onChangeTestText,
@@ -566,12 +570,14 @@ function Settings({
         onClose={setSendConfirmEmail}
         open={sendConfirmEmail}
       >
-        <Typography variant="h3" theme={theme} align="center">
-          {`${locale.sendConfirmEmail}?`}
-        </Typography>
-        <Typography variant="p" theme={theme}>
-          {user?.email}
-        </Typography>
+        <div className={p.dialog__content}>
+          <Typography variant="h3" theme={theme} align="center">
+            {`${locale.sendConfirmEmail}?`}
+          </Typography>
+          <Typography variant="p" theme={theme}>
+            {user?.email}
+          </Typography>
+        </div>
         <div className={p.dialog__actions}>
           <Button
             className={s.button}

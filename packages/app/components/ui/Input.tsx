@@ -96,6 +96,12 @@ const Input = forwardRef<
 
     return (
       <div
+        role="button"
+        tabIndex={-1}
+        onKeyDown={() => {
+          /** */
+        }}
+        onClick={onClick}
         className={clsx(s.wrapper, classWrapper || '', ubuntu500.className, hidden ? s.hidden : '')}
       >
         <input
@@ -118,7 +124,6 @@ const Input = forwardRef<
               onBlur(e);
             }
           }}
-          onClick={onClick}
           required={required}
           style={
             error

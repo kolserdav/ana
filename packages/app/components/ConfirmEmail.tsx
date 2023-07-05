@@ -3,11 +3,12 @@ import useLoad from '../hooks/useLoad';
 import useQueryString from '../hooks/useQueryString';
 import { Theme } from '../Theme';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { LOAD_PAGE_DURATION } from '../utils/constants';
+import { LOAD_PAGE_DURATION, Pages } from '../utils/constants';
 import s from './ConfirmEmail.module.scss';
 import Typography from './ui/Typography';
 import Request from '../utils/request';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
+import Link from './ui/Link';
 
 const request = new Request();
 
@@ -77,6 +78,9 @@ function ConfirmEmail({
         <Typography variant="h4" align="center" styleName="info" theme={theme}>
           {result || ''}
         </Typography>
+        <Link theme={theme} className={s.link} href={Pages.translate}>
+          {locale.goBack}
+        </Link>
       </div>
     </div>
   );
