@@ -114,8 +114,7 @@ function My({
     restartGetTags,
     alphaDesc,
     numericDesc,
-    setAlphaDesc,
-    setNumericDesc,
+    setCurrentSort,
   } = useTags({ isTrash, gt });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -285,12 +284,11 @@ function My({
           >
             <div className={s.filters_tags}>
               <SortTags
-                setAlphaDesc={setAlphaDesc}
                 theme={theme}
                 sort={sort}
                 alphaDesc={alphaDesc}
                 numericDesc={numericDesc}
-                setNumericDesc={setNumericDesc}
+                setCurrentSort={setCurrentSort}
               />
               <Hr theme={theme} viceVersa />
               {allTags.map((item) => (

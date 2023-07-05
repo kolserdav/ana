@@ -7,7 +7,6 @@ import SortAlphaDescIcon from '../icons/SortAlphaDesc';
 import SortNumericAscIcon from '../icons/SortNumericAsc';
 import SortNumericDescIcon from '../icons/SortNumericDesc';
 import IconButton from './IconButton';
-import { log } from '../../utils/lib';
 import s from './SortTags.module.scss';
 
 function SortTags({
@@ -15,37 +14,20 @@ function SortTags({
   alphaDesc,
   numericDesc,
   theme,
-  setAlphaDesc,
-  setNumericDesc,
+  setCurrentSort,
 }: {
   sort: Locale['app']['common']['sort'];
   alphaDesc: boolean;
   numericDesc: boolean;
   theme: Theme;
-  setAlphaDesc: React.Dispatch<React.SetStateAction<boolean>>;
-  setNumericDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentSort: React.Dispatch<React.SetStateAction<SortName>>;
 }) {
   const onClickSort = useCallback(
     // eslint-disable-next-line no-unused-vars
     (name: SortName) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      switch (name) {
-        case SortName.ALPHA_DESC:
-          setAlphaDesc(false);
-          break;
-        case SortName.ALPHA_ASC:
-          setAlphaDesc(true);
-          break;
-        case SortName.NUMERIC_DESC:
-          setNumericDesc(false);
-          break;
-        case SortName.NUMERIC_ASC:
-          setNumericDesc(true);
-          break;
-        default:
-          log('warn', 'Default click sort tags', name);
-      }
+      setCurrentSort(name);
     },
-    [setAlphaDesc, setNumericDesc]
+    [setCurrentSort]
   );
 
   return (
