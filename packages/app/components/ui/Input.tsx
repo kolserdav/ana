@@ -10,7 +10,7 @@ const Input = forwardRef<
   {
     disabled?: boolean;
     value?: string | readonly string[];
-    name: string | React.ReactNode;
+    name?: string | React.ReactNode;
     // eslint-disable-next-line no-unused-vars
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     theme: Theme;
@@ -143,23 +143,25 @@ const Input = forwardRef<
             disabled ? s.disabled : ''
           )}
         />
-        <label
-          className={disabled ? s.disabled : ''}
-          style={{
-            color: theme.text,
-            background: !gradient
-              ? disabled
-                ? 'transparent'
-                : backgroundColor
-              : `linear-gradient(to top, ${backgroundColor}, ${theme.paper} 65%)`,
-            transition: !gradient
-              ? `all ${LABEL_TRANSITION} ease-out`
-              : `all ${LABEL_TRANSITION} ease-in`,
-          }}
-          htmlFor={id}
-        >
-          {name}
-        </label>
+        {name && (
+          <label
+            className={disabled ? s.disabled : ''}
+            style={{
+              color: theme.text,
+              background: !gradient
+                ? disabled
+                  ? 'transparent'
+                  : backgroundColor
+                : `linear-gradient(to top, ${backgroundColor}, ${theme.paper} 65%)`,
+              transition: !gradient
+                ? `all ${LABEL_TRANSITION} ease-out`
+                : `all ${LABEL_TRANSITION} ease-in`,
+            }}
+            htmlFor={id}
+          >
+            {name}
+          </label>
+        )}
         <span className={clsx(s.desc, disabled ? s.disabled : '')}>
           <span style={{ color: theme.yellow }}>{error}</span>
           <span style={{ color: theme.text }}>{desc}</span>
@@ -191,6 +193,7 @@ Input.defaultProps = {
   defaultValue: undefined,
   value: undefined,
   maxLength: undefined,
+  name: undefined,
 };
 
 export default Input;

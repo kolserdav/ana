@@ -548,6 +548,7 @@ export interface Locale {
       microNotPermitted: string;
       serverIsNotConnected: string;
       undo: string;
+      closeUpdateTag: string;
     };
     my: {
       title: string;

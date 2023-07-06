@@ -627,6 +627,16 @@ export const useTags = ({
     gt,
   });
 
+  /**
+   * Clear new tag
+   */
+  useEffect(() => {
+    if (addTags) {
+      return;
+    }
+    setNewTag('');
+  }, [addTags]);
+
   const createTag = async (text: string) => {
     const res = await request.tagCreate({ text });
     log(res.status, res.message, res, true);
@@ -705,6 +715,10 @@ export const useTags = ({
     }
   };
 
+  const onCloseTagUpdate = () => {
+    setTagToUpdate(null);
+  };
+
   return {
     onClickAddTaggs,
     allTags,
@@ -725,6 +739,7 @@ export const useTags = ({
     onClickDeleteTag,
     tagRestart,
     setTagRestart,
+    onCloseTagUpdate,
   };
 };
 

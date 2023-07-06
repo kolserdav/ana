@@ -24,6 +24,7 @@ export default function useTags({
   const [alphaDesc, setAlphaDesc] = useState<boolean>(false);
   const [numericDesc, setNumericDesc] = useState<boolean>(false);
   const [currentSort, setCurrentSort] = useState<SortName>(SortName.ALPHA_DESC);
+  const [filterTagsText, setFilterTagsText] = useState<string>('');
 
   /**
    * Set all tags
@@ -125,14 +126,25 @@ export default function useTags({
     [allTags, currentSort]
   );
 
+  const __tags = useMemo(() => {
+    if (!filterTagsText) {
+      return _tags;
+    }
+    return _tags.filter((item) =>
+      new RegExp(filterTagsText.toUpperCase()).test(item.text.toUpperCase())
+    );
+  }, [_tags, filterTagsText]);
+
   return {
     tags,
     setTags,
     onClickTagCheepWrapper,
-    allTags: _tags,
+    allTags: __tags,
     tagsIsSet,
     alphaDesc,
     numericDesc,
     setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
   };
 }

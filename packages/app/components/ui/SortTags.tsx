@@ -45,12 +45,12 @@ function SortTags({
 
   return (
     <div className={s.wrapper}>
+      <SearchIcon withoutScale color={theme.text} />
       <Input
         type="text"
         id="tags-filter"
         theme={theme}
         value={filterText}
-        name={<SearchIcon withoutScale color={theme.text} />}
         onChange={onChangeFilterText}
       />
       <IconButton

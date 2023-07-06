@@ -180,6 +180,7 @@ const lang: Locale = {
       serverIsNotConnected:
         'The server is not available or the client does not support the protocol',
       undo: 'Undo last operation',
+      closeUpdateTag: 'Close Tag Update',
     },
     my: {
       title: 'My Texts',
