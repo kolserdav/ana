@@ -1,13 +1,13 @@
 import React from 'react';
 import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
-import AppBar from '../components/AppBar';
-import { AppProps, PageFull } from '../types';
-import { Locale, LocaleValue } from '../types/interfaces';
-import { prepagePage } from '../utils/lib';
-import Request from '../utils/request';
-import s from '../styles/Page.module.scss';
-import About from '../components/About';
+import AppBar from '../../components/AppBar';
+import { AppProps, PageFull } from '../../types';
+import { Locale, LocaleValue } from '../../types/interfaces';
+import { prepagePage } from '../../utils/lib';
+import Request from '../../utils/request';
+import s from '../../styles/Page.module.scss';
+import About from '../../components/About';
 
 const request = new Request();
 

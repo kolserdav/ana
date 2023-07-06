@@ -599,6 +599,7 @@ export interface Locale {
       repoTitle: string;
       aboutSite: string;
       contactsTitle: string;
+      donate: string;
     };
     settings: {
       title: string;

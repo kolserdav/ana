@@ -75,6 +75,11 @@ function About({
             {locale.contactsTitle}
           </Link>
         </div>
+        <div className={s.link}>
+          <Link href={Pages.donate} theme={theme}>
+            {locale.donate}
+          </Link>
+        </div>
       </div>
     </section>
   );

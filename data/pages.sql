@@ -4,6 +4,13 @@ INSERT INTO public."Page" VALUES (2, 'contacts', 'title', 'Resource owner inform
 INSERT INTO public."Page" VALUES (3, 'contacts', 'content', '<p>контакты</p>', 'ru') ;
 INSERT INTO public."Page" VALUES (4, 'contacts', 'content', '<p>contacts</p>', 'en') ;
 
+INSERT INTO public."Page" VALUES (25, 'donate', 'title', 'Пожертвование', 'ru') ;
+INSERT INTO public."Page" VALUES (26, 'donate', 'title', 'Donation', 'en') ;
+INSERT INTO public."Page" VALUES (27, 'donate', 'description', 'Помогите проекту', 'ru') ;
+INSERT INTO public."Page" VALUES (28, 'donate', 'description', 'Help the project', 'en') ;
+INSERT INTO public."Page" VALUES (29, 'donate', 'content', '', 'ru') ;
+INSERT INTO public."Page" VALUES (30, 'donate', 'content', '', 'en') ;
+
 INSERT INTO public."Page" VALUES (5, 'policy', 'content', '<p>Политика конфиденциальности</p>', 'ru') ;
 INSERT INTO public."Page" VALUES (6, 'policy', 'title', 'Политика конфиденциальности', 'ru') ;
 INSERT INTO public."Page" VALUES (7, 'policy', 'title', 'Privacy Policy', 'en') ;

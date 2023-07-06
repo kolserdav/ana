@@ -12,6 +12,7 @@ export const DATE_FILTER_STATISTICS_DEFAULT: DateFilter = 'week';
 export const SERVER_LOCAL_ADDRESS = process.env.SERVER_LOCAL_ADDRESS as string;
 export const SERVER = process.env.NEXT_PUBLIC_SERVER as string;
 export const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN as string;
+export const DONATE_LINK = process.env.NEXT_PUBLIC_DONATE_LINK as string;
 export const REPOSITORY_LINK = process.env.NEXT_PUBLIC_REPOSITORY_LINK as string;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const LOG_LEVEL = parseInt(process.env.NEXT_PUBLIC_LOG_LEVEL as string, 10);
@@ -32,6 +33,8 @@ export enum Pages {
   translate = '/',
   // eslint-disable-next-line no-unused-vars
   about = '/about',
+  // eslint-disable-next-line no-unused-vars
+  donate = '/about/donate',
   // eslint-disable-next-line no-unused-vars
   policy = '/policy',
   // eslint-disable-next-line no-unused-vars

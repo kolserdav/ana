@@ -224,6 +224,7 @@ const lang: Locale = {
       repoTitle: 'Исходный код',
       aboutSite: 'Об этом приложении',
       contactsTitle: 'Контакты',
+      donate: 'Пожертвовать',
     },
     settings: {
       title: 'Настройки',
