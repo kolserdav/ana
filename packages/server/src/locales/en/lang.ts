@@ -106,6 +106,7 @@ const lang: Locale = {
     confirmEmail: {
       title: 'Mail Confirmation',
       paramsNotFound: 'Required page parameters not found',
+      goBack: 'Back',
     },
     common: {
       formDesc: 'Fields marked with * are required',
@@ -179,6 +180,7 @@ const lang: Locale = {
       serverIsNotConnected:
         'The server is not available or the client does not support the protocol',
       undo: 'Undo last operation',
+      closeUpdateTag: 'Close Tag Update',
     },
     my: {
       title: 'My Texts',

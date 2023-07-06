@@ -7,49 +7,52 @@ import SortAlphaDescIcon from '../icons/SortAlphaDesc';
 import SortNumericAscIcon from '../icons/SortNumericAsc';
 import SortNumericDescIcon from '../icons/SortNumericDesc';
 import IconButton from './IconButton';
-import { log } from '../../utils/lib';
 import s from './SortTags.module.scss';
+import SearchIcon from '../icons/Search';
+import Input from './Input';
 
 function SortTags({
   sort,
   alphaDesc,
   numericDesc,
   theme,
-  setAlphaDesc,
-  setNumericDesc,
+  setCurrentSort,
+  filterText,
+  setFilterText,
 }: {
   sort: Locale['app']['common']['sort'];
   alphaDesc: boolean;
   numericDesc: boolean;
   theme: Theme;
-  setAlphaDesc: React.Dispatch<React.SetStateAction<boolean>>;
-  setNumericDesc: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentSort: React.Dispatch<React.SetStateAction<SortName>>;
+  filterText: string;
+  setFilterText: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const onClickSort = useCallback(
     // eslint-disable-next-line no-unused-vars
     (name: SortName) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      switch (name) {
-        case SortName.ALPHA_DESC:
-          setAlphaDesc(false);
-          break;
-        case SortName.ALPHA_ASC:
-          setAlphaDesc(true);
-          break;
-        case SortName.NUMERIC_DESC:
-          setNumericDesc(false);
-          break;
-        case SortName.NUMERIC_ASC:
-          setNumericDesc(true);
-          break;
-        default:
-          log('warn', 'Default click sort tags', name);
-      }
+      setCurrentSort(name);
     },
-    [setAlphaDesc, setNumericDesc]
+    [setCurrentSort]
   );
+
+  const onChangeFilterText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setFilterText(value);
+  };
 
   return (
     <div className={s.wrapper}>
+      <SearchIcon withoutScale color={theme.text} />
+      <Input
+        type="text"
+        id="tags-filter"
+        theme={theme}
+        value={filterText}
+        onChange={onChangeFilterText}
+      />
       <IconButton
         titleHide
         title={sort.byAlpha}

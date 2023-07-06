@@ -88,6 +88,7 @@ function Translate({
     onClickDeleteTag,
     tagRestart,
     setTagRestart,
+    onCloseTagUpdate,
   } = useTags({ setLoad });
 
   const { undo, setUndo } = useUndo();
@@ -374,9 +375,19 @@ function Translate({
                       id="add-new-tag"
                       onChange={onChangeNewTag}
                       value={newTag}
-                      name={tagToUpdate ? locale.changeTag : locale.newTag}
+                      desc={tagToUpdate ? locale.changeTag : locale.newTag}
                       theme={theme}
                     />
+                    {tagToUpdate && (
+                      <IconButton
+                        title={locale.closeUpdateTag}
+                        titleHide
+                        theme={theme}
+                        onClick={onCloseTagUpdate}
+                      >
+                        <CloseIcon color={theme.text} />
+                      </IconButton>
+                    )}
                     <IconButton titleHide theme={theme} title={showHelp} ref={helpTagRef}>
                       <HelpIcon color={theme.text} />
                     </IconButton>

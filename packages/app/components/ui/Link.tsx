@@ -55,7 +55,7 @@ function Link({
           textDecorationColor: theme.text,
         }}
       >
-        <span style={style || { color: theme.blue }}>{children}</span>
+        <span style={{ ...style, color: theme.blue }}>{children}</span>
       </NextLink>
     )
   );

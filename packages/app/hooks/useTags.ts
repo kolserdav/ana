@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { TagFindManyResult } from '../types/interfaces';
 import Request from '../utils/request';
 import { log } from '../utils/lib';
+import { SortName } from '../types';
 
 const request = new Request();
 
@@ -22,6 +23,8 @@ export default function useTags({
   const [tagsIsSet, setTagsIsSet] = useState<boolean>(false);
   const [alphaDesc, setAlphaDesc] = useState<boolean>(false);
   const [numericDesc, setNumericDesc] = useState<boolean>(false);
+  const [currentSort, setCurrentSort] = useState<SortName>(SortName.ALPHA_DESC);
+  const [filterTagsText, setFilterTagsText] = useState<string>('');
 
   /**
    * Set all tags
@@ -40,9 +43,33 @@ export default function useTags({
     })();
   }, [restart, deleted, gt]);
 
+  /**
+   * Set sort icons
+   */
+  useEffect(() => {
+    switch (currentSort) {
+      case SortName.ALPHA_DESC:
+        setAlphaDesc(false);
+        break;
+      case SortName.ALPHA_ASC:
+        setAlphaDesc(true);
+        break;
+      case SortName.NUMERIC_DESC:
+        setNumericDesc(false);
+        break;
+      case SortName.NUMERIC_ASC:
+        setNumericDesc(true);
+        break;
+      default:
+        log('warn', 'Default click sort tags', currentSort);
+        break;
+    }
+  }, [currentSort]);
+
   const onClickTagCheepWrapper = (tag: TagFindManyResult[0], command: 'add' | 'del') => () => {
     const _tags = tags.slice();
     const index = _tags.findIndex((item) => item.id === tag.id);
+
     switch (command) {
       case 'add':
         if (index !== -1) {
@@ -66,51 +93,58 @@ export default function useTags({
     setTags(_tags);
   };
 
-  const onClickSortByApha = () => {
-    setAlphaDesc(!alphaDesc);
-  };
-
-  const onClickSortByNumeric = () => {
-    setNumericDesc(!numericDesc);
-  };
-
   const _tags = useMemo(
     () =>
-      allTags.sort((a, b) => {
-        if (alphaDesc && numericDesc) {
-          if (a.PhraseTag.length < b.PhraseTag.length) {
-            return -1;
-          }
-          return 1;
-        }
-        if (alphaDesc) {
-          if (a.text[0] < b.text[0]) {
-            return -1;
-          }
-          return 1;
-        }
-        if (numericDesc) {
-          if (a.PhraseTag.length < b.PhraseTag.length) {
-            return -1;
-          }
-          return 1;
+      allTags?.sort((a, b) => {
+        switch (currentSort) {
+          case SortName.ALPHA_DESC:
+            if (a.text[0] < b.text[0]) {
+              return -1;
+            }
+            break;
+          case SortName.ALPHA_ASC:
+            if (a.text[0] > b.text[0]) {
+              return -1;
+            }
+            break;
+          case SortName.NUMERIC_DESC:
+            if (a.PhraseTag.length < b.PhraseTag.length) {
+              return -1;
+            }
+            break;
+          case SortName.NUMERIC_ASC:
+            if (a.PhraseTag.length > b.PhraseTag.length) {
+              return -1;
+            }
+            break;
+          default:
+            log('warn', 'Default click sort tags', currentSort);
+            break;
         }
         return 1;
-      }),
-    [alphaDesc, numericDesc, allTags]
+      }) || [],
+    [allTags, currentSort]
   );
+
+  const __tags = useMemo(() => {
+    if (!filterTagsText) {
+      return _tags;
+    }
+    return _tags.filter((item) =>
+      new RegExp(filterTagsText.toUpperCase()).test(item.text.toUpperCase())
+    );
+  }, [_tags, filterTagsText]);
 
   return {
     tags,
     setTags,
     onClickTagCheepWrapper,
-    allTags: _tags,
+    allTags: __tags,
     tagsIsSet,
-    onClickSortByApha,
-    onClickSortByNumeric,
     alphaDesc,
     numericDesc,
-    setAlphaDesc,
-    setNumericDesc,
+    setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
   };
 }

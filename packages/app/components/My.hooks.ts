@@ -460,8 +460,9 @@ export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefi
     tagsIsSet,
     alphaDesc,
     numericDesc,
-    setAlphaDesc,
-    setNumericDesc,
+    setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
   } = useTagsGlobal({
     onChangeTags: (_tags) => {
       setSkip(0);
@@ -559,8 +560,9 @@ export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefi
     restartGetTags,
     alphaDesc,
     numericDesc,
-    setAlphaDesc,
-    setNumericDesc,
+    setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
   };
 };
 

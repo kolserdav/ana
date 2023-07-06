@@ -105,6 +105,7 @@ const lang: Locale = {
     confirmEmail: {
       title: 'Подтверждение почты',
       paramsNotFound: 'Не найдены необходимые параметры страницы',
+      goBack: 'Назад',
     },
     common: {
       formDesc: 'Поля помеченные * обязательны для заполенения',
@@ -179,6 +180,7 @@ const lang: Locale = {
       microNotPermitted: 'Разрешение на использование микрофона не получено',
       serverIsNotConnected: 'Сервер недоступен или клиент не поддерживает протокол',
       undo: 'Отменить последнюю операцию',
+      closeUpdateTag: 'Закрыть изменение метки',
     },
     my: {
       title: 'Мои тексты',

@@ -604,3 +604,24 @@ export const useChangeNode = ({
     nodeSuccess,
   };
 };
+
+export const useListenFocus = () => {
+  /**
+   * Listen on focus
+   */
+  useEffect(() => {
+    const listenHandler = () => {
+      const { userRenew: _userRenew } = storeUserRenew.getState();
+      storeUserRenew.dispatch(
+        changeUserRenew({
+          userRenew: !_userRenew,
+        })
+      );
+    };
+    window.addEventListener('focus', listenHandler);
+
+    return () => {
+      window.addEventListener('focus', listenHandler);
+    };
+  }, []);
+};
