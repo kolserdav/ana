@@ -452,7 +452,18 @@ export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefi
     }
   }, []);
 
-  const { tags, onClickTagCheepWrapper, setTags, allTags, tagsIsSet } = useTagsGlobal({
+  const {
+    tags,
+    onClickTagCheepWrapper,
+    setTags,
+    allTags,
+    tagsIsSet,
+    alphaDesc,
+    numericDesc,
+    setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
+  } = useTagsGlobal({
     onChangeTags: (_tags) => {
       setSkip(0);
       setLocalStorage(
@@ -547,6 +558,11 @@ export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefi
     resetTags,
     onClickFilterTags,
     restartGetTags,
+    alphaDesc,
+    numericDesc,
+    setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
   };
 };
 

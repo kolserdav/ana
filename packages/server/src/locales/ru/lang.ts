@@ -105,6 +105,7 @@ const lang: Locale = {
     confirmEmail: {
       title: 'Подтверждение почты',
       paramsNotFound: 'Не найдены необходимые параметры страницы',
+      goBack: 'Назад',
     },
     common: {
       formDesc: 'Поля помеченные * обязательны для заполенения',
@@ -138,6 +139,10 @@ const lang: Locale = {
         forSixMonths: 'за полгода',
         forYear: 'за год',
         forAllTime: 'за всё время',
+      },
+      sort: {
+        byAlpha: 'По алфавиту',
+        byNumeric: 'По количеству',
       },
       wrongUrlFormat: 'Неверный формат адреса',
     },
@@ -175,6 +180,7 @@ const lang: Locale = {
       microNotPermitted: 'Разрешение на использование микрофона не получено',
       serverIsNotConnected: 'Сервер недоступен или клиент не поддерживает протокол',
       undo: 'Отменить последнюю операцию',
+      closeUpdateTag: 'Закрыть изменение метки',
     },
     my: {
       title: 'Мои тексты',
@@ -218,6 +224,7 @@ const lang: Locale = {
       repoTitle: 'Исходный код',
       aboutSite: 'Об этом приложении',
       contactsTitle: 'Контакты',
+      donate: 'Пожертвовать',
     },
     settings: {
       title: 'Настройки',

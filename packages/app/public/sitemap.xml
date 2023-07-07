@@ -4,7 +4,7 @@
 		<loc>https://uyem.ru/</loc>
 		<xhtml:link rel="alternate" hreflang="ru" href="https://uyem.ru/ru/" />
 		<xhtml:link rel="alternate" hreflang="en" href="https://uyem.ru/en/" />
-		<lastmod>2022-06-25</lastmod>
+		<lastmod>2023-07-03</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.4</priority>
 	</url>
@@ -12,7 +12,7 @@
 		<loc>https://uyem.ru/about</loc>
 		<xhtml:link rel="alternate" hreflang="ru" href="https://uyem.ru/ru/about" />
 		<xhtml:link rel="alternate" hreflang="en" href="https://uyem.ru/en/about" />
-		<lastmod>2022-12-15</lastmod>
+		<lastmod>2023-07-03</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.3</priority>
 	</url>
@@ -20,7 +20,7 @@
 		<loc>https://uyem.ru/rules</loc>
 		<xhtml:link rel="alternate" hreflang="ru" href="https://uyem.ru/ru/rules" />
 		<xhtml:link rel="alternate" hreflang="en" href="https://uyem.ru/en/rules" />
-		<lastmod>2022-12-15</lastmod>
+		<lastmod>2023-07-03</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.3</priority>
 	</url>
@@ -28,7 +28,7 @@
 		<loc>https://uyem.ru/policy</loc>
 		<xhtml:link rel="alternate" hreflang="ru" href="https://uyem.ru/ru/policy" />
 		<xhtml:link rel="alternate" hreflang="en" href="https://uyem.ru/en/policy" />
-		<lastmod>2022-06-23</lastmod>
+		<lastmod>2023-07-03</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
@@ -36,7 +36,7 @@
 		<loc>https://uyem.ru/settings</loc>
 		<xhtml:link rel="alternate" hreflang="ru" href="https://uyem.ru/ru/settings" />
 		<xhtml:link rel="alternate" hreflang="en" href="https://uyem.ru/en/settings" />
-		<lastmod>2022-06-23</lastmod>
+		<lastmod>2023-07-03</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
@@ -44,7 +44,7 @@
 		<loc>https://uyem.ru/contacts</loc>
 		<xhtml:link rel="alternate" hreflang="ru" href="https://uyem.ru/ru/contacts" />
 		<xhtml:link rel="alternate" hreflang="en" href="https://uyem.ru/en/contacts" />
-		<lastmod>2022-06-23</lastmod>
+		<lastmod>2023-07-03</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>

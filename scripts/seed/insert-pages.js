@@ -17,7 +17,11 @@ const inserts = data.split(';').filter((item) => item);
     const item = inserts[i];
     if (item) {
       console.log('Running sql', item);
-      await prisma.$queryRawUnsafe(item);
+      try {
+        await prisma.$queryRawUnsafe(item);
+      } catch (e) {
+        console.error('Error db request', e);
+      }
     }
   }
 })();

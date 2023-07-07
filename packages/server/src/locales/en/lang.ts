@@ -106,6 +106,7 @@ const lang: Locale = {
     confirmEmail: {
       title: 'Mail Confirmation',
       paramsNotFound: 'Required page parameters not found',
+      goBack: 'Back',
     },
     common: {
       formDesc: 'Fields marked with * are required',
@@ -139,6 +140,10 @@ const lang: Locale = {
         forSixMonths: 'half a year',
         forYear: 'for the year',
         forAllTime: 'for all time',
+      },
+      sort: {
+        byAlpha: 'Alphabetically',
+        byNumeric: 'By number',
       },
       wrongUrlFormat: 'Invalid address format',
     },
@@ -175,6 +180,7 @@ const lang: Locale = {
       serverIsNotConnected:
         'The server is not available or the client does not support the protocol',
       undo: 'Undo last operation',
+      closeUpdateTag: 'Close Tag Update',
     },
     my: {
       title: 'My Texts',
@@ -218,6 +224,7 @@ const lang: Locale = {
       repoTitle: 'Source code',
       aboutSite: 'About this application',
       contactsTitle: 'Contacts',
+      donate: 'Donate',
     },
     settings: {
       title: 'Settings',

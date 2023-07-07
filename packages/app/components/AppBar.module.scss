@@ -122,8 +122,15 @@
     }
   }
 
+  &.item {
+    cursor: default;
+    text-decoration: underline;
+  }
+
   &.disabled {
     background-color: rgba($color: #000, $alpha: 10%);
     cursor: default;
   }
 }
+
+

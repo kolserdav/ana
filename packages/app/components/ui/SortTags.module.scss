@@ -1,0 +1,15 @@
+@import '../../styles/constants';
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-grow: row wrap;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .item {
+    margin: 0.2rem;
+  }
+
+}

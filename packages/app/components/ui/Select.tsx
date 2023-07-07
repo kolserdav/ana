@@ -6,6 +6,7 @@ import { ubuntu500 } from '../../fonts/ubuntu';
 interface AdditionSelectProps {
   theme: Theme;
   active?: boolean;
+  viceVersa?: boolean;
 }
 
 const Select = forwardRef<
@@ -16,7 +17,7 @@ const Select = forwardRef<
   > &
     AdditionSelectProps
 >((_props, ref) => {
-  const { theme, 'aria-label': label, id, active } = _props;
+  const { theme, 'aria-label': label, id, active, viceVersa } = _props;
 
   const props = useMemo(() => {
     const newProps: Omit<
@@ -26,6 +27,7 @@ const Select = forwardRef<
       Partial<AdditionSelectProps> = { ..._props };
     delete newProps.theme;
     delete newProps.active;
+    delete newProps.viceVersa;
     return newProps;
   }, [_props]);
   return (
@@ -42,7 +44,7 @@ const Select = forwardRef<
         style={{
           backgroundColor: active ? theme.active : theme.paper,
           color: theme.text,
-          borderColor: theme.active,
+          borderColor: viceVersa ? theme.text : theme.active,
         }}
         className={ubuntu500.className}
         {...props}
@@ -55,6 +57,7 @@ Select.displayName = 'Select';
 
 Select.defaultProps = {
   active: undefined,
+  viceVersa: undefined,
 };
 
 export default Select;

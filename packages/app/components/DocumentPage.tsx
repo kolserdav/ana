@@ -46,6 +46,11 @@ function DocumentPage({
             {title}
           </Typography>
         </div>
+        <div className={s.description}>
+          <Typography theme={theme} variant="p" align="center">
+            {description}
+          </Typography>
+        </div>
         <div className={s.page__text} dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     </div>

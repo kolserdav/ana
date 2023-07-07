@@ -1,4 +1,4 @@
-import { createRef, useRef } from 'react';
+import { createRef, useCallback, useRef } from 'react';
 import clsx from 'clsx';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
@@ -25,7 +25,6 @@ import Tooltip from './ui/Tooltip';
 import Typography from './ui/Typography';
 import Dialog from './ui/Dialog';
 import Button from './ui/Button';
-import FilterIcon from './icons/Filter';
 import Checkbox from './ui/Checkbox';
 import Cheep from './ui/Cheep';
 import LoadIcon from './icons/LoadIcon';
@@ -34,6 +33,7 @@ import {
   APP_BAR_TRANSITION,
   DATA_TYPE_PHRASE,
   DATA_TYPE_PLAY_BUTTON,
+  DATE_FILTER_ALL,
   FIXED_TOOLS_HIGHT,
 } from '../utils/constants';
 import Input from './ui/Input';
@@ -48,6 +48,10 @@ import SpeakIcon from './ui/SpeakIcon';
 import SelectDateFilter from './ui/SelectDateFilter';
 import useFilterByDate from '../hooks/useFilterByDate';
 import { LocalStorageName } from '../utils/localStorage';
+import Hr from './ui/Hr';
+import SortTimeAscIcon from './icons/SortTimeAsc';
+import SortTimeDescIcon from './icons/SortTimeDesc';
+import SortTags from './ui/SortTags';
 
 function My({
   locale,
@@ -60,9 +64,11 @@ function My({
   voiceNotFound,
   changeLinkTo,
   dateFilter,
+  sort,
 }: {
   locale: Locale['app']['my'];
   dateFilter: Locale['app']['common']['dateFilter'];
+  sort: Locale['app']['common']['sort'];
   theme: Theme;
   edit: string;
   _delete: string;
@@ -85,6 +91,7 @@ function My({
     date,
     resetFilterByDate,
   } = useFilterByDate({
+    def: DATE_FILTER_ALL,
     localStorageName: isTrash
       ? LocalStorageName.FILTER_BY_DATE_TRASH
       : LocalStorageName.FILTER_BY_DATE,
@@ -104,6 +111,11 @@ function My({
     resetTags,
     onClickFilterTags,
     restartGetTags,
+    alphaDesc,
+    numericDesc,
+    setCurrentSort,
+    filterTagsText,
+    setFilterTagsText,
   } = useTags({ isTrash, gt });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -228,6 +240,7 @@ function My({
           </Typography>
           {isTrash && (
             <IconButton
+              titleHide
               disabled={phrases.length === 0}
               onClick={onClickOpenEmptyTrash}
               theme={theme}
@@ -271,6 +284,16 @@ function My({
             style={{ backgroundColor: theme.active }}
           >
             <div className={s.filters_tags}>
+              <SortTags
+                theme={theme}
+                sort={sort}
+                alphaDesc={alphaDesc}
+                numericDesc={numericDesc}
+                setCurrentSort={setCurrentSort}
+                setFilterText={setFilterTagsText}
+                filterText={filterTagsText}
+              />
+              <Hr theme={theme} viceVersa />
               {allTags.map((item) => (
                 <span key={item.id}>
                   <Cheep
@@ -311,12 +334,17 @@ function My({
           />
           <div className={s.sorts}>
             <div className={s.sort_item}>
-              <IconButton title={locale.byUpdateDate} theme={theme} onClick={onClickSortByDate}>
-                <FilterIcon
-                  withoutScale
-                  className={orderBy === 'asc' ? s.asc : s.desc}
-                  color={theme.text}
-                />
+              <IconButton
+                titleHide
+                title={locale.byUpdateDate}
+                theme={theme}
+                onClick={onClickSortByDate}
+              >
+                {orderBy === 'asc' ? (
+                  <SortTimeAscIcon color={theme.text} />
+                ) : (
+                  <SortTimeDescIcon color={theme.text} />
+                )}
               </IconButton>
             </div>
           </div>
@@ -350,6 +378,7 @@ function My({
               }}
             >
               <IconCheckbox
+                titleHide
                 checked={phrases.length === selected.length}
                 onClick={selectAll}
                 theme={theme}
@@ -357,6 +386,7 @@ function My({
                 label={`${locale.selectAll}: ${phrases.length - selected.length}`}
               />
               <IconCheckbox
+                titleHide
                 checked={phrases.length === selected.length}
                 onClick={unSelectAll}
                 theme={theme}
@@ -365,6 +395,7 @@ function My({
                 minus
               />
               <IconButton
+                titleHide
                 theme={theme}
                 onClick={onClickOpenDeleteSeleted}
                 title={locale.deleteSelected}
@@ -394,7 +425,12 @@ function My({
             borderColor: theme.text,
           }}
         >
-          <IconButton titleHide theme={theme} onClick={played ? onClickPauseAll : onClickPlayAll}>
+          <IconButton
+            titleHide
+            title={locale.playAll}
+            theme={theme}
+            onClick={played ? onClickPauseAll : onClickPlayAll}
+          >
             {played ? <PauseIcon color={theme.yellow} /> : <PlayIcon color={theme.green} />}
           </IconButton>
           <div className={s.played_phrase}>
@@ -407,11 +443,15 @@ function My({
               </Typography>
             </div>
           </div>
-          {(played || paused) && (
-            <IconButton titleHide theme={theme} onClick={onClickStopAll}>
-              <StopIcon color={theme.red} />
-            </IconButton>
-          )}
+
+          <IconButton
+            titleHide
+            theme={theme}
+            disabled={!played && !paused}
+            onClick={onClickStopAll}
+          >
+            <StopIcon color={theme.red} />
+          </IconButton>
         </div>
         <div ref={phrasesRef} className={s.phrases}>
           {phrases.length !== 0 ? (
@@ -525,7 +565,7 @@ function My({
                     <div className={s.tags}>
                       {item.PhraseTag.map((tag) => (
                         <div key={tag.id} className={s.tag_item}>
-                          <Typography variant="span" theme={theme} small disabled>
+                          <Typography variant="span" theme={theme} small styleName="blue">
                             {`#${tag.Tag.text}`}
                           </Typography>
                         </div>
@@ -536,8 +576,7 @@ function My({
                         variant="span"
                         theme={theme}
                         small
-                        blur
-                        styleName={item.updated === item.created ? 'info' : 'blue'}
+                        styleName={item.updated === item.created ? 'info' : 'warn'}
                       >
                         {item.updated.toString()}
                       </Typography>

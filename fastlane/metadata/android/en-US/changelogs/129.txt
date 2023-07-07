@@ -1,0 +1,1 @@
+- Prevent open in app other links

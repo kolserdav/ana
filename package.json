@@ -11,7 +11,7 @@
     "seed": "node ./scripts/seed/insert-pages.js"
   },
   "scripts": {
-    "build:app": "cd packages/app && npm run build",
+    "build:app": "npm run migrate && cd packages/app && npm run build",
     "build:server": "npm run migrate && cd packages/server && npm run build",
     "start:server": "cd packages/server && npm run start",
     "start:app": "cd packages/app && npm run start",
@@ -63,7 +63,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
-    "prisma": "^4.16.1",
+    "prisma": "^4.16.2",
     "puppeteer": "^19.6.0",
     "rimraf": "^5.0.1",
     "typescript": "^4.9.4"
@@ -71,7 +71,7 @@
   "dependencies": {
     "@fastify/cors": "^8.3.0",
     "@fastify/http-proxy": "^9.2.1",
-    "@prisma/client": "^4.16.1",
+    "@prisma/client": "^4.16.2",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "html-to-text": "^9.0.5",

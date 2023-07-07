@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -229,8 +230,12 @@ public class MainActivity extends Activity {
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
 
-
-                if (matchFound && !schema.path.equals("/") && firstLoad) {
+                if (!matchFound) {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(i);
+                    return true;
+                }
+                if (!schema.path.equals("/") && firstLoad) {
                     url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
                 Log.d(TAG, "Replaced url " + url);
@@ -250,7 +255,7 @@ public class MainActivity extends Activity {
                     };
                     task.start();
                 }
-                return true;
+                return false;
             }
 
             @Override

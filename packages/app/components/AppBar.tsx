@@ -158,6 +158,7 @@ function AppBar({
                   <TranslateIcon withoutScale color={theme.text} />
                 </div>
                 <Select
+                  viceVersa
                   ref={localeRef}
                   onChange={onChangeLang}
                   active
@@ -226,10 +227,12 @@ function AppBar({
               </div>
             </Link>
           ) : (
-            <div className={clsx(s.menu__item, s.active, s.disabled)}>
-              <TrashIcon color={theme.text} withoutScale />
-              <div style={{ color: theme.text }}>{locale.trash}</div>
-            </div>
+            user && (
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                <TrashIcon color={theme.text} withoutScale />
+                <div style={{ color: theme.text }}>{locale.trash}</div>
+              </div>
+            )
           )}
           {user && <Hr theme={theme} />}
           <div className={clsx(s.menu__item)}>
@@ -359,45 +362,47 @@ function AppBar({
       </Dialog>
       {user && (
         <Dialog className={p.dialog} theme={theme} onClose={setSupportDialog} open={supportDialog}>
-          <Typography variant="h3" theme={theme} align="center">
-            {locale.support.title}
-          </Typography>
-          {!user?.confirm && (
-            <>
-              <Typography variant="p" theme={theme} styleName="warn">
-                {locale.support.warning}
-              </Typography>
-              <Link href={Pages.settings} theme={theme}>
-                {locale.settings}
-              </Link>
-            </>
-          )}
-          <Input
-            theme={theme}
-            onChange={onChangeSupportSubject}
-            onBlur={onBlurSupportSubject}
-            value={supportSubject}
-            id="subject"
-            type="text"
-            required
-            error={supportSubjectError}
-            disabled={load || !user?.confirm}
-            name={locale.support.subject}
-            fullWidth
-            maxLength={SUPPORT_SUBJECT_MAX_LENGTH}
-            desc={`${supportSubject.length}/${SUPPORT_SUBJECT_MAX_LENGTH}`}
-          />
-          <Textarea
-            placeholder={locale.support.text}
-            value={supportText}
-            spellCheck
-            onInput={changeSupportText}
-            rows={supportTextRows}
-            theme={theme}
-            disabled={load || !user?.confirm}
-            maxLength={SUPPORT_TEXT_MAX_LENGHT}
-            error={supportTextError}
-          />
+          <div className={p.dialog__content}>
+            <Typography variant="h3" theme={theme} align="center">
+              {locale.support.title}
+            </Typography>
+            {!user?.confirm && (
+              <>
+                <Typography variant="p" theme={theme} styleName="warn">
+                  {locale.support.warning}
+                </Typography>
+                <Link href={Pages.settings} theme={theme}>
+                  {locale.settings}
+                </Link>
+              </>
+            )}
+            <Input
+              theme={theme}
+              onChange={onChangeSupportSubject}
+              onBlur={onBlurSupportSubject}
+              value={supportSubject}
+              id="subject"
+              type="text"
+              required
+              error={supportSubjectError}
+              disabled={load || !user?.confirm}
+              name={locale.support.subject}
+              fullWidth
+              maxLength={SUPPORT_SUBJECT_MAX_LENGTH}
+              desc={`${supportSubject.length}/${SUPPORT_SUBJECT_MAX_LENGTH}`}
+            />
+            <Textarea
+              placeholder={locale.support.text}
+              value={supportText}
+              spellCheck
+              onInput={changeSupportText}
+              rows={supportTextRows}
+              theme={theme}
+              disabled={load || !user?.confirm}
+              maxLength={SUPPORT_TEXT_MAX_LENGHT}
+              error={supportTextError}
+            />
+          </div>
           <div className={p.dialog__actions}>
             <Button className={s.button} onClick={onClickCancelSupport} theme={theme}>
               {locale.cancel}
