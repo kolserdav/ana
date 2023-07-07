@@ -10,8 +10,8 @@ android {
         applicationId "com.kolserdav.ana"
         minSdk 21
         targetSdk 33
-        versionCode 127
-        versionName "1.27"
+        versionCode 129
+        versionName "1.29"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
