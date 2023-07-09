@@ -4,7 +4,7 @@ class AppInterface {
     int id = 1;
     String url = null;
     String path = "/";
-    String urlDefault = "https://test.uyem.ru";
+    String urlDefault = "https://uyem.ru";
 
     public AppInterface(int _id, String _url, String _urlDefault, String _path) {
         id = _id;
