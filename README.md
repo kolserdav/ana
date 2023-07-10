@@ -2,10 +2,12 @@
 
 Application for easy composing texts in the foreign language.
 
-[Installation](./docs/INSTALLATION.md)
-
 ![Android 5.0](https://img.shields.io/badge/android-5.0+-brightgreen)
 ![License](https://img.shields.io/github/license/kolserdav/ana)
+
+## Download
+
+Get apk in [releases](https://github.com/kolserdav/ana/releases) or install with [F-Droid](https://f-droid.org/en/packages/com.kolserdav.ana/)
 
 ## Main Features
 
@@ -45,12 +47,16 @@ With sign in
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot8.jpeg" alt="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot8.jpeg" width="200"/>
 </div>
 
-## Localization
-
-At the moment, two interface languages English and Russian are supported, to add other interface languages, see [docs/contributing/LOCALES.md](docs/contributing/LOCALES.md)
-
 ## License
 
 [![AGPL-3.0 license ](https://www.gnu.org/graphics/agplv3-155x51.png)](https://www.gnu.org/licenses/agpl-3.0.html)
 
 It requires the operator of a network server to provide the source code of the modified version running there to the users of that server.
+
+## Contibuting
+
+[Installation](./docs/INSTALLATION.md)
+
+### Localization
+
+At the moment, two interface languages English and Russian are supported, to add other interface languages, see [docs/contributing/LOCALES.md](docs/contributing/LOCALES.md)

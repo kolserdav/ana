@@ -254,11 +254,6 @@ ${args
       checkPackage = true;
     }
 
-    let needInstall = false;
-    if (new RegExp(`${item?.replace(/\/$/, '')}/package.json` || '').test(_diff)) {
-      needInstall = true;
-    }
-
     if (!checkPackage) {
       log('info', 'Package ' + item + ' is not changed, skipping...', true);
       continue;
@@ -267,7 +262,7 @@ ${args
     log('info', 'Package will updated:', item);
     packs.push(item);
 
-    if (needInstall) {
+    if (new RegExp(`${item?.replace(/\/$/, '')}/package.json` || '').test(_diff)) {
       log('info', 'Need install:', item);
       const install = await spawnCommand('npm', ['i'], { env });
       if (install.code != 0) {
