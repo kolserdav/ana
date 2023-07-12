@@ -860,11 +860,9 @@ export interface PlayOnePhrase {
 export const usePlayOne = ({
   voiceNotFound,
   onStopPlayItem,
-  changeLinkTo,
 }: {
   voiceNotFound: string;
   onStopPlayItem: () => void;
-  changeLinkTo: string;
 }) => {
   const [forSpeech, setForSpeech] = useState<PlayOnePhrase | null>(null);
   const [ticker, setTicker] = useState<boolean>(false);
@@ -880,7 +878,6 @@ export const usePlayOne = ({
     voiceNotFound,
     lang: forSpeech?.lang || LEARN_LANG_DEFAULT,
     onStop: onStopPlayOne,
-    changeLinkTo,
   });
 
   const clickForPlayWrapper = (data: PlayOnePhrase) => () => {

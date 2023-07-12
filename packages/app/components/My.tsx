@@ -1,4 +1,4 @@
-import { createRef, useCallback, useRef } from 'react';
+import { createRef, useRef } from 'react';
 import clsx from 'clsx';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
@@ -62,7 +62,6 @@ function My({
   user,
   playSound,
   voiceNotFound,
-  changeLinkTo,
   dateFilter,
   sort,
 }: {
@@ -76,7 +75,6 @@ function My({
   user: UserCleanResult | null;
   voiceNotFound: string;
   playSound: string;
-  changeLinkTo: string;
 }) {
   const phrasesRef = useRef<HTMLDivElement>(null);
   const { load, setLoad } = useLoad();
@@ -228,7 +226,6 @@ function My({
   const { volumeIcon, clickForPlayWrapper, forSpeech, ticker } = usePlayOne({
     voiceNotFound,
     onStopPlayItem,
-    changeLinkTo,
   });
 
   return (
@@ -565,7 +562,16 @@ function My({
                     <div className={s.tags}>
                       {item.PhraseTag.map((tag) => (
                         <div key={tag.id} className={s.tag_item}>
-                          <Typography variant="span" theme={theme} small styleName="blue">
+                          <Typography
+                            variant="span"
+                            theme={theme}
+                            small
+                            styleName={
+                              tags.findIndex((_tag) => _tag.id === tag.Tag.id) !== -1
+                                ? 'blue'
+                                : 'cyan'
+                            }
+                          >
                             {`#${tag.Tag.text}`}
                           </Typography>
                         </div>
@@ -606,12 +612,14 @@ function My({
         </div>
       </div>
       <Dialog className={p.dialog} theme={theme} onClose={setDeletePhrase} open={deletePhrase}>
-        <Typography variant="h3" theme={theme} align="center">
-          {`${isTrash || deleteImmediatly ? locale.deletePhrase : locale.moveToTrash}?`}
-        </Typography>
-        <Typography variant="p" theme={theme}>
-          {phraseToDelete?.text || ''}
-        </Typography>
+        <div className={p.dialog__content}>
+          <Typography variant="h3" theme={theme} align="center">
+            {`${isTrash || deleteImmediatly ? locale.deletePhrase : locale.moveToTrash}?`}
+          </Typography>
+          <Typography variant="p" theme={theme}>
+            {phraseToDelete?.text || ''}
+          </Typography>
+        </div>
         <div className={p.dialog__actions}>
           {!isTrash && (
             <Checkbox
@@ -639,12 +647,14 @@ function My({
         onClose={setDeleteSelectedPhrases}
         open={deleteSelectedPhrases}
       >
-        <Typography variant="h3" theme={theme} align="center">
-          {`${isTrash || deleteImmediatly ? locale.deleteSelected : locale.moveSelectedToTrash}?`}
-        </Typography>
-        <Typography variant="p" theme={theme}>
-          {locale.willDelete.replace(LocaleVars.count, selected.length.toString())}
-        </Typography>
+        <div className={p.dialog__content}>
+          <Typography variant="h3" theme={theme} align="center">
+            {`${isTrash || deleteImmediatly ? locale.deleteSelected : locale.moveSelectedToTrash}?`}
+          </Typography>
+          <Typography variant="p" theme={theme}>
+            {locale.willDelete.replace(LocaleVars.count, selected.length.toString())}
+          </Typography>
+        </div>
         <div className={p.dialog__actions}>
           {!isTrash && (
             <Checkbox

@@ -48,7 +48,6 @@ function Translate({
   connId,
   voiceNotFound,
   playSound,
-  changeLinkTo,
   copyText,
 }: {
   theme: Theme;
@@ -62,7 +61,6 @@ function Translate({
   connId: string | null;
   voiceNotFound: string;
   playSound: string;
-  changeLinkTo: string;
 }) {
   const helpTagRef = createRef<HTMLButtonElement>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -269,7 +267,6 @@ function Translate({
                   text={text}
                   lang={learnLang}
                   voiceNotFound={voiceNotFound}
-                  changeLinkTo={changeLinkTo}
                 />
               </div>
             )}
@@ -336,7 +333,6 @@ function Translate({
                   text={reTranslate}
                   lang={learnLang}
                   voiceNotFound={voiceNotFound}
-                  changeLinkTo={changeLinkTo}
                 />
                 <IconButton
                   titleHide

@@ -123,7 +123,6 @@ const lang: Locale = {
       and: 'and',
       voiceNotFound: 'Special voice not found',
       playSound: 'Play text',
-      insertedLink: '...Link replaced...',
       sendMail: 'Send mail',
       emailIsSend: 'If the email does not arrive for a long time, then check the Spam folder',
       openTools: 'Open tools',

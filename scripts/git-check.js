@@ -262,14 +262,18 @@ ${args
     log('info', 'Package will updated:', item);
     packs.push(item);
 
-    if (new RegExp(`${item?.replace(/\/$/, '')}/package.json` || '').test(_diff)) {
-      log('info', 'Need install:', item);
+    const cleanItem = item?.replace(/\/$/, '');
+    if (
+      new RegExp(`${cleanItem}/package.json` || '').test(_diff) ||
+      new RegExp(`${cleanItem}/package-lock.json` || '').test(_diff)
+    ) {
+      log('warn', 'Need install:', item);
       const install = await spawnCommand('npm', ['i'], { env });
       if (install.code != 0) {
         return exit(install.code || undefined);
       }
     } else {
-      log('info', 'Installation skipped:', item);
+      log('warn', 'Installation skipped:', { item, _diff });
     }
 
     const build = await spawnCommand('npm', ['run', 'build'], { env });
