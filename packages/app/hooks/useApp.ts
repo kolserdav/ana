@@ -54,6 +54,13 @@ export default function useApp({
   const [isAndroid, setIsAndroid] = useState(false);
 
   /**
+   * Log loaded page
+   */
+  useEffect(() => {
+    log('info', 'Loaded page', window.location.href);
+  }, [router]);
+
+  /**
    * Set is android
    */
   useEffect(() => {

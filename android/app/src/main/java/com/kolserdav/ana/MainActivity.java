@@ -98,7 +98,6 @@ public class MainActivity extends Activity {
         }
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,8 +132,18 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
         setContentView(mWebView);
 
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+
+        if (data != null) {
+            loadFromDeepLink = true;
+            Log.d(TAG, "Loaded deep link " + data.getPath());
+            helper.alert("Url path is", data.getPath());
+        }
+
 
         db = new DB(this) {
+
 
             @Override
             public void onCreate(SQLiteDatabase _sqLiteDatabase) {
@@ -153,13 +162,7 @@ public class MainActivity extends Activity {
 
                 Intent intent = getIntent();
                 String url = helper.listenProcessText(intent, schemaApp);
-                Uri data = intent.getData();
-
-                if (data != null) {
-                    loadFromDeepLink = true;
-                    Log.d(TAG, "Loaded deep link " + data.getPath());
-                    helper.alert("Url path is", data.getPath());
-                }
+                helper.alert("Url path is", url);
 
                 try {
                     try {
