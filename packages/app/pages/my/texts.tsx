@@ -41,7 +41,6 @@ export default function MyTextsPage({
           cancel={localeCommon.cancel}
           playSound={localeCommon.playSound}
           voiceNotFound={localeCommon.voiceNotFound}
-          changeLinkTo={localeCommon.insertedLink}
           dateFilter={localeCommon.dateFilter}
           sort={localeCommon.sort}
         />

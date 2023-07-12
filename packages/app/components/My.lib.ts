@@ -149,7 +149,7 @@ export function cleanLinks(inputText: string, changeTo = '') {
 export function cleanBold(inputText: string, changeTo = '') {
   let replacedText = inputText;
 
-  replacedText = inputText.replace(/[(<b>)(</b>)]+/g, changeTo);
+  replacedText = inputText.replace(/(<b>|<\/b>)+/g, changeTo);
 
   return replacedText;
 }

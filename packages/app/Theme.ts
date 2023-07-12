@@ -32,7 +32,7 @@ const colors: Themes = {
     yellow: '#ff0',
     blue: '#07f',
     green: '#3f0',
-    cyan: '#066',
+    cyan: '#079',
     black: 'black',
     white: 'white',
   },

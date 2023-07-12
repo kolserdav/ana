@@ -269,7 +269,6 @@ function Translate({
                   text={text}
                   lang={learnLang}
                   voiceNotFound={voiceNotFound}
-                  changeLinkTo={changeLinkTo}
                 />
               </div>
             )}
@@ -336,7 +335,6 @@ function Translate({
                   text={reTranslate}
                   lang={learnLang}
                   voiceNotFound={voiceNotFound}
-                  changeLinkTo={changeLinkTo}
                 />
                 <IconButton
                   titleHide

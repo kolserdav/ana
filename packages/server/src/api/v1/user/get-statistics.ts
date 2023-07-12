@@ -134,7 +134,7 @@ const getStatistics: RequestHandler<
 
   const groupPhrasesCreated = await orm.$queryRawUnsafe<GroupBySummaryDateItemCountRaw[]>(
     `SELECT DATE_TRUNC('${truncArg}', created at time zone '${timeZone}') as summary_date, COUNT (id) FROM "Phrase" 
-    WHERE "userId"=$1 AND created::timestamp>$2::timestamp AND updated = created AND deleted = false GROUP BY summary_date ORDER BY summary_date ASC;`,
+    WHERE "userId"=$1 AND created::timestamp>$2::timestamp AND deleted = false GROUP BY summary_date ORDER BY summary_date ASC;`,
     id,
     gt
   );

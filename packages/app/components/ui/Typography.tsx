@@ -32,7 +32,7 @@ function Typography<T extends TypographyVariant>({
   small?: boolean;
   large?: boolean;
   align?: 'center' | 'right' | 'justify';
-  styleName?: Status | 'vice-versa' | 'blue';
+  styleName?: Status | 'vice-versa' | 'blue' | 'cyan';
   disabled?: boolean;
   blur?: boolean;
   datatype?: string;
@@ -74,6 +74,8 @@ function Typography<T extends TypographyVariant>({
             ? theme.red
             : styleName === 'info'
             ? theme.green
+            : styleName === 'cyan'
+            ? theme.cyan
             : styleName === 'vice-versa'
             ? theme.paper
             : styleName === 'blue'

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { log, wait } from '../utils/lib';
-import { SPEECH_SPEED_DEFAULT } from '../utils/constants';
+import { LINK_REPLACED, SPEECH_SPEED_DEFAULT } from '../utils/constants';
 import { LocalStorageName, getLocalStorage, setLocalStorage } from '../utils/localStorage';
 import { VolumeIcon } from '../types';
 import { cleanBold, cleanLinks } from '../components/My.lib';
@@ -13,13 +13,11 @@ const useSpeechSynth = ({
   voiceNotFound,
   lang,
   onStop,
-  changeLinkTo,
 }: {
   text: string;
   lang: string | undefined;
   voiceNotFound: string;
   onStop?: () => void;
-  changeLinkTo?: string;
 }) => {
   const router = useRouter();
 
@@ -253,7 +251,7 @@ const useSpeechSynth = ({
   }, [textToSpeech, lang, voice, speechSpeed, synth, stopSpeech]);
 
   const speechText = () => {
-    setTextToSpeech(cleanBold(cleanLinks(text, changeLinkTo)));
+    setTextToSpeech(cleanBold(cleanLinks(text, LINK_REPLACED)));
   };
 
   /**
