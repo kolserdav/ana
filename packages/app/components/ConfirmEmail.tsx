@@ -85,7 +85,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
-        {/** <a href={`${ANDROID_APP_NAME}://test.uyem.ru${pathname}`}>open in app</a> */}
+        <a href={`${ANDROID_APP_NAME}://test.uyem.ru${pathname}`}>open in app</a>
       </div>
     </div>
   );
