@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import useLoad from '../hooks/useLoad';
 import useQueryString from '../hooks/useQueryString';
 import { Theme } from '../Theme';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { LOAD_PAGE_DURATION, Pages } from '../utils/constants';
+import { ANDROID_APP_NAME, LOAD_PAGE_DURATION, Pages } from '../utils/constants';
 import s from './ConfirmEmail.module.scss';
 import Typography from './ui/Typography';
 import Request from '../utils/request';
@@ -11,6 +12,7 @@ import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import Link from './ui/Link';
 
 const request = new Request();
+const redirected = false;
 
 function ConfirmEmail({
   theme,
@@ -21,6 +23,8 @@ function ConfirmEmail({
   locale: Locale['app']['confirmEmail'];
   user: UserCleanResult | null;
 }) {
+  const router = useRouter();
+  const { pathname } = router;
   const [error, setError] = useState<string>('');
   const [result, setResult] = useState<string>();
   const { setLoad } = useLoad();
@@ -81,6 +85,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
+        <a href={`${ANDROID_APP_NAME}://localhost:3000${pathname}`}>open in app</a>
       </div>
     </div>
   );
