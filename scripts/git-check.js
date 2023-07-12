@@ -262,7 +262,11 @@ ${args
     log('info', 'Package will updated:', item);
     packs.push(item);
 
-    if (new RegExp(`${item?.replace(/\/$/, '')}/package.json` || '').test(_diff)) {
+    const cleanItem = item?.replace(/\/$/, '');
+    if (
+      new RegExp(`${cleanItem}/package.json` || '').test(_diff) ||
+      new RegExp(`${cleanItem}/package-lock.json` || '').test(_diff)
+    ) {
       log('warn', 'Need install:', item);
       const install = await spawnCommand('npm', ['i'], { env });
       if (install.code != 0) {
