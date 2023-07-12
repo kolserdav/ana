@@ -38,6 +38,8 @@ public class MainActivity extends Activity {
 
     private Boolean firstLoad = true;
 
+    private Boolean loadFromDeepLink = false;
+
 
     private static class Request extends AsyncTask<Void, Void, String> {
 
@@ -151,6 +153,13 @@ public class MainActivity extends Activity {
 
                 Intent intent = getIntent();
                 String url = helper.listenProcessText(intent, schemaApp);
+                Uri data = intent.getData();
+
+                if (data != null) {
+                    loadFromDeepLink = true;
+                    Log.d(TAG, "Loaded deep link " + data.getPath());
+                    helper.alert("Url path is", data.getPath());
+                }
 
                 try {
                     try {
@@ -230,12 +239,15 @@ public class MainActivity extends Activity {
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
 
+                // Open other url
                 if (!matchFound) {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(i);
                     return true;
                 }
-                if (!schema.path.equals("/") && firstLoad) {
+
+                // Rewrite url to saved
+                if (!schema.path.equals("/") && firstLoad && !loadFromDeepLink) {
                     url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
                 Log.d(TAG, "Replaced url " + url);

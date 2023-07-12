@@ -12,7 +12,6 @@ import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import Link from './ui/Link';
 
 const request = new Request();
-const redirected = false;
 
 function ConfirmEmail({
   theme,
@@ -85,7 +84,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
-        <a href={`${ANDROID_APP_NAME}://test.uyem.ru${pathname}`}>open in app</a>
+        <a href={`${ANDROID_APP_NAME}://${pathname.replace(/^\//, '')}`}>open in app</a>
       </div>
     </div>
   );

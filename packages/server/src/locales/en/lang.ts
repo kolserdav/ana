@@ -250,7 +250,8 @@ const lang: Locale = {
       serverIsNotRespond: 'Server not responding',
       saveVoiceTestText: 'Save for each voice',
       saveAllTestText: 'Save for all voices',
-      successCheckNode: 'Application will be loaded from another server next time it starts',
+      successCheckNode:
+        'The next time you run the application, it will be started from the specified server',
     },
     statistics: {
       title: 'Statistics',

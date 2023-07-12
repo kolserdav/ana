@@ -524,6 +524,7 @@ export const useChangeNode = ({
       switch (name) {
         case 'url':
           if (checked) {
+            log('info', successCheckNode, { name }, true);
             setIsNode(checked);
             if (typeof androidCommon !== 'undefined' && node) {
               androidCommon.setUrl(node);
