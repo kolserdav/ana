@@ -1,0 +1,1 @@
+- Fixed bug while open the process text 

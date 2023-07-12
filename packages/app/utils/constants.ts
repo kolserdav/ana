@@ -153,3 +153,4 @@ export const PROCESS_TEXT_QUERY_STRING = 'process_text';
 export const TAKE_ALL = 100000000;
 export const LINK_REPLACED = '...http...';
 export const ANDROID_APP_NAME = 'com.kolserdav.ana';
+export const NULL_STR = 'null';
