@@ -115,7 +115,7 @@ export const useLanguages = ({
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
-      if (!edit && edit !== NULL_STR) {
+      if (!edit || edit === NULL_STR) {
         router.push(`${router.asPath}?edit=${phrase.data.id}`);
       }
     })();
@@ -279,6 +279,10 @@ export const useTranslate = ({
       query: { edit: _edit },
     } = router;
 
+    if (_edit === NULL_STR) {
+      return;
+    }
+
     setEdit(_edit as string);
   }, [router]);
 
@@ -286,7 +290,7 @@ export const useTranslate = ({
    * If edit
    */
   useEffect(() => {
-    if (!edit || edit === NULL_STR) {
+    if (!edit) {
       return;
     }
     (async () => {
@@ -507,7 +511,7 @@ export const useTranslate = ({
     cleanText,
     onKeyDownReTranslate,
     onClickRetranslate,
-    edit,
+    edit: edit === NULL_STR ? null : edit,
     restart,
     setRestart,
     phraseToUpdate,
@@ -572,7 +576,7 @@ export const useSavePhrase = ({
       setTags([]);
       setRestart(!restart);
       setTagRestart(!tagRestart);
-      router.push(`${router.asPath}?edit=${saveRes.data.id}`);
+      router.push(`${router.pathname}?edit=${saveRes.data.id}`);
     }
   };
 
