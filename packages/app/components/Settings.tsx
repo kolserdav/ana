@@ -244,6 +244,7 @@ function Settings({
     urlDefault,
     wrongUrlFormat,
     serverIsNotRespond: locale.serverIsNotRespond,
+    successCheckNode: locale.successCheckNode,
   });
 
   return (

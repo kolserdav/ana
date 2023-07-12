@@ -623,6 +623,7 @@ export interface Locale {
       serverIsNotRespond: string;
       saveVoiceTestText: string;
       saveAllTestText: string;
+      successCheckNode: string;
     };
     statistics: {
       title: string;

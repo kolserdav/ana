@@ -502,11 +502,13 @@ export const useChangeNode = ({
   urlDefault,
   wrongUrlFormat,
   serverIsNotRespond,
+  successCheckNode,
 }: {
   urlDefault: string;
   url: null | string;
   wrongUrlFormat: string;
   serverIsNotRespond: string;
+  successCheckNode: string;
 }) => {
   const [isDefaultNode, setIsDefaultNode] = useState(false);
   const [isNode, setIsNode] = useState(false);
@@ -563,7 +565,7 @@ export const useChangeNode = ({
     }
     const result = await request.checkNewUrl(value);
     if (result.status === 'info') {
-      log('info', 'Success check', { result });
+      log('info', successCheckNode, { result }, true);
       if (typeof androidCommon !== 'undefined') {
         androidCommon.setUrl(value);
       }
