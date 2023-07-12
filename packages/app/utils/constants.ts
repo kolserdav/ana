@@ -151,3 +151,4 @@ export const CONTAINER_PADDING = 16;
 // deps in parseProcessText in android/app/src/main/java/com/kolserdav/ana/MainActivity.java
 export const PROCESS_TEXT_QUERY_STRING = 'process_text';
 export const TAKE_ALL = 100000000;
+export const LINK_REPLACED = '...http...';

@@ -9,7 +9,6 @@ function PlaySoundButton({
   title,
   theme,
   onStop,
-  changeLinkTo,
   titleHide,
 }: {
   text: string;
@@ -18,7 +17,6 @@ function PlaySoundButton({
   title: string;
   theme: Theme;
   onStop?: () => void;
-  changeLinkTo?: string;
   titleHide?: boolean;
 }) {
   const { speechText, synthAllow, volumeIcon } = useSpeechSynth({
@@ -26,7 +24,6 @@ function PlaySoundButton({
     voiceNotFound,
     lang,
     onStop,
-    changeLinkTo,
   });
 
   return synthAllow ? (
@@ -42,7 +39,6 @@ function PlaySoundButton({
 
 PlaySoundButton.defaultProps = {
   onStop: undefined,
-  changeLinkTo: undefined,
   titleHide: undefined,
 };
 

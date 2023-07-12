@@ -93,20 +93,14 @@ export default function useTags({
     setTags(_tags);
   };
 
-  const _tags = useMemo(
+  const _allTags = useMemo(
     () =>
       allTags?.sort((a, b) => {
         switch (currentSort) {
           case SortName.ALPHA_DESC:
-            if (a.text[0] < b.text[0]) {
-              return -1;
-            }
-            break;
+            return a.text.localeCompare(b.text);
           case SortName.ALPHA_ASC:
-            if (a.text[0] > b.text[0]) {
-              return -1;
-            }
-            break;
+            return b.text.localeCompare(a.text);
           case SortName.NUMERIC_DESC:
             if (a.PhraseTag.length < b.PhraseTag.length) {
               return -1;
@@ -126,20 +120,22 @@ export default function useTags({
     [allTags, currentSort]
   );
 
-  const __tags = useMemo(() => {
+  const __allTags = useMemo(() => {
     if (!filterTagsText) {
-      return _tags;
+      return _allTags;
     }
-    return _tags.filter((item) =>
-      new RegExp(filterTagsText.toUpperCase()).test(item.text.toUpperCase())
+    return _allTags.filter(
+      (item) =>
+        new RegExp(filterTagsText.toUpperCase()).test(item.text.toUpperCase()) ||
+        tags.findIndex((_item) => _item.text === item.text) !== -1
     );
-  }, [_tags, filterTagsText]);
+  }, [_allTags, tags, filterTagsText]);
 
   return {
     tags,
     setTags,
     onClickTagCheepWrapper,
-    allTags: __tags,
+    allTags: __allTags,
     tagsIsSet,
     alphaDesc,
     numericDesc,

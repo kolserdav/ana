@@ -492,7 +492,6 @@ export interface Locale {
       and: string;
       voiceNotFound: string;
       playSound: string;
-      insertedLink: string;
       sendMail: string;
       emailIsSend: string;
       openTools: string;
