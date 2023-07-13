@@ -15,7 +15,7 @@ function DeepLink({ children }: { children: string }) {
 
   return (
     <div className={s.wrapper}>
-      {isAndroid() && (
+      {isAndroid() && typeof androidCommon === 'undefined' && (
         <a href={`${ANDROID_APP_NAME}://${DEEP_LINK_HOST}${pathname}${search}`}>{children}</a>
       )}
     </div>
