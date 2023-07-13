@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import useLoad from '../hooks/useLoad';
 import useQueryString from '../hooks/useQueryString';
 import { Theme } from '../Theme';
 import { Locale, UserCleanResult } from '../types/interfaces';
-import { ANDROID_APP_NAME, LOAD_PAGE_DURATION, Pages } from '../utils/constants';
+import { LOAD_PAGE_DURATION, Pages } from '../utils/constants';
 import s from './ConfirmEmail.module.scss';
 import Typography from './ui/Typography';
 import Request from '../utils/request';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import Link from './ui/Link';
+
+const DeepLink = dynamic(() => import('./ui/DeepLink'), { ssr: false });
 
 const request = new Request();
 
@@ -22,14 +24,11 @@ function ConfirmEmail({
   locale: Locale['app']['confirmEmail'];
   user: UserCleanResult | null;
 }) {
-  const router = useRouter();
-  const { asPath } = router;
   const [error, setError] = useState<string>('');
   const [result, setResult] = useState<string>();
   const { setLoad } = useLoad();
   const { e, k } = useQueryString<{ e: string; k: string }>();
 
-  console.log(asPath);
   /**
    * Set params
    */
@@ -85,7 +84,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
-        <a href={`${ANDROID_APP_NAME}://path${asPath}`}>open in app</a>
+        <DeepLink />
       </div>
     </div>
   );

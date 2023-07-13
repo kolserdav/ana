@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 
     private Boolean firstLoad = true;
 
-    private Boolean loadFromDeepLink = false;
+    private String deepLink = null;
 
 
     private static class Request extends AsyncTask<Void, Void, String> {
@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
         setIntent(intent);
         AppInterface schemaApp = db.app.init(new AppInterface());
         String url = schemaApp.url;
-        helper.alert("ds", "" + intent.getData());
+        helper.alert("ds", "" + url + intent.getData().getPath());
         if (url.equals("null")) {
             url = schemaApp.urlDefault;
         }
@@ -257,7 +257,7 @@ public class MainActivity extends Activity {
 
 
                 // Rewrite url to saved
-                if (!schema.path.equals("/") && firstLoad && !loadFromDeepLink &&
+                if (!schema.path.equals("/") && firstLoad &&
                         !Intent.ACTION_PROCESS_TEXT.equals(intent.getAction())) {
                     url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
