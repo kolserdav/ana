@@ -134,7 +134,8 @@ public class MainActivity extends Activity {
         setContentView(mWebView);
 
         Intent intent = getIntent();
-        helper.alert("Pat", "" + intent.getAction());
+        String action = intent.getAction();
+        helper.alert("Pat", "" + intent.getData());
 
         db = new DB(this) {
 
