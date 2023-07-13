@@ -99,6 +99,19 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        AppInterface schemaApp = db.app.init(new AppInterface());
+        String url = schemaApp.url;
+        helper.alert("ds", "" + intent.getData());
+        if (url.equals("null")) {
+            url = schemaApp.urlDefault;
+        }
+        mWebView.loadUrl(url + intent.getData().getPath());
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -132,10 +145,6 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
         setContentView(mWebView);
-
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        helper.alert("Pat", "" + intent.getData());
 
         db = new DB(this) {
 

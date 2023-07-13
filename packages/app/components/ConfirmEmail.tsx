@@ -23,7 +23,7 @@ function ConfirmEmail({
   user: UserCleanResult | null;
 }) {
   const router = useRouter();
-  const { pathname } = router;
+  const { asPath } = router;
   const [error, setError] = useState<string>('');
   const [result, setResult] = useState<string>();
   const { setLoad } = useLoad();
@@ -84,7 +84,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
-        <a href={`${ANDROID_APP_NAME}://path${pathname}`}>open in app</a>
+        <a href={`${ANDROID_APP_NAME}://path${asPath}`}>open in app</a>
       </div>
     </div>
   );
