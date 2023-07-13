@@ -99,20 +99,9 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Uri data = intent.getData();
-
-        if (data != null) {
-            loadFromDeepLink = true;
-            Log.d(TAG, "Loaded deep link " + data.getPath());
-            helper.alert("Url path is", data.getPath());
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
@@ -143,6 +132,9 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
         setContentView(mWebView);
+
+        Intent intent = getIntent();
+        helper.alert("Pat", "" + intent.getAction());
 
         db = new DB(this) {
 
@@ -240,6 +232,8 @@ public class MainActivity extends Activity {
                 if (__url.equals("null")) {
                     __url = schema.urlDefault;
                 }
+
+                Intent intent = getIntent();
                 Pattern pattern = Pattern.compile(__url, Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(url);
                 boolean matchFound = matcher.find();
@@ -251,14 +245,13 @@ public class MainActivity extends Activity {
                     return true;
                 }
 
-                Intent intent = getIntent();
-
 
                 // Rewrite url to saved
                 if (!schema.path.equals("/") && firstLoad && !loadFromDeepLink &&
                         !Intent.ACTION_PROCESS_TEXT.equals(intent.getAction())) {
                     url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
+
                 Log.d(TAG, "Replaced url " + url);
                 view.loadUrl(url);
 
