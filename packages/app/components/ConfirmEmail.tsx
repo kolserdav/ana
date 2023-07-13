@@ -29,6 +29,7 @@ function ConfirmEmail({
   const { setLoad } = useLoad();
   const { e, k } = useQueryString<{ e: string; k: string }>();
 
+  console.log(asPath);
   /**
    * Set params
    */
