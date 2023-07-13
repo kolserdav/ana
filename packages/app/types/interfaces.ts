@@ -514,6 +514,7 @@ export interface Locale {
         byNumeric: string;
       };
       wrongUrlFormat: string;
+      openInApp: string;
     };
     translate: {
       title: string;

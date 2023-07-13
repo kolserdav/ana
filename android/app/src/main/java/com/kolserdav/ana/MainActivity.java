@@ -104,11 +104,11 @@ public class MainActivity extends Activity {
         setIntent(intent);
         AppInterface schemaApp = db.app.init(new AppInterface());
         String url = schemaApp.url;
-        helper.alert("ds", "" + url + intent.getData().getPath());
         if (url.equals("null")) {
             url = schemaApp.urlDefault;
         }
-        mWebView.loadUrl(url + intent.getData().getPath());
+        Uri data = intent.getData();
+        mWebView.loadUrl(url + data.getPath() + "?" + data.getQuery());
     }
 
     @Override

@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { ANDROID_APP_NAME } from '../../utils/constants';
+import { ANDROID_APP_NAME, DEEP_LINK_HOST } from '../../utils/constants';
+import s from './DeepLink.module.scss';
+import { isAndroid } from '../../utils/lib';
 
-function DeepLink() {
+function DeepLink({ children }: { children: string }) {
   const { pathname } = useRouter();
   const search = useMemo(() => {
     if (typeof window !== 'undefined') {
@@ -11,7 +13,13 @@ function DeepLink() {
     return null;
   }, []);
 
-  return <a href={`${ANDROID_APP_NAME}://path${pathname}${search}`}> open in app</a>;
+  return (
+    <div className={s.wrapper}>
+      {isAndroid() && (
+        <a href={`${ANDROID_APP_NAME}://${DEEP_LINK_HOST}${pathname}${search}`}>{children}</a>
+      )}
+    </div>
+  );
 }
 
 export default DeepLink;

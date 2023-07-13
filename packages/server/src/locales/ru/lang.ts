@@ -144,6 +144,7 @@ const lang: Locale = {
         byNumeric: 'По количеству',
       },
       wrongUrlFormat: 'Неверный формат адреса',
+      openInApp: 'Открыть в приложении',
     },
     translate: {
       title: 'Составление предложений',

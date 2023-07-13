@@ -154,3 +154,5 @@ export const TAKE_ALL = 100000000;
 export const LINK_REPLACED = '...http...';
 export const ANDROID_APP_NAME = 'com.kolserdav.ana';
 export const NULL_STR = 'null';
+// deps android/app/src/main/AndroidManifest.xml android:host
+export const DEEP_LINK_HOST = 'path';

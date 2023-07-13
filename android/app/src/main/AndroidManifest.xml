@@ -34,6 +34,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE"/>
+                <!-- android:host has dependency with packages/app/utils/constants.ts.DEEP_LINK_HOST -->
                 <data android:scheme="com.kolserdav.ana" android:host="path"/>
             </intent-filter>
             <intent-filter>

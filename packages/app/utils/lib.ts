@@ -191,3 +191,5 @@ export const wait = async (timeout: number) =>
       resolve(0);
     }, timeout);
   });
+
+export const isAndroid = () => /android/i.test(navigator.userAgent);

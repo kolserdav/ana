@@ -145,6 +145,7 @@ const lang: Locale = {
         byNumeric: 'By number',
       },
       wrongUrlFormat: 'Invalid address format',
+      openInApp: 'Open in App',
     },
     translate: {
       title: 'Creation of sentences',

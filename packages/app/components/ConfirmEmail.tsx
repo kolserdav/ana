@@ -19,10 +19,12 @@ function ConfirmEmail({
   theme,
   locale,
   user,
+  openInApp,
 }: {
   theme: Theme;
   locale: Locale['app']['confirmEmail'];
   user: UserCleanResult | null;
+  openInApp: string;
 }) {
   const [error, setError] = useState<string>('');
   const [result, setResult] = useState<string>();
@@ -84,7 +86,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
-        <DeepLink />
+        <DeepLink>{openInApp}</DeepLink>
       </div>
     </div>
   );
