@@ -67,13 +67,13 @@ export default function App({ Component, pageProps }: AppProps) {
           isAndroid,
         }}
       />
-      {showAcceptCookies && (
+      {showAcceptCookies && locale && (
         <AcceptCookies
           open={!acceptCookies}
           theme={theme}
-          policyTitle={locale?.withPolicy || ''}
-          text={locale?.acceptCookies || ''}
-          button={locale?.ok || ''}
+          policyTitle={locale.withPolicy}
+          text={locale.acceptCookies}
+          button={locale.ok}
           onClick={onClickAcceptCookies}
         />
       )}
