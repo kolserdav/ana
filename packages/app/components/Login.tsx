@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import useChangeLocation from '../hooks/useChangeLocation';
 import useLoad from '../hooks/useLoad';
 import { Theme } from '../Theme';
@@ -23,6 +24,8 @@ import Input from './ui/Input';
 import Link from './ui/Link';
 import Typography from './ui/Typography';
 
+const DeepLink = dynamic(() => import('./ui/DeepLink'), { ssr: false });
+
 function Login({
   theme,
   locale,
@@ -35,6 +38,7 @@ function Login({
   and,
   sendMail,
   emailIsSend,
+  openInApp,
 }: {
   theme: Theme;
   locale: Locale['app']['login'];
@@ -47,6 +51,7 @@ function Login({
   and: string;
   sendMail: string;
   emailIsSend: string;
+  openInApp: string;
 }) {
   const { load, setLoad } = useLoad();
 
@@ -309,6 +314,7 @@ function Login({
               </Link>
             )}
           </div>
+          {isChangePass && <DeepLink theme={theme}>{openInApp}</DeepLink>}
           {!isChangePass && (
             <div className={s.link}>
               <Link

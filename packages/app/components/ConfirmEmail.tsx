@@ -86,7 +86,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
-        <DeepLink>{openInApp}</DeepLink>
+        <DeepLink theme={theme}>{openInApp}</DeepLink>
       </div>
     </div>
   );

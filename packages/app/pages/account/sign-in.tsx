@@ -31,6 +31,7 @@ export default function HomePage({
           and={localeCommon.and}
           sendMail={localeCommon.sendMail}
           emailIsSend={localeCommon.emailIsSend}
+          openInApp={localeCommon.openInApp}
         />
       </main>
       <LoaderFull open={!userLoad} noOpacity />
