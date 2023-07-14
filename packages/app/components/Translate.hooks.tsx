@@ -115,7 +115,7 @@ export const useLanguages = ({
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
-      if (!edit || edit === NULL_STR) {
+      if (!edit) {
         router.push(`${router.pathname}?edit=${phrase.data.id}`);
       }
     })();
