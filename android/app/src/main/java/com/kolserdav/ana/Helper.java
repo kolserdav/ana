@@ -66,8 +66,11 @@ public class Helper extends Config {
         Uri path = intent.getData();
         if (path != null) {
             url = url.concat(path.getPath());
-            url = url.concat("?");
-            url = url.concat(path.getQuery());
+            String query = path.getQuery();
+            if (query != null) {
+                url = url.concat("?");
+                url = url.concat(query);
+            }
         } else {
             url.concat(options.path);
         }

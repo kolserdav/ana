@@ -1,11 +1,16 @@
 package com.kolserdav.ana;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +20,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,8 +46,46 @@ public class MainActivity extends Activity {
 
     private Boolean firstLoad = true;
 
-    private String deepLink = null;
+    private final String CHANNEL_ID = "1";
 
+    public void createNotification(String title, String content, String path) {
+        Intent intent = new Intent(this, MainActivity.class);
+        String url = getUrl();
+        intent.setData(Uri.parse(url + path));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_IMMUTABLE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(requestID, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private String getUrl() {
+        AppInterface schemaApp = db.app.init(new AppInterface());
+        String url = schemaApp.url;
+        if (url.equals("null")) {
+            url = schemaApp.urlDefault;
+        }
+        return url;
+    }
 
     private static class Request extends AsyncTask<Void, Void, String> {
 
@@ -102,18 +148,26 @@ public class MainActivity extends Activity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppInterface schemaApp = db.app.init(new AppInterface());
-        String url = schemaApp.url;
-        if (url.equals("null")) {
-            url = schemaApp.urlDefault;
-        }
+        String url = getUrl();
         Uri data = intent.getData();
-        mWebView.loadUrl(url + data.getPath() + "?" + data.getQuery());
+        if (data != null) {
+            mWebView.loadUrl(url + data.getPath() + "?" + data.getQuery());
+        } else {
+            Log.d(TAG, "On new intent without getData");
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        startService(new Intent(this, DisplayNotification.class));
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        createNotificationChannel();
 
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -146,9 +200,12 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
         setContentView(mWebView);
 
+        startService(new Intent(this, DisplayNotification.class));
+
         db = new DB(this) {
 
 
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onCreate(SQLiteDatabase _sqLiteDatabase) {
                 try {
@@ -178,7 +235,7 @@ public class MainActivity extends Activity {
                                    @Override
                                    public void run() {
                                        AppInterface schemaApp = db.app.init(new AppInterface());
-                                           String _url = url;
+                                       String _url = url;
                                        if (status != 200) {
                                            Log.w(TAG, "Url replaced " + _url);
                                            _url = _url.replace(_url, schemaApp.urlDefault);
@@ -189,6 +246,7 @@ public class MainActivity extends Activity {
 
                                        Log.d(TAG,"Status is " + status + ", load url " + _url);
                                        context.mWebView.loadUrl(_url);
+
                                        Log.d(TAG,"Loaded url " + _url);
 
                                        context.helper.microphoneAccess();
@@ -207,8 +265,8 @@ public class MainActivity extends Activity {
         };
 
         webViewListeners();
-
     }
+
 
     private void webViewListeners() {
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -315,6 +373,7 @@ public class MainActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 }
+
 
 
 

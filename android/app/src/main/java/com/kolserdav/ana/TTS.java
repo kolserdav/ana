@@ -20,20 +20,26 @@ class TTS {
 
     Set<Voice> voices;
 
+    private final String TAG = "TTS";
+
 
 
     public TTS(MainActivity context) {
-        textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    voices = textToSpeech.getVoices();
-                    locales = Locale.getAvailableLocales();
-                    voice = textToSpeech.getDefaultVoice();
+        try {
+            textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if (status == TextToSpeech.SUCCESS) {
+                        voices = textToSpeech.getVoices();
+                        locales = Locale.getAvailableLocales();
+                        voice = textToSpeech.getDefaultVoice();
+                    }
                 }
-            }
-        });
-        textToSpeech.setLanguage(Locale.US);
+            });
+            textToSpeech.setLanguage(Locale.US);
+        } catch (Exception e) {
+            Log.e(TAG, "Error create text to speech: " + e.getMessage());
+        }
     }
 
 
