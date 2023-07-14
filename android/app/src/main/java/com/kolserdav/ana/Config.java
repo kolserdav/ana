@@ -5,18 +5,12 @@ class AppInterface {
     String url = null;
     String path = "/";
     String urlDefault = "https://uyem.ru";
-
-    public AppInterface(int _id, String _url, String _urlDefault, String _path) {
-        id = _id;
-        url = _url;
-        urlDefault = _urlDefault;
-        path = _path;
-    }
+    // Push notifications server
+    String wsAddress = null;
 
     public AppInterface() {
 
     }
-
 }
 
 public class Config {
@@ -26,11 +20,13 @@ public class Config {
     // Dependency packages/app/types/interfaces.ts.CHECK_URL_PATH
     public static final String CHECK_URL_PATH = "/api/check";
 
-    public static final Integer DATABASE_VERSION = 21;
+    public static final Integer DATABASE_VERSION = 22;
 
     public static final String DATABASE_NAME = "db";
 
     // Dependency PROCESS_TEXT_QUERY_STRING in packages/app/utils/constants.ts
     public static final String QUERY_STRING_PROCESS_TEXT = "process_text";
+
+    public static final String CHANNEL_ID = "1";
 }
 

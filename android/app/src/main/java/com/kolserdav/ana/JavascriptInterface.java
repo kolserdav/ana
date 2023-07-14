@@ -189,7 +189,7 @@ class AndroidCommon {
             @Override
             public void run() {
 
-                AppInterface schemaApp = main.db.app.init(new AppInterface());
+                AppInterface schemaApp = main.db.app.init();
                 Log.d(TAG, "Run callback " + cb + " (" + schemaApp.urlDefault + ", " + schemaApp.url + ")");
                 main.mWebView.loadUrl("javascript:" + cb + "('" +
                         schemaApp.urlDefault + "', '" + schemaApp.url + "')");
@@ -202,7 +202,7 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                AppInterface schemaApp = main.db.app.init(new AppInterface());
+                AppInterface schemaApp = main.db.app.init();
                 schemaApp.url = url;
                 main.db.app.setUrl(schemaApp);
             }

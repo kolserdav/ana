@@ -4,12 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,13 +19,8 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,109 +39,11 @@ public class MainActivity extends Activity {
 
     private Boolean firstLoad = true;
 
-    private final String CHANNEL_ID = "1";
-
-    public void createNotification(String title, String content, String path) {
-        Intent intent = new Intent(this, MainActivity.class);
-        String url = getUrl();
-        intent.setData(Uri.parse(url + path));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        int requestID = (int) System.currentTimeMillis();
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(content)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(requestID, builder.build());
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private String getUrl() {
-        AppInterface schemaApp = db.app.init(new AppInterface());
-        String url = schemaApp.url;
-        if (url.equals("null")) {
-            url = schemaApp.urlDefault;
-        }
-        return url;
-    }
-
-    private static class Request extends AsyncTask<Void, Void, String> {
-
-        public int status = 500;
-
-        private DB db;
-
-        Request(DB _db) {
-            db = _db;
-        }
-
-        public static final String TAG = "Request";
-
-        protected String doInBackground(Void... params) {
-            AppInterface dataApp = db.app.init(new AppInterface());
-            try {
-                if (dataApp.url.equals("null")) {
-                    return "Error";
-                }
-
-                String useUrl = dataApp.url + Config.CHECK_URL_PATH;
-                Log.d(TAG, "Try request " + useUrl);
-                URL url = new URL(useUrl);
-
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-                connection.setRequestMethod("GET");
-
-                status = connection.getResponseCode();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-
-                return response.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        protected void onGetStatus(Integer code) {
-            Log.d(TAG, "Code is " + code);
-        }
-
-        protected void onPostExecute(String response) {
-            if (response != null) {
-                Log.d(MainActivity.TAG, "Status " + this.status);
-                onGetStatus(status);
-            }
-
-        }
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        String url = getUrl();
+        String url = db.getUrl();
         Uri data = intent.getData();
         if (data != null) {
             mWebView.loadUrl(url + data.getPath() + "?" + data.getQuery());
@@ -160,15 +55,23 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        startService(new Intent(this, DisplayNotification.class));
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(Config.CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        createNotificationChannel();
-
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
@@ -200,7 +103,7 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
         setContentView(mWebView);
 
-        startService(new Intent(this, DisplayNotification.class));
+        Intent serviceIntent = new Intent(this, DisplayNotification.class);
 
         db = new DB(this) {
 
@@ -218,8 +121,7 @@ public class MainActivity extends Activity {
                     return;
                 }
 
-                AppInterface schemaApp = app.init(new AppInterface());
-                Log.d(TAG, "On create DB " + schemaApp);
+                AppInterface schemaApp = app.init();
 
                 Intent intent = getIntent();
                 String url = helper.listenProcessText(intent, schemaApp);
@@ -227,14 +129,18 @@ public class MainActivity extends Activity {
 
                 try {
                     try {
-                       new Request(this) {
+                        String _url = schemaApp.url;
+                        if (_url.equals("null")) {
+                            _url = schemaApp.urlDefault;
+                        }
+                        String useUrl = _url + Config.CHECK_URL_PATH;
+                       new Request(useUrl) {
                            @Override
                            protected void onGetStatus(Integer code) {
                                super.onGetStatus(code);
                                context.runOnUiThread(new Runnable() {
                                    @Override
                                    public void run() {
-                                       AppInterface schemaApp = db.app.init(new AppInterface());
                                        String _url = url;
                                        if (status != 200) {
                                            Log.w(TAG, "Url replaced " + _url);
@@ -246,7 +152,6 @@ public class MainActivity extends Activity {
 
                                        Log.d(TAG,"Status is " + status + ", load url " + _url);
                                        context.mWebView.loadUrl(_url);
-
                                        Log.d(TAG,"Loaded url " + _url);
 
                                        context.helper.microphoneAccess();
@@ -257,7 +162,32 @@ public class MainActivity extends Activity {
                            @Override
                            protected void onPostExecute(String response) {
                                super.onPostExecute(response);
-                               Log.d(TAG, "Post execute: " + response);
+                               Log.d(TAG, "On post execute: " + response);
+                               JSONObject data = null;
+                               try {
+                                   data = new JSONObject(response);
+                               } catch (JSONException e) {
+                                   Log.e(TAG, "Error parse JSON: " + e.getMessage());
+                               }
+                               if (data != null) {
+                                   Object wsAddress = null;
+                                   try {
+                                       wsAddress = data.get("data");
+                                   } catch (JSONException e) {
+                                       Log.e(TAG, "Error get WS address from JSON: " + e.getMessage());
+                                   }
+                                   Log.d(TAG, "WS server is: " + wsAddress);
+                                   if (wsAddress != null) {
+                                       AppInterface app = db.app.init();
+                                       app.wsAddress = wsAddress.toString();
+                                       db.app.setWSAddress(app);
+
+                                       // Starting notification service
+                                       serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_URL, db.getUrl());
+                                       serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_WS_ADDRESS, app.wsAddress);
+                                       startService(serviceIntent);
+                                   }
+                               }
                            }
                        }.execute().get();
 
@@ -271,6 +201,8 @@ public class MainActivity extends Activity {
         };
 
         webViewListeners();
+
+        // new DisplayNotification(db);
     }
 
 
@@ -296,7 +228,7 @@ public class MainActivity extends Activity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String _url) {
-                AppInterface schema = context.db.app.init(new AppInterface());
+                AppInterface schema = context.db.app.init();
                 String url = _url;
 
                 Log.d(TAG, "Should override url " + url +
@@ -350,11 +282,8 @@ public class MainActivity extends Activity {
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
                 super.doUpdateVisitedHistory(view, url, isReload);
 
-                AppInterface schemaApp = context.db.app.init(new AppInterface());
+                AppInterface schemaApp = context.db.app.init();
                 if (!firstLoad) {
-                    new AppInterface(schemaApp.id,
-                            schemaApp.url,
-                            schemaApp.urlDefault, schemaApp.path);
                     String _url = schemaApp.url;
                     if (_url.equals("null")) {
                         _url = schemaApp.urlDefault;

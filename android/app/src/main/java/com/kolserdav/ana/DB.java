@@ -35,6 +35,8 @@ class App extends Table {
     public static final String APP_COLUMN_URL_DEFAULT = "urlDefault";
     public static final String APP_COLUMN_PATH = "path";
 
+    public static final String APP_COLUMN_WS_ADDRESS = "wsAddress";
+
     private static final String TAG = "App";
 
     public App(SQLiteDatabase db) {
@@ -42,7 +44,8 @@ class App extends Table {
                 APP_COLUMN_ID,
                 APP_COLUMN_URL,
                 APP_COLUMN_URL_DEFAULT,
-                APP_COLUMN_PATH
+                APP_COLUMN_PATH,
+                APP_COLUMN_WS_ADDRESS
         });
     }
 
@@ -50,7 +53,7 @@ class App extends Table {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 APP_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 APP_COLUMN_URL + " TEXT, " + APP_COLUMN_URL_DEFAULT + " TEXT, " +
-                APP_COLUMN_PATH + " TEXT" + ")");
+                APP_COLUMN_PATH + " TEXT, " + APP_COLUMN_WS_ADDRESS + " TEXT" + ")");
     }
 
     public void setUrl(AppInterface options) {
@@ -78,9 +81,17 @@ class App extends Table {
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
     }
 
-    public AppInterface init(AppInterface options) {
+    public void setWSAddress(AppInterface options) {
+        Log.d("INFO", "Update WS address " + options.wsAddress + " with id " + options.id);
+        db.execSQL("UPDATE " + TABLE_NAME +
+                " SET " + APP_COLUMN_WS_ADDRESS + "='" + options.wsAddress + "'" +
+                " WHERE " + APP_COLUMN_ID + "=" + options.id);
+    }
+
+    public AppInterface init() {
         // String selection = APP_COLUMN_ID + "=?";
         // String[] selectionArgs = {"%" + id + "%"};
+        AppInterface options = new AppInterface();
         Cursor cursor = db.query(
                 TABLE_NAME,
                 projections,
@@ -98,15 +109,17 @@ class App extends Table {
                             APP_COLUMN_ID + ", " +
                             APP_COLUMN_URL + ", " +
                             APP_COLUMN_URL_DEFAULT + ", " +
-                            APP_COLUMN_PATH +  ") " +
+                            APP_COLUMN_PATH +  ", " +
+                            APP_COLUMN_WS_ADDRESS + ") " +
                     "VALUES" +
                     " (" +
-                    null + ", '" +
+                    options.id + ", '" +
                     options.url + "', '" +
                     options.urlDefault + "', '" +
-                    options.path + "')"
+                    options.path + "', '" +
+                            options.wsAddress + "')"
             );
-            return init(options);
+            return init();
         }
         if (count != 1) {
             Log.w(TAG,"App cursor count is " + count);
@@ -118,6 +131,7 @@ class App extends Table {
             schema.url = cursor.getString(getAppColumnIndex(APP_COLUMN_URL));
             schema.urlDefault = cursor.getString(getAppColumnIndex(APP_COLUMN_URL_DEFAULT));
             schema.path = cursor.getString(getAppColumnIndex(APP_COLUMN_PATH));
+            schema.wsAddress = cursor.getString(getAppColumnIndex(APP_COLUMN_WS_ADDRESS));
         }
         return schema;
     }
@@ -127,22 +141,23 @@ class App extends Table {
 
 
 public class DB extends SQLiteOpenHelper {
-
     SQLiteDatabase sqLiteDatabase;
-
     App app;
-
-
-
-    MainActivity context;
-
     public DB(MainActivity _context) {
         super(_context, Config.DATABASE_NAME, null, Config.DATABASE_VERSION);
-        context = _context;
         sqLiteDatabase = getWritableDatabase();
         app = new App(sqLiteDatabase);
         app.onCreate();
         onCreate(sqLiteDatabase);
+    }
+
+    public String getUrl() {
+        AppInterface schemaApp = app.init();
+        String url = schemaApp.url;
+        if (url.equals("null")) {
+            url = schemaApp.urlDefault;
+        }
+        return url;
     }
 
     @Override
