@@ -253,6 +253,12 @@ public class MainActivity extends Activity {
                                    }
                                });
                            }
+
+                           @Override
+                           protected void onPostExecute(String response) {
+                               super.onPostExecute(response);
+                               Log.d(TAG, "Post execute: " + response);
+                           }
                        }.execute().get();
 
                     } catch (ExecutionException e) {
