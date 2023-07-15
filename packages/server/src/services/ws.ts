@@ -18,6 +18,8 @@ class WS {
 
   notificated: Record<string, Record<string, typeof CHECK>> = {};
 
+  pushSockets: Record<string, { socket: WebSocket; unitId: string }> = {};
+
   constructor() {
     this.deleteAllOnline();
     this.deleteServerRebootMessages();
@@ -79,6 +81,28 @@ class WS {
       }, 1000);
     });
   }
+
+  public setPushSocket = ({
+    connId,
+    unitId,
+    ws,
+  }: {
+    connId: string;
+    unitId: string;
+    ws: WebSocket;
+  }) => {
+    if (this.pushSockets[connId]) {
+      log('warn', 'Duplicate push socket', { connId, unitId });
+      return;
+    }
+    this.pushSockets[connId] = { socket: ws, unitId };
+  };
+
+  public deletePushSocket = (connId: string) => {
+    if (this.pushSockets[connId]) {
+      delete this.pushSockets[connId];
+    }
+  };
 
   public async setSocket({
     id,

@@ -225,6 +225,7 @@ export interface UserUpdateBody {
     oldPassword: string;
     newPassword: string;
   };
+  notificationId?: string;
   name?: string;
 }
 

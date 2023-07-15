@@ -59,6 +59,7 @@ model User {
   salt            String            @db.VarChar(32)
   updated         DateTime          @default(now())
   created         DateTime          @default(now())
+  notificationId  String?           @db.VarChar(64)
   lang            Lang              @default(en)
   role            UserRole          @default(user)
   RestoreLink     RestoreLink[]

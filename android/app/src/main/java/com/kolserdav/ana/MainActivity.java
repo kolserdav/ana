@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
 
     private Boolean firstLoad = true;
 
+    private Intent serviceIntent;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -55,6 +57,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+        startService(serviceIntent);
     }
 
     private void createNotificationChannel() {
@@ -104,7 +107,7 @@ public class MainActivity extends Activity {
         mWebView.addJavascriptInterface(androidCommon, "androidCommon");
         setContentView(mWebView);
 
-        Intent serviceIntent = new Intent(this, DisplayNotification.class);
+        serviceIntent = new Intent(this, DisplayNotification.class);
 
         db = new DB(this) {
 
@@ -187,7 +190,7 @@ public class MainActivity extends Activity {
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_URL, db.getUrl());
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_WS_ADDRESS, app.wsAddress);
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_NOTIFICATION_UNIT_ID, androidCommon.notificationUnitId);
-                                       startService(serviceIntent);
+                                       stopService(serviceIntent);
                                    }
                                }
                            }

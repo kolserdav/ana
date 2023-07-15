@@ -29,6 +29,20 @@ export default function useUser() {
   }, [renew]);
 
   /**
+   * Android set notification id
+   */
+  useEffect(() => {
+    if (typeof androidCommon === 'undefined' || !user) {
+      return;
+    }
+    const notificationId = androidCommon.getUUID();
+    (async () => {
+      const updateRes = await request.userUpdate({ notificationId, userId: user.id });
+      log(updateRes.status, updateRes.message, updateRes);
+    })();
+  }, [user]);
+
+  /**
    * Listen need renew
    */
   useEffect(() => {

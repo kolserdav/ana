@@ -15,6 +15,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -34,7 +35,6 @@ public class DisplayNotification extends Service {
     private String url = null;
 
     private String unitId = null;
-    
 
     public void createNotification(String title, String content, String path) {
         Intent intent = new Intent(this, MainActivity.class);
@@ -53,7 +53,42 @@ public class DisplayNotification extends Service {
         notificationManager.notify(requestID, builder.build());
     }
 
+    private void listenNotifications() {
+        URI uri = null;
+        try {
+            uri = new URI(wsAddress);
+        } catch (URISyntaxException e) {
+            Log.e(TAG, "Error create WebSocket URI: " + e.getMessage());
+        }
+        if (uri != null) {
+            WebSocket ws = new WebSocket(uri) {
+                @Override
+                public void onOpen(ServerHandshake handshake) {
+                    super.onOpen(handshake);
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("message", Config.WS_MESSAGE_NOTIFICATION_USER_ID);
+                        obj.put("data", unitId);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Failed create JSON object: " + e.getMessage());
+                    }
+                    send(obj.toString());
+                }
 
+                @Override
+                public void onClose(int code, String reason, boolean remote) {
+                    super.onClose(code, reason, remote);
+                    try {
+                        Thread.sleep(Config.WS_RECONNECT_TIMEOUT);
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "Failed wait reconnect WS: " + e.getMessage());
+                    }
+                    listenNotifications();
+                }
+            };
+            ws.connect();
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -62,32 +97,9 @@ public class DisplayNotification extends Service {
             @Override
             public void run() {
                 super.run();
-                // TODO listen notifications
                 while (url == null) {}
                 Log.d(TAG, "Notifications service is running: " + wsAddress + ", " + url);
-                URI uri = null;
-                try {
-                   uri = new URI(wsAddress);
-                } catch (URISyntaxException e) {
-                    Log.e(TAG, "Error create WebSocket URI: " + e.getMessage());
-                }
-                if (uri != null) {
-                    WebSocket ws = new WebSocket(uri) {
-                        @Override
-                        public void onOpen(ServerHandshake handshake) {
-                            super.onOpen(handshake);
-                            JSONObject obj = new JSONObject();
-                            try {
-                                obj.put("message", Config.WS_MESSAGE_NOTIFICATION_USER_ID);
-                                obj.put("data", unitId);
-                            } catch (JSONException e) {
-                                Log.e(TAG, "Failed create JSON object: " + e.getMessage());
-                            }
-                            send(obj.toString());
-                        }
-                    };
-                    ws.connect();
-                }
+                listenNotifications();
             }
         };
         thread.start();
@@ -115,5 +127,6 @@ public class DisplayNotification extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "Service destroyed");
     }
 }
