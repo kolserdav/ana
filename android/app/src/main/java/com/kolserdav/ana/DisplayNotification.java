@@ -34,6 +34,7 @@ public class DisplayNotification extends Service {
     private String url = null;
 
     private String unitId = null;
+    
 
     public void createNotification(String title, String content, String path) {
         Intent intent = new Intent(this, MainActivity.class);
@@ -77,7 +78,7 @@ public class DisplayNotification extends Service {
                             super.onOpen(handshake);
                             JSONObject obj = new JSONObject();
                             try {
-                                obj.put("type", Config.WS_MESSAGE_NOTIFICATION_USER_ID);
+                                obj.put("message", Config.WS_MESSAGE_NOTIFICATION_USER_ID);
                                 obj.put("data", unitId);
                             } catch (JSONException e) {
                                 Log.e(TAG, "Failed create JSON object: " + e.getMessage());

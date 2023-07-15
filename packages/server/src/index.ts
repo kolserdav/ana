@@ -58,7 +58,7 @@ if (cluster.isPrimary) {
           await ws.setUserId({ id: connId, userId: data, token });
           break;
         case WS_MESSAGE_NOTIFICATION_USER_ID:
-          console.log(1, data);
+          console.log(1, data, connId);
           break;
         default:
           log('warn', 'Default ws case', rawMessage);
@@ -67,6 +67,7 @@ if (cluster.isPrimary) {
 
     conn.on('close', async () => {
       await ws.deleteSocket(connId);
+      console.log(2, connId);
     });
   });
 }
