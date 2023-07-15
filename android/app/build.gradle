@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.kolserdav.ana"
-        minSdk 23
+        minSdk 21
         targetSdk 33
         versionCode 132
         versionName "1.32"
@@ -33,7 +33,7 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.neovisionaries:nv-websocket-client:2.14'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
