@@ -75,6 +75,8 @@ declare global {
     getUrlDefault: (props: keyof GlobalProps) => void;
 
     setUrl: (url: string) => void;
+
+    getUUID: () => string;
   }
 
   const androidCommon: AndroidCommon | undefined;

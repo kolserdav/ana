@@ -10,6 +10,7 @@ import {
   parseMessage,
 } from './types/interfaces';
 import Tasks from './services/tasks';
+import { WS_MESSAGE_NOTIFICATION_USER_ID } from './utils/constants';
 process.setMaxListeners(0);
 if (cluster.isPrimary) {
   process.on('uncaughtException', (err: Error) => {
@@ -55,6 +56,9 @@ if (cluster.isPrimary) {
           break;
         case WS_MESSAGE_USER_ID:
           await ws.setUserId({ id: connId, userId: data, token });
+          break;
+        case WS_MESSAGE_NOTIFICATION_USER_ID:
+          console.log(1, data);
           break;
         default:
           log('warn', 'Default ws case', rawMessage);

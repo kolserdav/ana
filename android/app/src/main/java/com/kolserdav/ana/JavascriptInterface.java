@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 class AndroidTextToSpeech {
@@ -128,12 +129,16 @@ class AndroidCommon {
 
     MainActivity main;
 
+    public final String notificationUnitId;
+
     private static final String TAG = "AndroidCommon";
 
     Helper helper;
     AndroidCommon(MainActivity _main) {
         main = _main;
         helper = new Helper();
+        notificationUnitId = UUID.randomUUID().toString();
+        Log.d(TAG, "Notification unit id is: " + notificationUnitId);
     }
     @JavascriptInterface
     public void closeApp() {
@@ -144,6 +149,11 @@ class AndroidCommon {
                 System.exit(0);
             }
         });
+    }
+
+    @JavascriptInterface
+    public String getUUID() {
+       return notificationUnitId;
     }
 
     @JavascriptInterface

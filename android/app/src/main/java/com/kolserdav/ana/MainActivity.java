@@ -100,7 +100,8 @@ public class MainActivity extends Activity {
 
         TTS tts = new TTS(this);
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
-        mWebView.addJavascriptInterface(new AndroidCommon(this), "androidCommon");
+        AndroidCommon androidCommon = new AndroidCommon(this);
+        mWebView.addJavascriptInterface(androidCommon, "androidCommon");
         setContentView(mWebView);
 
         Intent serviceIntent = new Intent(this, DisplayNotification.class);
@@ -185,6 +186,7 @@ public class MainActivity extends Activity {
                                        // Starting notification service
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_URL, db.getUrl());
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_WS_ADDRESS, app.wsAddress);
+                                       serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_NOTIFICATION_UNIT_ID, androidCommon.notificationUnitId);
                                        startService(serviceIntent);
                                    }
                                }

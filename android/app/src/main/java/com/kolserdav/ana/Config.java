@@ -28,5 +28,8 @@ public class Config {
     public static final String QUERY_STRING_PROCESS_TEXT = "process_text";
 
     public static final String CHANNEL_ID = "1";
+
+    // Dependency packages/server/src/utils/constants.ts.WS_MESSAGE_NOTIFICATION_USER_ID
+    public static final String WS_MESSAGE_NOTIFICATION_USER_ID = "notification_user_id";
 }
 
