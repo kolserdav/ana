@@ -51,22 +51,43 @@ enum UserRole {
 }
 
 model User {
-  id              String            @id @default(uuid())
-  name            String?           @db.VarChar(24)
-  email           String            @unique @db.VarChar(255)
-  confirm         Boolean           @default(false)
-  password        String
-  salt            String            @db.VarChar(32)
-  updated         DateTime          @default(now())
-  created         DateTime          @default(now())
-  notificationId  String?           @db.VarChar(64)
-  lang            Lang              @default(en)
-  role            UserRole          @default(user)
-  RestoreLink     RestoreLink[]
-  ConfirmLink     ConfirmLink[]
-  Phrase          Phrase[]
-  Tag             Tag[]
-  OnlineStatistic OnlineStatistic[]
+  id                   String                 @id @default(uuid())
+  name                 String?                @db.VarChar(24)
+  email                String                 @unique @db.VarChar(255)
+  confirm              Boolean                @default(false)
+  password             String
+  salt                 String                 @db.VarChar(32)
+  updated              DateTime               @default(now())
+  created              DateTime               @default(now())
+  pushEnabled          Boolean                @default(true)
+  timeZone             Int?
+  notificationId       String?                @db.VarChar(64)
+  lang                 Lang                   @default(en)
+  role                 UserRole               @default(user)
+  RestoreLink          RestoreLink[]
+  ConfirmLink          ConfirmLink[]
+  Phrase               Phrase[]
+  Tag                  Tag[]
+  OnlineStatistic      OnlineStatistic[]
+  PushNotificationUser PushNotificationUser[]
+}
+
+model PushNotification {
+  id                   Int                    @id @default(autoincrement())
+  title                String
+  description          String
+  path                 String
+  created              DateTime               @default(now())
+  PushNotificationUser PushNotificationUser[]
+}
+
+model PushNotificationUser {
+  id                 Int              @id @default(autoincrement())
+  userId             String
+  pushNotificationId Int
+  User               User             @relation(fields: [userId], references: [id])
+  PushNotification   PushNotification @relation(fields: [pushNotificationId], references: [id])
+  created            DateTime         @default(now())
 }
 
 model RestoreLink {

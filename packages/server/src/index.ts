@@ -25,9 +25,10 @@ if (cluster.isPrimary) {
 } else {
   import('./http');
 
-  new Tasks();
-
   const ws = new WS();
+
+  new Tasks(ws);
+
   ws.server.on('connection', async (conn) => {
     const connId = v4();
 

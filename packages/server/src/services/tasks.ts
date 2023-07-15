@@ -6,22 +6,43 @@ import {
   SCRIPT_FILE_SERVER_MESSAGES,
   TRANSLATE_URL,
   NODE_ENV,
+  CHECK_PUSH_NOTIFICATION_INTERVAL,
+  PUSH_NOTIFICATION_MAX_TIME,
+  PUSH_NOTIFICATION_MIN_TIME,
 } from '../utils/constants';
 import { sendEmail } from '../utils/email';
 import { ORM } from './orm';
 import { log } from 'console';
 import path from 'path';
 import { ScriptServerMessagesArgName } from '../types';
+import WS from './ws';
 
 const orm = new ORM();
 
 class Tasks {
   cwd = process.cwd();
 
-  constructor() {
+  ws: WS;
+
+  constructor(_ws: WS) {
+    this.ws = _ws;
+
     if (NODE_ENV !== 'development') {
       this.checkTranslateService();
     }
+
+    //this.sendPushNotifications();
+  }
+
+  private sendPushNotifications() {
+    setInterval(async () => {
+      const date = new Date();
+      const hours = date.getHours();
+      const lt = hours - PUSH_NOTIFICATION_MIN_TIME;
+      const gt = hours + PUSH_NOTIFICATION_MAX_TIME;
+      console.log(date, hours, lt, gt);
+      const usersForNotification = await orm.userFindMany({});
+    }, CHECK_PUSH_NOTIFICATION_INTERVAL);
   }
 
   private checkTranslateService() {

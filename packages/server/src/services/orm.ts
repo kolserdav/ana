@@ -182,6 +182,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public userFindMany: Database['userFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'user',
+      command: 'findMany',
+    });
+  };
+
   public userCreate: Database['userCreate'] = async (args) => {
     return this.runFromWorker({
       args,

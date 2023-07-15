@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDistance } from 'date-fns';
 import storeUserRenew from '../store/userRenew';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
@@ -38,6 +39,22 @@ export default function useUser() {
     const notificationId = androidCommon.getUUID();
     (async () => {
       const updateRes = await request.userUpdate({ notificationId, userId: user.id });
+      log(updateRes.status, updateRes.message, updateRes);
+    })();
+  }, [user]);
+
+  /**
+   * Set time zone
+   */
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    (async () => {
+      const updateRes = await request.userUpdate({
+        timeZone: new Date().getTimezoneOffset() / 60,
+        userId: user.id,
+      });
       log(updateRes.status, updateRes.message, updateRes);
     })();
   }, [user]);

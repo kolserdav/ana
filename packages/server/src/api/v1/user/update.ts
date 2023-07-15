@@ -20,7 +20,7 @@ const userUpdate: RequestHandler<{ Body: UserUpdateBody }, Result<UserCleanResul
   reply
 ) => {
   const { lang, id } = parseHeaders(headers);
-  const { email, password, name, userId, notificationId } = body;
+  const { email, password, name, userId, notificationId, pushEnabled, timeZone } = body;
 
   const locale = getLocale(lang).server;
 
@@ -70,6 +70,8 @@ const userUpdate: RequestHandler<{ Body: UserUpdateBody }, Result<UserCleanResul
       name,
       email,
       notificationId,
+      pushEnabled,
+      timeZone,
       password: password?.newPassword ? _hash : undefined,
       salt: password?.newPassword ? salt : undefined,
       updated: new Date(),

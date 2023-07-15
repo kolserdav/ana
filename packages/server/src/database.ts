@@ -36,6 +36,12 @@ abstract class Database {
     Prisma.CheckSelect<T, Result<User | null>, Promise<Result<Prisma.UserGetPayload<T> | null>>>
   >;
 
+  public abstract userFindMany<T extends Prisma.UserFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.UserFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Array<User>>, Promise<Result<Array<Prisma.UserGetPayload<T>>>>>
+  >;
+
   public abstract serverMessageFindMany<T extends Prisma.ServerMessageFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.ServerMessageFindManyArgs>
   ): Promise<

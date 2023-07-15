@@ -227,6 +227,8 @@ export interface UserUpdateBody {
   };
   notificationId?: string;
   name?: string;
+  pushEnabled?: boolean;
+  timeZone?: number;
 }
 
 export interface UserDeleteBody {
