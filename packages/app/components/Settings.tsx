@@ -303,7 +303,7 @@ function Settings({
             <Typography variant="h4" theme={theme}>
               {locale.notifications.title}
             </Typography>
-            <div className={s.select_node}>
+            <div className={s.select_node__item}>
               <Typography variant="p" theme={theme}>
                 {locale.notifications.description}
               </Typography>

@@ -59,12 +59,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        String enabled = "false";
         if (androidCommon.notificationEnabled) {
-            enabled = "true";
+            startService(serviceIntent);
+        } else {
+            Log.d(TAG, "Notification service disabled");
         }
-        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_NOTIFICATION_ENABLED, enabled);
-        startService(serviceIntent);
     }
 
     private void createNotificationChannel() {

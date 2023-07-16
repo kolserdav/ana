@@ -29,22 +29,22 @@ public class DisplayNotification extends Service {
 
     public static final String INTENT_EXTRA_NAME_NOTIFICATION_UNIT_ID = "notification_unit_id";
 
-    public static final String INTENT_EXTRA_NAME_NOTIFICATION_ENABLED = "notification_enabled";
-
     private String wsAddress = null;
 
     private String url = null;
 
     private String unitId = null;
 
-    private boolean notificationEnabled = false;
-
     public void createNotification(String title, String content, String path) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setData(Uri.parse(url + path));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         int requestID = (int) System.currentTimeMillis();
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_IMMUTABLE);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flags = PendingIntent.FLAG_IMMUTABLE;
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, flags);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Config.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
@@ -144,7 +144,6 @@ public class DisplayNotification extends Service {
             wsAddress = extras.get(INTENT_EXTRA_NAME_WS_ADDRESS).toString();
             url = extras.get(INTENT_EXTRA_NAME_URL).toString();
             unitId = extras.get(INTENT_EXTRA_NAME_NOTIFICATION_UNIT_ID).toString();
-            notificationEnabled = extras.get(INTENT_EXTRA_NAME_NOTIFICATION_ENABLED).toString().equals("true");
         }
         return super.onStartCommand(intent, flags, startId);
     }
