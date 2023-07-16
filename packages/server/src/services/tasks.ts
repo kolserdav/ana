@@ -77,7 +77,7 @@ class Tasks {
             {
               NOT: {
                 PushNotificationUser: {
-                  every: {
+                  some: {
                     created: {
                       gt: dateDay,
                     },
