@@ -16,6 +16,7 @@ import { log } from 'console';
 import path from 'path';
 import { ScriptServerMessagesArgName } from '../types';
 import WS from './ws';
+import { Prisma } from '@prisma/client';
 
 const orm = new ORM();
 
@@ -49,6 +50,15 @@ class Tasks {
 
       const dateDay = new Date();
       dateDay.setHours(dateDay.getHours() - 12);
+
+      const notificationCount = await orm.count<Prisma.PushNotificationFindManyArgs>(
+        'pushNotification',
+        {
+          where: {
+            lang: 'en',
+          },
+        }
+      );
 
       const usersForNotification = await orm.userFindMany({
         where: {
@@ -114,7 +124,7 @@ class Tasks {
         }
 
         const dateMonth = new Date();
-        dateMonth.setDate(dateMonth.getDate() - 30);
+        dateMonth.setDate(dateMonth.getDate() - notificationCount.data);
 
         const notifications = await orm.pushNotificationFindMany({
           where: {
