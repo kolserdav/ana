@@ -83,12 +83,8 @@ class Tasks {
               ],
             },
             {
-              OnlineStatistic: {
-                every: {
-                  created: {
-                    lt: dateDay,
-                  },
-                },
+              updated: {
+                lt: dateDay,
               },
             },
             {
