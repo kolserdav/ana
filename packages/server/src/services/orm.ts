@@ -341,6 +341,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public pushNotificationFindMany: Database['pushNotificationFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'pushNotification',
+      command: 'findMany',
+    });
+  };
+
   private createServer() {
     this.listenWorkerMessages<DBCommandProps>(async ({ id, msg }) => {
       const result = await this.run({ ...msg });

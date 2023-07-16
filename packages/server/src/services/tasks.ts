@@ -31,17 +31,142 @@ class Tasks {
       this.checkTranslateService();
     }
 
-    //this.sendPushNotifications();
+    this.sendPushNotifications();
   }
 
   private sendPushNotifications() {
-    setInterval(async () => {
+    const getPushTimeZones = () => {
       const date = new Date();
       const hours = date.getHours();
-      const lt = hours - PUSH_NOTIFICATION_MIN_TIME;
-      const gt = hours + PUSH_NOTIFICATION_MAX_TIME;
-      console.log(date, hours, lt, gt);
-      const usersForNotification = await orm.userFindMany({});
+      //const hours = 5;
+      const lte = hours - PUSH_NOTIFICATION_MIN_TIME;
+      const gt = lte - (PUSH_NOTIFICATION_MAX_TIME - PUSH_NOTIFICATION_MIN_TIME);
+      return { lte, gt };
+    };
+
+    setInterval(async () => {
+      const { gt, lte } = getPushTimeZones();
+
+      const dateDay = new Date();
+      dateDay.setHours(dateDay.getHours() - 12);
+
+      const usersForNotification = await orm.userFindMany({
+        where: {
+          AND: [
+            {
+              timeZone: {
+                not: null,
+              },
+            },
+            {
+              timeZone: {
+                lte,
+                gt,
+              },
+            },
+            {
+              OR: [
+                {
+                  PushNotificationUser: {
+                    every: {
+                      created: {
+                        gt: dateDay,
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              notificationId: {
+                not: null,
+              },
+            },
+            {
+              pushEnabled: true,
+            },
+            {
+              // TODO clean
+              role: 'admin',
+            },
+          ],
+        },
+        select: {
+          id: true,
+          lang: true,
+          notificationId: true,
+        },
+      });
+      for (let i = 0; usersForNotification.data[i]; i++) {
+        const user = usersForNotification.data[i];
+        if (!user || !user.notificationId) {
+          continue;
+        }
+
+        const dateMonth = new Date();
+        dateMonth.setDate(dateMonth.getDate() - 30);
+
+        const notifications = await orm.pushNotificationFindMany({
+          where: {
+            AND: [
+              {
+                lang: user.lang,
+              },
+              {
+                OR: [
+                  {
+                    PushNotificationUser: {
+                      every: {
+                        userId: {
+                          not: user.id,
+                        },
+                      },
+                    },
+                  },
+                  {
+                    PushNotificationUser: {
+                      some: {
+                        AND: [
+                          {
+                            userId: user.id,
+                          },
+                          {
+                            created: {
+                              gt: dateMonth,
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          include: {
+            PushNotificationUser: true,
+          },
+        });
+
+        const _notification = notifications.data.sort((a, b) => {
+          if (a.PushNotificationUser.length < b.PushNotificationUser.length) {
+            return -1;
+          }
+          return 1;
+        });
+        if (_notification[0]) {
+          const notification = _notification[0];
+          this.ws.sendMessage(
+            user.notificationId,
+            {
+              type: notification.title as 'info',
+              message: notification.description,
+              data: notification.path,
+            },
+            true
+          );
+        }
+      }
     }, CHECK_PUSH_NOTIFICATION_INTERVAL);
   }
 

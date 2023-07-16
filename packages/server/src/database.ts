@@ -11,6 +11,7 @@ import {
   OnlineStatistic,
   PrismaClient,
   Selector,
+  PushNotification,
 } from '@prisma/client';
 import { Result } from './types/interfaces';
 
@@ -303,6 +304,16 @@ abstract class Database {
       T,
       Result<Selector | null>,
       Promise<Result<Prisma.SelectorGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract pushNotificationFindMany<T extends Prisma.PushNotificationFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PushNotificationFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<PushNotification>>,
+      Promise<Result<Array<Prisma.PushNotificationGetPayload<T>>>>
     >
   >;
 }
