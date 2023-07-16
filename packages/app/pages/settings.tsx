@@ -51,6 +51,7 @@ export default function SettingsPage({
           openTools={localeCommon.openTools}
           notificationEnabled={notificationEnabled}
           setNotificationEnabled={setNotificationEnabled}
+          needUpdateApp={localeCommon.needUpdateApp}
         />
       </main>
     </>

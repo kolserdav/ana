@@ -55,6 +55,7 @@ function Settings({
   openTools,
   notificationEnabled,
   setNotificationEnabled,
+  needUpdateApp,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -75,6 +76,7 @@ function Settings({
   openTools: string;
   notificationEnabled: boolean;
   setNotificationEnabled: (value: boolean) => void;
+  needUpdateApp: string;
 }) {
   const settingsSetSaveRef = useRef(null);
 
@@ -249,6 +251,7 @@ function Settings({
     wrongUrlFormat,
     serverIsNotRespond: locale.serverIsNotRespond,
     successCheckNode: locale.successCheckNode,
+    needUpdateApp,
   });
 
   return (
