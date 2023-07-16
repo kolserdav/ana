@@ -111,6 +111,7 @@ export const LICENSE = {
   title: 'AGPL-3.0 license ',
   link: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };
+export const FDROID_LINK = 'https://f-droid.org/en/packages/com.kolserdav.ana/';
 // deps packages/server/orm/schema.prisma.Phrase.text
 export const PHRASE_MAX_LENGTH_DEFAULT = 1000;
 export const TRANSLATE_MAX_SYMBOLS = 10000;

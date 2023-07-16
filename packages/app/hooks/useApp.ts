@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import useTheme from './useTheme';
 import storeClick, { changeClick } from '../store/click';
@@ -77,7 +77,7 @@ export default function useApp({
     }
     if (typeof androidCommon === 'undefined') {
       setUrlDefault(window.location.origin);
-    } else if (androidCommon.getUrlDefault) {
+    } else if (typeof androidCommon.getUrlDefault !== 'undefined') {
       global.getUrlDefault = (d: string, u: string) => {
         if (u) {
           setUrlDefault(d);
@@ -86,6 +86,8 @@ export default function useApp({
         }
       };
       androidCommon.getUrlDefault('getUrlDefault');
+    } else {
+      log('warn', 'Need to update the application', {});
     }
   }, []);
 

@@ -516,6 +516,7 @@ export interface Locale {
       };
       wrongUrlFormat: string;
       openInApp: string;
+      needUpdateApp: string;
     };
     translate: {
       title: string;
@@ -602,6 +603,7 @@ export interface Locale {
       contactsTitle: string;
       donate: string;
       packageVersion: string;
+      download: string;
     };
     settings: {
       title: string;

@@ -7,6 +7,8 @@ import { UserCleanResult } from '../types/interfaces';
 const request = new Request();
 const { userRenew: userRenewDef } = storeUserRenew.getState();
 
+const NEED_UPDATE_MESSAGE = 'Need to update the application';
+
 export default function useUser() {
   const [userLoad, setUserLoad] = useState<boolean>(false);
   const [user, setUser] = useState<UserCleanResult | null>(null);
@@ -34,6 +36,10 @@ export default function useUser() {
    */
   useEffect(() => {
     if (typeof androidCommon === 'undefined' || !user) {
+      return;
+    }
+    if (typeof androidCommon.getUUID === 'undefined') {
+      log('warn', NEED_UPDATE_MESSAGE, {});
       return;
     }
     const notificationId = androidCommon.getUUID();
@@ -84,6 +90,10 @@ export default function useUser() {
       log(updateRes.status, updateRes.message, updateRes);
     })();
     if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    if (typeof androidCommon.setNotificationEnabled === 'undefined') {
+      log('warn', NEED_UPDATE_MESSAGE, {});
       return;
     }
     androidCommon.setNotificationEnabled(notificationEnabled);

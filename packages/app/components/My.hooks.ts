@@ -736,9 +736,11 @@ export const useResetAllFilters = ({
 export const usePlayAll = ({
   phrasesRef,
   selectedFixed,
+  needUpdateApp,
 }: {
   phrasesRef: React.RefObject<HTMLDivElement>;
   selectedFixed: boolean;
+  needUpdateApp: string;
 }) => {
   const playToolsRef = useRef<HTMLDivElement>(null);
   const [played, setPlayed] = useState<boolean>(false);
@@ -828,6 +830,11 @@ export const usePlayAll = ({
     setPlayed(true);
     setPaused(false);
     if (typeof androidCommon !== 'undefined') {
+      if (typeof androidCommon.setKeepScreenOn === 'undefined') {
+        log('warn', needUpdateApp, {}, true, true);
+        return;
+      }
+
       androidCommon.setKeepScreenOn(true);
     }
   };

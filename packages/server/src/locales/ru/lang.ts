@@ -145,6 +145,8 @@ const lang: Locale = {
       },
       wrongUrlFormat: 'Неверный формат адреса',
       openInApp: 'Открыть в приложении',
+      needUpdateApp:
+        'Приложение должно быть обновлено до последней версии, чтобы поддерживать все функции',
     },
     translate: {
       title: 'Составление предложений',
@@ -219,13 +221,14 @@ const lang: Locale = {
       withPolicy: 'Политику конфиденциальности',
     },
     about: {
-      aboutProgram: 'О программе',
+      aboutProgram: 'О приложении',
       licenseTitle: 'Распостраняется по лицензии',
       repoTitle: 'Исходный код',
-      aboutSite: 'Об этом приложении',
+      aboutSite: 'Об этом сервисе',
       contactsTitle: 'Контакты',
       donate: 'Пожертвовать',
       packageVersion: 'Версия приложения',
+      download: 'Скачать',
     },
     settings: {
       title: 'Настройки',

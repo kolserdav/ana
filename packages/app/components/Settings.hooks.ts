@@ -503,12 +503,14 @@ export const useChangeNode = ({
   wrongUrlFormat,
   serverIsNotRespond,
   successCheckNode,
+  needUpdateApp,
 }: {
   urlDefault: string;
   url: null | string;
   wrongUrlFormat: string;
   serverIsNotRespond: string;
   successCheckNode: string;
+  needUpdateApp: string;
 }) => {
   const [isDefaultNode, setIsDefaultNode] = useState(false);
   const [isNode, setIsNode] = useState(false);
@@ -527,6 +529,10 @@ export const useChangeNode = ({
             log('info', successCheckNode, { name }, true);
             setIsNode(checked);
             if (typeof androidCommon !== 'undefined' && node) {
+              if (typeof androidCommon.setUrl === 'undefined') {
+                log('warn', needUpdateApp, {}, true, true);
+                return;
+              }
               androidCommon.setUrl(node);
             }
           }
@@ -537,6 +543,10 @@ export const useChangeNode = ({
         case 'urlDefault':
           setIsDefaultNode(checked);
           if (typeof androidCommon !== 'undefined') {
+            if (typeof androidCommon.setUrl === 'undefined') {
+              log('warn', needUpdateApp, {}, true, true);
+              return;
+            }
             androidCommon.setUrl('null');
           }
           if (isNode) {
@@ -546,7 +556,7 @@ export const useChangeNode = ({
         default:
       }
     },
-    [isDefaultNode, isNode, node]
+    [isDefaultNode, isNode, node, successCheckNode, needUpdateApp]
   );
 
   const onChangeNewNode = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -568,6 +578,10 @@ export const useChangeNode = ({
     if (result.status === 'info') {
       log('info', successCheckNode, { result }, true);
       if (typeof androidCommon !== 'undefined') {
+        if (typeof androidCommon.setUrl === 'undefined') {
+          log('warn', needUpdateApp, {}, true, true);
+          return;
+        }
         androidCommon.setUrl(value);
       }
       setNodeSuccess(true);

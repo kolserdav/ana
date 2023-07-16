@@ -146,6 +146,7 @@ const lang: Locale = {
       },
       wrongUrlFormat: 'Invalid address format',
       openInApp: 'Open in App',
+      needUpdateApp: 'The app needs to be updated to the latest version to support all features',
     },
     translate: {
       title: 'Creation of sentences',
@@ -219,13 +220,14 @@ const lang: Locale = {
       withPolicy: 'Privacy Policy',
     },
     about: {
-      aboutProgram: 'About the program',
+      aboutProgram: 'About the application',
       licenseTitle: 'Distributed under license',
       repoTitle: 'Source code',
-      aboutSite: 'About this application',
+      aboutSite: 'About this service',
       contactsTitle: 'Contacts',
       donate: 'Donate',
       packageVersion: 'Package version',
+      download: 'Download',
     },
     settings: {
       title: 'Settings',

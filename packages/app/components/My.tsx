@@ -64,6 +64,7 @@ function My({
   voiceNotFound,
   dateFilter,
   sort,
+  needUpdateApp,
 }: {
   locale: Locale['app']['my'];
   dateFilter: Locale['app']['common']['dateFilter'];
@@ -75,6 +76,7 @@ function My({
   user: UserCleanResult | null;
   voiceNotFound: string;
   playSound: string;
+  needUpdateApp: string;
 }) {
   const phrasesRef = useRef<HTMLDivElement>(null);
   const { load, setLoad } = useLoad();
@@ -219,6 +221,7 @@ function My({
   } = usePlayAll({
     phrasesRef,
     selectedFixed: selected.length !== 0,
+    needUpdateApp,
   });
 
   const playIsFixed = playToolsFixed && (played || paused);

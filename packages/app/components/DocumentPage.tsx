@@ -48,7 +48,7 @@ function DocumentPage({
         </div>
         <div className={s.description}>
           <Typography theme={theme} variant="p" align="center">
-            {description}
+            {description || ''}
           </Typography>
         </div>
         <div className={s.page__text} dangerouslySetInnerHTML={{ __html: content }} />

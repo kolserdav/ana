@@ -180,6 +180,10 @@ export const copyText = (text: string) => {
     return navigator.clipboard.writeText(text);
   }
   return new Promise((resolve) => {
+    if (typeof androidCommon.copyToClipboard === 'undefined') {
+      log('warn', 'Need to update the application', {});
+      resolve(1);
+    }
     androidCommon.copyToClipboard(text);
     resolve(0);
   });
