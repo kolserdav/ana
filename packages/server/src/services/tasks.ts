@@ -156,6 +156,9 @@ class Tasks {
         });
         if (_notification[0]) {
           const notification = _notification[0];
+          if (!this.ws.getPushConnId(user.notificationId)) {
+            continue;
+          }
           this.ws.sendMessage(
             user.notificationId,
             {

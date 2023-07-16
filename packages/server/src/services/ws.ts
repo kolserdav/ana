@@ -251,11 +251,13 @@ class WS {
     return Object.keys(this.sockets);
   }
 
+  public getPushConnId = (id: string) => {
+    return Object.keys(this.pushSockets).find((item) => this.pushSockets[item]?.unitId === id);
+  };
+
   public sendMessage(id: string, data: WSMessage, android = false) {
     if (android) {
-      const socket = Object.keys(this.pushSockets).find(
-        (item) => this.pushSockets[item]?.unitId === id
-      );
+      const socket = this.getPushConnId(id);
       if (!socket) {
         log('warn', 'Send message to missing push socket', { id, data });
         return;
