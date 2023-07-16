@@ -70,7 +70,7 @@ class Tasks {
                   PushNotificationUser: {
                     every: {
                       created: {
-                        gt: dateDay,
+                        lt: dateDay,
                       },
                     },
                   },
@@ -132,7 +132,7 @@ class Tasks {
                           },
                           {
                             created: {
-                              gt: dateMonth,
+                              lt: dateMonth,
                             },
                           },
                         ],
