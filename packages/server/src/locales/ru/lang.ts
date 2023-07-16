@@ -228,7 +228,7 @@ const lang: Locale = {
       contactsTitle: 'Контакты',
       donate: 'Пожертвовать',
       packageVersion: 'Версия приложения',
-      download: 'Скачать',
+      download: 'Скачать последнюю версию',
     },
     settings: {
       title: 'Настройки',

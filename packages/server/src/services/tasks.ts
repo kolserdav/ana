@@ -32,7 +32,6 @@ class Tasks {
       this.checkTranslateService();
     }
 
-    // TODO it's only for one server
     this.sendPushNotifications();
   }
 
@@ -171,6 +170,7 @@ class Tasks {
         });
         if (_notification[0]) {
           const notification = _notification[0];
+          // Check if user is connected to the server via Android-WebSocket
           if (!this.ws.getPushConnId(user.notificationId)) {
             continue;
           }
