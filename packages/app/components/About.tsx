@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale } from '../types/interfaces';
+import { Locale, UserCleanResult } from '../types/interfaces';
 import { LICENSE, Pages, REPOSITORY_LINK } from '../utils/constants';
+import { isAndroid } from '../utils/lib';
 import s from './About.module.scss';
 import Hr from './ui/Hr';
 import Link from './ui/Link';
@@ -14,6 +16,7 @@ function About({
   theme,
   policyTitle,
   rulesTitle,
+  user,
 }: {
   locale: Locale['app']['about'];
   title: string;
@@ -21,8 +24,33 @@ function About({
   theme: Theme;
   policyTitle: string;
   rulesTitle: string;
+  user: UserCleanResult | null;
 }) {
+  const [android, setAndroid] = useState<boolean>(false);
+  const [packageVersion, setPackageVersion] = useState<string>();
   useLoad();
+
+  /**
+   * Set android
+   */
+  useEffect(() => {
+    setAndroid(isAndroid());
+  }, []);
+
+  /**
+   * Set package version
+   */
+  useEffect(() => {
+    if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    setPackageVersion(androidCommon.getPackageVersion());
+
+    // TODO clear
+    // @ts-ignore
+    androidCommon.gedtasdUrlDefault();
+  }, []);
+
   return (
     <section className={s.wrapper}>
       <div className={s.container}>
@@ -56,6 +84,14 @@ function About({
             <a href={REPOSITORY_LINK}>{REPOSITORY_LINK}</a>
           </span>
         </div>
+        {(android || user?.role === 'admin') && (
+          <div className={s.item}>
+            <Typography theme={theme} variant="h5">{`${locale.packageVersion}:`}</Typography>
+            <Typography theme={theme} variant="span">
+              {packageVersion}
+            </Typography>
+          </div>
+        )}
         <Hr theme={theme} />
         <Typography variant="h3" theme={theme}>
           {locale.aboutSite}

@@ -79,6 +79,8 @@ declare global {
     getUUID: () => string;
 
     setNotificationEnabled: (value: boolean) => void;
+
+    getPackageVersion: () => string;
   }
 
   const androidCommon: AndroidCommon | undefined;

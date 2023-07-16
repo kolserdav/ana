@@ -3,6 +3,8 @@ package com.kolserdav.ana;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
@@ -129,6 +131,8 @@ class AndroidCommon {
 
     MainActivity main;
 
+    public String packageVersion;
+
     public final String notificationUnitId;
 
     private static final String TAG = "AndroidCommon";
@@ -139,6 +143,10 @@ class AndroidCommon {
     AndroidCommon(MainActivity _main) {
         main = _main;
         helper = new Helper();
+
+        packageVersion = helper.getPackageVersion(main);
+        Log.d(TAG, "Package version is: " + packageVersion);
+
         notificationUnitId = UUID.randomUUID().toString();
         Log.d(TAG, "Notification unit id is: " + notificationUnitId);
     }
@@ -151,6 +159,11 @@ class AndroidCommon {
                 System.exit(0);
             }
         });
+    }
+
+    @JavascriptInterface
+    public String getPackageVersion() {
+        return packageVersion;
     }
 
     @JavascriptInterface

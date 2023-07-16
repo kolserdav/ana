@@ -32,6 +32,7 @@ class Tasks {
       this.checkTranslateService();
     }
 
+    // TODO it's only for one server
     this.sendPushNotifications();
   }
 

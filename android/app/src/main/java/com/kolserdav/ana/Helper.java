@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -36,6 +37,19 @@ public class Helper extends Config {
 
     public Helper() {
         //
+    }
+
+    public String getPackageVersion(Context context) {
+        String result = null;
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(
+                    context.getPackageName(), 0);
+            result = info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Failed get package version: " + e.getMessage());
+        }
+        return result;
     }
 
 

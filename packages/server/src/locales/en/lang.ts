@@ -225,6 +225,7 @@ const lang: Locale = {
       aboutSite: 'About this application',
       contactsTitle: 'Contacts',
       donate: 'Donate',
+      packageVersion: 'Package version',
     },
     settings: {
       title: 'Settings',

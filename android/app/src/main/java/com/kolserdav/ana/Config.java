@@ -33,5 +33,6 @@ public class Config {
     public static final String WS_MESSAGE_NOTIFICATION_USER_ID = "notification_user_id";
 
     public static final int WS_RECONNECT_TIMEOUT = 3000;
+
 }
 

@@ -601,6 +601,7 @@ export interface Locale {
       aboutSite: string;
       contactsTitle: string;
       donate: string;
+      packageVersion: string;
     };
     settings: {
       title: string;
