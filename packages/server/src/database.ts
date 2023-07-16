@@ -12,6 +12,7 @@ import {
   PrismaClient,
   Selector,
   PushNotification,
+  PushNotificationUser,
 } from '@prisma/client';
 import { Result } from './types/interfaces';
 
@@ -304,6 +305,16 @@ abstract class Database {
       T,
       Result<Selector | null>,
       Promise<Result<Prisma.SelectorGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract pushNotificationUserCreate<T extends Prisma.PushNotificationUserCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PushNotificationUserCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<PushNotificationUser | null>,
+      Promise<Result<Prisma.PushNotificationUserGetPayload<T> | null>>
     >
   >;
 

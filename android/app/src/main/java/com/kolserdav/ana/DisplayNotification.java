@@ -84,6 +84,27 @@ public class DisplayNotification extends Service {
                     }
                     listenNotifications();
                 }
+
+                @Override
+                public void onMessage(String message) {
+                    super.onMessage(message);
+                    JSONObject data = null;
+                    try {
+                        data = new JSONObject(message);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Failed parse WS message: " + e.getMessage());
+                    }
+                    if (data != null) {
+                        try {
+                            String title = data.get("type").toString();
+                            String content = data.get("message").toString();
+                            String path = data.get("data").toString();
+                            createNotification(title, content, path);
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Failed parse WS message: " + e.getMessage());
+                        }
+                    }
+                }
             };
             ws.connect();
         }

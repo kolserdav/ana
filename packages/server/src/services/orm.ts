@@ -349,6 +349,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public pushNotificationUserCreate: Database['pushNotificationUserCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'pushNotificationUser',
+      command: 'create',
+    });
+  };
+
   private createServer() {
     this.listenWorkerMessages<DBCommandProps>(async ({ id, msg }) => {
       const result = await this.run({ ...msg });

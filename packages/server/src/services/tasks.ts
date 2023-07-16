@@ -165,6 +165,12 @@ class Tasks {
             },
             true
           );
+          await orm.pushNotificationUserCreate({
+            data: {
+              userId: user.id,
+              pushNotificationId: notification.id,
+            },
+          });
         }
       }
     }, CHECK_PUSH_NOTIFICATION_INTERVAL);
