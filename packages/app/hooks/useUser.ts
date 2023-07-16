@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { formatDistance } from 'date-fns';
 import storeUserRenew from '../store/userRenew';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
@@ -12,6 +11,7 @@ export default function useUser() {
   const [userLoad, setUserLoad] = useState<boolean>(false);
   const [user, setUser] = useState<UserCleanResult | null>(null);
   const [renew, setRenew] = useState<boolean>(userRenewDef);
+  const [notificationEnabled, setNotificationEnabled] = useState<boolean>(false);
 
   /**
    * Get user
@@ -60,6 +60,36 @@ export default function useUser() {
   }, [user]);
 
   /**
+   * Set notification enabled
+   */
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    setNotificationEnabled(user.pushEnabled);
+  }, [user]);
+
+  /**
+   * Set notification enabled Android
+   */
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    (async () => {
+      const updateRes = await request.userUpdate({
+        userId: user.id,
+        pushEnabled: notificationEnabled,
+      });
+      log(updateRes.status, updateRes.message, updateRes);
+    })();
+    if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    androidCommon.setNotificationEnabled(notificationEnabled);
+  }, [notificationEnabled, user]);
+
+  /**
    * Listen need renew
    */
   useEffect(() => {
@@ -72,5 +102,5 @@ export default function useUser() {
     };
   }, []);
 
-  return { user, userLoad };
+  return { user, userLoad, notificationEnabled, setNotificationEnabled };
 }

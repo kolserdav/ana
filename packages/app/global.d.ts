@@ -77,6 +77,8 @@ declare global {
     setUrl: (url: string) => void;
 
     getUUID: () => string;
+
+    setNotificationEnabled: (value: boolean) => void;
   }
 
   const androidCommon: AndroidCommon | undefined;

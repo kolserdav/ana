@@ -45,6 +45,8 @@ export interface AppProps {
   app: {
     theme: Theme;
     user: UserCleanResult | null;
+    notificationEnabled: boolean;
+    setNotificationEnabled: (value: boolean) => void;
     userLoad: boolean;
     touchpad: boolean;
     connId: string | null;

@@ -41,6 +41,8 @@ public class MainActivity extends Activity {
 
     private Intent serviceIntent;
 
+    AndroidCommon androidCommon;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -57,6 +59,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+        String enabled = "false";
+        if (androidCommon.notificationEnabled) {
+            enabled = "true";
+        }
+        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_NOTIFICATION_ENABLED, enabled);
         startService(serviceIntent);
     }
 
@@ -79,6 +86,7 @@ public class MainActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         helper = new Helper(this, this);
+        androidCommon =  new AndroidCommon(this);
 
 
         mWebView = new WebView(this);
@@ -103,7 +111,6 @@ public class MainActivity extends Activity {
 
         TTS tts = new TTS(this);
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
-        AndroidCommon androidCommon = new AndroidCommon(this);
         mWebView.addJavascriptInterface(androidCommon, "androidCommon");
         setContentView(mWebView);
 
@@ -186,7 +193,7 @@ public class MainActivity extends Activity {
                                        app.wsAddress = wsAddress.toString();
                                        db.app.setWSAddress(app);
 
-                                       // Starting notification service
+                                       // Stopping notification service while run app
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_URL, db.getUrl());
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_WS_ADDRESS, app.wsAddress);
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_NOTIFICATION_UNIT_ID, androidCommon.notificationUnitId);
@@ -206,8 +213,6 @@ public class MainActivity extends Activity {
         };
 
         webViewListeners();
-
-        // new DisplayNotification(db);
     }
 
 

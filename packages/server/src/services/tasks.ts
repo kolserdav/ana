@@ -39,7 +39,6 @@ class Tasks {
     const getPushTimeZones = () => {
       const date = new Date();
       const hours = date.getHours();
-      //const hours = 5;
       const lte = hours - PUSH_NOTIFICATION_MIN_TIME;
       const gt = lte - (PUSH_NOTIFICATION_MAX_TIME - PUSH_NOTIFICATION_MIN_TIME);
       return { lte, gt };
@@ -69,12 +68,22 @@ class Tasks {
               },
             },
             {
+              notificationId: {
+                not: null,
+              },
+            },
+            {
+              pushEnabled: true,
+            },
+            // If user's time is from 12 p.m. to 20 p.m.
+            {
               timeZone: {
                 lte,
                 gt,
               },
             },
             {
+              // I user didn't get notification today
               NOT: {
                 PushNotificationUser: {
                   some: {
@@ -85,22 +94,11 @@ class Tasks {
                 },
               },
             },
+            // If user wasn't steel online today
             {
               updated: {
                 lt: dateDay,
               },
-            },
-            {
-              notificationId: {
-                not: null,
-              },
-            },
-            {
-              pushEnabled: true,
-            },
-            {
-              // TODO clean
-              role: 'admin',
             },
           ],
         },
@@ -127,6 +125,7 @@ class Tasks {
               },
               {
                 OR: [
+                  // If whis message wasn't send to user
                   {
                     PushNotificationUser: {
                       every: {
@@ -136,6 +135,7 @@ class Tasks {
                       },
                     },
                   },
+                  // If this mesage was send to user the long time ago
                   {
                     PushNotificationUser: {
                       every: {
@@ -161,6 +161,7 @@ class Tasks {
           },
         });
 
+        // Geting the rarest message
         const _notification = notifications.data.sort((a, b) => {
           if (a.PushNotificationUser.length < b.PushNotificationUser.length) {
             return -1;

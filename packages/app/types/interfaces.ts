@@ -626,6 +626,10 @@ export interface Locale {
       saveVoiceTestText: string;
       saveAllTestText: string;
       successCheckNode: string;
+      notifications: {
+        title: string;
+        description: string;
+      };
     };
     statistics: {
       title: string;

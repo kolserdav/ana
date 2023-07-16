@@ -23,6 +23,15 @@ $settings-margin-left: 1rem;
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
+      border-radius: $input-border-radius;
+      border-width: 1px;
+      border-style: solid;
+      padding: 1rem;
+
+      .select_node__item {
+        display: flex;
+        flex-direction: column;
+      }
     }
     
 
@@ -91,6 +100,10 @@ $settings-margin-left: 1rem;
         border-width: 2px;
       }
       
+    }
+
+    .settings__item {
+      margin: $settings-margin-left $settings-margin-left $speech-select-shift;
     }
 
     .personal_data {

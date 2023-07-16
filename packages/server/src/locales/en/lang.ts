@@ -253,6 +253,10 @@ const lang: Locale = {
       saveAllTestText: 'Save for all voices',
       successCheckNode:
         'The next time you run the application, it will be started from the specified server',
+      notifications: {
+        title: 'Receive Notifications',
+        description: "Motivating Reminders. We'll try not to be too intrusive.",
+      },
     },
     statistics: {
       title: 'Statistics',

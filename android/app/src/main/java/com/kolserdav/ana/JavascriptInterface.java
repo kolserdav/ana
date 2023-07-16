@@ -133,6 +133,8 @@ class AndroidCommon {
 
     private static final String TAG = "AndroidCommon";
 
+    public boolean notificationEnabled = false;
+
     Helper helper;
     AndroidCommon(MainActivity _main) {
         main = _main;
@@ -147,6 +149,16 @@ class AndroidCommon {
             public void run() {
                 main.finishAffinity();
                 System.exit(0);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void setNotificationEnabled(boolean value) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notificationEnabled = value;
             }
         });
     }
