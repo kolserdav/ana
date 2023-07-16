@@ -75,7 +75,21 @@ class Tasks {
                     },
                   },
                 },
+                {
+                  PushNotificationUser: {
+                    some: {},
+                  },
+                },
               ],
+            },
+            {
+              OnlineStatistic: {
+                every: {
+                  created: {
+                    lt: dateDay,
+                  },
+                },
+              },
             },
             {
               notificationId: {
