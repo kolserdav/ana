@@ -135,7 +135,7 @@ class Tasks {
                   },
                   {
                     PushNotificationUser: {
-                      some: {
+                      every: {
                         AND: [
                           {
                             userId: user.id,
