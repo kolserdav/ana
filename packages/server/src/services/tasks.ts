@@ -75,10 +75,12 @@ class Tasks {
               },
             },
             {
-              PushNotificationUser: {
-                every: {
-                  created: {
-                    lt: dateDay,
+              NOT: {
+                PushNotificationUser: {
+                  every: {
+                    created: {
+                      gt: dateDay,
+                    },
                   },
                 },
               },
