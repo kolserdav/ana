@@ -1,1 +1,0 @@
-- Added a setting for the speed of reading text

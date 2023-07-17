@@ -9,7 +9,7 @@
 
   .container {
     position: relative;
-    width: 100%;
+    width: max-content;
     max-width: $container-max-width;
     display: flex;
     flex-direction: column;

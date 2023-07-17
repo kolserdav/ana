@@ -111,6 +111,7 @@ export const LICENSE = {
   title: 'AGPL-3.0 license ',
   link: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };
+export const FDROID_LINK = 'https://f-droid.org/en/packages/com.kolserdav.ana/';
 // deps packages/server/orm/schema.prisma.Phrase.text
 export const PHRASE_MAX_LENGTH_DEFAULT = 1000;
 export const TRANSLATE_MAX_SYMBOLS = 10000;
@@ -148,7 +149,12 @@ export const GRAPH_WIDTH_DEFAULT = 760;
 export const GRAPH_HEIGHT_COEFF = 1.6666666666666667;
 // deps $container-padding
 export const CONTAINER_PADDING = 16;
-// deps in parseProcessText in android/app/src/main/java/com/kolserdav/ana/MainActivity.java
+// deps in parseProcessText in android/app/src/main/java/com/kolserdav/ana/Config.java.QUERY_STRING_PROCESS_TEXT
 export const PROCESS_TEXT_QUERY_STRING = 'process_text';
 export const TAKE_ALL = 100000000;
 export const LINK_REPLACED = '...http...';
+// deps android/app/src/main/AndroidManifest.xml android:scheme
+export const ANDROID_APP_NAME = 'com.kolserdav.ana';
+export const NULL_STR = 'null';
+// deps android/app/src/main/AndroidManifest.xml android:host
+export const DEEP_LINK_HOST = 'path';

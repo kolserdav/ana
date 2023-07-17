@@ -2,8 +2,11 @@ package com.kolserdav.ana;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -36,6 +39,19 @@ public class Helper extends Config {
         //
     }
 
+    public String getPackageVersion(Context context) {
+        String result = null;
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(
+                    context.getPackageName(), 0);
+            result = info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Failed get package version: " + e.getMessage());
+        }
+        return result;
+    }
+
 
     public String listenProcessText(Intent intent, AppInterface options) {
         String url = options.url;
@@ -64,8 +80,11 @@ public class Helper extends Config {
         Uri path = intent.getData();
         if (path != null) {
             url = url.concat(path.getPath());
-            url = url.concat("?");
-            url = url.concat(path.getQuery());
+            String query = path.getQuery();
+            if (query != null) {
+                url = url.concat("?");
+                url = url.concat(query);
+            }
         } else {
             url.concat(options.path);
         }
@@ -92,5 +111,24 @@ public class Helper extends Config {
         Configuration config = resources.getConfiguration();
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
+
+    public void alert(String title, String message) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                    }
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }

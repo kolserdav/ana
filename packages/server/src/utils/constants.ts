@@ -100,3 +100,8 @@ export const CHECK_SERVER_MESSAGES_INTERVAL = 3000;
 export const CHECK_TRANSLATE_SERVICE_TIMEOUT = 5000;
 export const SCRIPT_FILE_SERVER_MESSAGES = 'server-messages.js';
 export const USER_NAME_DEFAULT = 'Anon';
+// deps android/app/src/main/java/com/kolserdav/ana/Config.java.WS_MESSAGE_NOTIFICATION_USER_ID
+export const WS_MESSAGE_NOTIFICATION_USER_ID = 'notification_user_id';
+export const CHECK_PUSH_NOTIFICATION_INTERVAL = 3000;
+export const PUSH_NOTIFICATION_MIN_TIME = 12;
+export const PUSH_NOTIFICATION_MAX_TIME = 20;

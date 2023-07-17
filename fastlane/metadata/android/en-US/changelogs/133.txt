@@ -1,0 +1,3 @@
+- Added motivational daily push notifications
+- Made it possible to open deep links in the application
+- Fixed some bugs

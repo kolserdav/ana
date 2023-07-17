@@ -268,7 +268,7 @@ ${args
       new RegExp(`${cleanItem}/package-lock.json` || '').test(_diff)
     ) {
       log('warn', 'Need install:', item);
-      const install = await spawnCommand('npm', ['i'], { env });
+      const install = await spawnCommand('npm', ['run', 'install:node'], { env });
       if (install.code != 0) {
         return exit(install.code || undefined);
       }

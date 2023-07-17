@@ -12,6 +12,7 @@ const request = new Request();
 
 interface ConfirmEmailProps extends AppProps {
   localeConfirm: Locale['app']['confirmEmail'];
+  localeCommon: Locale['app']['common'];
   localeAppBar: Locale['app']['appBar'];
   page: PageFull;
 }
@@ -20,6 +21,7 @@ export default function ConfirmEmailPage({
   app: { theme, user },
   localeConfirm,
   localeAppBar,
+  localeCommon,
   page,
 }: ConfirmEmailProps) {
   return (
@@ -31,7 +33,12 @@ export default function ConfirmEmailPage({
       </Head>
       <AppBar theme={theme} locale={localeAppBar} withoutExpandLess user={user} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <ConfirmEmail theme={theme} locale={localeConfirm} user={user} />
+        <ConfirmEmail
+          openInApp={localeCommon.openInApp}
+          theme={theme}
+          locale={localeConfirm}
+          user={user}
+        />
       </main>
     </>
   );
@@ -42,6 +49,7 @@ export async function getStaticProps({
 }: GetStaticPropsContext): Promise<{ props: Omit<ConfirmEmailProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const localeConfirm = await request.getLocale({ field: 'confirmEmail', locale });
+  const localeCommon = await request.getLocale({ field: 'common', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
@@ -59,6 +67,7 @@ export async function getStaticProps({
       page: prepagePage(page.data),
       localeConfirm: localeConfirm.data,
       localeAppBar: localeAppBar.data,
+      localeCommon: localeCommon.data,
     },
   };
 }

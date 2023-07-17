@@ -18,6 +18,8 @@ class WS {
 
   notificated: Record<string, Record<string, typeof CHECK>> = {};
 
+  pushSockets: Record<string, { socket: WebSocket; unitId: string }> = {};
+
   constructor() {
     this.deleteAllOnline();
     this.deleteServerRebootMessages();
@@ -79,6 +81,28 @@ class WS {
       }, 1000);
     });
   }
+
+  public setPushSocket = ({
+    connId,
+    unitId,
+    ws,
+  }: {
+    connId: string;
+    unitId: string;
+    ws: WebSocket;
+  }) => {
+    if (this.pushSockets[connId]) {
+      log('warn', 'Duplicate push socket', { connId, unitId });
+      return;
+    }
+    this.pushSockets[connId] = { socket: ws, unitId };
+  };
+
+  public deletePushSocket = (connId: string) => {
+    if (this.pushSockets[connId]) {
+      delete this.pushSockets[connId];
+    }
+  };
 
   public async setSocket({
     id,
@@ -227,7 +251,20 @@ class WS {
     return Object.keys(this.sockets);
   }
 
-  public sendMessage(id: string, data: WSMessage) {
+  public getPushConnId = (id: string) => {
+    return Object.keys(this.pushSockets).find((item) => this.pushSockets[item]?.unitId === id);
+  };
+
+  public sendMessage(id: string, data: WSMessage, android = false) {
+    if (android) {
+      const socket = this.getPushConnId(id);
+      if (!socket) {
+        log('warn', 'Send message to missing push socket', { id, data });
+        return;
+      }
+      this.pushSockets[socket]?.socket.send(JSON.stringify(data));
+      return;
+    }
     if (!this.sockets[id]) {
       log('warn', 'Send message to missing socket', { id, data });
       return;

@@ -7,6 +7,7 @@ import {
   DATE_FILTER_ALL,
   LEARN_LANG_DEFAULT,
   NATIVE_LANG_DEFAULT,
+  NULL_STR,
   PHRASE_MAX_LENGTH_DEFAULT,
   PROCESS_TEXT_QUERY_STRING,
   Pages,
@@ -105,7 +106,7 @@ export const useLanguages = ({
    * Load phrase from database
    */
   useEffect(() => {
-    if (!connId || !user || !loadText || edit) {
+    if (!connId || !user || !loadText || (edit && edit !== NULL_STR)) {
       return;
     }
     log('info', 'Text is', { oldText, loadText });
@@ -114,8 +115,8 @@ export const useLanguages = ({
       if (phrase.status !== 'info' || !phrase.data) {
         return;
       }
-      if (!edit && edit !== 'null') {
-        router.push(`${router.asPath}?edit=${phrase.data.id}`);
+      if (!edit) {
+        router.push(`${router.pathname}?edit=${phrase.data.id}`);
       }
     })();
   }, [loadText, user, connId, oldText, edit, router]);
@@ -278,6 +279,10 @@ export const useTranslate = ({
       query: { edit: _edit },
     } = router;
 
+    if (_edit === NULL_STR) {
+      return;
+    }
+
     setEdit(_edit as string);
   }, [router]);
 
@@ -429,7 +434,7 @@ export const useTranslate = ({
     setAddTags(false);
     setTags([]);
     removeLocalStorage(LocalStorageName.TEXT);
-    if (edit && edit !== 'null') {
+    if (edit && edit !== NULL_STR) {
       setEdit(null);
       router.push(`${router.pathname}?edit=null`);
     }
@@ -506,7 +511,7 @@ export const useTranslate = ({
     cleanText,
     onKeyDownReTranslate,
     onClickRetranslate,
-    edit,
+    edit: edit === NULL_STR ? null : edit,
     restart,
     setRestart,
     phraseToUpdate,
@@ -571,12 +576,12 @@ export const useSavePhrase = ({
       setTags([]);
       setRestart(!restart);
       setTagRestart(!tagRestart);
-      router.push(`${router.asPath}?edit=${saveRes.data.id}`);
+      router.push(`${router.pathname}?edit=${saveRes.data.id}`);
     }
   };
 
   const onClickUpdate = async () => {
-    if (!edit) {
+    if (!edit || edit === NULL_STR) {
       log('warn', 'This is not editable phrase', { edit });
       return;
     }

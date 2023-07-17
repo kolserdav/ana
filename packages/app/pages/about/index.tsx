@@ -41,6 +41,8 @@ export default function AboutPage({
           title={page.title}
           theme={theme}
           description={page.description}
+          user={user}
+          needUpdateApp={localeCommon.needUpdateApp}
         />
       </main>
     </>

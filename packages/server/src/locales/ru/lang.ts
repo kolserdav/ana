@@ -144,6 +144,9 @@ const lang: Locale = {
         byNumeric: 'По количеству',
       },
       wrongUrlFormat: 'Неверный формат адреса',
+      openInApp: 'Открыть в приложении',
+      needUpdateApp:
+        'Приложение должно быть обновлено до последней версии, чтобы поддерживать все функции',
     },
     translate: {
       title: 'Составление предложений',
@@ -218,12 +221,14 @@ const lang: Locale = {
       withPolicy: 'Политику конфиденциальности',
     },
     about: {
-      aboutProgram: 'О программе',
+      aboutProgram: 'О приложении',
       licenseTitle: 'Распостраняется по лицензии',
       repoTitle: 'Исходный код',
-      aboutSite: 'Об этом приложении',
+      aboutSite: 'Об этом сервисе',
       contactsTitle: 'Контакты',
       donate: 'Пожертвовать',
+      packageVersion: 'Версия приложения',
+      download: 'Скачать последнюю версию',
     },
     settings: {
       title: 'Настройки',
@@ -250,6 +255,12 @@ const lang: Locale = {
       serverIsNotRespond: 'Сервер не отвечает',
       saveVoiceTestText: 'Сохранять для каждого голоса',
       saveAllTestText: 'Сохранять для всех голосов',
+      successCheckNode: 'При следующем запуске приложение будет запущенно с указанного сервера',
+      notifications: {
+        title: 'Получать уведомления',
+        description:
+          'Мотивирующие напоминания. Мы постараемся чтобы они не были слишком навязчивыми.',
+      },
     },
     statistics: {
       title: 'Статистика',

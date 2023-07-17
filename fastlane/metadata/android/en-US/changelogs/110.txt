@@ -1,2 +1,0 @@
-- Added cancel speech synth
-- Added speech synth animation

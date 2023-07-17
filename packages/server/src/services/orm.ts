@@ -182,6 +182,14 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public userFindMany: Database['userFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'user',
+      command: 'findMany',
+    });
+  };
+
   public userCreate: Database['userCreate'] = async (args) => {
     return this.runFromWorker({
       args,
@@ -330,6 +338,22 @@ export class ORM extends Service implements Database {
       args,
       model: 'onlineStatistic',
       command: 'findMany',
+    });
+  };
+
+  public pushNotificationFindMany: Database['pushNotificationFindMany'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'pushNotification',
+      command: 'findMany',
+    });
+  };
+
+  public pushNotificationUserCreate: Database['pushNotificationUserCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'pushNotificationUser',
+      command: 'create',
     });
   };
 

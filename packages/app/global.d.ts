@@ -75,6 +75,12 @@ declare global {
     getUrlDefault: (props: keyof GlobalProps) => void;
 
     setUrl: (url: string) => void;
+
+    getUUID: () => string;
+
+    setNotificationEnabled: (value: boolean) => void;
+
+    getPackageVersion: () => string;
   }
 
   const androidCommon: AndroidCommon | undefined;

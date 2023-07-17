@@ -11,6 +11,8 @@ import {
   OnlineStatistic,
   PrismaClient,
   Selector,
+  PushNotification,
+  PushNotificationUser,
 } from '@prisma/client';
 import { Result } from './types/interfaces';
 
@@ -34,6 +36,12 @@ abstract class Database {
     args: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>
   ): Promise<
     Prisma.CheckSelect<T, Result<User | null>, Promise<Result<Prisma.UserGetPayload<T> | null>>>
+  >;
+
+  public abstract userFindMany<T extends Prisma.UserFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.UserFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<T, Result<Array<User>>, Promise<Result<Array<Prisma.UserGetPayload<T>>>>>
   >;
 
   public abstract serverMessageFindMany<T extends Prisma.ServerMessageFindManyArgs>(
@@ -297,6 +305,26 @@ abstract class Database {
       T,
       Result<Selector | null>,
       Promise<Result<Prisma.SelectorGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract pushNotificationUserCreate<T extends Prisma.PushNotificationUserCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PushNotificationUserCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<PushNotificationUser | null>,
+      Promise<Result<Prisma.PushNotificationUserGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract pushNotificationFindMany<T extends Prisma.PushNotificationFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PushNotificationFindManyArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<Array<PushNotification>>,
+      Promise<Result<Array<Prisma.PushNotificationGetPayload<T>>>>
     >
   >;
 }

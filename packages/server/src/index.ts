@@ -10,6 +10,7 @@ import {
   parseMessage,
 } from './types/interfaces';
 import Tasks from './services/tasks';
+import { WS_MESSAGE_NOTIFICATION_USER_ID } from './utils/constants';
 process.setMaxListeners(0);
 if (cluster.isPrimary) {
   process.on('uncaughtException', (err: Error) => {
@@ -24,9 +25,10 @@ if (cluster.isPrimary) {
 } else {
   import('./http');
 
-  new Tasks();
-
   const ws = new WS();
+
+  new Tasks(ws);
+
   ws.server.on('connection', async (conn) => {
     const connId = v4();
 
@@ -56,12 +58,16 @@ if (cluster.isPrimary) {
         case WS_MESSAGE_USER_ID:
           await ws.setUserId({ id: connId, userId: data, token });
           break;
+        case WS_MESSAGE_NOTIFICATION_USER_ID:
+          ws.setPushSocket({ ws: conn, unitId: data, connId });
+          break;
         default:
           log('warn', 'Default ws case', rawMessage);
       }
     });
 
     conn.on('close', async () => {
+      ws.deletePushSocket(connId);
       await ws.deleteSocket(connId);
     });
   });

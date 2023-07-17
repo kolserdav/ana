@@ -48,8 +48,6 @@ export enum Api {
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
   localPostSelector = '/local/create-selector',
-  // Android
-  apiCheck = '/api/check',
 }
 
 // eslint-disable-next-line no-shadow
@@ -227,7 +225,10 @@ export interface UserUpdateBody {
     oldPassword: string;
     newPassword: string;
   };
+  notificationId?: string;
   name?: string;
+  pushEnabled?: boolean;
+  timeZone?: number;
 }
 
 export interface UserDeleteBody {
@@ -514,6 +515,8 @@ export interface Locale {
         byNumeric: string;
       };
       wrongUrlFormat: string;
+      openInApp: string;
+      needUpdateApp: string;
     };
     translate: {
       title: string;
@@ -599,6 +602,8 @@ export interface Locale {
       aboutSite: string;
       contactsTitle: string;
       donate: string;
+      packageVersion: string;
+      download: string;
     };
     settings: {
       title: string;
@@ -623,6 +628,11 @@ export interface Locale {
       serverIsNotRespond: string;
       saveVoiceTestText: string;
       saveAllTestText: string;
+      successCheckNode: string;
+      notifications: {
+        title: string;
+        description: string;
+      };
     };
     statistics: {
       title: string;

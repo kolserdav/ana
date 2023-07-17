@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
-import { Locale } from '../types/interfaces';
-import { LICENSE, Pages, REPOSITORY_LINK } from '../utils/constants';
+import { Locale, UserCleanResult } from '../types/interfaces';
+import { FDROID_LINK, LICENSE, Pages, REPOSITORY_LINK } from '../utils/constants';
+import { isAndroid, log } from '../utils/lib';
 import s from './About.module.scss';
 import Hr from './ui/Hr';
 import Link from './ui/Link';
@@ -14,6 +17,8 @@ function About({
   theme,
   policyTitle,
   rulesTitle,
+  user,
+  needUpdateApp,
 }: {
   locale: Locale['app']['about'];
   title: string;
@@ -21,8 +26,34 @@ function About({
   theme: Theme;
   policyTitle: string;
   rulesTitle: string;
+  user: UserCleanResult | null;
+  needUpdateApp: string;
 }) {
+  const [android, setAndroid] = useState<boolean>(false);
+  const [packageVersion, setPackageVersion] = useState<string>();
   useLoad();
+
+  /**
+   * Set android
+   */
+  useEffect(() => {
+    setAndroid(isAndroid());
+  }, []);
+
+  /**
+   * Set package version
+   */
+  useEffect(() => {
+    if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    if (typeof androidCommon.getPackageVersion === 'undefined') {
+      log('warn', needUpdateApp, {}, true, true);
+      return;
+    }
+    setPackageVersion(androidCommon.getPackageVersion());
+  }, [needUpdateApp]);
+
   return (
     <section className={s.wrapper}>
       <div className={s.container}>
@@ -55,6 +86,22 @@ function About({
           <span className={s.value}>
             <a href={REPOSITORY_LINK}>{REPOSITORY_LINK}</a>
           </span>
+        </div>
+        {(android || user?.role === 'admin') && (
+          <div className={s.item}>
+            <Typography theme={theme} variant="h5">{`${locale.packageVersion}:`}</Typography>
+            <Typography theme={theme} variant="span">
+              {packageVersion}
+            </Typography>
+          </div>
+        )}
+        <div className={s.item}>
+          <Typography variant="h5" theme={theme}>
+            {`${locale.download}:`}
+          </Typography>
+          <Link href={FDROID_LINK} theme={theme}>
+            <Image width={200} height={143} src="/images/GetItOnFDroid.png" alt="F-Droid" />
+          </Link>
         </div>
         <Hr theme={theme} />
         <Typography variant="h3" theme={theme}>

@@ -17,8 +17,7 @@ $disabled-opacity: 0.3;
 
   .icon__text {
     position: relative;
-    max-width: $icon-button-width;
-    white-space: nowrap;    
+    max-width: $icon-button-width; 
   }
 
   &:disabled {

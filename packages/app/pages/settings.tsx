@@ -19,7 +19,7 @@ interface SettingsPageProps extends AppProps {
 }
 
 export default function SettingsPage({
-  app: { user, theme, urlDefault, _url, isAndroid },
+  app: { user, theme, urlDefault, _url, isAndroid, notificationEnabled, setNotificationEnabled },
   localeSettings,
   localeAppBar,
   localeCommon,
@@ -49,6 +49,9 @@ export default function SettingsPage({
           isAndroid={isAndroid}
           wrongUrlFormat={localeCommon.wrongUrlFormat}
           openTools={localeCommon.openTools}
+          notificationEnabled={notificationEnabled}
+          setNotificationEnabled={setNotificationEnabled}
+          needUpdateApp={localeCommon.needUpdateApp}
         />
       </main>
     </>

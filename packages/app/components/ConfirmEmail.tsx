@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import useLoad from '../hooks/useLoad';
 import useQueryString from '../hooks/useQueryString';
 import { Theme } from '../Theme';
@@ -10,16 +11,20 @@ import Request from '../utils/request';
 import storeUserRenew, { changeUserRenew } from '../store/userRenew';
 import Link from './ui/Link';
 
+const DeepLink = dynamic(() => import('./ui/DeepLink'), { ssr: false });
+
 const request = new Request();
 
 function ConfirmEmail({
   theme,
   locale,
   user,
+  openInApp,
 }: {
   theme: Theme;
   locale: Locale['app']['confirmEmail'];
   user: UserCleanResult | null;
+  openInApp: string;
 }) {
   const [error, setError] = useState<string>('');
   const [result, setResult] = useState<string>();
@@ -81,6 +86,7 @@ function ConfirmEmail({
         <Link theme={theme} className={s.link} href={Pages.translate}>
           {locale.goBack}
         </Link>
+        <DeepLink theme={theme}>{openInApp}</DeepLink>
       </div>
     </div>
   );

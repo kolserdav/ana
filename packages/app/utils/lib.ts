@@ -3,7 +3,7 @@ import { ru, enUS as en } from 'date-fns/locale';
 import { Page } from '@prisma/client';
 import storeAlert, { changeAlert } from '../store/alert';
 import { LocaleValue, LogLevel } from '../types/interfaces';
-import { IS_DEV, LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from './constants';
+import { LOAD_PAGE_DURATION, LOG_LEVEL, NO_SCROLL_CLASS } from './constants';
 import { PageFull } from '../types';
 
 export const DATE_LOCALE = {
@@ -24,7 +24,7 @@ export const log = (
 ) => {
   if (LogLevel[type] >= LOG_LEVEL) {
     // eslint-disable-next-line no-console
-    console[type](IS_DEV ? format(new Date(), 'hh:mm:ss') : '', type, text, data);
+    console[type](format(new Date(), 'hh:mm:ss'), type, text, data);
   }
   if (forUser) {
     storeAlert.dispatch(
@@ -180,6 +180,10 @@ export const copyText = (text: string) => {
     return navigator.clipboard.writeText(text);
   }
   return new Promise((resolve) => {
+    if (typeof androidCommon.copyToClipboard === 'undefined') {
+      log('warn', 'Need to update the application', {});
+      resolve(1);
+    }
     androidCommon.copyToClipboard(text);
     resolve(0);
   });
@@ -191,3 +195,5 @@ export const wait = async (timeout: number) =>
       resolve(0);
     }, timeout);
   });
+
+export const isAndroid = () => /android/i.test(navigator.userAgent);

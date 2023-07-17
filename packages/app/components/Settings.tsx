@@ -53,6 +53,9 @@ function Settings({
   wrongUrlFormat,
   isAndroid,
   openTools,
+  notificationEnabled,
+  setNotificationEnabled,
+  needUpdateApp,
 }: {
   locale: Locale['app']['settings'];
   localeLogin: Locale['app']['login'];
@@ -71,6 +74,9 @@ function Settings({
   wrongUrlFormat: string;
   isAndroid: boolean;
   openTools: string;
+  notificationEnabled: boolean;
+  setNotificationEnabled: (value: boolean) => void;
+  needUpdateApp: string;
 }) {
   const settingsSetSaveRef = useRef(null);
 
@@ -244,6 +250,8 @@ function Settings({
     urlDefault,
     wrongUrlFormat,
     serverIsNotRespond: locale.serverIsNotRespond,
+    successCheckNode: locale.successCheckNode,
+    needUpdateApp,
   });
 
   return (
@@ -258,31 +266,51 @@ function Settings({
             <Typography variant="h4" theme={theme}>
               {locale.selectNode}
             </Typography>
-            <div className={s.select_node}>
-              <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
-                {locale.defaultNode}
-              </Typography>
-              <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
-                {urlDefault}
-              </Typography>
-              <Radio checked={isDefaultNode} onChange={onChangeRadioWrapper('urlDefault')} />
+            <div className={s.settings__item}>
+              <div className={s.select_node} style={{ borderColor: theme.text }}>
+                <div className={s.select_node__item}>
+                  <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
+                    {locale.defaultNode}
+                  </Typography>
+                  <Typography variant="p" theme={theme} disabled={!isDefaultNode}>
+                    {urlDefault}
+                  </Typography>
+                </div>
+                <Radio checked={isDefaultNode} onChange={onChangeRadioWrapper('urlDefault')} />
+              </div>
+              <div className={s.select_node}>
+                <div className={s.select_node__item}>
+                  <Typography variant="h5" theme={theme} disabled={isDefaultNode}>
+                    {locale.customNode}
+                  </Typography>
+                  <Input
+                    type="text"
+                    id={s.select_node}
+                    theme={theme}
+                    error={nodeError}
+                    value={node}
+                    success={nodeSuccess}
+                    name={URL_PLACEHOLDER}
+                    onChange={onChangeNewNode}
+                    disabled={!isNode}
+                  />
+                </div>
+                <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
+              </div>
             </div>
-            <div className={s.select_node}>
-              <Typography variant="h5" theme={theme} disabled={!isDefaultNode}>
-                {locale.customNode}
+          </>
+        )}
+        {((isAndroid && user) || user?.role === 'admin') && (
+          <>
+            <Hr theme={theme} />
+            <Typography variant="h4" theme={theme}>
+              {locale.notifications.title}
+            </Typography>
+            <div className={s.select_node__item}>
+              <Typography variant="p" theme={theme}>
+                {locale.notifications.description}
               </Typography>
-              <Input
-                type="text"
-                id={s.select_node}
-                theme={theme}
-                error={nodeError}
-                value={node}
-                success={nodeSuccess}
-                name={URL_PLACEHOLDER}
-                onChange={onChangeNewNode}
-                disabled={!isNode}
-              />
-              <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
+              <Switch onClick={setNotificationEnabled} theme={theme} on={notificationEnabled} />
             </div>
           </>
         )}

@@ -11,7 +11,7 @@ import useLocale from '../hooks/useLocale';
 import AcceptCookies from '../components/AcceptCookies';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { user, userLoad } = useUser();
+  const { user, userLoad, notificationEnabled, setNotificationEnabled } = useUser();
 
   const { locale } = useLocale();
 
@@ -59,6 +59,8 @@ export default function App({ Component, pageProps }: AppProps) {
         app={{
           theme,
           user,
+          notificationEnabled,
+          setNotificationEnabled,
           userLoad,
           touchpad,
           connId,
@@ -67,13 +69,13 @@ export default function App({ Component, pageProps }: AppProps) {
           isAndroid,
         }}
       />
-      {showAcceptCookies && (
+      {showAcceptCookies && locale && (
         <AcceptCookies
           open={!acceptCookies}
           theme={theme}
-          policyTitle={locale?.withPolicy || ''}
-          text={locale?.acceptCookies || ''}
-          button={locale?.ok || ''}
+          policyTitle={locale.withPolicy}
+          text={locale.acceptCookies}
+          button={locale.ok}
           onClick={onClickAcceptCookies}
         />
       )}

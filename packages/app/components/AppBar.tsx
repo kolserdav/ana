@@ -294,7 +294,12 @@ function AppBar({
               </div>
             )}
             {!checkRouterPath(router.asPath, [Pages.signIn, Pages.signUp]) && !user ? (
-              <Link withoutHover fullWidth theme={theme} href={PAGE_LOGIN_IN_MENU}>
+              <Link
+                withoutHover
+                fullWidth
+                theme={theme}
+                href={`${PAGE_LOGIN_IN_MENU}?r=${router.pathname}`}
+              >
                 <div className={clsx(s.menu__item, s.active)}>
                   <LoginIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.login}</div>

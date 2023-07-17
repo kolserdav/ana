@@ -3,6 +3,8 @@ package com.kolserdav.ana;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 class AndroidTextToSpeech {
@@ -128,12 +131,24 @@ class AndroidCommon {
 
     MainActivity main;
 
+    public String packageVersion;
+
+    public final String notificationUnitId;
+
     private static final String TAG = "AndroidCommon";
+
+    public boolean notificationEnabled = false;
 
     Helper helper;
     AndroidCommon(MainActivity _main) {
         main = _main;
         helper = new Helper();
+
+        packageVersion = helper.getPackageVersion(main);
+        Log.d(TAG, "Package version is: " + packageVersion);
+
+        notificationUnitId = UUID.randomUUID().toString();
+        Log.d(TAG, "Notification unit id is: " + notificationUnitId);
     }
     @JavascriptInterface
     public void closeApp() {
@@ -144,6 +159,26 @@ class AndroidCommon {
                 System.exit(0);
             }
         });
+    }
+
+    @JavascriptInterface
+    public String getPackageVersion() {
+        return packageVersion;
+    }
+
+    @JavascriptInterface
+    public void setNotificationEnabled(boolean value) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notificationEnabled = value;
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public String getUUID() {
+       return notificationUnitId;
     }
 
     @JavascriptInterface
@@ -189,7 +224,7 @@ class AndroidCommon {
             @Override
             public void run() {
 
-                AppInterface schemaApp = main.db.app.init(new AppInterface());
+                AppInterface schemaApp = main.db.app.init();
                 Log.d(TAG, "Run callback " + cb + " (" + schemaApp.urlDefault + ", " + schemaApp.url + ")");
                 main.mWebView.loadUrl("javascript:" + cb + "('" +
                         schemaApp.urlDefault + "', '" + schemaApp.url + "')");
@@ -202,7 +237,7 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                AppInterface schemaApp = main.db.app.init(new AppInterface());
+                AppInterface schemaApp = main.db.app.init();
                 schemaApp.url = url;
                 main.db.app.setUrl(schemaApp);
             }
