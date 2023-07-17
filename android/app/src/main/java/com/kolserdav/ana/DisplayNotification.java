@@ -48,9 +48,11 @@ public class DisplayNotification extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Config.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
-                .setContentText(content)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(content))
+
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(requestID, builder.build());
@@ -63,6 +65,7 @@ public class DisplayNotification extends Service {
         } catch (URISyntaxException e) {
             Log.e(TAG, "Error create WebSocket URI: " + e.getMessage());
         }
+
         if (uri != null) {
             WebSocket ws = new WebSocket(uri) {
                 @Override

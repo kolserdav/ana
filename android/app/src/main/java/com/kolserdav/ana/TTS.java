@@ -48,7 +48,11 @@ class TTS {
     }
 
     public String setAvailableLocales() {
-        Locale[] _locales = textToSpeech.getAvailableLanguages().toArray(new Locale[0]);
+        Set<Locale> availableLanguages = textToSpeech.getAvailableLanguages();
+        if (availableLanguages == null) {
+            return null;
+        }
+        Locale[] _locales = availableLanguages.toArray(new Locale[0]);
         JSONObject json = new JSONObject();
         for (int i = 0; i < _locales.length; i ++) {
             Locale locale = _locales[i];

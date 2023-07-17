@@ -52,7 +52,8 @@ public class MainActivity extends Activity {
         if (data != null) {
             mWebView.loadUrl(url + data.getPath() + "?" + data.getQuery());
         } else {
-            Log.d(TAG, "On new intent without getData");
+            String _url = helper.listenProcessText(intent, db.app.init());
+            mWebView.loadUrl(_url);
         }
     }
 
