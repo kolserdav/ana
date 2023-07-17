@@ -52,6 +52,7 @@ import Hr from './ui/Hr';
 import SortTimeAscIcon from './icons/SortTimeAsc';
 import SortTimeDescIcon from './icons/SortTimeDesc';
 import SortTags from './ui/SortTags';
+import Skeleton from './ui/Skeleton';
 
 function My({
   locale,
@@ -356,13 +357,15 @@ function My({
             </Button>
           )}
         </div>
-        {phrases.length !== 0 && (
-          <div className={s.pagination}>
+        <div className={s.pagination}>
+          {phrases.length !== 0 ? (
             <Typography small theme={theme} variant="span">
               {pagination}
             </Typography>
-          </div>
-        )}
+          ) : (
+            <Skeleton width={104} height={16} />
+          )}
+        </div>
         <div ref={selectedRef} className={s.selected_container}>
           {selected.length !== 0 && (
             <div
