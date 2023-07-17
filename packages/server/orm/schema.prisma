@@ -75,7 +75,7 @@ model User {
 model PushNotification {
   id                   Int                    @id @default(autoincrement())
   title                String                 @db.VarChar(48)
-  description          String                 @db.VarChar(140)
+  description          String                 @db.VarChar(255)
   path                 String
   lang                 Lang
   created              DateTime               @default(now())

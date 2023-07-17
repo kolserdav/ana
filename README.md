@@ -33,6 +33,7 @@ With sign in
 - Filter saved texts by tags, date, search, learn language
 - Sort saved texts by date
 - Synth speech of all saved texts
+- Receive motivational push notifications
 
 ## Screenshots
 
