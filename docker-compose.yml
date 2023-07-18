@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   db:
-    container_name: pg
+    container_name: db
     image: postgres
     restart: always
     environment: # depends on .env
@@ -47,6 +47,59 @@ services:
     command: python ./main.py
     environment: # depends on .env
       CI: '${CI}'
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+  web:
+    image: nginx
+    volumes:
+      - ./resources/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./resources/ws.nginx.conf:/etc/nginx/conf.d/ws.nginx.conf
+      - ./resources/api.nginx.conf:/etc/nginx/conf.d/api.nginx.conf
+    ports:
+      - "8080:80"
+    environment:
+      - NGINX_HOST=ana.loc
+      - NGINX_PORT=80
+    depends_on:
+      - node
+      - db
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+  api:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.api
+    restart: always
+    ports:
+      - '3001:3001'
+      - '3002:3002'
+    container_name: api
+    depends_on:
+      - db
+      - translate
+    command: npm run start:server
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+  node:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.node
+    restart: always
+    ports:
+      - '3000:3000'
+    container_name: node
+    depends_on:
+      - api
+    command: npm run start:app
     logging:
       options:
         max-size: '12m'

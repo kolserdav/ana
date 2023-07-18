@@ -262,6 +262,8 @@ ${args
     log('info', 'Package will updated:', item);
     packs.push(item);
 
+    log('info', 'Changes: ', { _diff });
+
     const cleanItem = item?.replace(/\/$/, '');
     if (
       new RegExp(`${cleanItem}/package.json` || '').test(_diff) ||
@@ -273,7 +275,17 @@ ${args
         return exit(install.code || undefined);
       }
     } else {
-      log('warn', 'Installation skipped:', { item, _diff });
+      log('warn', 'Installation skipped:', { item });
+    }
+
+    if (new RegExp('packages/server/orm/schema.prisma').test(_diff)) {
+      log('warn', 'Need migration:', item);
+      const migrate = await spawnCommand('npm', ['run', 'migrate'], { env });
+      if (migrate.code != 0) {
+        return exit(migrate.code || undefined);
+      }
+    } else {
+      log('warn', 'Migration skipped:', { item });
     }
 
     const build = await spawnCommand('npm', ['run', 'build'], { env });
