@@ -1,0 +1,13 @@
+.wrapper {
+  position: fixed;
+  width: 100%;
+  max-width: $translate-container-max;
+  z-index: 10;
+  bottom: 0;
+  left: calc((100vw - $translate-container-max) / 2);
+  padding: 0.5rem 1rem;
+
+  @media (max-width: $mobile-width) {
+    left: 0;
+  }
+}
