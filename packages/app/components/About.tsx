@@ -71,6 +71,11 @@ function About({
             {description}
           </Typography>
         )}
+        <div className={s.link}>
+          <Link href={Pages.aboutTranslate} theme={theme}>
+            {locale.aboutTranslate}
+          </Link>
+        </div>
         <div className={s.item}>
           <Typography variant="h5" theme={theme}>
             {`${locale.licenseTitle}:`}

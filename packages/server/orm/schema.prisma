@@ -23,6 +23,7 @@ enum PageName {
   about
   settings
   donate
+  aboutTranslate
 }
 
 enum PageField {

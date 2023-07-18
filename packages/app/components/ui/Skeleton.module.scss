@@ -1,0 +1,32 @@
+@import '../../styles/constants';
+
+.wrapper {
+  position: relative;
+  background-image: linear-gradient(90deg, rgba($color: black, $alpha: 10%), rgba($color: gray, $alpha: 100%));
+  background-size: 200%;
+  animation: 1.6s linear 0.5s infinite normal none running anim;
+  background-position: 0%;
+  border-radius: $input-border-radius;
+}
+
+@keyframes anim {
+  0% {
+    background-position: 0%;
+  }
+
+  25% {
+    background-position: 50%;
+  }
+
+  50% {
+    background-position: 100%;
+  }
+
+  75% {
+    background-position: 50%;
+  }
+
+  100% {
+    background-position: 0%;
+  }
+}

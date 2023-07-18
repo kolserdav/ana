@@ -604,6 +604,7 @@ export interface Locale {
       donate: string;
       packageVersion: string;
       download: string;
+      aboutTranslate: string;
     };
     settings: {
       title: string;
