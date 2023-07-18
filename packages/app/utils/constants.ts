@@ -37,6 +37,8 @@ export enum Pages {
   // eslint-disable-next-line no-unused-vars
   policy = '/policy',
   // eslint-disable-next-line no-unused-vars
+  aboutTranslate = '/about/translate',
+  // eslint-disable-next-line no-unused-vars
   rules = '/rules',
   // eslint-disable-next-line no-unused-vars
   contacts = '/contacts',

@@ -229,6 +229,7 @@ const lang: Locale = {
       donate: 'Пожертвовать',
       packageVersion: 'Версия приложения',
       download: 'Скачать последнюю версию',
+      aboutTranslate: 'О модуле переводчика',
     },
     settings: {
       title: 'Настройки',

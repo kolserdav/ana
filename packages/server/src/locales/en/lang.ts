@@ -228,6 +228,7 @@ const lang: Locale = {
       donate: 'Donate',
       packageVersion: 'Package version',
       download: 'Download the latest version',
+      aboutTranslate: 'About translate engine',
     },
     settings: {
       title: 'Settings',
