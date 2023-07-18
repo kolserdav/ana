@@ -193,10 +193,12 @@ public class MainActivity extends Activity {
                                        app.wsAddress = wsAddress.toString();
                                        db.app.setWSAddress(app);
 
-                                       // Stopping notification service while run app
+                                       // Prepare notification service for next start when app is going to stop
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_URL, db.getUrl());
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_WS_ADDRESS, app.wsAddress);
                                        serviceIntent.putExtra(DisplayNotification.INTENT_EXTRA_NAME_NOTIFICATION_UNIT_ID, androidCommon.notificationUnitId);
+
+                                       // Stopping notification service while run app
                                        stopService(serviceIntent);
                                    }
                                }
