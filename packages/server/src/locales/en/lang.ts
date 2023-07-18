@@ -82,7 +82,7 @@ const lang: Locale = {
       openMenu: 'Open menu',
       closeMenu: 'Close Menu',
       changeInterfaceLang: 'Change the interface language',
-      about: 'About us',
+      about: 'About',
       closeApp: 'Close app',
       settings: 'Settings',
       statistics: 'Statistics',

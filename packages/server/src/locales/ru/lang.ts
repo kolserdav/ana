@@ -82,7 +82,7 @@ const lang: Locale = {
       closeMenu: 'Закрыть меню',
       statistics: 'Статистика',
       changeInterfaceLang: 'Сменить язык интерфейса',
-      about: 'О нас',
+      about: 'О приложении',
       closeApp: 'Закрыть приложениe',
       settings: 'Настройки',
       logoutDesc:
