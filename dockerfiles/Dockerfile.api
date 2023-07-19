@@ -10,5 +10,5 @@ COPY packages/app/types/interfaces.ts ./packages/server/src/types/interfaces.ts
 RUN npm --only-prod --ignore-scripts install
 RUN npm run install:server
 
-COPY .env.example ./.env
-RUN npm run build:server
+COPY .env ./.env
+COPY .prettierrc ./

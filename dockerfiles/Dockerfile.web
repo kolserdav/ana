@@ -1,0 +1,10 @@
+FROM nginx
+
+RUN apt-get update
+RUN apt-get install openssl -y
+RUN mkdir /etc/nginx/certs
+RUN mkdir /etc/nginx/certs/ana.loc
+RUN mkdir /etc/nginx/certs/ws.ana.loc
+
+RUN openssl req -batch -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout /etc/nginx/certs/ws.ana.loc/key.pem -out /etc/nginx/certs/ws.ana.loc/cert.pem
+RUN openssl req -batch -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout /etc/nginx/certs/ana.loc/key.pem -out /etc/nginx/certs/ana.loc/cert.pem

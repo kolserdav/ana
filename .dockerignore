@@ -1,3 +1,8 @@
 packages/translate2/__pycache__
 packages/translate2/core/__pycache__
 packages/translate2/utils/__pycache__
+packages/app/node_modules
+packages/app/.next
+packages/server/node_modules
+packages/server/dist
+node_modules
