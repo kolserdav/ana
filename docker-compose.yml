@@ -53,21 +53,26 @@ services:
         max-file: '5'
       driver: json-file
   web:
+    container_name: web
     build:
       context: ./
       dockerfile: ./dockerfiles/Dockerfile.web
+    restart: always
     volumes:
       - ./dockerfiles/resources/nginx.conf:/etc/nginx/conf.d/nginx.conf
       - ./dockerfiles/resources/ws.nginx.conf:/etc/nginx/conf.d/ws.nginx.conf
+      - ./dockerfiles/resources/api.nginx.conf:/etc/nginx/conf.d/api.nginx.conf
     ports:
       - '80:80'
       - '443:443'
+      - '4443:4443'
+      - '4444:4444'
     environment:
       - NGINX_HOST=ana.loc
       - NGINX_PORT=80
     depends_on:
+      - api
       - node
-      - db
     logging:
       options:
         max-size: '12m'
