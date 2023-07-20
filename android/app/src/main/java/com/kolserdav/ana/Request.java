@@ -7,7 +7,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
 
 public class Request extends AsyncTask<Void, Void, String> {
 
@@ -24,12 +34,39 @@ public class Request extends AsyncTask<Void, Void, String> {
         } catch (MalformedURLException e) {
             Log.e(TAG, "Error create url from string: " + e.getMessage());
         }
+
     }
 
     protected String doInBackground(Void... params) {
         Log.d(TAG, "Request to: " + url);
         try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509ExtendedTrustManager() {
+                        public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) {}
+                        public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) {}
+                        public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {}
+                        public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {}
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[0];
+                        }
+                    }
+            };
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, null);
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
 

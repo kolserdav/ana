@@ -4,7 +4,7 @@ class AppInterface {
     int id = 1;
     String url = null;
     String path = "/";
-    String urlDefault = "http://localhost:3000";
+    String urlDefault = "https://uyem.ru";
     // Push notifications server
     String wsAddress = null;
 
@@ -20,7 +20,7 @@ public class Config {
     // Dependency packages/app/types/interfaces.ts.CHECK_URL_PATH
     public static final String CHECK_URL_PATH = "/api/check";
 
-    public static final Integer DATABASE_VERSION = 23;
+    public static final Integer DATABASE_VERSION = 29;
 
     public static final String DATABASE_NAME = "db";
 

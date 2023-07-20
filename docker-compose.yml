@@ -58,56 +58,57 @@ services:
       context: ./
       dockerfile: ./dockerfiles/Dockerfile.web
     restart: always
-    volumes:
-      - ./dockerfiles/resources/nginx.conf:/etc/nginx/conf.d/nginx.conf
-      - ./dockerfiles/resources/ws.nginx.conf:/etc/nginx/conf.d/ws.nginx.conf
-      - ./dockerfiles/resources/api.nginx.conf:/etc/nginx/conf.d/api.nginx.conf
     ports:
-      - '80:80'
       - '443:443'
-      - '4443:4443'
+      - '4433:4433'
       - '4444:4444'
-    environment:
-      - NGINX_HOST=ana.loc
-      - NGINX_PORT=80
     depends_on:
-      - api
-      - node
+      - server
+      - app
+    environment:
+      - PORT=${PORT}
+      - APP_PORT=${APP_PORT}
+      - SERVER_PORT=${SERVER_PORT}
     logging:
       options:
         max-size: '12m'
         max-file: '5'
       driver: json-file
-  api:
+  server:
     build:
       context: ./
-      dockerfile: dockerfiles/Dockerfile.api
+      dockerfile: dockerfiles/Dockerfile.server
     restart: always
     ports:
-      - '3001:3001'
-      - '3002:3002'
-    container_name: api
+      - '${PORT}:${PORT}'
+      - '${WS_PORT}:${WS_PORT}'
+    container_name: server
+    volumes:
+      - ./packages/server:/home/app/packages/server
+      - ./.env:/home/app/.env
     depends_on:
       - db
       - translate
-    command: sh -c "npm run build:server && npm run start:server"
+    command: sh -c "npm run build:server && npm run seed && npm run start:server"
     logging:
       options:
         max-size: '12m'
         max-file: '5'
       driver: json-file
-  node:
+  app:
     build:
       context: ./
-      dockerfile: dockerfiles/Dockerfile.node
+      dockerfile: dockerfiles/Dockerfile.app
     restart: always
     ports:
-      - '3000:3000'
-    container_name: node
+      - '${APP_PORT}:${APP_PORT}'
+    container_name: app
+    volumes:
+      - ./packages/app:/home/app/packages/app
     environment:
-      - PORT=3000
+      - PORT=${APP_PORT}
     depends_on:
-      - api
+      - server
     command: sh -c "npm run generate && npm run build:app && npm run start:app"
     logging:
       options:

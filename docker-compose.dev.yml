@@ -12,17 +12,3 @@ services:
     extends:
       file: docker-compose.yml
       service: pgadmin
-  api:
-    extends:
-      file: docker-compose.yml
-      service: api
-  node:
-    extends:
-      file: docker-compose.yml
-      service: node
-  web:
-    extends:
-      file: docker-compose.yml
-      service: web
-  
-  

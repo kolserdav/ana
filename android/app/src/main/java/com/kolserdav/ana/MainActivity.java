@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.webkit.PermissionRequest;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
@@ -90,6 +92,7 @@ public class MainActivity extends Activity {
 
 
         mWebView = new WebView(this);
+
         WebSettings webSettings = this.mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
@@ -221,6 +224,7 @@ public class MainActivity extends Activity {
     private void webViewListeners() {
         mWebView.setWebChromeClient(new WebChromeClient() {
 
+
             @Override
             public void onPermissionRequest(final PermissionRequest request) {
                 runOnUiThread(new Runnable() {
@@ -236,7 +240,10 @@ public class MainActivity extends Activity {
 
         mWebView.setWebViewClient(new WebViewClient() {
 
-
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed(); // Ignore SSL certificate errors
+            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String _url) {

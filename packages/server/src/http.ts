@@ -75,8 +75,9 @@ process.on('unhandledRejection', (err: Error) => {
   });
 
   await fastify.register(import('@fastify/middie'), { hook: 'preHandler' });
-  await fastify.use(cors({ origin: CORS.concat([APP_URL]) }));
-  console.log(CORS.concat([APP_URL]));
+
+  await fastify.use(cors({ origin: CORS.concat([APP_URL]).filter((item) => item !== undefined) }));
+
   await fastify.use(
     [
       Api.getUserFindFirst,

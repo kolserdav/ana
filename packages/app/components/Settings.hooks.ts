@@ -526,7 +526,9 @@ export const useChangeNode = ({
       switch (name) {
         case 'url':
           if (checked) {
-            log('info', successCheckNode, { name }, true);
+            if (nodeSuccess) {
+              log('info', successCheckNode, { name }, true);
+            }
             setIsNode(checked);
             if (typeof androidCommon !== 'undefined' && node) {
               if (typeof androidCommon.setUrl === 'undefined') {
@@ -542,6 +544,9 @@ export const useChangeNode = ({
           break;
         case 'urlDefault':
           setIsDefaultNode(checked);
+          if (checked) {
+            log('info', successCheckNode, { name }, true);
+          }
           if (typeof androidCommon !== 'undefined') {
             if (typeof androidCommon.setUrl === 'undefined') {
               log('warn', needUpdateApp, {}, true, true);
@@ -556,7 +561,7 @@ export const useChangeNode = ({
         default:
       }
     },
-    [isDefaultNode, isNode, node, successCheckNode, needUpdateApp]
+    [isDefaultNode, isNode, node, needUpdateApp, successCheckNode, nodeSuccess]
   );
 
   const onChangeNewNode = async (e: React.ChangeEvent<HTMLInputElement>) => {
