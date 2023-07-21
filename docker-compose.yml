@@ -4,7 +4,7 @@ services:
     container_name: db
     image: postgres
     restart: always
-    environment: # depends on .env
+    environment:
       POSTGRES_USER: '${POSTGRES_USER}'
       POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
       POSTGRES_DB: '${POSTGRES_DB}'
@@ -21,7 +21,7 @@ services:
     container_name: pgadmin4
     image: dpage/pgadmin4
     restart: always
-    environment: # depends on .env
+    environment:
       POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
       PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL}'
       PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD}'
@@ -41,12 +41,12 @@ services:
       dockerfile: ./dockerfiles/Dockerfile.translate
     restart: always
     ports:
-      - '8000:8000'
+      - '${TRANSLATE_PORT}:${TRANSLATE_PORT}'
     volumes:
       - ./packages/translate2:/usr/app
     command: python ./main.py
-    environment: # depends on .env
-      CI: '${CI}'
+    environment:
+      - CI=${CI}
     logging:
       options:
         max-size: '12m'
@@ -60,15 +60,17 @@ services:
     restart: always
     ports:
       - '443:443'
-      - '4433:4433'
-      - '4444:4444'
+      - '${PORT_SSL}:${PORT_SSL}'
+      - '${WS_PORT_SSL}:${WS_PORT_SSL}'
     depends_on:
       - server
       - app
     environment:
       - PORT=${PORT}
       - APP_PORT=${APP_PORT}
-      - SERVER_PORT=${SERVER_PORT}
+      - WS_PORT=${WS_PORT}
+      - DOLLAR=$
+    command: /bin/bash -c "/home/change-nginx-variables.sh && nginx -g 'daemon off;'"
     logging:
       options:
         max-size: '12m'

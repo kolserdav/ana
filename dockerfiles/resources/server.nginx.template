@@ -1,0 +1,13 @@
+server  {
+    location / {
+        proxy_set_header    X-Real-IP  ${DOLLAR}remote_addr;
+        proxy_set_header    X-Forwarded-For ${DOLLAR}remote_addr;
+        proxy_set_header    Host ${DOLLAR}host;
+        proxy_pass          http://server:$PORT;
+    }
+
+    listen 4444 ssl; 
+    ssl_certificate /etc/nginx/certs/server.cert.pem;
+    ssl_certificate_key /etc/nginx/certs/server.key.pem;
+
+}

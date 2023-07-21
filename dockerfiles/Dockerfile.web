@@ -8,6 +8,8 @@ RUN openssl req -batch -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout /et
 RUN openssl req -batch -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout /etc/nginx/certs/ws.key.pem -out /etc/nginx/certs/ws.cert.pem
 RUN openssl req -batch -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout /etc/nginx/certs/server.key.pem -out /etc/nginx/certs/server.cert.pem
 
-COPY ./dockerfiles/resources/app.nginx.conf /etc/nginx/conf.d/app.nginx.conf
-COPY ./dockerfiles/resources/ws.nginx.conf /etc/nginx/conf.d/ws.nginx.conf
-COPY ./dockerfiles/resources/server.nginx.conf /etc/nginx/conf.d/server.nginx.conf
+COPY ./dockerfiles/resources/app.nginx.template /etc/nginx/conf.d/app.nginx.template
+COPY ./dockerfiles/resources/ws.nginx.template /etc/nginx/conf.d/ws.nginx.template
+COPY ./dockerfiles/resources/server.nginx.template /etc/nginx/conf.d/server.nginx.template
+
+COPY scripts/sh/change-nginx-variables.sh /home
