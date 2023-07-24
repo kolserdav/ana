@@ -77,7 +77,6 @@ export default function useUser() {
 
   const changeNotificationEnabled = useCallback(
     (pushEnabled: boolean) => {
-      setNotificationEnabled(pushEnabled);
       if (!user) {
         return;
       }
@@ -87,6 +86,9 @@ export default function useUser() {
           pushEnabled,
         });
         log(updateRes.status, updateRes.message, updateRes);
+        if (updateRes.data) {
+          setUser(updateRes.data);
+        }
       })();
     },
     [user]
