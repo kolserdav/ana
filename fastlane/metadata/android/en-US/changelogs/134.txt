@@ -1,1 +1,2 @@
 - Added the ability to connect to a node in the local network
+- Fixed some bugs

@@ -43,7 +43,6 @@ public class DisplayNotification extends Service {
     private String unitId = null;
 
     public void createNotification(String title, String content, String path) {
-        Log.d(TAG, "Show notification: " + title + " " + content + " " + path);
         Intent intent = new Intent(this, MainActivity.class);
         intent.setData(Uri.parse(url + path));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -64,6 +63,7 @@ public class DisplayNotification extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(requestID, builder.build());
+        Log.d(TAG, "Show notification: " + title + " " + content + " " + path);
     }
 
     private void listenNotifications() {
@@ -73,7 +73,7 @@ public class DisplayNotification extends Service {
         } catch (URISyntaxException e) {
             Log.e(TAG, "Error create WebSocket URI: " + e.getMessage());
         }
-        // createNotification("Test", "Test", "/");
+
         if (uri != null) {
             WebSocket ws = new WebSocket(uri) {
 

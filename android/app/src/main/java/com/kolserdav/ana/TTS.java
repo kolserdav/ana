@@ -69,6 +69,9 @@ class TTS {
 
     public String getVoices(String lang) {
         JSONObject json = new JSONObject();
+        if (voices == null) {
+            voices = textToSpeech.getVoices();
+        }
         Voice[] _voices = voices.toArray(new Voice[0]);
         for (int i = 0; i < _voices.length; i ++) {
             Voice v = _voices[i];

@@ -156,6 +156,7 @@ class AndroidCommon {
             @Override
             public void run() {
                 main.finishAffinity();
+                main.finish();
             }
         });
     }

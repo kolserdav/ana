@@ -75,6 +75,7 @@ function Settings({
   isAndroid: boolean;
   openTools: string;
   notificationEnabled: boolean;
+  // eslint-disable-next-line no-unused-vars
   setNotificationEnabled: (value: boolean) => void;
   needUpdateApp: string;
 }) {

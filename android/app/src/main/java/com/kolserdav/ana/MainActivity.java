@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
     protected void onStop() {
         super.onStop();
         if (androidCommon.notificationEnabled) {
+            createNotificationChannel();
             startService(serviceIntent);
         } else {
             Log.d(TAG, "Notification service disabled");
@@ -93,7 +94,6 @@ public class MainActivity extends Activity {
 
 
         mWebView = new WebView(this);
-
 
         WebSettings webSettings = this.mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
