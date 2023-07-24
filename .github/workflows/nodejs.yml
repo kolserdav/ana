@@ -28,6 +28,8 @@ jobs:
       - name: Prepare environment
         run: |
           npm run scripts
+      - name: Start database
+        run: |
           docker-compose -f docker-compose.ci.yml --env-file .env up -d
       - name: Install dependencies
         run: |
