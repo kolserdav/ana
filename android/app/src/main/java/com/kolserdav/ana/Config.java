@@ -1,5 +1,12 @@
 package com.kolserdav.ana;
 
+import java.net.Socket;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
+
 class AppInterface {
     int id = 1;
     String url = null;
@@ -33,6 +40,20 @@ public class Config {
     public static final String WS_MESSAGE_NOTIFICATION_USER_ID = "notification_user_id";
 
     public static final int WS_RECONNECT_TIMEOUT = 3000;
+
+    public static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[]{
+            new X509ExtendedTrustManager() {
+                public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) {}
+                public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) {}
+                public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {}
+                public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {}
+                public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            }
+    };
 
 }
 

@@ -11,15 +11,19 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 
 public class DisplayNotification extends Service {
@@ -39,6 +43,7 @@ public class DisplayNotification extends Service {
     private String unitId = null;
 
     public void createNotification(String title, String content, String path) {
+        Log.d(TAG, "Show notification: " + title + " " + content + " " + path);
         Intent intent = new Intent(this, MainActivity.class);
         intent.setData(Uri.parse(url + path));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -68,9 +73,16 @@ public class DisplayNotification extends Service {
         } catch (URISyntaxException e) {
             Log.e(TAG, "Error create WebSocket URI: " + e.getMessage());
         }
-
+        // createNotification("Test", "Test", "/");
         if (uri != null) {
             WebSocket ws = new WebSocket(uri) {
+
+                @Override
+                public void onError(Exception ex) {
+                    Log.e(TAG, "WS on error: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+
                 @Override
                 public void onOpen(ServerHandshake handshake) {
                     super.onOpen(handshake);
@@ -113,11 +125,27 @@ public class DisplayNotification extends Service {
                         } catch (JSONException e) {
                             Log.e(TAG, "Failed parse WS message: " + e.getMessage());
                         }
+                    } else {
+                        Log.w(TAG, "Skipped show notification, because data is null");
                     }
                 }
             };
-     
-            ws.connect();
+            SSLContext sslContext = null;
+            try {
+                sslContext = SSLContext.getInstance( "TLS" );
+                sslContext.init( null, Config.TRUST_ALL_CERTS, new SecureRandom());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+            if (sslContext != null) {
+                SSLSocketFactory factory = sslContext.getSocketFactory();
+                ws.setSocketFactory(factory);
+                ws.connect();
+            } else {
+                Log.w(TAG, "Skipped connect to WS: sslContext is null");
+            }
         }
     }
 

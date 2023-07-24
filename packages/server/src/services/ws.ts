@@ -251,8 +251,12 @@ class WS {
     return Object.keys(this.sockets);
   }
 
+  public getPushSocketKeys() {
+    return Object.keys(this.pushSockets);
+  }
+
   public getPushConnId = (id: string) => {
-    return Object.keys(this.pushSockets).find((item) => this.pushSockets[item]?.unitId === id);
+    return this.getPushSocketKeys().find((item) => this.pushSockets[item]?.unitId === id);
   };
 
   public sendMessage(id: string, data: WSMessage, android = false) {
