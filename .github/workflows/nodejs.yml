@@ -30,7 +30,7 @@ jobs:
           npm run scripts
       - name: Start database
         run: |
-          docker-compose up -d
+          docker-compose -f docker-compose.yml --env-file .env up -d
       - name: Install dependencies
         run: |
           npm install --ignore-scripts
