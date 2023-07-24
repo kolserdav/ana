@@ -77,6 +77,7 @@ export default function useUser() {
 
   const changeNotificationEnabled = useCallback(
     (pushEnabled: boolean) => {
+      setNotificationEnabled(pushEnabled);
       if (!user) {
         return;
       }
