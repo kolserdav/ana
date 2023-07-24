@@ -19,15 +19,43 @@ docker-compose @latest
 
 **If, for example, you already have a Postgres database installed on your machine and you want to use it, then you need to create your own docker-compose file called `docker-compose.custom.yml` , which imports only the necessary services from _docker-compose.yml_, just like you did in the _docker-compose.ci.yml_ and _docker-compose.dev.yml_ files.**
 
+## Get the code
+
+Clone the repository:
+
+```sh
+git clone https://github.com/kolserdav/ana.git
+```
+
+Change work directory to ana:
+
+```sh
+cd ana
+```
+
 ## Set up environment variables
 
 You need to create three .env files from .env.example files
 
 1. `.env`
-2. `packages/app/.env`
-3. `packages/translate/.env`
 
-Read the comments in these files carefully and adjust the variables according to your network.
+```sh
+cp .env.example .env
+```
+
+2. `packages/app/.env`
+
+```sh
+cp packages/app/.env.example packages/app/.env
+```
+
+3. `packages/translate2/.env`
+
+```sh
+cp packages/translate2.env.example packages/translate2/.env
+```
+
+**Read the comments in these files carefully and adjust the variables according to your network.**
 
 ## Start Docker containers
 
@@ -52,5 +80,5 @@ _The `Ana` mobile app, since version `1.34`, also works with a self-signed certi
 
 - Open App>settings
 - Change custom node  
-  ![custom node local](../assets/custom_node_local.jpg)
+  ![custom node local](./assets/custom_node_local.jpg)
 - Restart app

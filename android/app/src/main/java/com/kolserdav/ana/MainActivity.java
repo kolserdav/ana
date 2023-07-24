@@ -159,6 +159,8 @@ public class MainActivity extends Activity {
                                        if (status != 200) {
                                            Log.w(TAG, "Url replaced " + _url);
                                            _url = _url.replace(_url, schemaApp.urlDefault);
+                                           schemaApp.url = "null";
+                                           db.app.setUrl(schemaApp);
                                        }
                                        if (_url.equals("null")) {
                                            _url = schemaApp.urlDefault;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import storeUserRenew from '../store/userRenew';
 import { log } from '../utils/lib';
 import Request from '../utils/request';
@@ -75,29 +75,29 @@ export default function useUser() {
     setNotificationEnabled(user.pushEnabled);
   }, [user]);
 
-  /**
-   * Set notification enabled Android
-   */
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-    (async () => {
-      const updateRes = await request.userUpdate({
-        userId: user.id,
-        pushEnabled: notificationEnabled,
-      });
-      log(updateRes.status, updateRes.message, updateRes);
-    })();
-    if (typeof androidCommon === 'undefined') {
-      return;
-    }
-    if (typeof androidCommon.setNotificationEnabled === 'undefined') {
-      log('warn', NEED_UPDATE_MESSAGE, {});
-      return;
-    }
-    androidCommon.setNotificationEnabled(notificationEnabled);
-  }, [notificationEnabled, user]);
+  const changeNotificationEnabled = useCallback(
+    (pushEnabled: boolean) => {
+      if (!user) {
+        return;
+      }
+      (async () => {
+        const updateRes = await request.userUpdate({
+          userId: user.id,
+          pushEnabled,
+        });
+        log(updateRes.status, updateRes.message, updateRes);
+      })();
+      if (typeof androidCommon === 'undefined') {
+        return;
+      }
+      if (typeof androidCommon.setNotificationEnabled === 'undefined') {
+        log('warn', NEED_UPDATE_MESSAGE, {});
+        return;
+      }
+      androidCommon.setNotificationEnabled(pushEnabled);
+    },
+    [user]
+  );
 
   /**
    * Listen need renew
@@ -112,5 +112,5 @@ export default function useUser() {
     };
   }, []);
 
-  return { user, userLoad, notificationEnabled, setNotificationEnabled };
+  return { user, userLoad, notificationEnabled, setNotificationEnabled: changeNotificationEnabled };
 }
