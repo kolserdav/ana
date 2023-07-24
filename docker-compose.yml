@@ -69,7 +69,7 @@ services:
       - PORT=${PORT}
       - APP_PORT=${APP_PORT}
       - WS_PORT=${WS_PORT}
-      - DOLLAR=$
+      - DOLLAR=${DOLLAR}
     command: /bin/bash -c "/home/change-nginx-variables.sh && nginx -g 'daemon off;'"
     logging:
       options:
