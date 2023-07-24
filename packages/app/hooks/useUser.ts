@@ -88,17 +88,23 @@ export default function useUser() {
         });
         log(updateRes.status, updateRes.message, updateRes);
       })();
-      if (typeof androidCommon === 'undefined') {
-        return;
-      }
-      if (typeof androidCommon.setNotificationEnabled === 'undefined') {
-        log('warn', NEED_UPDATE_MESSAGE, {});
-        return;
-      }
-      androidCommon.setNotificationEnabled(pushEnabled);
     },
     [user]
   );
+
+  /**
+   * Set Android puth enabled
+   */
+  useEffect(() => {
+    if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    if (typeof androidCommon.setNotificationEnabled === 'undefined') {
+      log('warn', NEED_UPDATE_MESSAGE, {});
+      return;
+    }
+    androidCommon.setNotificationEnabled(notificationEnabled);
+  }, [notificationEnabled]);
 
   /**
    * Listen need renew
