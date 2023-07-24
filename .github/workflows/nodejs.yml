@@ -30,7 +30,6 @@ jobs:
           npm run scripts
       - name: Start database
         run: |
-          cat .env
           docker-compose -f docker-compose.ci.yml --env-file .env up -d
       - name: Install dependencies
         run: |
