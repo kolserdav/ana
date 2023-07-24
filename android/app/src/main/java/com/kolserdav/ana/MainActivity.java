@@ -39,8 +39,6 @@ public class MainActivity extends Activity {
 
     private Helper helper;
 
-    private Boolean firstLoad = true;
-
     private Intent serviceIntent;
 
     AndroidCommon androidCommon;
@@ -272,9 +270,8 @@ public class MainActivity extends Activity {
                     return true;
                 }
 
-
                 // Rewrite url to saved
-                if (!schema.path.equals("/") && firstLoad &&
+                if (!schema.path.equals("/") &&
                         !Intent.ACTION_PROCESS_TEXT.equals(intent.getAction())) {
                     url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
@@ -282,20 +279,6 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "Replaced url " + url);
                 view.loadUrl(url);
 
-                if (firstLoad) {
-                    Thread task = new Thread() {
-                        public void run() {
-                            try {
-                                Thread.sleep(helper.FIRST_LOAD_DURATION);
-                                Log.d(TAG, "First load is " + firstLoad);
-                                firstLoad = false;
-                            } catch(InterruptedException v) {
-                                Log.e(TAG, v.toString());
-                            }
-                        }
-                    };
-                    task.start();
-                }
                 return false;
             }
 
@@ -304,17 +287,17 @@ public class MainActivity extends Activity {
                 super.doUpdateVisitedHistory(view, url, isReload);
 
                 AppInterface schemaApp = context.db.app.init();
-                if (!firstLoad) {
-                    String _url = schemaApp.url;
-                    if (_url.equals("null")) {
-                        _url = schemaApp.urlDefault;
-                    }
-                    String path = url.replace(_url, "");
-                    schemaApp.path = path+"";
-                    context.db.app.setPath(schemaApp);
-                    Log.d(TAG, "Change path  from " + schemaApp.path + " to " + path +
-                            ", url: " + schemaApp.url + ", _url: " + _url);
+
+                String _url = schemaApp.url;
+                if (_url.equals("null")) {
+                    _url = schemaApp.urlDefault;
                 }
+                String path = url.replace(_url, "");
+                schemaApp.path = path+"";
+                context.db.app.setPath(schemaApp);
+                Log.d(TAG, "Change path  from " + schemaApp.path + " to " + path +
+                        ", url: " + schemaApp.url + ", _url: " + _url);
+
             }
         });
     }
