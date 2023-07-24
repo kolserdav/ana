@@ -17,6 +17,9 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.SSLContext;
 
 
 public class DisplayNotification extends Service {
@@ -113,6 +116,7 @@ public class DisplayNotification extends Service {
                     }
                 }
             };
+     
             ws.connect();
         }
     }
