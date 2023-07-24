@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.webkit.PermissionRequest;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
@@ -29,6 +31,8 @@ import java.util.regex.Pattern;
 public class MainActivity extends Activity {
 
     MainActivity context = this;
+
+    TTS tts;
     private static final String TAG = "MainActivity";
 
     public WebView mWebView;
@@ -36,8 +40,6 @@ public class MainActivity extends Activity {
     public DB db;
 
     private Helper helper;
-
-    private Boolean firstLoad = true;
 
     private Intent serviceIntent;
 
@@ -61,10 +63,12 @@ public class MainActivity extends Activity {
     protected void onStop() {
         super.onStop();
         if (androidCommon.notificationEnabled) {
+            createNotificationChannel();
             startService(serviceIntent);
         } else {
             Log.d(TAG, "Notification service disabled");
         }
+        tts.shutdown();
     }
 
     private void createNotificationChannel() {
@@ -84,12 +88,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
+        tts = new TTS(this);
         helper = new Helper(this, this);
         androidCommon =  new AndroidCommon(this);
 
 
         mWebView = new WebView(this);
+
         WebSettings webSettings = this.mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
@@ -109,7 +114,7 @@ public class MainActivity extends Activity {
 
         webSettings.setDefaultTextEncodingName("utf-8");
 
-        TTS tts = new TTS(this);
+
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(androidCommon, "androidCommon");
         setContentView(mWebView);
@@ -153,9 +158,12 @@ public class MainActivity extends Activity {
                                    @Override
                                    public void run() {
                                        String _url = url;
+                                       Log.d(TAG, "Application status: " + status);
                                        if (status != 200) {
                                            Log.w(TAG, "Url replaced " + _url);
                                            _url = _url.replace(_url, schemaApp.urlDefault);
+                                           schemaApp.url = "null";
+                                           db.app.setUrl(schemaApp);
                                        }
                                        if (_url.equals("null")) {
                                            _url = schemaApp.urlDefault;
@@ -175,6 +183,9 @@ public class MainActivity extends Activity {
                                super.onPostExecute(response);
                                Log.d(TAG, "On post execute: " + response);
                                JSONObject data = null;
+                               if (response == null) {
+                                   return;
+                               }
                                try {
                                    data = new JSONObject(response);
                                } catch (JSONException e) {
@@ -221,6 +232,7 @@ public class MainActivity extends Activity {
     private void webViewListeners() {
         mWebView.setWebChromeClient(new WebChromeClient() {
 
+
             @Override
             public void onPermissionRequest(final PermissionRequest request) {
                 runOnUiThread(new Runnable() {
@@ -236,7 +248,10 @@ public class MainActivity extends Activity {
 
         mWebView.setWebViewClient(new WebViewClient() {
 
-
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed(); // Ignore SSL certificate errors
+            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String _url) {
@@ -263,9 +278,8 @@ public class MainActivity extends Activity {
                     return true;
                 }
 
-
                 // Rewrite url to saved
-                if (!schema.path.equals("/") && firstLoad &&
+                if (!schema.path.equals("/") &&
                         !Intent.ACTION_PROCESS_TEXT.equals(intent.getAction())) {
                     url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
                 }
@@ -273,20 +287,6 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "Replaced url " + url);
                 view.loadUrl(url);
 
-                if (firstLoad) {
-                    Thread task = new Thread() {
-                        public void run() {
-                            try {
-                                Thread.sleep(helper.FIRST_LOAD_DURATION);
-                                Log.d(TAG, "First load is " + firstLoad);
-                                firstLoad = false;
-                            } catch(InterruptedException v) {
-                                Log.e(TAG, v.toString());
-                            }
-                        }
-                    };
-                    task.start();
-                }
                 return false;
             }
 
@@ -295,17 +295,17 @@ public class MainActivity extends Activity {
                 super.doUpdateVisitedHistory(view, url, isReload);
 
                 AppInterface schemaApp = context.db.app.init();
-                if (!firstLoad) {
-                    String _url = schemaApp.url;
-                    if (_url.equals("null")) {
-                        _url = schemaApp.urlDefault;
-                    }
-                    String path = url.replace(_url, "");
-                    schemaApp.path = path+"";
-                    context.db.app.setPath(schemaApp);
-                    Log.d(TAG, "Change path  from " + schemaApp.path + " to " + path +
-                            ", url: " + schemaApp.url + ", _url: " + _url);
+
+                String _url = schemaApp.url;
+                if (_url.equals("null")) {
+                    _url = schemaApp.urlDefault;
                 }
+                String path = url.replace(_url, "").replace(schemaApp.urlDefault, "");
+                schemaApp.path = path+"";
+                context.db.app.setPath(schemaApp);
+                Log.d(TAG, "Change path  from " + schemaApp.path + " to " + path +
+                        ", url: " + schemaApp.url + ", _url: " + _url);
+
             }
         });
     }

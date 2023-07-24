@@ -1,4 +1,4 @@
-# Installation to a local machine
+# Installation for contributing
 
 ## Dependencies
 
@@ -42,8 +42,6 @@ When it's via **Docker**:
 ```
 npm run install:node
 ```
-
----
 
 ---
 
@@ -95,16 +93,10 @@ npm run dev
 
 When its via **Docker**
 
-Build translate container:
-
-```sh
-docker-compose build
-```
-
 Run containers:
 
 ```sh
-docker-compose up -d
+docker-compose up -d -f docker-compose.dev.yml
 ```
 
 Start server and client:

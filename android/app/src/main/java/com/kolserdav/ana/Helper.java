@@ -17,8 +17,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
 import java.net.URLDecoder;
+import java.security.cert.X509Certificate;
 import java.util.Locale;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
 
 
 public class Helper extends Config {
@@ -131,4 +138,5 @@ public class Helper extends Config {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
 }

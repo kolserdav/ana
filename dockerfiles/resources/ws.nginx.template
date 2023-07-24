@@ -1,0 +1,19 @@
+
+server {
+  location / {
+      proxy_connect_timeout 1d;
+      proxy_send_timeout 1d;
+      proxy_read_timeout 1d;
+      proxy_pass http://server:$WS_PORT;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade ${DOLLAR}http_upgrade;
+      proxy_set_header Connection "Upgrade";
+      proxy_set_header Host ${DOLLAR}host;
+  }
+
+
+    listen 4433 ssl;
+    ssl_certificate /etc/nginx/certs/ws.cert.pem;
+    ssl_certificate_key /etc/nginx/certs/ws.key.pem;
+
+}

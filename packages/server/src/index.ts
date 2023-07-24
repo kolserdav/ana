@@ -11,7 +11,9 @@ import {
 } from './types/interfaces';
 import Tasks from './services/tasks';
 import { WS_MESSAGE_NOTIFICATION_USER_ID } from './utils/constants';
+
 process.setMaxListeners(0);
+
 if (cluster.isPrimary) {
   process.on('uncaughtException', (err: Error) => {
     log('error', '[MASTER] uncaughtException', err);

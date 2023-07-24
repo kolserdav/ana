@@ -3,8 +3,6 @@ package com.kolserdav.ana;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,7 +11,6 @@ import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 
 import java.util.UUID;
-import java.util.function.Function;
 
 class AndroidTextToSpeech {
 
@@ -26,6 +23,8 @@ class AndroidTextToSpeech {
     Boolean speaking = false;
 
     Helper helper;
+
+    public static final String TAG =  "AndroidTextToSpeech";
 
 
     AndroidTextToSpeech(TTS _tts) {
@@ -77,6 +76,7 @@ class AndroidTextToSpeech {
 
     @JavascriptInterface
     public String getLanguage() {
+        Log.d(TAG, "Get language: " + tts.getLanguage());
         return tts.getLanguage();
     }
 
@@ -156,7 +156,7 @@ class AndroidCommon {
             @Override
             public void run() {
                 main.finishAffinity();
-                System.exit(0);
+                main.finish();
             }
         });
     }

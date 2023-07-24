@@ -1,10 +1,10 @@
 version: '3.8'
 services:
   db:
-    container_name: pg
+    container_name: db
     image: postgres
     restart: always
-    environment: # depends on .env
+    environment:
       POSTGRES_USER: '${POSTGRES_USER}'
       POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
       POSTGRES_DB: '${POSTGRES_DB}'
@@ -21,7 +21,7 @@ services:
     container_name: pgadmin4
     image: dpage/pgadmin4
     restart: always
-    environment: # depends on .env
+    environment:
       POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
       PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL}'
       PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD}'
@@ -40,12 +40,78 @@ services:
       context: ./
       dockerfile: ./dockerfiles/Dockerfile.translate
     restart: always
-    network_mode: host
+    ports:
+      - '${TRANSLATE_PORT}:${TRANSLATE_PORT}'
     volumes:
       - ./packages/translate2:/usr/app
     command: python ./main.py
-    environment: # depends on .env
-      CI: '${CI}'
+    environment:
+      - CI=${CI}
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+  web:
+    container_name: web
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/Dockerfile.web
+    restart: always
+    ports:
+      - '443:443'
+      - '${PORT_SSL}:${PORT_SSL}'
+      - '${WS_PORT_SSL}:${WS_PORT_SSL}'
+    depends_on:
+      - server
+      - app
+    environment:
+      - PORT=${PORT}
+      - APP_PORT=${APP_PORT}
+      - WS_PORT=${WS_PORT}
+      - DOLLAR=$
+    command: /bin/bash -c "/home/change-nginx-variables.sh && nginx -g 'daemon off;'"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+  server:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.server
+    restart: always
+    ports:
+      - '${PORT}:${PORT}'
+      - '${WS_PORT}:${WS_PORT}'
+    container_name: server
+    volumes:
+      - ./packages/server:/home/app/packages/server
+      - ./.env:/home/app/.env
+    depends_on:
+      - db
+      - translate
+    command: sh -c "npm run build:server && npm run seed && npm run start:server"
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+  app:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.app
+    restart: always
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    container_name: app
+    volumes:
+      - ./packages/app:/home/app/packages/app
+    environment:
+      - PORT=${APP_PORT}
+    depends_on:
+      - server
+    command: sh -c "npm run generate && npm run build:app && npm run start:app"
     logging:
       options:
         max-size: '12m'

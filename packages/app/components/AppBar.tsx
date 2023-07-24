@@ -328,7 +328,7 @@ function AppBar({
               </div>
             )}
             {android && (
-              <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="#close">
+              <Link onClick={closeApp} withoutHover fullWidth theme={theme} href="?">
                 <div className={clsx(s.menu__item, s.active)}>
                   <CloseOctagonIcon color={theme.text} withoutScale />
                   <div style={{ color: theme.text }}>{locale.closeApp}</div>

@@ -20,7 +20,7 @@ Without sign in
 - Translation (English, Arabic, Azerbaijani, Catalan, Chinese, Czech, Danish, Dutch, Esperanto, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Indonesian, Irish, Italian, Japanese, Korean , Persian, Polish, Portuguese, Russian, Slovak, Spanish, Swedish, Thai, Turkish, Ukrainian.)
 - Speech recognize
 - Synth speech
-- Select custom node
+- Select [custom node](./docs/CUSTOM_NODE.md)
 
 ---
 
@@ -54,10 +54,6 @@ With sign in
 
 It requires the operator of a network server to provide the source code of the modified version running there to the users of that server.
 
-## Contibuting
+# Contibuting
 
-[Installation](./docs/INSTALLATION.md)
-
-### Localization
-
-At the moment, two interface languages English and Russian are supported, to add other interface languages, see [docs/contributing/LOCALES.md](docs/contributing/LOCALES.md)
+See [docs/contributing/README.md](./docs/contributing/README.md)

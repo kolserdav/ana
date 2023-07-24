@@ -108,6 +108,7 @@ class Tasks {
           notificationId: true,
         },
       });
+
       for (let i = 0; usersForNotification.data[i]; i++) {
         const user = usersForNotification.data[i];
         if (!user || !user.notificationId) {

@@ -146,7 +146,12 @@ class Request {
     field: T;
     locale: string | undefined;
   }): Promise<Result<Locale['app'][T]>> {
-    return this.send({ url: `${Api.getLocaleV1}?field=${field}`, locale, method: 'GET' });
+    return this.send({
+      server: SERVER_LOCAL_ADDRESS,
+      url: `${Api.getLocaleV1}?field=${field}`,
+      locale,
+      method: 'GET',
+    });
   }
 
   public async getUser(): Promise<Result<UserCleanResult>> {
@@ -158,7 +163,12 @@ class Request {
   ): Promise<
     Prisma.CheckSelect<T, Result<Array<Page>>, Promise<Result<Array<Prisma.PageGetPayload<T>>>>>
   > {
-    return this.send({ url: Api.postPageFindManyV1, method: 'POST', body: args });
+    return this.send({
+      server: SERVER_LOCAL_ADDRESS,
+      url: Api.postPageFindManyV1,
+      method: 'POST',
+      body: args,
+    });
   }
 
   public async checkEmail({ email }: CheckEmailQuery): Promise<Result<CheckEmailResult>> {

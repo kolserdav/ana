@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  db:
+    extends:
+      file: docker-compose.yml
+      service: db
+  translate:
+    extends:
+      file: docker-compose.yml
+      service: translate
+  pgadmin:
+    extends:
+      file: docker-compose.yml
+      service: pgadmin

@@ -24,7 +24,7 @@ const confirmEmail: RequestHandler<
   if (!checkEmail(email)) {
     reply.type(APPLICATION_JSON).code(400);
     return {
-      status: 'info',
+      status: 'warn',
       message: locale.badRequest,
       data: null,
     };

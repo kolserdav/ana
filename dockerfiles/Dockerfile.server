@@ -1,0 +1,16 @@
+FROM node:18-alpine
+
+WORKDIR /home/app
+
+COPY package*.json ./
+
+COPY packages/server ./packages/server
+COPY packages/app/types/interfaces.ts ./packages/server/src/types/interfaces.ts
+COPY scripts ./scripts
+COPY data ./data
+
+RUN npm --ignore-scripts install
+RUN npm run install:server
+
+COPY .env ./.env
+COPY .prettierrc ./

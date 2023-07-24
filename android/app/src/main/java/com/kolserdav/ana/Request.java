@@ -5,9 +5,16 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+
 
 public class Request extends AsyncTask<Void, Void, String> {
 
@@ -24,12 +31,27 @@ public class Request extends AsyncTask<Void, Void, String> {
         } catch (MalformedURLException e) {
             Log.e(TAG, "Error create url from string: " + e.getMessage());
         }
+
     }
 
     protected String doInBackground(Void... params) {
         Log.d(TAG, "Request to: " + url);
         try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            TrustManager[] trustAllCerts = Config.TRUST_ALL_CERTS;
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, null);
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
 
@@ -45,7 +67,9 @@ public class Request extends AsyncTask<Void, Void, String> {
 
             return response.toString();
         } catch (Exception e) {
+            Log.e(TAG, "Failed request: " + e.getMessage());
             e.printStackTrace();
+            onGetStatus(status);
             return null;
         }
     }

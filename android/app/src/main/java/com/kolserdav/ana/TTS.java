@@ -18,11 +18,13 @@ class TTS {
 
     Locale lang;
 
-    Set<Voice> voices;
+    Set<Voice> voices = null;
 
     private final String TAG = "TTS";
 
-
+    public void shutdown() {
+        textToSpeech.shutdown();
+    }
 
     public TTS(MainActivity context) {
         try {
@@ -67,6 +69,9 @@ class TTS {
 
     public String getVoices(String lang) {
         JSONObject json = new JSONObject();
+        if (voices == null) {
+            voices = textToSpeech.getVoices();
+        }
         Voice[] _voices = voices.toArray(new Voice[0]);
         for (int i = 0; i < _voices.length; i ++) {
             Voice v = _voices[i];
@@ -105,7 +110,11 @@ class TTS {
     }
 
     public String getLanguage() {
-        return textToSpeech.getVoice().getLocale().getLanguage();
+        Voice voice = textToSpeech.getVoice();
+        if (voice == null) {
+            return null;
+        }
+        return voice.getLocale().getLanguage();
     }
 
     public void setLanguage(String locale) {

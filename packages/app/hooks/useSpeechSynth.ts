@@ -92,6 +92,7 @@ const useSpeechSynth = ({
         androidTextToSpeech.setLanguage(lang);
         const waitChange = async (): Promise<number> => {
           const _lang = androidTextToSpeech.getLanguage();
+
           if (_lang !== lang) {
             await wait(100);
             return waitChange();

@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android:permission=BIND_JOB_SERVICE" />
 
-
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
