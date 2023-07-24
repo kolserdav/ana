@@ -58,7 +58,7 @@ class Tasks {
           },
         }
       );
-      console.log({ lte, gt });
+
       const usersForNotification = await orm.userFindMany({
         where: {
           AND: [
@@ -108,6 +108,7 @@ class Tasks {
           notificationId: true,
         },
       });
+      console.log({ lte, gt, notificationCount, dateDay });
       for (let i = 0; usersForNotification.data[i]; i++) {
         const user = usersForNotification.data[i];
         if (!user || !user.notificationId) {
