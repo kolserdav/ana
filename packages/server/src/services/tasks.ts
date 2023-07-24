@@ -58,7 +58,7 @@ class Tasks {
           },
         }
       );
-
+      console.log({ lte, gt });
       const usersForNotification = await orm.userFindMany({
         where: {
           AND: [

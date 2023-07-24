@@ -82,7 +82,9 @@ public class Request extends AsyncTask<Void, Void, String> {
 
             return response.toString();
         } catch (Exception e) {
+            Log.e(TAG, "Failed request: " + e.getMessage());
             e.printStackTrace();
+            onGetStatus(status);
             return null;
         }
     }

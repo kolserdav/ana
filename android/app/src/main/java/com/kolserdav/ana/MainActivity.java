@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 public class MainActivity extends Activity {
 
     MainActivity context = this;
+
+    TTS tts;
     private static final String TAG = "MainActivity";
 
     public WebView mWebView;
@@ -65,6 +67,7 @@ public class MainActivity extends Activity {
         } else {
             Log.d(TAG, "Notification service disabled");
         }
+        tts.shutdown();
     }
 
     private void createNotificationChannel() {
@@ -84,12 +87,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
+        tts = new TTS(this);
         helper = new Helper(this, this);
         androidCommon =  new AndroidCommon(this);
 
 
         mWebView = new WebView(this);
+
 
         WebSettings webSettings = this.mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -110,7 +114,7 @@ public class MainActivity extends Activity {
 
         webSettings.setDefaultTextEncodingName("utf-8");
 
-        TTS tts = new TTS(this);
+
         mWebView.addJavascriptInterface(new AndroidTextToSpeech(tts), "androidTextToSpeech");
         mWebView.addJavascriptInterface(androidCommon, "androidCommon");
         setContentView(mWebView);
@@ -154,6 +158,7 @@ public class MainActivity extends Activity {
                                    @Override
                                    public void run() {
                                        String _url = url;
+                                       Log.d(TAG, "Application status: " + status);
                                        if (status != 200) {
                                            Log.w(TAG, "Url replaced " + _url);
                                            _url = _url.replace(_url, schemaApp.urlDefault);
@@ -178,6 +183,9 @@ public class MainActivity extends Activity {
                                super.onPostExecute(response);
                                Log.d(TAG, "On post execute: " + response);
                                JSONObject data = null;
+                               if (response == null) {
+                                   return;
+                               }
                                try {
                                    data = new JSONObject(response);
                                } catch (JSONException e) {
@@ -292,7 +300,7 @@ public class MainActivity extends Activity {
                 if (_url.equals("null")) {
                     _url = schemaApp.urlDefault;
                 }
-                String path = url.replace(_url, "");
+                String path = url.replace(_url, "").replace(schemaApp.urlDefault, "");
                 schemaApp.path = path+"";
                 context.db.app.setPath(schemaApp);
                 Log.d(TAG, "Change path  from " + schemaApp.path + " to " + path +
