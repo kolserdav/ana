@@ -441,7 +441,7 @@ function My({
               className={clsx(s.content, ticker ? s.animate : '')}
               style={{ animationDuration: `${animationDuration}s` }}
             >
-              <Typography nowrap theme={theme} variant="span" disabled fullWidth>
+              <Typography nowrap theme={theme} variant="span" disabled fitContent>
                 {!played && !paused ? locale.playAll : playedText}
               </Typography>
             </div>

@@ -295,7 +295,7 @@ $search-input-wudth-coeff: 1.5;
     .content {
       position: relative;
       display: inline;
-      width: auto;
+      width: fit-content;
 
       &.animate {
         animation-name: moving;
