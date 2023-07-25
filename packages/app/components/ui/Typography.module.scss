@@ -9,6 +9,10 @@
   &.full_width {
     width: 100%;
   }
+
+  &.fit_content {
+    width: fit-content;
+  }
   
   p, h1, h2, h3, h4, h5, h6, label, span {
     word-wrap: break-word;

@@ -23,6 +23,7 @@ function Typography<T extends TypographyVariant>({
   fullWidth,
   id,
   smaller,
+  fitContent,
 }: {
   variant: TypographyVariant;
   children: string | React.ReactNode;
@@ -40,6 +41,7 @@ function Typography<T extends TypographyVariant>({
   fullWidth?: boolean;
   id?: T extends 'label' ? string : string | undefined;
   smaller?: boolean;
+  fitContent?: boolean;
 }) {
   return (
     <div
@@ -54,6 +56,7 @@ function Typography<T extends TypographyVariant>({
         large ? s.large : '',
         nowrap ? s.nowrap : '',
         fullWidth ? s.full_width : '',
+        fitContent ? s.fit_content : '',
         align
           ? align === 'center'
             ? s.center
@@ -120,6 +123,7 @@ Typography.defaultProps = {
   fullWidth: undefined,
   id: undefined,
   smaller: undefined,
+  fitContent: undefined,
 };
 
 export default Typography;
