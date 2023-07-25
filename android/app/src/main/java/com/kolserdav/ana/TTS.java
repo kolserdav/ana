@@ -22,10 +22,6 @@ class TTS {
 
     private final String TAG = "TTS";
 
-    public void shutdown() {
-        textToSpeech.shutdown();
-    }
-
     public TTS(MainActivity context) {
         try {
             textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
