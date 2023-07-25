@@ -32,7 +32,10 @@ if (cluster.isPrimary) {
   new Tasks(ws);
 
   ws.server.on('connection', async (conn) => {
+    const { protocol } = conn;
     const connId = v4();
+
+    log('info', 'New WS connection', { connId, protocol });
 
     conn.on('error', (e) => {
       log('error', 'Error ws connection', e);
@@ -70,6 +73,8 @@ if (cluster.isPrimary) {
 
     conn.on('close', async () => {
       ws.deletePushSocket(connId);
+
+      log('info', 'Close WS connection', { connId, protocol });
       await ws.deleteSocket(connId);
     });
   });

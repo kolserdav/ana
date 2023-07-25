@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +40,7 @@ public class DisplayNotification extends Service {
     private String url = null;
 
     private String unitId = null;
+
 
     public void createNotification(String title, String content, String path) {
         Intent intent = new Intent(this, MainActivity.class);

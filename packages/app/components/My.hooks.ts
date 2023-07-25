@@ -55,9 +55,11 @@ export const usePhrases = ({
   gt,
   learnLang,
   isTrash,
+  tagsLoaded,
 }: {
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   tags: TagFindManyResult;
+  tagsLoaded: boolean;
   setSkip: React.Dispatch<React.SetStateAction<number>>;
   skip: number;
   locale: Locale['app']['my'];
@@ -126,7 +128,8 @@ export const usePhrases = ({
       !tagsIsSet ||
       (_search && _search.length < SEARCH_MIN_LENGTH) ||
       !learnLang ||
-      !gt
+      !gt ||
+      !tagsLoaded
     ) {
       return;
     }
@@ -174,6 +177,7 @@ export const usePhrases = ({
     learnLang,
     restart,
     isTrash,
+    tagsLoaded,
   ]);
 
   const onClickSortByDate = () => {
@@ -439,6 +443,7 @@ export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefi
   const [skip, setSkip] = useState<number>(0);
   const [strongTags, setStrongTags] = useState<boolean>(false);
   const [tagsRestart, setTagsRestart] = useState<boolean>(false);
+  const [tagsLoaded, setTagsLoaded] = useState<boolean>(false);
 
   /**
    * Set saved strong tags
@@ -518,6 +523,7 @@ export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefi
         setFilterTags(true);
       }
     }
+    setTagsLoaded(true);
   }, [allTags, setTags, tagsIsSet]);
 
   const changeStrongCb = () => {
@@ -563,6 +569,7 @@ export const useTags = ({ isTrash, gt }: { isTrash: boolean; gt: string | undefi
     setCurrentSort,
     filterTagsText,
     setFilterTagsText,
+    tagsLoaded,
   };
 };
 

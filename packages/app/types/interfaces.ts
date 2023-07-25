@@ -64,6 +64,7 @@ export enum LocaleVars {
   count = '%count',
 }
 
+export const APP_WS_PROTOCOL = 'app_ws';
 // Deps android/app/src/main/java/com/kolserdav/ana/Config.java
 export const CHECK_URL_PATH = '/api/check';
 export const MINIMAL_SUPPORT_TEXT_LENGTH = 10;

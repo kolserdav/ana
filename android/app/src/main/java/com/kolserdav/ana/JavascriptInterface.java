@@ -155,8 +155,7 @@ class AndroidCommon {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                main.finishAffinity();
-                main.finish();
+                main.closeApp();
             }
         });
     }

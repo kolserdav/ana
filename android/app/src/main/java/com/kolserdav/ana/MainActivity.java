@@ -11,9 +11,11 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -71,6 +73,7 @@ public class MainActivity extends Activity {
         } else {
             Log.d(TAG, "Notification service disabled");
         }
+        closeApp();
     }
 
     private void createNotificationChannel() {
@@ -172,6 +175,7 @@ public class MainActivity extends Activity {
                                            _url = schemaApp.urlDefault;
                                        }
 
+                                       openScreenDev();
                                        Log.d(TAG,"Status is " + status + ", load url " + _url);
                                        context.mWebView.loadUrl(_url);
                                        Log.d(TAG,"Loaded url " + _url);
@@ -231,6 +235,13 @@ public class MainActivity extends Activity {
         webViewListeners();
     }
 
+    private void openScreenDev() {
+        if (Settings.Secure.getInt(this.getContentResolver(),
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED , 0) == 1) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+    }
+
 
     private void webViewListeners() {
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -253,7 +264,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed(); // Ignore SSL certificate errors
+                handler.proceed();
             }
 
             @Override
@@ -321,6 +332,41 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void closeApp() {
+        finishAffinity();
+        finish();
+        destroyWebView();
+    }
+
+    public void destroyWebView() {
+
+        if (mWebView == null) {
+            return;
+        }
+
+        mWebView.clearHistory();
+
+        mWebView.clearCache(true);
+
+        mWebView.loadUrl("about:blank");
+
+        mWebView.onPause();
+        mWebView.removeAllViews();
+        mWebView.destroyDrawingCache();
+
+        mWebView.pauseTimers();
+
+        mWebView.destroy();
+
+        mWebView = null;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tts.shutdown();
     }
 }
 
