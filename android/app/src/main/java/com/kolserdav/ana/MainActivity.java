@@ -48,6 +48,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        Log.d(TAG, "On new intent");
         setIntent(intent);
         String url = db.getUrl();
         Uri data = intent.getData();
@@ -62,13 +64,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "On stop");
         if (androidCommon.notificationEnabled) {
             createNotificationChannel();
             startService(serviceIntent);
         } else {
             Log.d(TAG, "Notification service disabled");
         }
-        tts.shutdown();
     }
 
     private void createNotificationChannel() {
@@ -86,6 +88,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "On create");
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         tts = new TTS(this);
