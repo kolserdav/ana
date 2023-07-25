@@ -117,6 +117,7 @@ function My({
     setCurrentSort,
     filterTagsText,
     setFilterTagsText,
+    tagsLoaded,
   } = useTags({ isTrash, gt });
 
   const onChangeDateFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -152,6 +153,7 @@ function My({
     gt,
     learnLang: langFilter,
     isTrash,
+    tagsLoaded,
   });
 
   const {

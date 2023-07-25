@@ -345,7 +345,7 @@ function AppBar({
           style={{ backgroundColor: theme.active, border: `1px groove ${theme.paper}` }}
           onClick={scrollToTop}
         >
-          <ChevronUpIcon />
+          <ChevronUpIcon color={theme.text} />
         </button>
       )}
       <Dialog className={p.dialog} theme={theme} onClose={setLogoutDialog} open={logoutDialog}>

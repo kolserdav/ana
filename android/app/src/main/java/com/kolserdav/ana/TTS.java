@@ -24,14 +24,12 @@ class TTS {
 
     public TTS(MainActivity context) {
         try {
-            textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int status) {
-                    if (status == TextToSpeech.SUCCESS) {
-                        voices = textToSpeech.getVoices();
-                        locales = Locale.getAvailableLocales();
-                        voice = textToSpeech.getDefaultVoice();
-                    }
+            textToSpeech = new TextToSpeech(context, status -> {
+                Log.d(TAG, "Status: " + status);
+                if (status == TextToSpeech.SUCCESS) {
+                    voices = textToSpeech.getVoices();
+                    locales = Locale.getAvailableLocales();
+                    voice = textToSpeech.getDefaultVoice();
                 }
             });
             textToSpeech.setLanguage(Locale.US);
@@ -43,6 +41,10 @@ class TTS {
 
     public Boolean getSpeechState() {
         return textToSpeech.isSpeaking();
+    }
+
+    public void shutdown() {
+        textToSpeech.shutdown();
     }
 
     public String setAvailableLocales() {

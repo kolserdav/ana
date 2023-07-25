@@ -6,6 +6,7 @@ import storeLoad from '../store/load';
 import storeScroll, { changeScroll } from '../store/scroll';
 import { log, setBodyScroll } from '../utils/lib';
 import {
+  APP_WS_PROTOCOL,
   LOCALE_DEFAULT,
   LocaleValue,
   UserCleanResult,
@@ -126,7 +127,7 @@ export default function useApp({
       return null;
     }
     log('info', 'Creating WS connection', { restart, userLoad, WS_ADDRESS });
-    return typeof WebSocket !== 'undefined' ? new WebSocket(WS_ADDRESS) : null;
+    return typeof WebSocket !== 'undefined' ? new WebSocket(WS_ADDRESS, [APP_WS_PROTOCOL]) : null;
   }, [restart, userLoad]);
 
   const { theme } = useTheme();
@@ -197,6 +198,9 @@ export default function useApp({
       if (getLocalStorage(LocalStorageName.SERVER_RELOAD)) {
         log('warn', connectionRefused, e, true);
       }
+
+      log('info', 'Close WS connection', e);
+
       setLoad(true);
 
       setRestart(restart === undefined ? false : !restart);
