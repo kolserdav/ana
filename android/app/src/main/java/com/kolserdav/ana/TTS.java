@@ -59,7 +59,7 @@ class TTS {
             try {
                 json.put(String.valueOf(i), locale.getLanguage());
             } catch (Exception e) {
-                Log.d("Error json put", e.getMessage());
+                Log.d(TAG, "Failed JSON put: " + e.getMessage());
             }
         }
         return json.toString();
@@ -78,7 +78,7 @@ class TTS {
                     json.put(String.valueOf(v.getName()), v.getLocale().getDisplayName());
                 }
             } catch (Exception e) {
-                Log.d("Error json voice put", e.getMessage());
+                Log.d(TAG, "Failed JSON voice put: " + e.getMessage());
             }
         }
         return json.toString();
@@ -103,7 +103,7 @@ class TTS {
         try {
             textToSpeech.stop();
         } catch (Throwable e) {
-            Log.e("ERROR", e.getMessage());
+            Log.e(TAG, "Failed stop speak: " + e.getMessage());
         }
     }
 
