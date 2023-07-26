@@ -784,6 +784,9 @@ export const useSpeechRecognize = ({
    * Give microphone access
    */
   useEffect(() => {
+    if (!('webkitSpeechRecognition' in window)) {
+      return;
+    }
     if (!navigator.mediaDevices) {
       log('warn', 'Media devices is', navigator.mediaDevices);
       return;
