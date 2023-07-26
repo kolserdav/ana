@@ -45,6 +45,8 @@ public class MainActivity extends Activity {
 
     private Intent serviceIntent;
 
+    private WebSettings webSettings;
+
     AndroidCommon androidCommon;
 
     @Override
@@ -101,7 +103,7 @@ public class MainActivity extends Activity {
 
         mWebView = new WebView(this);
 
-        WebSettings webSettings = this.mWebView.getSettings();
+        webSettings = this.mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
@@ -110,13 +112,7 @@ public class MainActivity extends Activity {
         webSettings.setDisplayZoomControls(false);
         webSettings.setSupportZoom(false);
 
-        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Activity.CONNECTIVITY_SERVICE);
-        if(cm != null && cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()){
-            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        }
-        else{
-            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        }
+        setCacheMode();
 
         webSettings.setDefaultTextEncodingName("utf-8");
 
@@ -367,6 +363,16 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         tts.shutdown();
+    }
+
+    private void setCacheMode() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Activity.CONNECTIVITY_SERVICE);
+        if(cm != null && cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()){
+            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        }
+        else{
+            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        }
     }
 }
 

@@ -162,12 +162,18 @@ function Translate({
     reTranslate,
   });
 
-  const { onStartRecognize, onStopRecognize, allowRecogn, speechRecognStarted } =
-    useSpeechRecognize({
-      setText,
-      locale,
-      learnLang,
-    });
+  const {
+    onStartRecognize,
+    onStopRecognize,
+    allowRecogn,
+    speechRecognStarted,
+    clickMicroIfNotAllowed,
+    allowMicro,
+  } = useSpeechRecognize({
+    setText,
+    locale,
+    learnLang,
+  });
 
   const { loginRedirect } = useRedirect();
 
@@ -178,6 +184,13 @@ function Translate({
     createSelector({ type: 'translate', value: s.native_res });
     createSelector({ type: 'reTranslate', value: s.learn_res });
   }
+
+  const _onStartRecognize = allowMicro ? onStartRecognize : clickMicroIfNotAllowed;
+  const _onStopRecognize = allowMicro
+    ? onStopRecognize
+    : () => {
+        /** */
+      };
 
   return (
     <div className={s.wrapper}>
@@ -276,11 +289,12 @@ function Translate({
                 title={locale.startRecognize}
                 theme={theme}
                 disabled={load}
-                onMouseUp={onStopRecognize}
-                onMouseDown={onStartRecognize}
-                onTouchStart={onStartRecognize}
-                onTouchEnd={onStopRecognize}
+                onMouseUp={_onStopRecognize}
+                onMouseDown={_onStartRecognize}
+                onTouchStart={_onStartRecognize}
+                onTouchEnd={_onStopRecognize}
                 touchStarted={speechRecognStarted}
+                withoutContext
               >
                 <MicrophoneIcon color={theme.text} />
               </IconButton>

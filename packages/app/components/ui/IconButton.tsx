@@ -13,6 +13,7 @@ const IconButton = forwardRef<
     titleHide?: boolean;
     viceVersa?: boolean;
     small?: boolean;
+    withoutContext?: boolean;
   }
 >((props, ref) => {
   const _props = useMemo(() => {
@@ -21,6 +22,7 @@ const IconButton = forwardRef<
     delete newProps.titleHide;
     delete newProps.viceVersa;
     delete newProps.small;
+    delete newProps.withoutContext;
     return newProps;
   }, [props]);
 
@@ -30,7 +32,7 @@ const IconButton = forwardRef<
   const onContextMenuOpen = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (title) {
       ev.preventDefault();
-      if (!touchStarted) {
+      if (!touchStarted && !props.withoutContext) {
         setOpenTooltip(true);
       }
     }
@@ -97,6 +99,7 @@ IconButton.defaultProps = {
   titleHide: undefined,
   viceVersa: undefined,
   small: undefined,
+  withoutContext: undefined,
 };
 
 export default IconButton;
