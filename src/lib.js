@@ -187,4 +187,16 @@ const needSplitNext = ({ argv, index }, symbol = '=') => {
  */
 const gitHeadRemote = (branch) => new RegExp(`[a-zA-Z0-9]+\\t+refs\/heads\/${branch}\n`);
 
-module.exports = { getPage, startServer, spawnCommand, needSplitNext, gitHeadRemote };
+/**
+ *
+ * @param {number} timeout
+ */
+const wait = async (timeout) => {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(0);
+    }, timeout);
+  });
+};
+
+module.exports = { getPage, startServer, spawnCommand, needSplitNext, gitHeadRemote, wait };
