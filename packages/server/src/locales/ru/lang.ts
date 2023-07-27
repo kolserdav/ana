@@ -283,6 +283,9 @@ const lang: Locale = {
     admin: {
       pushNotifications: 'Кликабельные уведомления',
       createPushNotification: 'Создать кликабельное уведомление',
+      titleMustBeNotEmpty: 'Заголовок уведомления не должен быть пустым',
+      pushTitle: 'Заголовок уведомления',
+      pushBody: 'Текст уведомления',
     },
   },
 };

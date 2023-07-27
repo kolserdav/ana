@@ -66,6 +66,8 @@ import {
   CHECK_URL_PATH,
   PushNotificationFindManyQuery,
   PushNotificationFindManyResult,
+  PushNotificationCreateBody,
+  PushNotificationCreateResult,
 } from '../types/interfaces';
 import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -465,6 +467,16 @@ class Request {
     return this.send({
       url: `${Api.pushNotificationFindMany}?skip=${skip}&take=${take}`,
       method: 'GET',
+    });
+  }
+
+  public async pushNotificationCreate(
+    body: PushNotificationCreateBody
+  ): Promise<Result<PushNotificationCreateResult>> {
+    return this.send({
+      url: Api.pushNotificationCreate,
+      method: 'POST',
+      body,
     });
   }
 }

@@ -14,6 +14,7 @@ const request = new Request();
 interface PageProps extends AppProps {
   localeAppBar: Locale['app']['appBar'];
   localeAdmin: Locale['app']['admin'];
+  localeCommon: Locale['app']['common'];
   page: PageFull;
 }
 
@@ -22,6 +23,7 @@ export default function AdminPage({
   localeAppBar,
   page,
   localeAdmin,
+  localeCommon,
 }: PageProps) {
   useCloseRole({ user, userLoad, whiteList: ['admin'] });
   return (
@@ -29,7 +31,16 @@ export default function AdminPage({
       <Head title={page.title} description={page.description} keywords={page.keywords} />
       <AppBar user={user} full theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
-        <Admin title={page.title} theme={theme} locale={localeAdmin} />
+        <Admin
+          save={localeCommon.save}
+          edit={localeCommon.edit}
+          _delete={localeCommon.delete}
+          cancel={localeCommon.cancel}
+          user={user}
+          title={page.title}
+          theme={theme}
+          locale={localeAdmin}
+        />
       </main>
     </>
   );
@@ -40,6 +51,7 @@ export async function getStaticProps({
 }: GetStaticPropsContext): Promise<{ props: Omit<PageProps, 'app'> }> {
   const localeAppBar = await request.getLocale({ field: 'appBar', locale });
   const localeAdmin = await request.getLocale({ field: 'admin', locale });
+  const localeCommon = await request.getLocale({ field: 'common', locale });
   const page = await request.pageFindMany({
     where: {
       AND: [
@@ -57,6 +69,7 @@ export async function getStaticProps({
       page: prepagePage(page.data),
       localeAppBar: localeAppBar.data,
       localeAdmin: localeAdmin.data,
+      localeCommon: localeCommon.data,
     },
   };
 }

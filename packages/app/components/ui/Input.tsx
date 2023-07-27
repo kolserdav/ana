@@ -102,7 +102,13 @@ const Input = forwardRef<
           /** */
         }}
         onClick={onClick}
-        className={clsx(s.wrapper, classWrapper || '', ubuntu500.className, hidden ? s.hidden : '')}
+        className={clsx(
+          s.wrapper,
+          classWrapper || '',
+          ubuntu500.className,
+          hidden ? s.hidden : '',
+          fullWidth ? s.full__width : ''
+        )}
       >
         <input
           ref={ref || inputRef}

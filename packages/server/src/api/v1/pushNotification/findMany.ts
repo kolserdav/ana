@@ -47,6 +47,9 @@ const pushNotificationFindMany: RequestHandler<
     status: 'info',
     message: locale.success,
     data: notifications.data,
+    count: notifications.count,
+    skip: notifications.skip,
+    take: notifications.take,
   };
 };
 

@@ -6,6 +6,7 @@ export const LOCALE_NAMES: Record<LocaleValue, string> = {
   en: 'English',
   ru: 'Русский',
 };
+
 export const URL_PLACEHOLDER = 'https://example.com';
 export const DATE_FILTER_ALL: DateFilter = 'all-time';
 export const DATE_FILTER_STATISTICS_DEFAULT: DateFilter = 'week';
@@ -76,7 +77,6 @@ export const TAB_INDEX_DEFAULT = -1;
 export const PASSWORD_MIN_LENGTH = 6;
 export const PUBLIC_ICONS_FILES = '/icons/files/';
 export const SELECTED_TAG_MAX = 2;
-export const PUSH_NOTIFICATIONS_TAKE = 20;
 // Deps load-page-duration
 export const LOAD_PAGE_DURATION = 900;
 export const LABEL_TRANSITION = '0.2s';
@@ -162,3 +162,13 @@ export const ANDROID_APP_NAME = 'com.kolserdav.ana';
 export const NULL_STR = 'null';
 // deps android/app/src/main/AndroidManifest.xml android:host
 export const DEEP_LINK_HOST = 'path';
+export const PUSH_NOTIFICATIONS_TAKE = 10;
+
+// deps packages/server/orm/schema.prisma PushNotification.title
+export const PUSH_NOTIFICATION_TITLE_MAX_LENGTH = 48;
+
+// deps packages/server/orm/schema.prisma PushNotification.description
+export const PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH = 255;
+
+export const PUSH_NOTIFICATION_DESCRIPTION_MIN_LENGTH = 50;
+export const PUSH_NOTIFICATION_LANG_DEFAULT: keyof typeof LOCALE_NAMES = 'en';

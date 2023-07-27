@@ -282,6 +282,9 @@ const lang: Locale = {
     admin: {
       pushNotifications: 'Push notifications',
       createPushNotification: 'Create a push notification',
+      titleMustBeNotEmpty: 'Notification title must not be empty',
+      pushTitle: 'Title of the notification',
+      pushBody: 'Notification text',
     },
   },
 };

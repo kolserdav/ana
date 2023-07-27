@@ -10,6 +10,7 @@ import {
   Selector,
   SelectorNames,
   PushNotification,
+  Lang,
 } from '@prisma/client';
 
 export const TRANSLATE_PREFIX = '/libre';
@@ -50,6 +51,7 @@ export enum Api {
   getStatistics = '/v1/get-statistics',
   localPostSelector = '/local/create-selector',
   pushNotificationFindMany = '/v1/push-notification-find-many',
+  pushNotificationCreate = '/v1/push-notification-create',
 }
 
 // eslint-disable-next-line no-shadow
@@ -302,6 +304,14 @@ export interface TagUpdateBody {
   data: Partial<TagCreateBody>;
 }
 export type TagUpdateResult = Tag | null;
+
+export interface PushNotificationCreateBody {
+  title: string;
+  description: string;
+  lang: Lang;
+  path: string;
+}
+export type PushNotificationCreateResult = PushNotification | null;
 
 export interface TagDeleteBody {
   tagId: string;
@@ -664,6 +674,9 @@ export interface Locale {
     admin: {
       pushNotifications: string;
       createPushNotification: string;
+      titleMustBeNotEmpty: string;
+      pushTitle: string;
+      pushBody: string;
     };
   };
 }

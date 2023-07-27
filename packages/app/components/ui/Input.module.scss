@@ -6,6 +6,11 @@
   margin-top: $form-item-margin-top;
   flex-direction: column;
 
+  &.full__width {
+    width: 100%;
+    max-width: 100%;
+  }
+
   &.hidden {
     display: none;
   }
