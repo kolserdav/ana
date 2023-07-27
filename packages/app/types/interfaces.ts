@@ -9,6 +9,8 @@ import {
   User,
   Selector,
   SelectorNames,
+  PushNotification,
+  Lang,
 } from '@prisma/client';
 
 export const TRANSLATE_PREFIX = '/libre';
@@ -48,6 +50,8 @@ export enum Api {
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
   localPostSelector = '/local/create-selector',
+  pushNotificationFindMany = '/v1/push-notification-find-many',
+  pushNotificationCreate = '/v1/push-notification-create',
 }
 
 // eslint-disable-next-line no-shadow
@@ -63,6 +67,9 @@ export enum LocaleVars {
   all = '%all',
   count = '%count',
 }
+
+// deps android/app/src/main/AndroidManifest.xml android:scheme
+export const ANDROID_APP_NAME = 'com.kolserdav.ana';
 
 export const APP_WS_PROTOCOL = 'app_ws';
 // Deps android/app/src/main/java/com/kolserdav/ana/Config.java
@@ -301,6 +308,14 @@ export interface TagUpdateBody {
 }
 export type TagUpdateResult = Tag | null;
 
+export interface PushNotificationCreateBody {
+  title: string;
+  description: string;
+  lang: Lang;
+  path: string;
+}
+export type PushNotificationCreateResult = PushNotification | null;
+
 export interface TagDeleteBody {
   tagId: string;
 }
@@ -372,6 +387,12 @@ export interface ConfirmEmailBody {
   key: string;
 }
 export type ConfirmEmailResult = null;
+
+export interface PushNotificationFindManyQuery {
+  skip: string;
+  take: string;
+}
+export type PushNotificationFindManyResult = PushNotification[];
 
 export interface Tab {
   id: number;
@@ -473,6 +494,7 @@ export interface Locale {
         minimalLengthOfTextIs: string;
       };
       trash: string;
+      adminArea: string;
     };
     confirmEmail: {
       title: string;
@@ -651,6 +673,15 @@ export interface Locale {
         minutes: string;
         seconds: string;
       };
+    };
+    admin: {
+      pushNotifications: string;
+      createPushNotification: string;
+      titleMustBeNotEmpty: string;
+      pushTitle: string;
+      pushBody: string;
+      pushLanguage: string;
+      pushPath: string;
     };
   };
 }

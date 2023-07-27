@@ -147,7 +147,7 @@ const useSpeechSynth = ({
         const _voice = _voices.find((item) => new RegExp(`${lang}`).test(item.lang));
         const langVoices = getLocalStorage(LocalStorageName.LANG_VOICES);
         if (!_voice) {
-          log('warn', voiceNotFound, _voices, true);
+          log('warn', voiceNotFound, _voices);
           setSynthAllow(false);
         } else {
           setSynthAllow(true);

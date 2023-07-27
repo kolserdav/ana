@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "PushNotification" ADD COLUMN     "updated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

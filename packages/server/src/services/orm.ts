@@ -341,6 +341,30 @@ export class ORM extends Service implements Database {
     });
   };
 
+  public pushNotificationCreate: Database['pushNotificationCreate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'pushNotification',
+      command: 'create',
+    });
+  };
+
+  public pushNotificationUpdate: Database['pushNotificationUpdate'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'pushNotification',
+      command: 'update',
+    });
+  };
+
+  public pushNotificationDelete: Database['pushNotificationDelete'] = async (args) => {
+    return this.runFromWorker({
+      args,
+      model: 'pushNotification',
+      command: 'delete',
+    });
+  };
+
   public pushNotificationFindMany: Database['pushNotificationFindMany'] = async (args) => {
     return this.runFromWorker({
       args,

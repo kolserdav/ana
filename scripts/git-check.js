@@ -2,7 +2,7 @@
 
 // @ts-check
 const { log } = require('../packages/server/dist/utils/lib');
-const { spawnCommand, needSplitNext, gitHeadRemote } = require('../src/lib');
+const { spawnCommand, needSplitNext, gitHeadRemote, wait } = require('../src/lib');
 const { repository, version } = require('../package.json');
 const { GIT_HEAD_REGEXP, BRANCH_NAME_DEFAULT, BRANCH } = require('../src/constants');
 const path = require('path');
@@ -297,6 +297,8 @@ ${args
     if (restart.code !== 0) {
       return exit(restart.code || undefined);
     }
+
+    await wait(5000);
   }
   throw new Error(`Update script end for packs: ${packs.join(',')}`);
 })();

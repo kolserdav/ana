@@ -24,6 +24,7 @@ enum PageName {
   settings
   donate
   aboutTranslate
+  admin
 }
 
 enum PageField {
@@ -55,16 +56,16 @@ model User {
   id                   String                 @id @default(uuid())
   name                 String?                @db.VarChar(24)
   email                String                 @unique @db.VarChar(255)
+  lang                 Lang                   @default(en)
+  role                 UserRole               @default(user)
   confirm              Boolean                @default(false)
+  pushEnabled          Boolean                @default(true)
+  timeZone             Int?
+  notificationId       String?                @db.VarChar(64)
   password             String
   salt                 String                 @db.VarChar(32)
   updated              DateTime               @default(now())
   created              DateTime               @default(now())
-  pushEnabled          Boolean                @default(true)
-  timeZone             Int?
-  notificationId       String?                @db.VarChar(64)
-  lang                 Lang                   @default(en)
-  role                 UserRole               @default(user)
   RestoreLink          RestoreLink[]
   ConfirmLink          ConfirmLink[]
   Phrase               Phrase[]
@@ -75,10 +76,13 @@ model User {
 
 model PushNotification {
   id                   Int                    @id @default(autoincrement())
+  // Deps packages/app/utils/constants.ts PUSH_NOTIFICATION_TITLE_MAX_LENGTH
   title                String                 @db.VarChar(48)
+  // Deps packages/app/utils/constants.ts PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH
   description          String                 @db.VarChar(255)
   path                 String
   lang                 Lang
+  updated              DateTime               @default(now())
   created              DateTime               @default(now())
   PushNotificationUser PushNotificationUser[]
 }

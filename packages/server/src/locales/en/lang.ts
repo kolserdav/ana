@@ -102,6 +102,7 @@ const lang: Locale = {
         minimalLengthOfTextIs: `Minimum is ${MINIMAL_SUPPORT_TEXT_LENGTH} characters`,
       },
       trash: 'Learned texts',
+      adminArea: 'Admin Area',
     },
     confirmEmail: {
       title: 'Mail Confirmation',
@@ -277,6 +278,15 @@ const lang: Locale = {
         minutes: 'minutes',
         seconds: 'seconds',
       },
+    },
+    admin: {
+      pushNotifications: 'Push notifications',
+      createPushNotification: 'Create a push notification',
+      titleMustBeNotEmpty: 'Notification title must not be empty',
+      pushTitle: 'Title of the notification',
+      pushBody: 'Notification text',
+      pushLanguage: 'Language of notification',
+      pushPath: 'Page',
     },
   },
 };

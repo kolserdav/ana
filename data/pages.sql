@@ -46,3 +46,6 @@ INSERT INTO public."Page" VALUES (34, 'translate', 'keywords', 'notepad, transla
 
 INSERT INTO public."Page" VALUES (35, 'my', 'title', 'Мои тексты', 'ru') ;
 INSERT INTO public."Page" VALUES (36, 'my', 'title', 'My texts', 'en') ;
+
+INSERT INTO public."Page" VALUES (37, 'admin', 'title', 'Admin Area', 'en') ;
+INSERT INTO public."Page" VALUES (38, 'admin', 'title', 'Кабинет админа', 'ru') ;

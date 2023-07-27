@@ -18,7 +18,7 @@ const getLocaleHandler: RequestHandler<
     status: 'info',
     message: '',
     code: 200,
-    data: locale[field],
+    data: locale[field] || {},
   };
 };
 
