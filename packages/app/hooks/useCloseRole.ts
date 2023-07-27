@@ -15,6 +15,9 @@ export default function useCloseRole({
 }) {
   const router = useRouter();
 
+  /**
+   * Check user role
+   */
   useEffect(() => {
     if (!userLoad) {
       return;

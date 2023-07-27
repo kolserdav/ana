@@ -51,7 +51,7 @@ export enum Pages {
   // eslint-disable-next-line no-unused-vars
   myDictionary = '/my/texts',
   // eslint-disable-next-line no-unused-vars
-  admin = '/admin/area',
+  admin = '/admin',
 }
 
 const now = new Date();
