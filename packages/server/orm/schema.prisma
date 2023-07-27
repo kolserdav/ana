@@ -24,6 +24,7 @@ enum PageName {
   settings
   donate
   aboutTranslate
+  admin
 }
 
 enum PageField {
@@ -79,6 +80,7 @@ model PushNotification {
   description          String                 @db.VarChar(255)
   path                 String
   lang                 Lang
+  updated              DateTime               @default(now())
   created              DateTime               @default(now())
   PushNotificationUser PushNotificationUser[]
 }

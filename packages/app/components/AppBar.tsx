@@ -48,6 +48,7 @@ import InformationIcon from './icons/Information';
 import LoginIcon from './icons/Login';
 import LogoutIcon from './icons/Logout';
 import CloseOctagonIcon from './icons/CloseOctagon';
+import AdminIcon from './icons/Admin';
 
 function AppBar({
   theme,
@@ -280,6 +281,19 @@ function AppBar({
             </div>
           )}
           <div className={s.bottom}>
+            {!checkRouterPath(router.asPath, [Pages.admin]) && user && user.role === 'admin' ? (
+              <Link withoutHover fullWidth theme={theme} href={Pages.admin}>
+                <div className={clsx(s.menu__item, s.active)}>
+                  <AdminIcon color={theme.text} withoutScale />
+                  <div style={{ color: theme.text }}>{locale.adminArea}</div>
+                </div>
+              </Link>
+            ) : (
+              <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                <InformationIcon color={theme.text} withoutScale />
+                <div style={{ color: theme.text }}>{locale.about}</div>
+              </div>
+            )}
             {!checkRouterPath(router.asPath, [Pages.about]) ? (
               <Link withoutHover fullWidth theme={theme} href={Pages.about}>
                 <div className={clsx(s.menu__item, s.active)}>

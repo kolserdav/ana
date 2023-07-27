@@ -9,6 +9,7 @@ import {
   User,
   Selector,
   SelectorNames,
+  PushNotification,
 } from '@prisma/client';
 
 export const TRANSLATE_PREFIX = '/libre';
@@ -48,6 +49,7 @@ export enum Api {
   postSupport = '/v1/support',
   getStatistics = '/v1/get-statistics',
   localPostSelector = '/local/create-selector',
+  pushNotificationFindMany = '/v1/push-notification-find-many',
 }
 
 // eslint-disable-next-line no-shadow
@@ -373,6 +375,12 @@ export interface ConfirmEmailBody {
 }
 export type ConfirmEmailResult = null;
 
+export interface PushNotificationFindManyQuery {
+  skip: string;
+  take: string;
+}
+export type PushNotificationFindManyResult = PushNotification[];
+
 export interface Tab {
   id: number;
   title: string;
@@ -473,6 +481,7 @@ export interface Locale {
         minimalLengthOfTextIs: string;
       };
       trash: string;
+      adminArea: string;
     };
     confirmEmail: {
       title: string;
@@ -651,6 +660,10 @@ export interface Locale {
         minutes: string;
         seconds: string;
       };
+    };
+    admin: {
+      pushNotifications: string;
+      createPushNotification: string;
     };
   };
 }

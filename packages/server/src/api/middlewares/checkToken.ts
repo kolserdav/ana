@@ -9,10 +9,11 @@ const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
   if (method === 'OPTIONS') {
     return next();
   }
-  const { lang, token } = parseHeaders(headers);
+  const { lang, token, id } = parseHeaders(headers);
   const locale = getLocale(lang).server;
-  const result = await checkToken(token);
-  if (result === 2) {
+  const { error, parsedToken } = await checkToken(token);
+
+  if (error === 2) {
     res.statusCode = 500;
     return res.end(
       getErrorResult({
@@ -21,7 +22,7 @@ const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
       })
     );
   }
-  if (result === 1) {
+  if (error === 1 || !parsedToken) {
     res.statusCode = 403;
     return res.end(
       getErrorResult({
@@ -30,6 +31,16 @@ const checkTokenMiddleware: MiddleHandler = async (req, res, next) => {
       })
     );
   }
+  if (id !== parsedToken.id) {
+    res.statusCode = 401;
+    return res.end(
+      getErrorResult({
+        message: locale.unauthorized,
+        code: 401,
+      })
+    );
+  }
+
   return next();
 };
 

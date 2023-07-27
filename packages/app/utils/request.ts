@@ -64,6 +64,8 @@ import {
   PhraseFindManyResultLight,
   UNDEFINED_QUERY_STRING,
   CHECK_URL_PATH,
+  PushNotificationFindManyQuery,
+  PushNotificationFindManyResult,
 } from '../types/interfaces';
 import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -452,6 +454,16 @@ class Request {
     return this.send({
       url: CHECK_URL_PATH,
       server: origin,
+      method: 'GET',
+    });
+  }
+
+  public async pushNotificationFindMany({
+    skip,
+    take,
+  }: PushNotificationFindManyQuery): Promise<Result<PushNotificationFindManyResult>> {
+    return this.send({
+      url: `${Api.pushNotificationFindMany}?skip=${skip}&take=${take}`,
       method: 'GET',
     });
   }

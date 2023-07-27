@@ -50,6 +50,8 @@ export enum Pages {
   trash = '/my/trash',
   // eslint-disable-next-line no-unused-vars
   myDictionary = '/my/texts',
+  // eslint-disable-next-line no-unused-vars
+  admin = '/admin/area',
 }
 
 const now = new Date();
@@ -74,7 +76,7 @@ export const TAB_INDEX_DEFAULT = -1;
 export const PASSWORD_MIN_LENGTH = 6;
 export const PUBLIC_ICONS_FILES = '/icons/files/';
 export const SELECTED_TAG_MAX = 2;
-
+export const PUSH_NOTIFICATIONS_TAKE = 20;
 // Deps load-page-duration
 export const LOAD_PAGE_DURATION = 900;
 export const LABEL_TRANSITION = '0.2s';

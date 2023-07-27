@@ -1,5 +1,4 @@
 import { GetStaticPropsContext } from 'next';
-import Head from 'next/head';
 import AppBar from '../components/AppBar';
 import { AppProps, PageFull } from '../types';
 import { Locale, LocaleValue } from '../types/interfaces';
@@ -7,6 +6,7 @@ import { prepagePage } from '../utils/lib';
 import Request from '../utils/request';
 import s from '../styles/Page.module.scss';
 import Translate from '../components/Translate';
+import Head from '../components/Head';
 
 const request = new Request();
 
@@ -26,11 +26,7 @@ export default function TranslatePage({
 }: PageProps) {
   return (
     <>
-      <Head>
-        <title>{page.title}</title>
-        <meta name="description" content={page.description} />
-        <meta name="keywords" content={page.keywords} />
-      </Head>
+      <Head title={page.title} description={page.description} keywords={page.keywords} />
       <AppBar user={user} full theme={theme} locale={localeAppBar} />
       <main className={s.wrapper} style={{ backgroundColor: theme.paper }}>
         <Translate

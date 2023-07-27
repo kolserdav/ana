@@ -101,6 +101,7 @@ const lang: Locale = {
         minimalLengthOfTextIs: `Минимум ${MINIMAL_SUPPORT_TEXT_LENGTH} символов`,
       },
       trash: 'Выученные тексты',
+      adminArea: 'Кабинет администратора',
     },
     confirmEmail: {
       title: 'Подтверждение почты',
@@ -278,6 +279,10 @@ const lang: Locale = {
         minutes: 'минут',
         seconds: 'секунд',
       },
+    },
+    admin: {
+      pushNotifications: 'Кликабельные уведомления',
+      createPushNotification: 'Создать кликабельное уведомление',
     },
   },
 };

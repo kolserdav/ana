@@ -318,6 +318,36 @@ abstract class Database {
     >
   >;
 
+  public abstract pushNotificationCreate<T extends Prisma.PushNotificationCreateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PushNotificationCreateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<PushNotification | null>,
+      Promise<Result<Prisma.PushNotificationGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract pushNotificationUpdate<T extends Prisma.PushNotificationUpdateArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PushNotificationUpdateArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<PushNotification | null>,
+      Promise<Result<Prisma.PushNotificationGetPayload<T> | null>>
+    >
+  >;
+
+  public abstract pushNotificationDelete<T extends Prisma.PushNotificationDeleteArgs>(
+    args: Prisma.SelectSubset<T, Prisma.PushNotificationDeleteArgs>
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Result<PushNotification | null>,
+      Promise<Result<Prisma.PushNotificationGetPayload<T> | null>>
+    >
+  >;
+
   public abstract pushNotificationFindMany<T extends Prisma.PushNotificationFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.PushNotificationFindManyArgs>
   ): Promise<

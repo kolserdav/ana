@@ -70,10 +70,15 @@ export function createPasswordHash({ password, salt }: { password: string; salt:
   ).toString('base64');
 }
 
-export const checkToken = async (token: string) => {
+export const checkToken = async (
+  token: string
+): Promise<{ error: 0 | 1 | 2; parsedToken: JWTFull | null }> => {
   const parsedToken = parseToken(token);
   if (!parsedToken) {
-    return 1;
+    return {
+      error: 1,
+      parsedToken,
+    };
   }
   const { id, password } = parsedToken;
   const user = await orm.userFindFirst({
@@ -82,10 +87,19 @@ export const checkToken = async (token: string) => {
     },
   });
   if (user.status === 'error') {
-    return 2;
+    return {
+      error: 2,
+      parsedToken,
+    };
   }
   if (!user.data) {
-    return 1;
+    return {
+      error: 1,
+      parsedToken,
+    };
   }
-  return 0;
+  return {
+    error: 0,
+    parsedToken,
+  };
 };

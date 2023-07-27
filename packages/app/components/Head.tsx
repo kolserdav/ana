@@ -1,3 +1,5 @@
+import NextHead from 'next/head';
+
 function Head({
   title,
   description,
@@ -10,7 +12,7 @@ function Head({
   noIndex?: boolean;
 }) {
   return (
-    <>
+    <NextHead>
       <title>{title}</title>
       <meta name="robots" content={noIndex ? 'noindex,nofollow' : 'index,follow'} />
       <meta name="description" content={description} />
@@ -21,7 +23,7 @@ function Head({
       <meta name="og:description" content={description} />
       <meta name="og:title" content={title} />
       <link rel="icon" href="/favicon.ico" />
-    </>
+    </NextHead>
   );
 }
 

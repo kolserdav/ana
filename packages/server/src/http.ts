@@ -48,6 +48,8 @@ import getStatistics from './api/v1/user/get-statistics';
 import selectorCreate from './api/localhost/selector/create';
 import onlyLocals from './api/middlewares/onlyLocal';
 import phraseUpdateMany from './api/v1/phrase/updateMany';
+import checkRoleMiddlewareWrapper from './api/middlewares/checkRole';
+import pushNotificationFindMany from './api/v1/pushNotification/findMany';
 
 const prisma = new PrismaClient();
 
@@ -96,9 +98,12 @@ process.on('unhandledRejection', (err: Error) => {
       Api.postSendConfirmEmail,
       Api.postSupport,
       Api.getStatistics,
+      Api.pushNotificationFindMany,
     ],
     checkTokenMiddleware
   );
+
+  await fastify.use([Api.pushNotificationFindMany], checkRoleMiddlewareWrapper(['admin']));
 
   await fastify.use([Api.localPostSelector], onlyLocals);
 
@@ -187,6 +192,8 @@ process.on('unhandledRejection', (err: Error) => {
   fastify.get(Api.getStatistics, getStatistics);
   // Local routes
   fastify.post(Api.localPostSelector, selectorCreate);
+  // Admin routes
+  fastify.get(Api.pushNotificationFindMany, pushNotificationFindMany);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;

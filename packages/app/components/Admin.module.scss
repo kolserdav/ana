@@ -1,0 +1,32 @@
+@import '../styles/constants';
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .container {
+    width: 100%;
+    max-width: $translate-container-max;
+
+    .pushs {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      .pushs__item {
+        position: relative;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+
+        .cell {
+          margin: 0.2rem;
+        }
+      }
+    }
+  }
+}
