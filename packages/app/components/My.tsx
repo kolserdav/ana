@@ -590,7 +590,9 @@ function My({
                         variant="span"
                         theme={theme}
                         small
-                        styleName={item.updated === item.created ? 'info' : 'warn'}
+                        styleName={
+                          item.updated === item.created ? 'info' : isTrash ? 'blue' : 'warn'
+                        }
                       >
                         {item.updated.toString()}
                       </Typography>

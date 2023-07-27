@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { createRef, useEffect, useState } from 'react';
+import React, { createRef, useEffect, useMemo, useState } from 'react';
 import { v4 } from 'uuid';
 import { ubuntu400 } from '../../fonts/ubuntu';
 import storeAlert from '../../store/alert';
@@ -119,6 +119,9 @@ function Alert({ theme }: { theme: Theme }) {
         infs++;
       }
       const _alerts = alerts.slice();
+      if (_alerts.findIndex((item) => item.message === message) !== -1) {
+        return;
+      }
 
       if (alertIds.length >= ALERT_COUNT_MAX) {
         await new Promise((resolve) => {
