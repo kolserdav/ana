@@ -11,11 +11,14 @@ import Textarea from './ui/Textarea';
 import Typography from './ui/Typography';
 import p from '../styles/Page.module.scss';
 import {
+  LOCALE_NAMES,
   PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH,
   PUSH_NOTIFICATION_TITLE_MAX_LENGTH,
+  Pages,
 } from '../utils/constants';
 import IconButton from './ui/IconButton';
 import AddIcon from './icons/Add';
+import Select from './ui/Select';
 
 function Admin({
   theme,
@@ -38,7 +41,9 @@ function Admin({
 }) {
   const { setLoad, load } = useLoad();
 
-  const { pushs, pages, page, onClickPushPaginationWrapper } = usePushNotifications({ setLoad });
+  const { pushs, pages, page, onClickPushPaginationWrapper, pushRestart } = usePushNotifications({
+    setLoad,
+  });
 
   const {
     onClickPush,
@@ -54,7 +59,11 @@ function Admin({
     pushTextRows,
     pushTextError,
     onClickOpenPushDialog,
-  } = useCreatePushNotification({ user, setLoad, locale });
+    onChangePushLang,
+    onChangePushPath,
+    pushLang,
+    pushPath,
+  } = useCreatePushNotification({ user, setLoad, locale, pushRestart });
 
   return (
     <div className={s.wrapper}>
@@ -116,7 +125,13 @@ function Admin({
           </div>
         </div>
       </div>
-      <Dialog className={p.dialog} theme={theme} onClose={setPushDialog} open={pushDialog}>
+      <Dialog
+        withoutCloseAlways
+        className={p.dialog}
+        theme={theme}
+        onClose={setPushDialog}
+        open={pushDialog}
+      >
         <div className={p.dialog__content}>
           <Typography variant="h3" theme={theme} align="center">
             {locale.createPushNotification}
@@ -147,6 +162,34 @@ function Admin({
             maxLength={PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH}
             error={pushTextError}
           />
+          <div className={s.dialog__select}>
+            <Select
+              value={pushLang}
+              onChange={onChangePushLang}
+              aria-label={locale.pushLanguage}
+              theme={theme}
+            >
+              {Object.keys(LOCALE_NAMES).map((item) => (
+                <option key={item} value={item}>
+                  {LOCALE_NAMES[item as keyof typeof LOCALE_NAMES]}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className={s.dialog__select}>
+            <Select
+              value={pushPath}
+              onChange={onChangePushPath}
+              aria-label={locale.pushPath}
+              theme={theme}
+            >
+              {Object.keys(Pages).map((item) => (
+                <option key={item} value={item}>
+                  {Pages[item as keyof typeof Pages]}
+                </option>
+              ))}
+            </Select>
+          </div>
         </div>
         <div className={p.dialog__actions}>
           <Button className={s.button} onClick={onClickCancelPush} theme={theme}>

@@ -68,6 +68,9 @@ export enum LocaleVars {
   count = '%count',
 }
 
+// deps android/app/src/main/AndroidManifest.xml android:scheme
+export const ANDROID_APP_NAME = 'com.kolserdav.ana';
+
 export const APP_WS_PROTOCOL = 'app_ws';
 // Deps android/app/src/main/java/com/kolserdav/ana/Config.java
 export const CHECK_URL_PATH = '/api/check';
@@ -677,6 +680,8 @@ export interface Locale {
       titleMustBeNotEmpty: string;
       pushTitle: string;
       pushBody: string;
+      pushLanguage: string;
+      pushPath: string;
     };
   };
 }

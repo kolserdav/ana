@@ -285,6 +285,8 @@ const lang: Locale = {
       titleMustBeNotEmpty: 'Notification title must not be empty',
       pushTitle: 'Title of the notification',
       pushBody: 'Notification text',
+      pushLanguage: 'Language of notification',
+      pushPath: 'Page',
     },
   },
 };

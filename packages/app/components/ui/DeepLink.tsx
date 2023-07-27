@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { ANDROID_APP_NAME, DEEP_LINK_HOST } from '../../utils/constants';
+import { DEEP_LINK_HOST } from '../../utils/constants';
 import s from './DeepLink.module.scss';
 import { isAndroid } from '../../utils/lib';
 import { Theme } from '../../Theme';
+import { ANDROID_APP_NAME } from '../../types/interfaces';
 
 function DeepLink({ children, theme }: { children: string; theme: Theme }) {
   const { pathname } = useRouter();

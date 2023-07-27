@@ -595,7 +595,7 @@ export const useRedirect = ({ user }: { user: UserCleanResult | null }) => {
         router.push(r);
         return;
       }
-      router.push(Pages.home);
+      router.push(Pages.translate);
     }
   }, [user, router, r]);
 };

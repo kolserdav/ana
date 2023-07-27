@@ -22,8 +22,6 @@ export const WS_ADDRESS = process.env.NEXT_PUBLIC_WS_ADDRESS as string;
 // eslint-disable-next-line no-shadow
 export enum Pages {
   // eslint-disable-next-line no-unused-vars
-  home = '/',
-  // eslint-disable-next-line no-unused-vars
   signIn = '/account/sign-in',
   // eslint-disable-next-line no-unused-vars
   signUp = '/account/sign-up',
@@ -157,8 +155,7 @@ export const CONTAINER_PADDING = 16;
 export const PROCESS_TEXT_QUERY_STRING = 'process_text';
 export const TAKE_ALL = 100000000;
 export const LINK_REPLACED = '...http...';
-// deps android/app/src/main/AndroidManifest.xml android:scheme
-export const ANDROID_APP_NAME = 'com.kolserdav.ana';
+
 export const NULL_STR = 'null';
 // deps android/app/src/main/AndroidManifest.xml android:host
 export const DEEP_LINK_HOST = 'path';
@@ -172,3 +169,4 @@ export const PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH = 255;
 
 export const PUSH_NOTIFICATION_DESCRIPTION_MIN_LENGTH = 50;
 export const PUSH_NOTIFICATION_LANG_DEFAULT: keyof typeof LOCALE_NAMES = 'en';
+export const PUSH_NOTIFICATION_PATH_DEFAULT = Pages.translate;

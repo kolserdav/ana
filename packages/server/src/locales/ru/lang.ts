@@ -286,6 +286,8 @@ const lang: Locale = {
       titleMustBeNotEmpty: 'Заголовок уведомления не должен быть пустым',
       pushTitle: 'Заголовок уведомления',
       pushBody: 'Текст уведомления',
+      pushLanguage: 'Язык уведомления',
+      pushPath: 'Страница',
     },
   },
 };

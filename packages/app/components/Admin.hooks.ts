@@ -6,6 +6,7 @@ import {
   PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH,
   PUSH_NOTIFICATION_DESCRIPTION_MIN_LENGTH,
   PUSH_NOTIFICATION_LANG_DEFAULT,
+  PUSH_NOTIFICATION_PATH_DEFAULT,
   TEXTAREA_ROWS_DEFAULT,
 } from '../utils/constants';
 import { log, shortenString } from '../utils/lib';
@@ -22,12 +23,14 @@ export const usePushNotifications = ({
   const [pushs, setPushs] = useState<PushNotification[]>([]);
   const [skip, setSkip] = useState(0);
   const [count, setCount] = useState(0);
+  const [restart, setRestart] = useState(false);
 
   /**
    * Get push notifications
    */
   useEffect(() => {
     (async () => {
+      log('info', 'Get push notifications', { restart });
       setLoad(true);
       const _pushs = await request.pushNotificationFindMany({
         skip: skip.toString(),
@@ -41,7 +44,7 @@ export const usePushNotifications = ({
       setPushs(_pushs.data);
       setCount(_pushs.count || 0);
     })();
-  }, [setLoad, skip]);
+  }, [setLoad, skip, restart]);
 
   const onClickPushPaginationWrapper = useCallback(
     (pageNum: number) => () => {
@@ -60,17 +63,24 @@ export const usePushNotifications = ({
     [skip]
   );
 
-  return { pushs, pages, page, onClickPushPaginationWrapper };
+  const pushRestart = useCallback(() => {
+    setSkip(0);
+    setRestart(!restart);
+  }, [setSkip, setRestart, restart]);
+
+  return { pushs, pages, page, onClickPushPaginationWrapper, pushRestart };
 };
 
 export const useCreatePushNotification = ({
   user,
   setLoad,
   locale,
+  pushRestart,
 }: {
   user: UserCleanResult | null;
   setLoad: React.Dispatch<React.SetStateAction<boolean>>;
   locale: Locale['app']['admin'];
+  pushRestart: () => void;
 }) => {
   const [pushDialog, setPushDialog] = useState<boolean>(false);
   const [pushSubject, setPushSubject] = useState<string>('');
@@ -78,7 +88,7 @@ export const useCreatePushNotification = ({
   const [pushTextError, setPushTextError] = useState<string>('');
   const [pushText, setPushText] = useState<string>('');
   const [pushTextRows, setPushTextRows] = useState<number>(TEXTAREA_ROWS_DEFAULT);
-  const [pushPath, setPushPath] = useState<string>('');
+  const [pushPath, setPushPath] = useState<string>(PUSH_NOTIFICATION_PATH_DEFAULT);
   const [pushLang, setPushLang] = useState<Lang>(PUSH_NOTIFICATION_LANG_DEFAULT);
 
   const changePushText = (e: React.FormEvent<HTMLTextAreaElement>) => {
@@ -142,6 +152,7 @@ export const useCreatePushNotification = ({
     }
     cleanFields();
     setPushDialog(false);
+    pushRestart();
   };
 
   const onClickCancelPush = () => {
@@ -160,7 +171,21 @@ export const useCreatePushNotification = ({
   };
 
   const onBlurPushSubject = () => {
-    //
+    // TODO
+  };
+
+  const onChangePushPath = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setPushPath(value);
+  };
+
+  const onChangePushLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setPushLang(value as Lang);
   };
 
   return {
@@ -178,5 +203,9 @@ export const useCreatePushNotification = ({
     pushText,
     pushTextRows,
     pushTextError,
+    onChangePushLang,
+    onChangePushPath,
+    pushLang,
+    pushPath,
   };
 };

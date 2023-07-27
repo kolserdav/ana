@@ -1,4 +1,3 @@
-import ctranslate2
 import argostranslate.package as package
 import argostranslate.translate
 from argostranslate.translate import Language, Package
@@ -7,9 +6,10 @@ from pathlib import Path
 import sentencepiece as sp
 import re
 from utils.constants import NUM_HYPOTHESES, logger, LEARN_LANG_DEFAULT, NATIVE_LANG_DEFAULT, CI
+from utils.lib import Lib
 
 
-class Translate:
+class Translate(Lib):
 
     sentence_sym_reg = r'[!.?]'
 
@@ -29,6 +29,7 @@ class Translate:
         self.installed_packages = package.get_installed_packages()
 
     def install_models(self):
+
         package.update_package_index()
         available_packages = package.get_available_packages()
 
@@ -63,14 +64,17 @@ class Translate:
 
     def translate(self, text: str, from_code: str, to_code: str):
         result = ''
+
         package_path = self.get_package_path(
             from_code=from_code, to_code=to_code)
+
         if package_path is None:
             en_translate = self.translate(
                 text=text, from_code=from_code, to_code='en')
             return self.translate(text=en_translate, from_code='en', to_code=to_code)
-        translator = ctranslate2.Translator(
-            f"{package_path}/model", device="cpu")
+
+        translator = self.get_translator(package_path=package_path)
+
         paragraphs = text.split(self.eol)
 
         for paragraph in paragraphs:

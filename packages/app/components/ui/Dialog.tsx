@@ -11,12 +11,14 @@ function Dialog({
   children,
   onClose,
   className,
+  withoutCloseAlways,
 }: {
   theme: Theme;
   open: boolean;
   children: React.ReactNode | React.ReactNode[];
   className?: string;
   onClose?: React.Dispatch<React.SetStateAction<boolean>>;
+  withoutCloseAlways?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,6 +36,9 @@ function Dialog({
     let cleanSubs = () => {
       /** */
     };
+    if (withoutCloseAlways) {
+      return cleanSubs;
+    }
     setTimeout(() => {
       if (onClose && open) {
         cleanSubs = storeClick.subscribe(() => {
@@ -51,7 +56,7 @@ function Dialog({
     return () => {
       cleanSubs();
     };
-  }, [onClose, open]);
+  }, [onClose, open, withoutCloseAlways]);
 
   return (
     <div className={clsx(s.wrapper, open ? s.open : '')}>
@@ -75,6 +80,7 @@ Dialog.displayName = 'Tooltip';
 Dialog.defaultProps = {
   onClose: undefined,
   className: undefined,
+  withoutCloseAlways: undefined,
 };
 
 export default Dialog;

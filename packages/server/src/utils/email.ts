@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 import { htmlToText } from 'html-to-text';
 import { SMTP_EMAIL, SMTP_HOST, SMTP_PASSWORD, SMTP_PORT } from './constants';
 import { EmailType, SendEmailParams } from '../types';
-import { LOCALE_DEFAULT } from '../types/interfaces';
+import { ANDROID_APP_NAME, LOCALE_DEFAULT } from '../types/interfaces';
 import { log } from './lib';
 
 function getTextOfEmail(html: string): string {
@@ -35,7 +35,7 @@ export async function sendEmail<T extends EmailType>(params: SendEmailParams<T>)
     host: SMTP_HOST,
     port: SMTP_PORT,
     secure: true,
-    from,
+    from: from || ANDROID_APP_NAME,
     auth: {
       user: SMTP_EMAIL,
       pass: SMTP_PASSWORD,
