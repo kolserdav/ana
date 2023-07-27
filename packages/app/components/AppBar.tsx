@@ -289,10 +289,13 @@ function AppBar({
                 </div>
               </Link>
             ) : (
-              <div className={clsx(s.menu__item, s.active, s.disabled)}>
-                <InformationIcon color={theme.text} withoutScale />
-                <div style={{ color: theme.text }}>{locale.about}</div>
-              </div>
+              user &&
+              user.role === 'admin' && (
+                <div className={clsx(s.menu__item, s.active, s.disabled)}>
+                  <AdminIcon color={theme.text} withoutScale />
+                  <div style={{ color: theme.text }}>{locale.adminArea}</div>
+                </div>
+              )
             )}
             {!checkRouterPath(router.asPath, [Pages.about]) ? (
               <Link withoutHover fullWidth theme={theme} href={Pages.about}>
