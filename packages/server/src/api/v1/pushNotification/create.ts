@@ -39,7 +39,7 @@ const pushNotificationCreate: RequestHandler<
 
   reply.type(APPLICATION_JSON).code(201);
 
-  return { status: 'info', message: locale.tagSaved, data: notification.data };
+  return { status: 'info', message: locale.pushNotificationSaved, data: notification.data };
 };
 
 export default pushNotificationCreate;

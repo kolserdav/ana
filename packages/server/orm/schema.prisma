@@ -75,13 +75,14 @@ model User {
 }
 
 model PushNotification {
-  id                   Int                    @id @default(autoincrement())
+  id                   String                 @id @default(uuid())
   // Deps packages/app/utils/constants.ts PUSH_NOTIFICATION_TITLE_MAX_LENGTH
   title                String                 @db.VarChar(48)
   // Deps packages/app/utils/constants.ts PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH
   description          String                 @db.VarChar(255)
   path                 String
   lang                 Lang
+  priority             Int                    @default(autoincrement())
   updated              DateTime               @default(now())
   created              DateTime               @default(now())
   PushNotificationUser PushNotificationUser[]
@@ -90,7 +91,7 @@ model PushNotification {
 model PushNotificationUser {
   id                 Int              @id @default(autoincrement())
   userId             String
-  pushNotificationId Int
+  pushNotificationId String
   User               User             @relation(fields: [userId], references: [id])
   PushNotification   PushNotification @relation(fields: [pushNotificationId], references: [id])
   created            DateTime         @default(now())

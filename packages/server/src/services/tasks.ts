@@ -160,6 +160,9 @@ class Tasks {
           include: {
             PushNotificationUser: true,
           },
+          orderBy: {
+            priority: 'asc',
+          },
         });
 
         // Geting the rarest message
