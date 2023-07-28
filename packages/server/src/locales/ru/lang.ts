@@ -37,6 +37,7 @@ const lang: Locale = {
     },
     translateServiceNotWorking: 'Извините, сервис перевода временно недоступен',
     supportSuccess: 'Заявка отправлена в теническую поддержку',
+    pushNotificationSaved: 'Уведомление сохранено',
   },
   app: {
     login: {

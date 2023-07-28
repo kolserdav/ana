@@ -37,6 +37,7 @@ const lang: Locale = {
     },
     translateServiceNotWorking: 'Sorry, the translation service is temporarily unavailable',
     supportSuccess: 'The ticket has been sent to technical support',
+    pushNotificationSaved: 'Push notification saved',
   },
   app: {
     login: {

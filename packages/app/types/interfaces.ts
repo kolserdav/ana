@@ -431,6 +431,7 @@ export interface Locale {
     };
     translateServiceNotWorking: string;
     supportSuccess: string;
+    pushNotificationSaved: string;
   };
   app: {
     login: {
