@@ -29,7 +29,7 @@ const pushNotificationFindMany: RequestHandler<
     skip,
     take,
     orderBy: {
-      updated: 'desc',
+      priority: 'asc',
     },
   });
   if (notifications.status === 'error') {

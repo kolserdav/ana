@@ -109,6 +109,8 @@ export const TAKE_PHRASES_DEFAULT = 20;
 export const LEARN_LANG_DEFAULT = 'en';
 // deps packages/translate2/utils/constants.py NATIVE_LANG_DEFAULT
 export const NATIVE_LANG_DEFAULT = 'ru';
+// deps android/app/src/main/AndroidManifest.xml android:scheme
+export const ANDROID_APP_SCHEME = 'com.kolserdav.ana';
 export const LICENSE = {
   title: 'AGPL-3.0 license ',
   link: 'https://www.gnu.org/licenses/agpl-3.0.html',

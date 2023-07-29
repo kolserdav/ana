@@ -40,6 +40,7 @@ export default function AdminPage({
           title={page.title}
           theme={theme}
           locale={localeAdmin}
+          openTools={localeCommon.openTools}
         />
       </main>
     </>

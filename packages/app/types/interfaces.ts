@@ -52,6 +52,8 @@ export enum Api {
   localPostSelector = '/local/create-selector',
   pushNotificationFindMany = '/v1/push-notification-find-many',
   pushNotificationCreate = '/v1/push-notification-create',
+  pushNotificationUpdate = '/v1/push-notification-update',
+  pushNotificationDelete = '/v1/push-notification-delete',
 }
 
 // eslint-disable-next-line no-shadow
@@ -67,9 +69,6 @@ export enum LocaleVars {
   all = '%all',
   count = '%count',
 }
-
-// deps android/app/src/main/AndroidManifest.xml android:scheme
-export const ANDROID_APP_NAME = 'com.kolserdav.ana';
 
 export const APP_WS_PROTOCOL = 'app_ws';
 // Deps android/app/src/main/java/com/kolserdav/ana/Config.java
@@ -316,6 +315,17 @@ export interface PushNotificationCreateBody {
 }
 export type PushNotificationCreateResult = PushNotification | null;
 
+export type PushNotificationUpdateBody = Partial<PushNotificationCreateBody> & {
+  id: string;
+  priority?: number;
+};
+export type PushNotificationUpdateResult = PushNotification | null;
+
+export type PushNotificationDeleteBody = {
+  id: string;
+};
+export type PushNotificationDeleteResult = PushNotification | null;
+
 export interface TagDeleteBody {
   tagId: string;
 }
@@ -432,6 +442,7 @@ export interface Locale {
     translateServiceNotWorking: string;
     supportSuccess: string;
     pushNotificationSaved: string;
+    pushNotificationDeleted: string;
   };
   app: {
     login: {
@@ -602,7 +613,6 @@ export interface Locale {
       willDelete: string;
       resetAllFilters: string;
       playAll: string;
-      openTools: string;
       selectPhrase: string;
       translation: string;
       reTranslation: string;
@@ -678,7 +688,10 @@ export interface Locale {
     admin: {
       pushNotifications: string;
       createPushNotification: string;
+      editPushNotification: string;
+      deletePushNotification: string;
       titleMustBeNotEmpty: string;
+      pushPriority: string;
       pushTitle: string;
       pushBody: string;
       pushLanguage: string;

@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
 import { htmlToText } from 'html-to-text';
-import { SMTP_EMAIL, SMTP_HOST, SMTP_PASSWORD, SMTP_PORT } from './constants';
+import { ANDROID_APP_NAME, SMTP_EMAIL, SMTP_HOST, SMTP_PASSWORD, SMTP_PORT } from './constants';
 import { EmailType, SendEmailParams } from '../types';
-import { ANDROID_APP_NAME, LOCALE_DEFAULT } from '../types/interfaces';
+import { LOCALE_DEFAULT } from '../types/interfaces';
 import { log } from './lib';
 
 function getTextOfEmail(html: string): string {

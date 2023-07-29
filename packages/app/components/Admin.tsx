@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import { Theme } from '../Theme';
 import useLoad from '../hooks/useLoad';
 import { Locale, UserCleanResult } from '../types/interfaces';
@@ -19,6 +20,11 @@ import {
 import IconButton from './ui/IconButton';
 import AddIcon from './icons/Add';
 import Select from './ui/Select';
+import DotsHorisontalIcon from './icons/DotsHorisontal';
+import EditIcon from './icons/Edit';
+import Tooltip from './ui/Tooltip';
+import DeleteIcon from './icons/Delete';
+import Link from './ui/Link';
 
 function Admin({
   theme,
@@ -29,6 +35,7 @@ function Admin({
   edit,
   _delete,
   cancel,
+  openTools,
 }: {
   locale: Locale['app']['admin'];
   theme: Theme;
@@ -38,6 +45,7 @@ function Admin({
   edit: string;
   _delete: string;
   cancel: string;
+  openTools: string;
 }) {
   const { setLoad, load } = useLoad();
 
@@ -63,6 +71,17 @@ function Admin({
     onChangePushPath,
     pushLang,
     pushPath,
+    pagePaths,
+    onClickPushNotificationUpdateWraper,
+    onClickPushNotificationDeleteWraper,
+    deletePushNotificationDialog,
+    deletePushNotification,
+    setDeletePushNotificationDialog,
+    onClickCloseDeletePushNotification,
+    pushPriority,
+    onChangePushPriority,
+    pushNotificationToDelete,
+    onClickChangePush,
   } = useCreatePushNotification({ user, setLoad, locale, pushRestart });
 
   return (
@@ -84,24 +103,68 @@ function Admin({
           <AddIcon color={theme.green} />
         </IconButton>
         <div className={s.pushs}>
-          {pushs.map((item) => (
-            <div key={item.id} className={s.pushs__item} style={{ borderColor: theme.active }}>
-              <div className={s.data}>
-                <div className={s.cell}>
-                  <b>{item.title}</b>
+          {pushs.map((item) => {
+            const ref = createRef<HTMLButtonElement>();
+            return (
+              <div key={item.id} className={s.pushs__item} style={{ borderColor: theme.active }}>
+                <div className={s.actions}>
+                  <IconButton titleHide title={openTools} theme={theme} ref={ref}>
+                    <DotsHorisontalIcon color={theme.text} />
+                  </IconButton>
+
+                  <Tooltip withoutClose closeOnClick theme={theme} parentRef={ref} length={50}>
+                    <div className={p.menu_tooltip}>
+                      <IconButton
+                        titleHide
+                        theme={theme}
+                        title={edit}
+                        onClick={onClickPushNotificationUpdateWraper(item)}
+                      >
+                        <EditIcon color={theme.blue} />
+                      </IconButton>
+                      <IconButton
+                        titleHide
+                        theme={theme}
+                        title={_delete}
+                        onClick={onClickPushNotificationDeleteWraper(item)}
+                      >
+                        <DeleteIcon color={theme.red} />
+                      </IconButton>
+                    </div>
+                  </Tooltip>
                 </div>
-                <div className={s.cell}>{item.description}</div>
+                <div className={s.data}>
+                  <div className={s.cell}>
+                    <b>{item.title}</b>
+                  </div>
+                  <div className={s.cell}>{item.description}</div>
+                </div>
+                <div className={s.meta}>
+                  <div className={s.cell} style={{ fontSize: 'small' }}>
+                    {item.priority}
+                  </div>
+                  <div className={s.cell} style={{ color: theme.cyan }}>
+                    {item.lang}
+                  </div>
+                  <div className={s.cell} style={{ color: theme.blue }}>
+                    <Link theme={theme} href={item.path}>
+                      {item.path}
+                    </Link>
+                  </div>
+                </div>
+                <div className={s.date}>
+                  <Typography
+                    variant="span"
+                    theme={theme}
+                    small
+                    styleName={item.updated === item.created ? 'info' : 'warn'}
+                  >
+                    {item.updated.toString()}
+                  </Typography>
+                </div>
               </div>
-              <div className={s.meta}>
-                <div className={s.cell} style={{ color: theme.green }}>
-                  {item.lang}
-                </div>
-                <div className={s.cell} style={{ color: theme.blue }}>
-                  {item.path}
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           <div className={s.pagination}>
             {pages.map((item, index, array) => (
               <div
@@ -134,7 +197,7 @@ function Admin({
       >
         <div className={p.dialog__content}>
           <Typography variant="h3" theme={theme} align="center">
-            {locale.createPushNotification}
+            {pushPriority === null ? locale.createPushNotification : locale.editPushNotification}
           </Typography>
           <Input
             theme={theme}
@@ -183,13 +246,27 @@ function Admin({
               aria-label={locale.pushPath}
               theme={theme}
             >
-              {Object.keys(Pages).map((item) => (
-                <option key={item} value={item}>
-                  {Pages[item as keyof typeof Pages]}
+              {pagePaths.map((item) => (
+                <option key={item} value={Pages[item as keyof typeof Pages]}>
+                  {item}
                 </option>
               ))}
             </Select>
           </div>
+          {pushPriority !== null && (
+            <Input
+              theme={theme}
+              onChange={onChangePushPriority}
+              value={pushPriority}
+              id="push-notification-priority"
+              type="number"
+              required
+              error={pushSubjectError}
+              disabled={load || !user?.confirm}
+              name={locale.pushPriority}
+              fullWidth
+            />
+          )}
         </div>
         <div className={p.dialog__actions}>
           <Button className={s.button} onClick={onClickCancelPush} theme={theme}>
@@ -199,10 +276,37 @@ function Admin({
           <Button
             disabled={load || !user?.confirm || pushText.length === 0 || pushSubjectError !== ''}
             className={s.button}
-            onClick={onClickPush}
+            onClick={pushPriority === null ? onClickPush : onClickChangePush}
             theme={theme}
           >
             {save}
+          </Button>
+        </div>
+      </Dialog>
+      <Dialog
+        className={p.dialog}
+        theme={theme}
+        onClose={setDeletePushNotificationDialog}
+        open={deletePushNotificationDialog}
+      >
+        <div className={p.dialog__content}>
+          <Typography variant="h3" theme={theme} align="center">
+            {`${locale.deletePushNotification}?`}
+          </Typography>
+          <Typography variant="h5" theme={theme}>
+            {pushNotificationToDelete?.title}
+          </Typography>
+          <Typography variant="p" theme={theme}>
+            {pushNotificationToDelete?.description}
+          </Typography>
+        </div>
+        <div className={p.dialog__actions}>
+          <Button className={s.button} onClick={onClickCloseDeletePushNotification} theme={theme}>
+            {cancel}
+          </Button>
+          <div className={s.button_margin} />
+          <Button className={s.button} onClick={deletePushNotification} theme={theme}>
+            {_delete}
           </Button>
         </div>
       </Dialog>

@@ -51,6 +51,8 @@ import phraseUpdateMany from './api/v1/phrase/updateMany';
 import checkRoleMiddlewareWrapper from './api/middlewares/checkRole';
 import pushNotificationFindMany from './api/v1/pushNotification/findMany';
 import pushNotificationCreate from './api/v1/pushNotification/create';
+import pushNotificationUpdate from './api/v1/pushNotification/update';
+import pushNotificationDelete from './api/v1/pushNotification/delete';
 
 const prisma = new PrismaClient();
 
@@ -101,12 +103,19 @@ process.on('unhandledRejection', (err: Error) => {
       Api.getStatistics,
       Api.pushNotificationFindMany,
       Api.pushNotificationCreate,
+      Api.pushNotificationDelete,
+      Api.pushNotificationUpdate,
     ],
     checkTokenMiddleware
   );
 
   await fastify.use(
-    [Api.pushNotificationFindMany, Api.pushNotificationCreate],
+    [
+      Api.pushNotificationFindMany,
+      Api.pushNotificationCreate,
+      Api.pushNotificationDelete,
+      Api.pushNotificationUpdate,
+    ],
     checkRoleMiddlewareWrapper(['admin'])
   );
 
@@ -200,6 +209,8 @@ process.on('unhandledRejection', (err: Error) => {
   // Admin routes
   fastify.get(Api.pushNotificationFindMany, pushNotificationFindMany);
   fastify.post(Api.pushNotificationCreate, pushNotificationCreate);
+  fastify.put(Api.pushNotificationUpdate, pushNotificationUpdate);
+  fastify.delete(Api.pushNotificationDelete, pushNotificationDelete);
 
   fastify.listen({ port: PORT, host: HOST }, (err, address) => {
     if (err) throw err;
