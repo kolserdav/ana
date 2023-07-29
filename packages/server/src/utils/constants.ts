@@ -105,3 +105,5 @@ export const WS_MESSAGE_NOTIFICATION_USER_ID = 'notification_user_id';
 export const CHECK_PUSH_NOTIFICATION_INTERVAL = 3000;
 export const PUSH_NOTIFICATION_MIN_TIME = 12;
 export const PUSH_NOTIFICATION_MAX_TIME = 20;
+// deps android/app/src/main/res/values/strings.xml app_name
+export const ANDROID_APP_NAME = 'Ana';

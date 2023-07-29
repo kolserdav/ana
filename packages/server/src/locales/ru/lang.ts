@@ -38,6 +38,7 @@ const lang: Locale = {
     translateServiceNotWorking: 'Извините, сервис перевода временно недоступен',
     supportSuccess: 'Заявка отправлена в теническую поддержку',
     pushNotificationSaved: 'Уведомление сохранено',
+    pushNotificationDeleted: 'Уведомление удалено',
   },
   app: {
     login: {
@@ -204,7 +205,6 @@ const lang: Locale = {
       willDelete: `Будет удалено ${LocaleVars.count} текстов(а)`,
       resetAllFilters: 'Сбросить фильтры',
       playAll: 'Воспроизвести все',
-      openTools: 'Открыть инструменты',
       selectPhrase: 'Выбрать текст',
       translation: 'Перевод',
       reTranslation: 'Обратный перевод',
@@ -284,11 +284,14 @@ const lang: Locale = {
     admin: {
       pushNotifications: 'Кликабельные уведомления',
       createPushNotification: 'Создать кликабельное уведомление',
+      editPushNotification: 'Изменить уведомление',
+      deletePushNotification: 'Удалить уведомление',
       titleMustBeNotEmpty: 'Заголовок уведомления не должен быть пустым',
       pushTitle: 'Заголовок уведомления',
       pushBody: 'Текст уведомления',
       pushLanguage: 'Язык уведомления',
       pushPath: 'Страница',
+      pushPriority: 'Приоритет уведомления',
     },
   },
 };

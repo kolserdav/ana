@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { DEEP_LINK_HOST } from '../../utils/constants';
+import { ANDROID_APP_SCHEME, DEEP_LINK_HOST } from '../../utils/constants';
 import s from './DeepLink.module.scss';
 import { isAndroid } from '../../utils/lib';
 import { Theme } from '../../Theme';
-import { ANDROID_APP_NAME } from '../../types/interfaces';
 
 function DeepLink({ children, theme }: { children: string; theme: Theme }) {
   const { pathname } = useRouter();
@@ -15,7 +14,7 @@ function DeepLink({ children, theme }: { children: string; theme: Theme }) {
     return null;
   }, []);
 
-  const link = `${ANDROID_APP_NAME}://${DEEP_LINK_HOST}${pathname}${search}`;
+  const link = `${ANDROID_APP_SCHEME}://${DEEP_LINK_HOST}${pathname}${search}`;
 
   return (
     <div className={s.wrapper} style={{ color: theme.blue }}>

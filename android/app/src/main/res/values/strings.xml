@@ -1,4 +1,5 @@
 <resources>
+    <!-- Dependency packages/server/src/utils/constants.ts ANDROID_APP_NAME -->
     <string name="app_name">Ana</string>
     <string name="channel_name">notifications</string>
     <string name="channel_description">All notifications</string>

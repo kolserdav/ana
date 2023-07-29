@@ -44,6 +44,7 @@ export default function MyTextsPage({
           dateFilter={localeCommon.dateFilter}
           sort={localeCommon.sort}
           needUpdateApp={localeCommon.needUpdateApp}
+          openTools={localeCommon.openTools}
         />
       </main>
     </>

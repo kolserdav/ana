@@ -8,6 +8,13 @@
   align-items: center;
   justify-content: center;
 
+  .actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+  }
+
 
   .dialog__select {
     position: relative;
@@ -22,11 +29,15 @@
     width: 100%;
     max-width: $translate-container-max;
     margin-bottom: 2rem;
+    padding: 0 $container-padding;
+    margin-top: 2rem;
+    padding-bottom: $app-bar-height;
 
     .pushs {
       position: relative;
       display: flex;
       flex-direction: column;
+      margin-top: 1rem;
 
       .pushs__item {
         position: relative;
@@ -38,6 +49,12 @@
         border-radius: $input-border-radius;
         padding: 0.4rem;
         margin: 0.6rem 0;
+
+        .date {
+          position: relative;
+          width: 100%;
+          text-align: right;
+        }
 
         .data {
           display: flex;

@@ -66,6 +66,7 @@ function My({
   dateFilter,
   sort,
   needUpdateApp,
+  openTools,
 }: {
   locale: Locale['app']['my'];
   dateFilter: Locale['app']['common']['dateFilter'];
@@ -78,6 +79,7 @@ function My({
   voiceNotFound: string;
   playSound: string;
   needUpdateApp: string;
+  openTools: string;
 }) {
   const phrasesRef = useRef<HTMLDivElement>(null);
   const { load, setLoad } = useLoad();
@@ -469,12 +471,12 @@ function My({
                   className={s.item_container}
                 >
                   <div className={s.actions}>
-                    <IconButton titleHide title={locale.openTools} theme={theme} ref={ref}>
+                    <IconButton titleHide title={openTools} theme={theme} ref={ref}>
                       <DotsHorisontalIcon color={theme.text} />
                     </IconButton>
 
                     <Tooltip withoutClose closeOnClick theme={theme} parentRef={ref} length={100}>
-                      <div className={s.menu_tooltip}>
+                      <div className={p.menu_tooltip}>
                         <IconButton
                           titleHide
                           theme={theme}

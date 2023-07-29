@@ -68,6 +68,10 @@ import {
   PushNotificationFindManyResult,
   PushNotificationCreateBody,
   PushNotificationCreateResult,
+  PushNotificationUpdateBody,
+  PushNotificationUpdateResult,
+  PushNotificationDeleteBody,
+  PushNotificationDeleteResult,
 } from '../types/interfaces';
 import { SERVER, SERVER_LOCAL_ADDRESS } from './constants';
 import { CookieName, getCookie } from './cookies';
@@ -476,6 +480,26 @@ class Request {
     return this.send({
       url: Api.pushNotificationCreate,
       method: 'POST',
+      body,
+    });
+  }
+
+  public async pushNotificationUpdate(
+    body: PushNotificationUpdateBody
+  ): Promise<Result<PushNotificationUpdateResult>> {
+    return this.send({
+      url: Api.pushNotificationUpdate,
+      method: 'PUT',
+      body,
+    });
+  }
+
+  public async pushNotificationDelete(
+    body: PushNotificationDeleteBody
+  ): Promise<Result<PushNotificationDeleteResult>> {
+    return this.send({
+      url: Api.pushNotificationDelete,
+      method: 'DELETE',
       body,
     });
   }

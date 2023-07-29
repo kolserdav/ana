@@ -38,6 +38,7 @@ const lang: Locale = {
     translateServiceNotWorking: 'Sorry, the translation service is temporarily unavailable',
     supportSuccess: 'The ticket has been sent to technical support',
     pushNotificationSaved: 'Push notification saved',
+    pushNotificationDeleted: 'Push notification deleted',
   },
   app: {
     login: {
@@ -203,7 +204,6 @@ const lang: Locale = {
       willDelete: `${LocaleVars.count} text(s) will be deleted`,
       resetAllFilters: 'Reset filters',
       playAll: 'Play All',
-      openTools: 'Open Tools',
       selectPhrase: 'Select Text',
       translation: 'Translation',
       reTranslation: 'Reverse translation',
@@ -283,11 +283,14 @@ const lang: Locale = {
     admin: {
       pushNotifications: 'Push notifications',
       createPushNotification: 'Create a push notification',
+      editPushNotification: 'Edit the push notification',
+      deletePushNotification: 'Delete the push notification',
       titleMustBeNotEmpty: 'Notification title must not be empty',
       pushTitle: 'Title of the notification',
       pushBody: 'Notification text',
       pushLanguage: 'Language of notification',
       pushPath: 'Page',
+      pushPriority: "Notification's priority",
     },
   },
 };
