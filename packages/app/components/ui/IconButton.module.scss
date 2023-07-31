@@ -5,12 +5,8 @@ $disabled-opacity: 0.3;
 
 .wrapper {
   position: relative;
+  display:contents;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  font-size: small;
-  align-items: center;
-  justify-content: center;
   border-radius: 50%;
   border: none;
   background-color: transparent;
@@ -18,6 +14,7 @@ $disabled-opacity: 0.3;
   .icon__text {
     position: relative;
     max-width: $icon-button-width; 
+    cursor: default;
   }
 
   &:disabled {
@@ -39,6 +36,7 @@ $disabled-opacity: 0.3;
   font-size: smaller;
   width: $icon-button-width;
   height: $icon-button-width;
+  
  
   .text {
     overflow: hidden;

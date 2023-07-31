@@ -478,7 +478,7 @@ function My({
                     <Tooltip withoutClose closeOnClick theme={theme} parentRef={ref} length={100}>
                       <div className={p.menu_tooltip}>
                         <IconButton
-                          titleHide
+                          viceVersa
                           theme={theme}
                           title={edit}
                           onClick={onClickPhraseUpdateWraper(item)}
@@ -486,7 +486,7 @@ function My({
                           <EditIcon color={theme.blue} />
                         </IconButton>
                         <IconButton
-                          titleHide
+                          viceVersa
                           theme={theme}
                           onClick={onClickDeletePhraseWrapper(item)}
                           title={_delete}
@@ -495,6 +495,7 @@ function My({
                         </IconButton>
                         <IconCheckbox
                           titleHide
+                          viceVersa
                           checked={selected.indexOf(item.id) !== -1}
                           onClick={onChangeSelectedWrapper(item.id)}
                           theme={theme}
