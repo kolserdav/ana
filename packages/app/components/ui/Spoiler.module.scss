@@ -9,10 +9,12 @@
     border-style: groove;
     display: flex;
     flex-direction: row;
+   
 
     &.summary__open {
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
+      border-bottom: none;
     }
 
     .summary__icon {

@@ -97,7 +97,6 @@ function Admin({
         <IconButton
           theme={theme}
           title={locale.createPushNotification}
-          titleHide
           onClick={onClickOpenPushDialog}
         >
           <AddIcon color={theme.green} />
@@ -115,7 +114,7 @@ function Admin({
                   <Tooltip withoutClose closeOnClick theme={theme} parentRef={ref} length={50}>
                     <div className={p.menu_tooltip}>
                       <IconButton
-                        titleHide
+                        viceVersa
                         theme={theme}
                         title={edit}
                         onClick={onClickPushNotificationUpdateWraper(item)}
@@ -123,7 +122,7 @@ function Admin({
                         <EditIcon color={theme.blue} />
                       </IconButton>
                       <IconButton
-                        titleHide
+                        viceVersa
                         theme={theme}
                         title={_delete}
                         onClick={onClickPushNotificationDeleteWraper(item)}
