@@ -260,8 +260,14 @@ const lang: Locale = {
       successCheckNode:
         'The next time you run the application, it will be started from the specified server',
       notifications: {
-        title: 'Receive Notifications',
+        title: 'Notification settings',
+        label: 'Receive Notifications',
         description: "Motivating Reminders. We'll try not to be too intrusive.",
+      },
+      powerSettings: {
+        title: 'Performance settings',
+        label: "Don't close connection when application is closed",
+        description: 'Quick start or save',
       },
     },
     statistics: {

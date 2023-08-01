@@ -410,6 +410,12 @@ export interface Tab {
   content: string;
 }
 
+interface SwitchBlock {
+  title: string;
+  label: string;
+  description: string;
+}
+
 export interface Locale {
   server: {
     error: string;
@@ -664,10 +670,8 @@ export interface Locale {
       saveVoiceTestText: string;
       saveAllTestText: string;
       successCheckNode: string;
-      notifications: {
-        title: string;
-        description: string;
-      };
+      notifications: SwitchBlock;
+      powerSettings: SwitchBlock;
     };
     statistics: {
       title: string;

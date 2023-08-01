@@ -12,6 +12,7 @@ import {
   useDeleteAccount,
   useLanguage,
   useListenFocus,
+  useNotStopWeb,
   usePersonalData,
   useTestSpeech,
 } from './Settings.hooks';
@@ -246,6 +247,8 @@ function Settings({
     node,
     nodeError,
     nodeSuccess,
+    oldSuccessCustomNode,
+    onClickOldSuccessCustomNode,
   } = useChangeNode({
     url,
     urlDefault,
@@ -254,6 +257,8 @@ function Settings({
     successCheckNode: locale.successCheckNode,
     needUpdateApp,
   });
+
+  const { setNotStopWeb, notStopWeb } = useNotStopWeb({ needUpdateApp });
 
   return (
     <div className={s.wrapper}>
@@ -294,6 +299,11 @@ function Settings({
                     name={URL_PLACEHOLDER}
                     onChange={onChangeNewNode}
                     disabled={!isNode}
+                    dropdown={
+                      oldSuccessCustomNode
+                        ? [{ text: oldSuccessCustomNode, onClick: onClickOldSuccessCustomNode }]
+                        : undefined
+                    }
                   />
                 </div>
                 <Radio checked={isNode} onChange={onChangeRadioWrapper('url')} />
@@ -301,20 +311,43 @@ function Settings({
             </div>
           </>
         )}
+
         {((isAndroid && user) || user?.role === 'admin') && (
           <>
             <Hr theme={theme} />
             <Typography variant="h4" theme={theme}>
               {locale.notifications.title}
             </Typography>
-            <div className={s.select_node__item}>
-              <Typography variant="p" theme={theme}>
+            <div className={s.switch__item}>
+              <Typography variant="label" small theme={theme}>
+                {locale.notifications.label}
+              </Typography>
+              <Typography variant="span" small blur theme={theme}>
                 {locale.notifications.description}
               </Typography>
-              <Switch onClick={setNotificationEnabled} theme={theme} on={notificationEnabled} />
+              <div className={s.switch__item__button}>
+                <Switch onClick={setNotificationEnabled} theme={theme} on={notificationEnabled} />
+              </div>
             </div>
           </>
         )}
+
+        <Hr theme={theme} />
+        <Typography variant="h4" theme={theme}>
+          {locale.powerSettings.title}
+        </Typography>
+        <div className={s.switch__item}>
+          <Typography variant="label" small theme={theme}>
+            {locale.powerSettings.label}
+          </Typography>
+          <Typography variant="span" small blur theme={theme}>
+            {locale.powerSettings.description}
+          </Typography>
+          <div className={s.switch__item__button}>
+            <Switch onClick={setNotStopWeb} theme={theme} on={notStopWeb || false} />
+          </div>
+        </div>
+
         <Hr theme={theme} />
         <Typography variant="h4" theme={theme}>
           {locale.speechSettings}

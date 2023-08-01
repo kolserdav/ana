@@ -172,3 +172,6 @@ export const PUSH_NOTIFICATION_DESCRIPTION_MAX_LENGTH = 255;
 export const PUSH_NOTIFICATION_DESCRIPTION_MIN_LENGTH = 50;
 export const PUSH_NOTIFICATION_LANG_DEFAULT: keyof typeof LOCALE_NAMES = 'en';
 export const PUSH_NOTIFICATION_PATH_DEFAULT = Pages.translate;
+
+// Dependency
+export const ANDROID_NOT_STOP_WEB_DEFAULT = true;

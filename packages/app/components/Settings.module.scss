@@ -26,11 +26,25 @@ $settings-margin-left: 1rem;
       border-radius: $input-border-radius;
       border-width: 1px;
       border-style: solid;
-      padding: 1rem;
+      padding: $settings-margin-left;
 
       .select_node__item {
         display: flex;
         flex-direction: column;
+      }
+    }
+
+    .switch__item {
+      display: flex;
+      width: 100%;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      padding: $settings-margin-left;
+      align-items: center;
+
+      .switch__item__button {
+        display: flex;
+        align-items: center;
       }
     }
     

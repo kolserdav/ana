@@ -517,6 +517,22 @@ export const useChangeNode = ({
   const [node, setNode] = useState(url || '');
   const [nodeError, setNodeError] = useState('');
   const [nodeSuccess, setNodeSuccess] = useState(false);
+  const [oldSuccessCustomNode, setOldSuccessCustomNode] = useState<string | null>(null);
+
+  /**
+   * Set old success custom node
+   */
+  useEffect(() => {
+    const _oldSuccessCustomNode = getLocalStorage(LocalStorageName.LAST_SUCCESS_CUSTOM_NODE);
+    setOldSuccessCustomNode(_oldSuccessCustomNode);
+  }, []);
+
+  const onClickOldSuccessCustomNode = () => {
+    if (!oldSuccessCustomNode) {
+      return;
+    }
+    setNode(oldSuccessCustomNode);
+  };
 
   const onChangeRadioWrapper = useCallback(
     (name: 'url' | 'urlDefault') => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -589,6 +605,8 @@ export const useChangeNode = ({
         }
         androidCommon.setUrl(value);
       }
+      setLocalStorage(LocalStorageName.LAST_SUCCESS_CUSTOM_NODE, value);
+      setOldSuccessCustomNode(value);
       setNodeSuccess(true);
     } else {
       log('error', serverIsNotRespond, { result });
@@ -624,6 +642,8 @@ export const useChangeNode = ({
     isNode,
     nodeError,
     nodeSuccess,
+    oldSuccessCustomNode,
+    onClickOldSuccessCustomNode,
   };
 };
 
@@ -646,4 +666,42 @@ export const useListenFocus = () => {
       window.addEventListener('focus', listenHandler);
     };
   }, []);
+};
+
+export const useNotStopWeb = ({ needUpdateApp }: { needUpdateApp: string }) => {
+  const [notStopWeb, setNotStopWeb] = useState<boolean>();
+
+  const changeNotStopWeb = () => {
+    if (notStopWeb === undefined) {
+      return;
+    }
+    const _notStopWeb = !notStopWeb;
+    setNotStopWeb(_notStopWeb);
+
+    if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    if (!androidCommon.setNotStopWeb) {
+      log('warn', needUpdateApp, {}, true);
+      return;
+    }
+    androidCommon.setNotStopWeb(_notStopWeb ? 'true' : 'false');
+  };
+
+  /**
+   * Set not stop web
+   */
+  useEffect(() => {
+    if (typeof androidCommon === 'undefined') {
+      return;
+    }
+    if (!androidCommon.getNotStopWeb) {
+      log('warn', needUpdateApp, {}, true);
+      return;
+    }
+
+    setNotStopWeb(androidCommon.getNotStopWeb() === 'true');
+  }, [needUpdateApp, notStopWeb]);
+
+  return { setNotStopWeb: changeNotStopWeb, notStopWeb };
 };

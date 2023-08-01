@@ -42,6 +42,8 @@ export enum LocalStorageName {
   SAVE_ALL_TEXT_TEST = 'SAVE_ALL_TEXT_TEST',
   // eslint-disable-next-line no-unused-vars
   LANG_VOICES = 'LANG_VOICES',
+  // eslint-disable-next-line no-unused-vars
+  LAST_SUCCESS_CUSTOM_NODE = 'LAST_SUCCESS_CUSTOM_NODE',
 }
 
 type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends LocalStorageName.THEME
@@ -82,6 +84,8 @@ type LocalStorageValue<T extends keyof typeof LocalStorageName> = T extends Loca
   ? boolean
   : T extends LocalStorageName.SAVE_VOICE_TEXT_TEST
   ? boolean
+  : T extends LocalStorageName.LAST_SUCCESS_CUSTOM_NODE
+  ? string
   : never;
 
 export function getLocalStorage<T extends keyof typeof LocalStorageName>(

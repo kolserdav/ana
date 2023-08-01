@@ -37,6 +37,8 @@ class App extends Table {
 
     public static final String APP_COLUMN_WS_ADDRESS = "wsAddress";
 
+    public static final String APP_COLUMN_NOT_STOP_WEB = "notStopWeb";
+
     private static final String TAG = "App";
 
     public App(SQLiteDatabase db) {
@@ -45,7 +47,8 @@ class App extends Table {
                 APP_COLUMN_URL,
                 APP_COLUMN_URL_DEFAULT,
                 APP_COLUMN_PATH,
-                APP_COLUMN_WS_ADDRESS
+                APP_COLUMN_WS_ADDRESS,
+                APP_COLUMN_NOT_STOP_WEB
         });
     }
 
@@ -53,7 +56,8 @@ class App extends Table {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 APP_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 APP_COLUMN_URL + " TEXT, " + APP_COLUMN_URL_DEFAULT + " TEXT, " +
-                APP_COLUMN_PATH + " TEXT, " + APP_COLUMN_WS_ADDRESS + " TEXT" + ")");
+                APP_COLUMN_PATH + " TEXT, " + APP_COLUMN_WS_ADDRESS + " TEXT, " +
+                APP_COLUMN_NOT_STOP_WEB + " BOOL" + ")");
     }
 
     public void setUrl(AppInterface options) {
@@ -75,49 +79,61 @@ class App extends Table {
     }
 
     public void setPath(AppInterface options) {
-        Log.d("INFO", "Update path " + options.path + " with id " + options.id);
+        Log.d(TAG, "Update path " + options.path + " with id " + options.id);
         db.execSQL("UPDATE " + TABLE_NAME +
                 " SET " + APP_COLUMN_PATH + "='" + options.path + "'" +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
     }
 
+    public void setNotStopWeb(AppInterface options) {
+        Log.d(TAG, "Update not stop web " + options.notStopWeb + " with id " + options.id);
+        db.execSQL("UPDATE " + TABLE_NAME +
+                " SET " + APP_COLUMN_NOT_STOP_WEB + "='" + options.notStopWeb + "'" +
+                " WHERE " + APP_COLUMN_ID + "=" + options.id);
+    }
+
     public void setWSAddress(AppInterface options) {
-        Log.d("INFO", "Update WS address " + options.wsAddress + " with id " + options.id);
+        Log.d(TAG, "Update WS address " + options.wsAddress + " with id " + options.id);
         db.execSQL("UPDATE " + TABLE_NAME +
                 " SET " + APP_COLUMN_WS_ADDRESS + "='" + options.wsAddress + "'" +
                 " WHERE " + APP_COLUMN_ID + "=" + options.id);
     }
 
     public AppInterface init() {
-        // String selection = APP_COLUMN_ID + "=?";
-        // String[] selectionArgs = {"%" + id + "%"};
+        /**
+         *   String selection = APP_COLUMN_ID + "=?";
+         *   String[] selectionArgs = {"%" + id + "%"};
+         */
+
         AppInterface options = new AppInterface();
         Cursor cursor = db.query(
-                TABLE_NAME,
-                projections,
-                null,
-                null,
-                null,
-                null,
-                null
+            TABLE_NAME,
+            projections,
+            null,
+            null,
+            null,
+            null,
+            null
         );
         int count = cursor.getCount();
         if (count == 0) {
             db.execSQL(
-                    "INSERT INTO " + TABLE_NAME +
-                    " (" +
-                            APP_COLUMN_ID + ", " +
-                            APP_COLUMN_URL + ", " +
-                            APP_COLUMN_URL_DEFAULT + ", " +
-                            APP_COLUMN_PATH +  ", " +
-                            APP_COLUMN_WS_ADDRESS + ") " +
-                    "VALUES" +
-                    " (" +
+                "INSERT INTO " + TABLE_NAME +
+                " (" +
+                    APP_COLUMN_ID + ", " +
+                    APP_COLUMN_URL + ", " +
+                    APP_COLUMN_URL_DEFAULT + ", " +
+                    APP_COLUMN_PATH +  ", " +
+                    APP_COLUMN_WS_ADDRESS + ", " +
+                    APP_COLUMN_NOT_STOP_WEB + ") " +
+                "VALUES" +
+                " (" +
                     options.id + ", '" +
                     options.url + "', '" +
                     options.urlDefault + "', '" +
                     options.path + "', '" +
-                            options.wsAddress + "')"
+                    options.wsAddress + "', '" +
+                    options.notStopWeb + "')"
             );
             return init();
         }
@@ -132,6 +148,7 @@ class App extends Table {
             schema.urlDefault = cursor.getString(getAppColumnIndex(APP_COLUMN_URL_DEFAULT));
             schema.path = cursor.getString(getAppColumnIndex(APP_COLUMN_PATH));
             schema.wsAddress = cursor.getString(getAppColumnIndex(APP_COLUMN_WS_ADDRESS));
+            schema.notStopWeb = cursor.getString(getAppColumnIndex(APP_COLUMN_NOT_STOP_WEB)).equals("true");
         }
         return schema;
     }
