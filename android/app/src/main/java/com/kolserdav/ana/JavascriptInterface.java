@@ -232,6 +232,26 @@ class AndroidCommon {
     }
 
     @JavascriptInterface
+    public void setNotStopWeb(final String value) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                AppInterface schemaApp = main.db.app.init();
+                Log.d(TAG, "Not stop web changed to " + value + " (" + schemaApp.notStopWeb  + ")");
+                schemaApp.notStopWeb = value.equals("true");
+                main.db.app.setNotStopWeb(schemaApp);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public String getNotStopWeb() {
+        AppInterface app = main.db.app.init();
+        main.notStopWeb = app.notStopWeb;
+        return main.notStopWeb ? "true" : "false";
+    }
+
+    @JavascriptInterface
     public void setUrl(String url) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

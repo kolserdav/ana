@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Theme } from '../../Theme';
 import { LABEL_TRANSITION } from '../../utils/constants';
@@ -34,6 +34,7 @@ const Input = forwardRef<
     classWrapper?: string;
     defaultValue?: string;
     maxLength?: number;
+    dropdown?: { text: string | null; onClick: () => void }[];
   }
 >(
   (
@@ -62,6 +63,7 @@ const Input = forwardRef<
       classWrapper,
       defaultValue,
       maxLength,
+      dropdown,
     },
     ref
   ) => {
@@ -93,6 +95,16 @@ const Input = forwardRef<
     useEffect(() => {
       setGradient(value !== '');
     }, [value]);
+
+    const _dropdown = useMemo(() => {
+      if (!dropdown) {
+        return undefined;
+      }
+      if (dropdown[0].text === value) {
+        return undefined;
+      }
+      return dropdown;
+    }, [value, dropdown]);
 
     return (
       <div
@@ -168,6 +180,27 @@ const Input = forwardRef<
             {name}
           </label>
         )}
+        {_dropdown && (
+          <div
+            style={{ backgroundColor: theme.text, color: theme.paper }}
+            className={clsx(s.dropdown, (_dropdown?.length || 0) !== 0 ? s.open : '')}
+          >
+            {_dropdown.map((item) => (
+              <div
+                key={item.text}
+                onClick={item.onClick}
+                role="button"
+                tabIndex={-1}
+                onKeyDown={() => {
+                  // TODO
+                }}
+              >
+                {item.text}
+              </div>
+            ))}
+          </div>
+        )}
+
         <span className={clsx(s.desc, disabled ? s.disabled : '')}>
           <span style={{ color: theme.yellow }}>{error}</span>
           <span style={{ color: theme.text }}>{desc}</span>
@@ -200,6 +233,7 @@ Input.defaultProps = {
   value: undefined,
   maxLength: undefined,
   name: undefined,
+  dropdown: undefined,
 };
 
 export default Input;

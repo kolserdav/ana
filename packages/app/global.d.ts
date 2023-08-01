@@ -63,6 +63,8 @@ declare global {
 
   const androidTextToSpeech: AndroidTextToSpeech | undefined;
 
+  type BoolStr = 'true' | 'false';
+
   interface AndroidCommon {
     closeApp: () => void;
 
@@ -81,6 +83,10 @@ declare global {
     setNotificationEnabled: (value: boolean) => void;
 
     getPackageVersion: () => string;
+
+    setNotStopWeb: (value: BoolStr) => void;
+
+    getNotStopWeb: () => BoolStr;
   }
 
   const androidCommon: AndroidCommon | undefined;

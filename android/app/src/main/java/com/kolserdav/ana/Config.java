@@ -1,5 +1,8 @@
 package com.kolserdav.ana;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+
 import java.net.Socket;
 import java.security.cert.X509Certificate;
 
@@ -15,6 +18,8 @@ class AppInterface {
     // Push notifications server
     String wsAddress = null;
 
+    Boolean notStopWeb = false;
+
     public AppInterface() {
 
     }
@@ -27,7 +32,7 @@ public class Config {
     // Dependency packages/app/types/interfaces.ts.CHECK_URL_PATH
     public static final String CHECK_URL_PATH = "/api/check";
 
-    public static final Integer DATABASE_VERSION = 30;
+    public static final Integer DATABASE_VERSION = 33;
 
     public static final String DATABASE_NAME = "db";
 
@@ -41,7 +46,13 @@ public class Config {
 
     public static final int WS_RECONNECT_TIMEOUT = 3000;
 
+    // Dependency packages/app/utils/constants.ts.ANDROID_NOT_STOP_WEB_DEFAULT
+    public static final Boolean NOT_STOP_WEB_DEFAULT = true;
+
+    @SuppressLint("CustomX509TrustManager")
+    @TargetApi(24)
     public static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[]{
+
             new X509ExtendedTrustManager() {
                 public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) {}
                 public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) {}

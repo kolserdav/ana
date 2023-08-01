@@ -47,7 +47,10 @@ public class MainActivity extends Activity {
 
     private WebSettings webSettings;
 
+    public Boolean notStopWeb = Config.NOT_STOP_WEB_DEFAULT;
+
     AndroidCommon androidCommon;
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -111,6 +114,8 @@ public class MainActivity extends Activity {
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
         webSettings.setSupportZoom(false);
+
+
 
         setCacheMode();
 
@@ -192,14 +197,14 @@ public class MainActivity extends Activity {
                                try {
                                    data = new JSONObject(response);
                                } catch (JSONException e) {
-                                   Log.e(TAG, "Error parse JSON: " + e.getMessage());
+                                   Log.e(TAG, "Failed parse JSON: " + e.getMessage());
                                }
                                if (data != null) {
                                    Object wsAddress = null;
                                    try {
                                        wsAddress = data.get("data");
                                    } catch (JSONException e) {
-                                       Log.e(TAG, "Error get WS address from JSON: " + e.getMessage());
+                                       Log.e(TAG, "Failed get WS address from JSON: " + e.getMessage());
                                    }
                                    Log.d(TAG, "WS server is: " + wsAddress);
                                    if (wsAddress != null) {
@@ -220,10 +225,10 @@ public class MainActivity extends Activity {
                        }.execute().get();
 
                     } catch (ExecutionException e) {
-                        Log.e(TAG, "Error request E " + e.getMessage());
+                        Log.e(TAG, "Failed request E " + e.getMessage());
                     }
                 } catch (InterruptedException e) {
-                    Log.e(TAG, "Error request I " + e.getMessage());
+                    Log.e(TAG, "Failed request I " + e.getMessage());
                 }
             }
         };
@@ -232,9 +237,18 @@ public class MainActivity extends Activity {
     }
 
     private void openScreenDev() {
-        if (Settings.Secure.getInt(this.getContentResolver(),
-                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED , 0) == 1) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        /**
+            if (isDevMode()) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        */
+    }
+
+    private boolean isDevMode() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Settings.Secure.getInt(context.getContentResolver(), Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0;
+        } else {
+            return Settings.Secure.getInt(context.getContentResolver(), Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 1) != 0;
         }
     }
 
@@ -331,9 +345,12 @@ public class MainActivity extends Activity {
     }
 
     public void closeApp() {
+        Log.d(TAG, "Close app with notStopWeb: " + notStopWeb);
         finishAffinity();
         finish();
-        destroyWebView();
+        if (!notStopWeb) {
+            destroyWebView();
+        }
     }
 
     public void destroyWebView() {

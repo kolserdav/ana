@@ -32,6 +32,26 @@
     }
   }
 
+  .dropdown {
+    cursor: pointer;
+    z-index: 6;
+    position: absolute;
+    width: 100%;
+    top: $input-height;
+    height: 0;
+    padding: 0;
+    display: block;
+    transition: height 0.3s ease-in;
+    overflow: hidden;
+    border-radius: $input-border-radius;
+
+    &.open {
+      height: $input-height;
+      transition: height 0.3s ease-out;
+      padding: $input-padding;
+    }
+  }
+
   input {
     max-width: $small-width;
 
