@@ -1,0 +1,41 @@
+{
+  "name": "Ana",
+  "short_name": "Ana",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "48x48",
+      "type": "image/png",
+      "src": "https://raw.githubusercontent.com/kolserdav/ana/master/android/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+      "sizes": "72x72",
+      "type": "image/png",
+      "src": "https://raw.githubusercontent.com/kolserdav/ana/master/android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+      "sizes": "96x96",
+      "type": "image/png",
+      "src": "https://raw.githubusercontent.com/kolserdav/ana/master/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/kolserdav/ana/master/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "type": "image/png",
+      "sizes": "114x114"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/kolserdav/ana/master/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "fdroid",
+      "url": "https://f-droid.org/packages/com.kolserdav.ana",
+      "id": "com.kolserdav.ana"
+    }
+  ]
+}
