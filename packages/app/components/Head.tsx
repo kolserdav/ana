@@ -23,6 +23,7 @@ function Head({
       <meta name="og:description" content={description} />
       <meta name="og:title" content={title} />
       <link rel="icon" href="/favicon.ico" />
+      <link rel="manifest" href="manifest.json" />
     </NextHead>
   );
 }
