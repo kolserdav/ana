@@ -1,6 +1,7 @@
 ## Contibuting
 
-[Installation for developer](./INSTALLATION_DEV.md)
+[Installation for developer](./INSTALLATION_DEV.md)  
+[Debugging Android app](./ANDROID_STUDIO.md)
 
 ### Localization
 
