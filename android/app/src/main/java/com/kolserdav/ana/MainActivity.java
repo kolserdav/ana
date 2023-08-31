@@ -128,6 +128,11 @@ public class MainActivity extends Activity {
 
         serviceIntent = new Intent(this, DisplayNotification.class);
 
+        if (Config.screenOn) {
+            Log.w(TAG, "Use development screen on");
+            setScreenOn();
+        }
+
         db = new DB(this) {
 
 
@@ -244,7 +249,7 @@ public class MainActivity extends Activity {
         */
     }
 
-    private boolean isDevMode() {
+    private boolean setScreenOn() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return Settings.Secure.getInt(context.getContentResolver(), Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0;
         } else {
@@ -279,8 +284,14 @@ public class MainActivity extends Activity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String _url) {
-                AppInterface schema = context.db.app.init();
                 String url = _url;
+
+                boolean isImage = helper.handleRegex(url, Config.dataImageReg);
+                if (isImage) {
+                    return true;
+                }
+
+                AppInterface schema = context.db.app.init();
 
                 Log.d(TAG, "Should override url " + url +
                         " with saved " + schema.path);
@@ -291,10 +302,8 @@ public class MainActivity extends Activity {
                 }
 
                 Intent intent = getIntent();
-                Pattern pattern = Pattern.compile(__url, Pattern.CASE_INSENSITIVE);
-                Matcher matcher = pattern.matcher(url);
-                boolean matchFound = matcher.find();
 
+                boolean matchFound = helper.handleRegex(url, __url);
                 // Open other url
                 if (!matchFound) {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
