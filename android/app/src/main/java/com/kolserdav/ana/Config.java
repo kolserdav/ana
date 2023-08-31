@@ -27,7 +27,8 @@ class AppInterface {
 
 public class Config {
 
-    public static final int FIRST_LOAD_DURATION = 3000;
+    // FIXME set false for production
+    public static final Boolean screenOn = false;
 
     // Dependency packages/app/types/interfaces.ts.CHECK_URL_PATH
     public static final String CHECK_URL_PATH = "/api/check";
@@ -48,9 +49,6 @@ public class Config {
 
     // Dependency packages/app/utils/constants.ts.ANDROID_NOT_STOP_WEB_DEFAULT
     public static final Boolean NOT_STOP_WEB_DEFAULT = true;
-
-    // FIXME comment on production
-    public static final Boolean screenOn = true;
 
     public static final String dataImageReg = "^data:image";
 
