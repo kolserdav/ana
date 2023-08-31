@@ -311,10 +311,12 @@ public class MainActivity extends Activity {
                     return true;
                 }
 
+                Log.d(TAG, "Schema path: " + schema.path);
+
                 // Rewrite url to saved
                 if (!schema.path.equals("/") &&
                         !Intent.ACTION_PROCESS_TEXT.equals(intent.getAction())) {
-                    url = url.replaceAll("\\/[a-z-(/)]+$", "") + schema.path;
+                    url = url.replaceAll(Config.pathRegex, "") + schema.path;
                 }
 
                 Log.d(TAG, "Replaced url " + url);
@@ -333,7 +335,10 @@ public class MainActivity extends Activity {
                 if (_url.equals("null")) {
                     _url = schemaApp.urlDefault;
                 }
-                String path = url.replace(_url, "").replace(schemaApp.urlDefault, "");
+                Log.d(TAG, "Do updateVisitedHistory url: " + url + ", _url: " + _url);
+                Pattern pattern =  Pattern.compile(Config.originRegex);
+                Matcher matcher = pattern.matcher(url);
+                String path = matcher.replaceAll("");
                 schemaApp.path = path+"";
                 context.db.app.setPath(schemaApp);
                 Log.d(TAG, "Change path  from " + schemaApp.path + " to " + path +

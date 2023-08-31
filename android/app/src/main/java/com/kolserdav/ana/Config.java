@@ -28,12 +28,12 @@ class AppInterface {
 public class Config {
 
     // FIXME set false for production
-    public static final Boolean screenOn = false;
+    public static final Boolean screenOn = true;
 
     // Dependency packages/app/types/interfaces.ts.CHECK_URL_PATH
     public static final String CHECK_URL_PATH = "/api/check";
 
-    public static final Integer DATABASE_VERSION = 33;
+    public static final Integer DATABASE_VERSION = 35;
 
     public static final String DATABASE_NAME = "db";
 
@@ -51,6 +51,10 @@ public class Config {
     public static final Boolean NOT_STOP_WEB_DEFAULT = true;
 
     public static final String dataImageReg = "^data:image";
+
+    public static final String pathRegex = "\\/[a-z-(/)]+$";
+
+    public static final String originRegex = "^https?:\\/\\/[a-zA-Z\\d\\.-]+";
 
     @SuppressLint("CustomX509TrustManager")
     @TargetApi(24)
