@@ -131,7 +131,7 @@ class Request {
           resolve(d.json());
         })
         .catch((err) => {
-          log('error', 'Request error', { err, SERVER, url });
+          log('error', 'Request error', { err, SERVER, url, headers });
           resolve({
             status: 'error',
             message: 'No internet',

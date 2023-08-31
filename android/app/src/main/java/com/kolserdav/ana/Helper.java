@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Helper extends Config {
@@ -37,6 +39,12 @@ public class Helper extends Config {
 
     public Helper() {
         //
+    }
+
+    public Boolean handleRegex(String patternBase, String patternPart) {
+        Pattern pattern = Pattern.compile(patternPart, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(patternBase);
+        return matcher.find();
     }
 
     public String getPackageVersion(Context context) {

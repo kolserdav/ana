@@ -49,6 +49,11 @@ public class Config {
     // Dependency packages/app/utils/constants.ts.ANDROID_NOT_STOP_WEB_DEFAULT
     public static final Boolean NOT_STOP_WEB_DEFAULT = true;
 
+    // FIXME comment on production
+    public static final Boolean screenOn = true;
+
+    public static final String dataImageReg = "^data:image";
+
     @SuppressLint("CustomX509TrustManager")
     @TargetApi(24)
     public static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[]{
