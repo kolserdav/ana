@@ -28,7 +28,7 @@ class AppInterface {
 public class Config {
 
     // FIXME set false for production
-    public static final Boolean screenOn = true;
+    public static final Boolean screenOn = false;
 
     // Dependency packages/app/types/interfaces.ts.CHECK_URL_PATH
     public static final String CHECK_URL_PATH = "/api/check";
