@@ -14,7 +14,7 @@
     "@types/react": "18.2.13",
     "@types/react-dom": "18.2.6",
     "clsx": "^1.2.1",
-    "next": "13.1.4",
+    "next": "13.5.4",
     "nextjs-cors": "^2.1.2",
     "react": "18.2.0",
     "react-cookie": "^4.1.1",
