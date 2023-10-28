@@ -1,9 +1,9 @@
 version: '3.8'
 services:
-  db:
+  postgres:
     extends:
       file: docker-compose.yml
-      service: db
+      service: postgres
   translate:
     extends:
       file: docker-compose.yml
