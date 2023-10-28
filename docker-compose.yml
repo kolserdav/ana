@@ -28,7 +28,7 @@ services:
     ports:
       - '5050:80'
     depends_on:
-      - db
+      - postgres
     logging:
       options:
         max-size: '12m'
@@ -89,7 +89,7 @@ services:
       - ./packages/server:/home/app/packages/server
       - ./.env:/home/app/.env
     depends_on:
-      - db
+      - postgres
       - translate
     command: sh -c "npm run build:server && npm run seed && npm run start:server"
     logging:
