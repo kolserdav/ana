@@ -5,6 +5,9 @@ Application for easy composing texts in the foreign language.
 ![Android 5.0](https://img.shields.io/badge/android-5.0+-brightgreen)
 ![License](https://img.shields.io/github/license/kolserdav/ana)
 
+# Deprecation warning
+**The aplication is deprecate, the server of app is down.**
+
 ## Download
 
 Get apk in [releases](https://github.com/kolserdav/ana/releases) or install with [F-Droid](https://f-droid.org/en/packages/com.kolserdav.ana/)
