@@ -3,7 +3,6 @@
   "version": "1.24.0",
   "description": "",
   "main": "index.js",
-  "homepage": "https://uyem.ru",
   "repository": "git@github.com:kolserdav/ana.git",
   "types": "types",
   "prisma": {
